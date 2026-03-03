@@ -1,0 +1,47 @@
+Raising trap objects:
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+
+Clear trap objects:
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+
+
+
+
+Objects details:
+
+uxAlarmActiveSeverity OBJECT-TYPE
+        SYNTAX     INTEGER{
+						   none(0),
+                           warning(1),
+                           minor(2),
+                           major(3),
+                           critical(4)
+                          }
+
+add others ...

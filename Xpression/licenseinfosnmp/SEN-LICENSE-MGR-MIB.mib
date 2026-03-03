@@ -1,0 +1,356 @@
+Zusammenfassung
+hiQTcaL1DatabaseTrap: FaultyObject = TCA:deitgdd1osvnodea/AUDIT_ERR: Logging limit of 30 logs in 5 mins exceeded with 100 occurances (/log/HiqLogAlert.log). :  : HiPath8000
+hiQLicenseSessionCountOkTrap: FaultyObject = Resource:OSMO: License session level = 0% :  : HiPath8000
+hiQLicenseSessionCountOkTrap: FaultyObject = Resource:Client: License session level = 0% :  : HiPath8000
+hiQLicenseSessionCountOkTrap: FaultyObject = Resource:Session: License session level = 1% :  : HiPath8000
+alarm cleared: RTP process soapExport_7571 (pid 7571) exited (status unknown) in state RTP_NM_RUNNING - restart = no FaultyObject: APPL:deitgdd1osvnodea.soapExport_7571 :  : HiPath8000
+alarm cleared: RTP process soapExport_7571 (pid 7571) exited (status unknown) in state RTP_NM_RUNNING - restart = no FaultyObject: APPL:deitgdd1osvnodea.soapExport_7571 :  : HiPath8000
+alarm cleared: RTP process soapExport_7571 (pid 7571) exited (status unknown) in state RTP_NM_RUNNING - restart = no FaultyObject: APPL:deitgdd1osvnodea.soapExport_7571 :  : HiPath8000
+alarm cleared: RTP process soapExport_7571 (pid 7571) exited (status unknown) in state RTP_NM_RUNNING - restart = no FaultyObject: APPL:deitgdd1osvnodea.soapExport_7571 :  : HiPath8000
+alarm cleared: RTP process soapExport_7571 (pid 7571) exited (status unknown) in state RTP_NM_RUNNING - restart = no FaultyObject: APPL:deitgdd1osvnodea.soapExport_7571 :  : HiPath8000
+alarm cleared: RTP process soapExport_7571 (pid 7571) exited (status unknown) in state RTP_NM_RUNNING - restart = no FaultyObject: APPL:deitgdd1osvnodea.soapExport_7571 :  : HiPath8000
+alarm cleared: RTP process soapExport_7571 (pid 7571) exited (status unknown) in state RTP_NM_RUNNING - restart = no FaultyObject: APPL:deitgdd1osvnodea.soapExport_7571 :  : HiPath8000
+alarm cleared: RTP process soapExport_7571 (pid 7571) exited (status unknown) in state RTP_NM_RUNNING - restart = no FaultyObject: APPL:deitgdd1osvnodea.soapExport_7571 :  : HiPath8000
+alarm cleared: RTP process soapExport_7571 (pid 7571) exited (status unknown) in state RTP_NM_RUNNING - restart = no FaultyObject: APPL:deitgdd1osvnodea.soapExport_7571 :  : HiPath8000
+alarm cleared: RTP process soapExport_7571 (pid 7571) exited (status unknown) in state RTP_NM_RUNNING - restart = no FaultyObject: APPL:deitgdd1osvnodea.soapExport_7571 :  : HiPath8000
+alarm cleared: RTP process soapExport_7571 (pid 7571) exited (status unknown) in state RTP_NM_RUNNING - restart = no FaultyObject: APPL:deitgdd1osvnodea.soapExport_7571 :  : HiPath8000
+alarm cleared: RTP process soapExport_7571 (pid 7571) exited (status unknown) in state RTP_NM_RUNNING - restart = no FaultyObject: APPL:deitgdd1osvnodea.soapExport_7571 :  : HiPath8000
+alarm cleared: RTP process soapExport_7571 (pid 7571) exited (status unknown) in state RTP_NM_RUNNING - restart = no FaultyObject: APPL:deitgdd1osvnodea.soapExport_7571 :  : HiPath8000
+alarm cleared: FaultyObject = TCA:deitgdd1osvnodeb/AUDIT_ERR: Logging limit of 30 logs in 5 mins exceeded with 30 occurances (/log/HiqLogAlert.log). :  : HiPath8000
+alarm cleared: FaultyObject = Server:OSVTM/From:deitgdd1osvnodea/To:10.192.131.60: Communication established :  : HiPath8000
+alarm cleared: FaultyObject = TCA:deitgdd1osvnodea/AUDIT_ERR: Logging limit of 30 logs in 5 mins exceeded with 100 occurances (/log/HiqLogAlert.log). :  : HiPath8000
+hiQTcaL1DatabaseTrap: FaultyObject = TCA:deitgdd1osvnodea/AUDIT_ERR: Logging limit of 30 logs in 5 mins exceeded with 100 occurances (/log/HiqLogAlert.log). :  : HiPath8000
+alarm cleared:  : module flashcard_space : RemoteShell
+alarm cleared:  : module flashcard_status : RemoteShell
+alarm cleared:  : module mdstat_md0 : RemoteShell
+alarm cleared:  : module mdstat_md1 : RemoteShell
+alarm cleared:  : module flashcard_cronjob : RemoteShell
+alarm cleared:  : module flashcard_backup : RemoteShell
+Cleared by GenericClear: poll initiated by operator:  :  : RemoteShell
+alarm cleared: alarmCleared :  : RemoteShell
+hiQTcaL1CommunicationTrap: FaultyObject = TCA:deitgdd1osvnodea/COM_EXT_TIME_OUT: Logging limit of 15 logs in 15 mins exceeded with 29 occurances (/log/HiqLogTransactionTimeout.log). :  : HiPath8000
+systemUnaccessible: User nmsadm: Polling-error. : module mdstat_md0 : RemoteShell
+systemUnaccessible: User nmsadm: Polling-error. : module mdstat_md1 : RemoteShell
+systemUnaccessible: User nmsadm: Polling-error. : module flashcard_cronjob : RemoteShell
+systemUnaccessible: User nmsadm: Polling-error. : module flashcard_backup : RemoteShell
+systemUnaccessible: User nmsadm: Polling-error. : module flashcard_space : RemoteShell
+systemUnaccessible: User nmsadm: Polling-error. : module flashcard_status : RemoteShell
+alarm cleared: FaultyObject = TCA:deitgdd1osvnodeb/AUDIT_ERR: Logging limit of 30 logs in 5 mins exceeded with 30 occurances (/log/HiqLogAlert.log). :  : HiPath8000
+hiQTcaL1DatabaseTrap: FaultyObject = TCA:deitgdd1osvnodeb/AUDIT_ERR: Logging limit of 30 logs in 5 mins exceeded with 30 occurances (/log/HiqLogAlert.log). :  : HiPath8000
+alarm cleared: FaultyObject = TCA:deitgdd1osvnodeb/AUDIT_ERR: Logging limit of 30 logs in 5 mins exceeded with 30 occurances (/log/HiqLogAlert.log). :  : HiPath8000
+hiQTcaL1CommunicationTrap: FaultyObject = TCA:deitgdd1osvnodea/COM_EXT_TIME_OUT: Logging limit of 15 logs in 15 mins exceeded with 29 occurances (/log/HiqLogTransactionTimeout.log). :  : HiPath8000
+hiQTcaL1DatabaseTrap: FaultyObject = TCA:deitgdd1osvnodeb/AUDIT_ERR: Logging limit of 30 logs in 5 mins exceeded with 30 occurances (/log/HiqLogAlert.log). :  : HiPath8000
+hiQTcaL1CommunicationTrap: FaultyObject = TCA:deitgdd1osvnodea/COM_EXT_TIME_OUT: Logging limit of 15 logs in 15 mins exceeded with 29 occurances (/log/HiqLogTransactionTimeout.log). :  : HiPath8000
+hiQTcaL1CommunicationTrap: FaultyObject = TCA:deitgdd1osvnodea/COM_EXT_TIME_OUT: Logging limit of 15 logs in 15 mins exceeded with 29 occurances (/log/HiqLogTransactionTimeout.log). :  : HiPath8000
+ Port 2 failure: neName: de-itg-de0032-osb-01, neType: proxy, eventGroupName: Ethernet, eventName: Port 2 failure, severity: major, eventType: equipmentAlarm, eventTime: 20140129164328.000, faultyObject: Ethernet, monitoredValue: 1.000000, thresholdValue:
+ Port 2 failure: neName: de-itg-de0032-osb-01, neType: proxy, eventGroupName: Ethernet, eventName: Port 2 failure, severity: major, eventType: equipmentAlarm, eventTime: 20140129164328.000, faultyObject: Ethernet, monitoredValue: 1.000000, thresholdValue:
+ Port 2 failure: neName: de-itg-de0326-osb-01, neType: proxy, eventGroupName: Ethernet, eventName: Port 2 failure, severity: major, eventType: equipmentAlarm, eventTime: 20140129174108.000, faultyObject: Ethernet, monitoredValue: 1.000000, thresholdValue:
+ Port 2 failure: neName: de-itg-de0326-osb-01, neType: proxy, eventGroupName: Ethernet, eventName: Port 2 failure, severity: major, eventType: equipmentAlarm, eventTime: 20140129174108.000, faultyObject: Ethernet, monitoredValue: 1.000000, thresholdValue:
+Network element type $neTypeOB starting: neName: de-itg-de0032-osb-01, neType: proxy, eventTime: 20140129164108.000+0000 :  : OpenBranch
+Network element type $neTypeOB starting: neName: de-itg-de0326-osb-01, neType: proxy, eventTime: 20140129173848.000+0100 :  : OpenBranch
+alarm cleared: FaultyObject = TCA:deitgdd1osvnodea/AUDIT_ERR: Logging limit of 30 logs in 5 mins exceeded with 100 occurances (/log/HiqLogAlert.log). :  : HiPath8000
+hiQTcaL1DatabaseTrap: FaultyObject = TCA:deitgdd1osvnodea/AUDIT_ERR: Logging limit of 30 logs in 5 mins exceeded with 100 occurances (/log/HiqLogAlert.log). :  : HiPath8000
+hiQTcaL1DatabaseTrap: FaultyObject = TCA:deitgdd1osvnodea/AUDIT_ERR: Logging limit of 30 logs in 5 mins exceeded with 100 occurances (/log/HiqLogAlert.log). :  : HiPath8000
+alarm cleared: FaultyObject = TCA:deitgdd1osvnodeb/AUDIT_ERR: Logging limit of 30 logs in 5 mins exceeded with 30 occurances (/log/HiqLogAlert.log). :  : HiPath8000
+hiQTcaL1DatabaseTrap: FaultyObject = TCA:deitgdd1osvnodeb/AUDIT_ERR: Logging limit of 30 logs in 5 mins exceeded with 30 occurances (/log/HiqLogAlert.log). :  : HiPath8000
+hiQTcaL1CommunicationTrap: FaultyObject = TCA:deitgdd1osvnodea/COM_EXT_TIME_OUT: Logging limit of 15 logs in 15 mins exceeded with 29 occurances (/log/HiqLogTransactionTimeout.log). :  : HiPath8000
+hiQGlobalCommsEstablishedTrap: FaultyObject = SIP-EP/de0196_ep/10.161.20.9: Communication established FaultyObject: APPL:deitgdd1osvnodea.SIP-EP/de0196_ep/10.161.20.9 :  : HiPath8000
+hiQTcaL1CommunicationTrap: FaultyObject = TCA:deitgdd1osvnodea/COM_EXT_TIME_OUT: Logging limit of 15 logs in 15 mins exceeded with 29 occurances (/log/HiqLogTransactionTimeout.log). :  : HiPath8000
+hiQGlobalCommsEstablishedTrap: FaultyObject = SIP-EP/de0196_ep/10.161.20.9: Communication established FaultyObject: APPL:deitgdd1osvnodea.SIP-EP/de0196_ep/10.161.20.9 :  : HiPath8000
+hiQTcaL1CommunicationTrap: FaultyObject = TCA:deitgdd1osvnodea/COM_EXT_TIME_OUT: Logging limit of 15 logs in 15 mins exceeded with 29 occurances (/log/HiqLogTransactionTimeout.log). :  : HiPath8000
+hiQTcaL1CommunicationTrap: FaultyObject = TCA:deitgdd1osvnodea/COM_EXT_TIME_OUT: Logging limit of 15 logs in 15 mins exceeded with 29 occurances (/log/HiqLogTransactionTimeout.log). :  : HiPath8000
+hiQTcaL1DatabaseTrap: FaultyObject = TCA:deitgdd1osvnodea/AUDIT_ERR: Logging limit of 30 logs in 5 mins exceeded with 100 occurances (/log/HiqLogAlert.log). :  : HiPath8000
+hiQTcaL1DatabaseTrap: FaultyObject = TCA:deitgdd1osvnodea/AUDIT_ERR: Logging limit of 30 logs in 5 mins exceeded with 100 occurances (/log/HiqLogAlert.log). :  : HiPath8000
+hiQTcaL1CommunicationTrap: FaultyObject = TCA:deitgdd1osvnodea/COM_EXT_TIME_OUT: Logging limit of 15 logs in 15 mins exceeded with 29 occurances (/log/HiqLogTransactionTimeout.log). :  : HiPath8000
+alarm cleared: FaultyObject = TCA:deitgdd1osvnodeb/AUDIT_ERR: Logging limit of 30 logs in 5 mins exceeded with 30 occurances (/log/HiqLogAlert.log). :  : HiPath8000
+alarm cleared: FaultyObject = TCA:deitgdd1osvnodeb/AUDIT_ERR: Logging limit of 30 logs in 5 mins exceeded with 30 occurances (/log/HiqLogAlert.log). :  : HiPath8000
+hiQTcaL1DatabaseTrap: FaultyObject = TCA:deitgdd1osvnodeb/AUDIT_ERR: Logging limit of 30 logs in 5 mins exceeded with 30 occurances (/log/HiqLogAlert.log). :  : HiPath8000
+hiQTcaL1CommunicationTrap: FaultyObject = TCA:deitgdd1osvnodea/COM_EXT_TIME_OUT: Logging limit of 15 logs in 15 mins exceeded with 29 occurances (/log/HiqLogTransactionTimeout.log). :  : HiPath8000
+hiQTcaL1CommunicationTrap: FaultyObject = TCA:deitgdd1osvnodea/COM_EXT_TIME_OUT: Logging limit of 15 logs in 15 mins exceeded with 29 occurances (/log/HiqLogTransactionTimeout.log). :  : HiPath8000
+agent polled: Disk amount more than 75% used ! : FixedDisk Partition_D : SysMon
+hiQTcaL1DatabaseTrap: FaultyObject = TCA:deitgdd1osvnodea/AUDIT_ERR: Logging limit of 30 logs in 5 mins exceeded with 100 occurances (/log/HiqLogAlert.log). :  : HiPath8000
+hiQTcaL1DatabaseTrap: FaultyObject = TCA:deitgdd1osvnodea/AUDIT_ERR: Logging limit of 30 logs in 5 mins exceeded with 100 occurances (/log/HiqLogAlert.log). :  : HiPath8000
+hiQTcaL1DatabaseTrap: FaultyObject = TCA:deitgdd1osvnodea/AUDIT_ERR: Logging limit of 30 logs in 5 mins exceeded with 100 occurances (/log/HiqLogAlert.log). :  : HiPath8000
+alarm cleared: hicomErrorMsgId=F0000hicomErrorPriority=M5hicomErrorAction=hicomErrorAbsMod=AFRhicomErrorEvent=TESThicomErrorSubevent=INIT-STOERMELDUNGhicomErrorCardRef=--hicomErrorBoardVersion=--hicomErrorFwType=--hicomErrorTimDat=1390739400hico
+alarm cleared: Disk amount more than 75% used ! : FixedDisk Partition_D : SysMon
+hicomErrorMsg: hicomErrorMsgId=F0000hicomErrorPriority=M5hicomErrorAction=hicomErrorAbsMod=AFRhicomErrorEvent=TESThicomErrorSubevent=INIT-STOERMELDUNGhicomErrorCardRef=--hicomErrorBoardVersion=--hicomErrorFwType=--hicomErrorTimDat=1390998600hico
+alarm cleared: FaultyObject = TCA:deitgdd1osvnodeb/AUDIT_ERR: Logging limit of 30 logs in 5 mins exceeded with 30 occurances (/log/HiqLogAlert.log). :  : HiPath8000
+agent polled: Disk amount more than 85% used ! : FixedDisk Partition_D : SysMon
+hiQTcaL1DatabaseTrap: FaultyObject = TCA:deitgdd1osvnodeb/AUDIT_ERR: Logging limit of 30 logs in 5 mins exceeded with 30 occurances (/log/HiqLogAlert.log). :  : HiPath8000
+hiQTcaL1DatabaseTrap: FaultyObject = TCA:deitgdd1osvnodeb/AUDIT_ERR: Logging limit of 30 logs in 5 mins exceeded with 30 occurances (/log/HiqLogAlert.log). :  : HiPath8000
+agent polled: Disk amount more than 85% used ! : FixedDisk Partition_D : SysMon
+alarm cleared: Disk amount more than 75% used ! : FixedDisk Partition_D : SysMon
+hiQTcaL1CommunicationTrap: FaultyObject = TCA:deitgdd1osvnodea/COM_EXT_TIME_OUT: Logging limit of 15 logs in 15 mins exceeded with 29 occurances (/log/HiqLogTransactionTimeout.log). :  : HiPath8000
+alarm cleared: SNMP agent not responding: check SNMP community :  : Mediatrix
+no response: SNMP agent not responding: check SNMP community :  : Mediatrix
+alarm cleared: Port type: isdn-port : module ISDN, port Bri4 : Mediatrix
+interface # 7 up: Port type: isdn-port : module ISDN, port Bri4 : Mediatrix
+alarm cleared: Port type: isdn-port : module ISDN, port Bri4 : Mediatrix
+hiQTcaL1CommunicationTrap: FaultyObject = TCA:deitgdd1osvnodea/COM_EXT_TIME_OUT: Logging limit of 15 logs in 15 mins exceeded with 29 occurances (/log/HiqLogTransactionTimeout.log). :  : HiPath8000
+hiQTcaL1DatabaseTrap: FaultyObject = TCA:deitgdd1osvnodea/PROVISIONING_ERR: Logging limit of 5 logs in 5 mins exceeded with 8 occurances (/log/HiqLogProvisioning.log). :  : HiPath8000
+hiQTcaL1DatabaseTrap: FaultyObject = TCA:deitgdd1osvnodea/PROVISIONING_ERR: Logging limit of 5 logs in 5 mins exceeded with 8 occurances (/log/HiqLogProvisioning.log). :  : HiPath8000
+hiQTcaL1CommunicationTrap: FaultyObject = TCA:deitgdd1osvnodea/COM_EXT_TIME_OUT: Logging limit of 15 logs in 15 mins exceeded with 29 occurances (/log/HiqLogTransactionTimeout.log). :  : HiPath8000
+hiQTcaL1DatabaseTrap: FaultyObject = TCA:deitgdd1osvnodea/AUDIT_ERR: Logging limit of 30 logs in 5 mins exceeded with 100 occurances (/log/HiqLogAlert.log). :  : HiPath8000
+hiQTcaL1DatabaseTrap: FaultyObject = TCA:deitgdd1osvnodea/AUDIT_ERR: Logging limit of 30 logs in 5 mins exceeded with 100 occurances (/log/HiqLogAlert.log). :  : HiPath8000
+hiQTcaL1CommunicationTrap: FaultyObject = TCA:deitgdd1osvnodea/COM_EXT_TIME_OUT: Logging limit of 15 logs in 15 mins exceeded with 29 occurances (/log/HiqLogTransactionTimeout.log). :  : HiPath8000
+hiQTcaL1DatabaseTrap: FaultyObject = TCA:deitgdd1osvnodea/AUDIT_ERR: Logging limit of 30 logs in 5 mins exceeded with 100 occurances (/log/HiqLogAlert.log). :  : HiPath8000
+hiQGlobalCommsEstablishedTrap: FaultyObject = SIP-EP/de0196_ep/10.161.20.9: Communication established FaultyObject: APPL:deitgdd1osvnodea.SIP-EP/de0196_ep/10.161.20.9 :  : HiPath8000
+alarm cleared: FaultyObject = TCA:deitgdd1osvnodeb/AUDIT_ERR: Logging limit of 30 logs in 5 mins exceeded with 30 occurances (/log/HiqLogAlert.log). :  : HiPath8000
+hiQTcaL1DatabaseTrap: FaultyObject = TCA:deitgdd1osvnodeb/AUDIT_ERR: Logging limit of 30 logs in 5 mins exceeded with 30 occurances (/log/HiqLogAlert.log). :  : HiPath8000
+hiQTcaL1CommunicationTrap: FaultyObject = TCA:deitgdd1osvnodea/COM_EXT_TIME_OUT: Logging limit of 15 logs in 15 mins exceeded with 29 occurances (/log/HiqLogTransactionTimeout.log). :  : HiPath8000
+hiQTcaL1DatabaseTrap: FaultyObject = TCA:deitgdd1osvnodeb/AUDIT_ERR: Logging limit of 30 logs in 5 mins exceeded with 30 occurances (/log/HiqLogAlert.log). :  : HiPath8000
+hiQTcaL1CommunicationTrap: FaultyObject = TCA:deitgdd1osvnodea/COM_EXT_TIME_OUT: Logging limit of 15 logs in 15 mins exceeded with 29 occurances (/log/HiqLogTransactionTimeout.log). :  : HiPath8000
+hiQTcaL1CommunicationTrap: FaultyObject = TCA:deitgdd1osvnodea/COM_EXT_TIME_OUT: Logging limit of 15 logs in 15 mins exceeded with 29 occurances (/log/HiqLogTransactionTimeout.log). :  : HiPath8000
+hiQTcaL1CommunicationTrap: FaultyObject = TCA:deitgdd1osvnodea/COM_EXT_TIME_OUT: Logging limit of 15 logs in 15 mins exceeded with 29 occurances (/log/HiqLogTransactionTimeout.log). :  : HiPath8000
+hiQGlobalCommsEstablishedTrap: FaultyObject = SIP-EP/de0196_ep/10.161.20.9: Communication established FaultyObject: APPL:deitgdd1osvnodea.SIP-EP/de0196_ep/10.161.20.9 :  : HiPath8000
+hiQTcaL1CommunicationTrap: FaultyObject = TCA:deitgdd1osvnodea/COM_EXT_TIME_OUT: Logging limit of 15 logs in 15 mins exceeded with 29 occurances (/log/HiqLogTransactionTimeout.log). :  : HiPath8000
+hiQTcaL1CommunicationTrap: FaultyObject = TCA:deitgdd1osvnodea/COM_EXT_TIME_OUT: Logging limit of 15 logs in 15 mins exceeded with 29 occurances (/log/HiqLogTransactionTimeout.log). :  : HiPath8000
+hiQTcaL1CommunicationTrap: FaultyObject = TCA:deitgdd1osvnodea/COM_EXT_TIME_OUT: Logging limit of 15 logs in 15 mins exceeded with 29 occurances (/log/HiqLogTransactionTimeout.log). :  : HiPath8000
+hiQTcaL1CommunicationTrap: FaultyObject = TCA:deitgdd1osvnodea/COM_EXT_TIME_OUT: Logging limit of 15 logs in 15 mins exceeded with 29 occurances (/log/HiqLogTransactionTimeout.log). :  : HiPath8000
+hiQTcaL1CommunicationTrap: FaultyObject = TCA:deitgdd1osvnodea/COM_EXT_TIME_OUT: Logging limit of 15 logs in 15 mins exceeded with 29 occurances (/log/HiqLogTransactionTimeout.log). :  : HiPath8000
+hiQTcaL1CommunicationTrap: FaultyObject = TCA:deitgdd1osvnodea/COM_EXT_TIME_OUT: Logging limit of 15 logs in 15 mins exceeded with 29 occurances (/log/HiqLogTransactionTimeout.log). :  : HiPath8000
+hiQTcaL1DatabaseTrap: FaultyObject = TCA:deitgdd1osvnodea/AUDIT_ERR: Logging limit of 30 logs in 5 mins exceeded with 100 occurances (/log/HiqLogAlert.log). :  : HiPath8000
+hiQTcaL1CommunicationTrap: FaultyObject = TCA:deitgdd1osvnodea/COM_EXT_TIME_OUT: Logging limit of 15 logs in 15 mins exceeded with 29 occurances (/log/HiqLogTransactionTimeout.log). :  : HiPath8000
+hiQTcaL1CommunicationTrap: FaultyObject = TCA:deitgdd1osvnodea/COM_EXT_TIME_OUT: Logging limit of 15 logs in 15 mins exceeded with 29 occurances (/log/HiqLogTransactionTimeout.log). :  : HiPath8000
+alarm cleared:  :  : Ping
+alarm cleared: SNMP agent not responding: check SNMP community :  : Mediatrix
+no response - device can not be pinged :  :  : Ping
+hiQTcaL1DatabaseTrap: FaultyObject = TCA:deitgdd1osvnodeb/AUDIT_ERR: Logging limit of 30 logs in 5 mins exceeded with 30 occurances (/log/HiqLogAlert.log). :  : HiPath8000
+no response: SNMP agent not responding: check SNMP community :  : Mediatrix
+hiQTcaL1CommunicationTrap: FaultyObject = TCA:deitgdd1osvnodea/COM_EXT_TIME_OUT: Logging limit of 15 logs in 15 mins exceeded with 29 occurances (/log/HiqLogTransactionTimeout.log). :  : HiPath8000
+hiQTcaL1CommunicationTrap: FaultyObject = TCA:deitgdd1osvnodea/COM_EXT_TIME_OUT: Logging limit of 15 logs in 15 mins exceeded with 29 occurances (/log/HiqLogTransactionTimeout.log). :  : HiPath8000
+cold start of agent: Agent restarted: GateNM starts status poll :  : MIB-II
+hiQTcaL1DatabaseTrap: FaultyObject = TCA:deitgdd1osvnodea/AUDIT_ERR: Logging limit of 30 logs in 5 mins exceeded with 100 occurances (/log/HiqLogAlert.log). :  : HiPath8000
+cold start of agent: Agent restarted: GateNM starts status poll :  : MIB-II
+hiQTcaL1DatabaseTrap: FaultyObject = TCA:deitgdd1osvnodea/AUDIT_ERR: Logging limit of 30 logs in 5 mins exceeded with 100 occurances (/log/HiqLogAlert.log). :  : HiPath8000
+hiQTcaL1DatabaseTrap: FaultyObject = TCA:deitgdd1osvnodeb/AUDIT_ERR: Logging limit of 30 logs in 5 mins exceeded with 30 occurances (/log/HiqLogAlert.log). :  : HiPath8000
+hiQTcaL1DatabaseTrap: FaultyObject = TCA:deitgdd1osvnodeb/AUDIT_ERR: Logging limit of 30 logs in 5 mins exceeded with 30 occurances (/log/HiqLogAlert.log). :  : HiPath8000
+alarm cleared: TOPO_AGENT_START : OtherSNMPProxy ManualHP4KProxy : HiPath4000
+alarm cleared: SYSTEM_AGENT_START : OtherSNMPProxy ManualHP4KProxy : HiPath4000
+alarm cleared: hicomErrorMsgId=F0000hicomErrorPriority=M5hicomErrorAction=hicomErrorAbsMod=AFRhicomErrorEvent=TESThicomErrorSubevent=INIT-STOERMELDUNGhicomErrorCardRef=--hicomErrorBoardVersion=--hicomErrorFwType=--hicomErrorTimDat=1390653000hico
+alarm cleared: SQL_AGENT_START : OtherSNMPProxy ManualHP4KProxy : HiPath4000
+alarm cleared: ERROR_AGENT_START : OtherSNMPProxy ManualHP4KProxy : HiPath4000
+alarm cleared: Agent restarted: GateNM starts status poll :  : MIB-II
+alarm cleared: HW_AGENT_START : OtherSNMPProxy ManualHP4KProxy : HiPath4000
+alarm cleared: SQL_AGENT_START : OtherSNMPProxy ManualHP4KProxy : HiPath4000
+alarm cleared: SW_AGENT_START : OtherSNMPProxy ManualHP4KProxy : HiPath4000
+alarm cleared: hicomErrorMsgId=F0000hicomErrorPriority=M5hicomErrorAction=hicomErrorAbsMod=AFRhicomErrorEvent=TESThicomErrorSubevent=INIT-STOERMELDUNGhicomErrorCardRef=--hicomErrorBoardVersion=--hicomErrorFwType=--hicomErrorTimDat=1390653000hico
+alarm cleared: SYSTEM_AGENT_START : OtherSNMPProxy ManualHP4KProxy : HiPath4000
+alarm cleared: DISCOVERY_AGENT_START : OtherSNMPProxy ManualHP4KProxy : HiPath4000
+alarm cleared: DISCOVERY_AGENT_START : OtherSNMPProxy ManualHP4KProxy : HiPath4000
+alarm cleared: DISCOVERY_AGENT_START :  : HiPath4000N
+alarm cleared: SW_AGENT_START :  : HiPath4000N
+alarm cleared: HW_AGENT_START :  : HiPath4000N
+alarm cleared: TOPO_AGENT_START :  : HiPath4000N
+alarm cleared: DISCOVERY_AGENT_START :  : HiPath4000N
+alarm cleared: TOPO_AGENT_START :  : HiPath4000N
+alarm cleared: ERROR_AGENT_START :  : HiPath4000N
+alarm cleared: DISCOVERY_AGENT_START :  : HiPath4000N
+alarm cleared: DISCOVERY_AGENT_START :  : HiPath4000N
+alarm cleared: SW_AGENT_START :  : HiPath4000N
+alarm cleared: SW_AGENT_START :  : HiPath4000N
+alarm cleared: HW_AGENT_START :  : HiPath4000N
+alarm cleared: ERROR_AGENT_START :  : HiPath4000N
+alarm cleared: TOPO_AGENT_START :  : HiPath4000N
+alarm cleared: HW_AGENT_START :  : HiPath4000N
+alarm cleared: HW_AGENT_START :  : HiPath4000N
+alarm cleared: ERROR_AGENT_START :  : HiPath4000N
+alarm cleared: SW_AGENT_START :  : HiPath4000N
+alarm cleared: Agent restarted: GateNM starts status poll :  : HiPath4000N
+alarm cleared: DISCOVERY_AGENT_START :  : HiPath4000N
+alarm cleared: HW_AGENT_START :  : HiPath4000N
+alarm cleared: SW_AGENT_START :  : HiPath4000N
+alarm cleared: ERROR_AGENT_START :  : HiPath4000N
+alarm cleared: ERROR_AGENT_START :  : HiPath4000N
+alarm cleared: SW_AGENT_START :  : HiPath4000N
+alarm cleared: TOPO_AGENT_START :  : HiPath4000N
+alarm cleared: SW_AGENT_START :  : HiPath4000N
+alarm cleared: HW_AGENT_START :  : HiPath4000N
+alarm cleared: Agent restarted: GateNM starts status poll :  : HiPath4000N
+alarm cleared: DISCOVERY_AGENT_START :  : HiPath4000N
+alarm cleared: TOPO_AGENT_START :  : HiPath4000N
+alarm cleared: HW_AGENT_START :  : HiPath4000N
+alarm cleared: TOPO_AGENT_START :  : HiPath4000N
+alarm cleared: SYSTEM_AGENT_START :  : HiPath4000N
+alarm cleared: DISCOVERY_AGENT_START :  : HiPath4000N
+alarm cleared: TOPO_AGENT_START :  : HiPath4000N
+alarm cleared: DISCOVERY_AGENT_START :  : HiPath4000N
+alarm cleared: ERROR_AGENT_START :  : HiPath4000N
+alarm cleared: SW_AGENT_START :  : HiPath4000N
+alarm cleared: ERROR_AGENT_START :  : HiPath4000N
+alarm cleared: HW_AGENT_START :  : HiPath4000N
+alarm cleared: ERROR_AGENT_START :  : HiPath4000N
+alarm cleared: TOPO_AGENT_START :  : HiPath4000N
+alarm cleared: Agent restarted: GateNM starts status poll :  : HiPath4000N
+alarm cleared: SYSTEM_AGENT_START :  : HiPath4000N
+alarm cleared: Agent restarted: GateNM starts status poll :  : HiPath4000N
+alarm cleared: ERROR_AGENT_START :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: SYSTEM_AGENT_START :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: Agent restarted: GateNM starts status poll :  : HiPath4000N
+alarm cleared: Agent restarted: GateNM starts status poll :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: SYSTEM_AGENT_START :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: SYSTEM_AGENT_START :  : HiPath4000N
+alarm cleared: Agent restarted: GateNM starts status poll :  : HiPath4000N
+alarm cleared: SYSTEM_AGENT_START :  : HiPath4000N
+alarm cleared: SYSTEM_AGENT_START :  : HiPath4000N
+alarm cleared: Agent restarted: GateNM starts status poll :  : HiPath4000N
+alarm cleared: Agent restarted: GateNM starts status poll :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: HW_AGENT_START :  : HiPath4000N
+alarm cleared: ERROR_AGENT_START :  : HiPath4000N
+alarm cleared: Agent restarted: GateNM starts status poll :  : HiPath4000N
+alarm cleared: DISCOVERY_AGENT_START :  : HiPath4000N
+alarm cleared: Agent restarted: GateNM starts status poll :  : HiPath4000N
+alarm cleared: DISCOVERY_AGENT_START :  : HiPath4000N
+alarm cleared: SYSTEM_AGENT_START :  : HiPath4000N
+alarm cleared: DISCOVERY_AGENT_START :  : HiPath4000N
+alarm cleared: SW_AGENT_START :  : HiPath4000N
+alarm cleared: SYSTEM_AGENT_START :  : HiPath4000N
+alarm cleared: HW_AGENT_START :  : HiPath4000N
+alarm cleared: ERROR_AGENT_START :  : HiPath4000N
+alarm cleared: TOPO_AGENT_START :  : HiPath4000N
+alarm cleared: TOPO_AGENT_START :  : HiPath4000N
+alarm cleared: SYSTEM_AGENT_START :  : HiPath4000N
+alarm cleared: SW_AGENT_START :  : HiPath4000N
+alarm cleared: HW_AGENT_START :  : HiPath4000N
+alarm cleared: SYSTEM_AGENT_START :  : HiPath4000N
+alarm cleared: SW_AGENT_START :  : HiPath4000N
+alarm cleared: TOPO_AGENT_START :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT : OtherSNMPProxy ManualHP4KProxy : HiPath4000
+alarm cleared: STOP_SIGNAL_CAUGHT : OtherSNMPProxy ManualHP4KProxy : HiPath4000
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT : OtherSNMPProxy ManualHP4KProxy : HiPath4000
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT : OtherSNMPProxy ManualHP4KProxy : HiPath4000
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT : OtherSNMPProxy ManualHP4KProxy : HiPath4000
+alarm cleared: STOP_SIGNAL_CAUGHT : OtherSNMPProxy ManualHP4KProxy : HiPath4000
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT : OtherSNMPProxy ManualHP4KProxy : HiPath4000
+alarm cleared: STOP_SIGNAL_CAUGHT :  : HiPath4000N
+alarm cleared: STOP_SIGNAL_CAUGHT : OtherSNMPProxy ManualHP4KProxy : HiPath4000
+alarm cleared:  :  : HiPath8000
+internalMessageDiscSubagent: DISCOVERY_AGENT_START : OtherSNMPProxy ManualHP4KProxy : HiPath4000
+internalMessageDiscSubagent: DISCOVERY_AGENT_START : OtherSNMPProxy ManualHP4KProxy : HiPath4000
+internalMessageSQLSubagent: SQL_AGENT_START : OtherSNMPProxy ManualHP4KProxy : HiPath4000
+internalMessageSQLSubagent: SQL_AGENT_START : OtherSNMPProxy ManualHP4KProxy : HiPath4000
+internalMessageTopoSubagent: TOPO_AGENT_START : OtherSNMPProxy ManualHP4KProxy : HiPath4000
+internalMessageTopoSubagent: TOPO_AGENT_START : OtherSNMPProxy ManualHP4KProxy : HiPath4000
+internalMessageHWSubagent: HW_AGENT_START : OtherSNMPProxy ManualHP4KProxy : HiPath4000
+internalMessageHWSubagent: HW_AGENT_START : OtherSNMPProxy ManualHP4KProxy : HiPath4000
+internalMessageSWSubagent: SW_AGENT_START : OtherSNMPProxy ManualHP4KProxy : HiPath4000
+internalMessageErrAlConfSubagent: ERROR_AGENT_START : OtherSNMPProxy ManualHP4KProxy : HiPath4000
+internalMessageAlarmSubagent: ALARM_AGENT_START : OtherSNMPProxy ManualHP4KProxy : HiPath4000
+alarm cleared: ALARM_AGENT_START : OtherSNMPProxy ManualHP4KProxy : HiPath4000
+hiQGlobalMajorLossOfCommsTrap: FaultyObject = SIP-EP/de0dd1_xpr_fax/10.4.111.104: Loss of communication FaultyObject: APPL:deitgdd1osvnodea.SIP-EP/de0dd1_xpr_fax/10.4.111.104 :  : HiPath8000
+internalMessageSystemSubagent: SYSTEM_AGENT_START : OtherSNMPProxy ManualHP4KProxy : HiPath4000
+cold start of agent: Agent restarted: GateNM starts status poll :  : MIB-II
+cold start of agent: Agent restarted: GateNM starts status poll :  : MIB-II
+alarm cleared: SNMP agent not responding: check SNMP community :  : MIB-II
+no response: SNMP agent not responding: check SNMP community :  : MIB-II
+internalErrorSystemSubagent: STOP_SIGNAL_CAUGHT : OtherSNMPProxy ManualHP4KProxy : HiPath4000
+internalErrorSQLSubagent: STOP_SIGNAL_CAUGHT : OtherSNMPProxy ManualHP4KProxy : HiPath4000
+internalErrorTopoSubagent: STOP_SIGNAL_CAUGHT : OtherSNMPProxy ManualHP4KProxy : HiPath4000
+internalErrorHWSubagent: STOP_SIGNAL_CAUGHT : OtherSNMPProxy ManualHP4KProxy : HiPath4000
+internalErrorSWSubagent: STOP_SIGNAL_CAUGHT : OtherSNMPProxy ManualHP4KProxy : HiPath4000
+internalErrorErrAlConfSubagent: STOP_SIGNAL_CAUGHT : OtherSNMPProxy ManualHP4KProxy : HiPath4000
+internalErrorAlarmSubagent: STOP_SIGNAL_CAUGHT : OtherSNMPProxy ManualHP4KProxy : HiPath4000
+internalErrorDiscSubagent: STOP_SIGNAL_CAUGHT : OtherSNMPProxy ManualHP4KProxy : HiPath4000
+internalErrorDiscSubagent: STOP_SIGNAL_CAUGHT : OtherSNMPProxy ManualHP4KProxy : HiPath4000
+hiQTcaL1DatabaseTrap: FaultyObject = TCA:deitgdd1osvnodea/AUDIT_ERR: Logging limit of 30 logs in 5 mins exceeded with 100 occurances (/log/HiqLogAlert.log). :  : HiPath8000
+hiQSolidBackupSuccessTrap: <BCKP30300> Backup completed successfully FaultyObject: DBS :  : HiPath8000
+alarm cleared: FaultyObject = Backup:node1: Function available :  : HiPath8000
+alarm cleared: FaultyObject = TCA:deitgdd1osvnodeb/AUDIT_ERR: Logging limit of 30 logs in 5 mins exceeded with 30 occurances (/log/HiqLogAlert.log). :  : HiPath8000
+alarm cleared: RTP process soapExport_7571 (pid 7571) exited (status unknown) in state RTP_NM_RUNNING - restart = no FaultyObject: APPL:deitgdd1osvnodea.soapExport_7571 :  : HiPath8000
+alarm cleared: RTP process soapExport_7571 (pid 7571) exited (status unknown) in state RTP_NM_RUNNING - restart = no FaultyObject: APPL:deitgdd1osvnodea.soapExport_7571 :  : HiPath8000
+alarm cleared: RTP process soapExport_7571 (pid 7571) exited (status unknown) in state RTP_NM_RUNNING - restart = no FaultyObject: APPL:deitgdd1osvnodea.soapExport_7571 :  : HiPath8000
+hiQTcaL1DatabaseTrap: FaultyObject = TCA:deitgdd1osvnodeb/AUDIT_ERR: Logging limit of 30 logs in 5 mins exceeded with 30 occurances (/log/HiqLogAlert.log). :  : HiPath8000
+alarm cleared: FaultyObject = TCA:deitgdd1osvnodea/AUDIT_ERR: Logging limit of 30 logs in 5 mins exceeded with 100 occurances (/log/HiqLogAlert.log). :  : HiPath8000
+hiQTcaL1DatabaseTrap: FaultyObject = TCA:deitgdd1osvnodea/AUDIT_ERR: Logging limit of 30 logs in 5 mins exceeded with 100 occurances (/log/HiqLogAlert.log). :  : HiPath8000
+hiQTcaL1DatabaseTrap: FaultyObject = TCA:deitgdd1osvnodeb/AUDIT_ERR: Logging limit of 30 logs in 5 mins exceeded with 30 occurances (/log/HiqLogAlert.log). :  : HiPath8000
+alarm cleared:  :  : HiPath8000
+alarm cleared:  :  : HiPath8000
+hiQGlobalMajorLossOfCommsTrap: FaultyObject = Server:OSVTM/From:deitgdd1osvnodeb/To:10.192.131.60: Loss of communication :  : HiPath8000
+hiQGlobalMajorLossOfCommsTrap: FaultyObject = Server:OSVTM/From:deitgdd1osvnodea/To:10.192.131.60: Loss of communication :  : HiPath8000

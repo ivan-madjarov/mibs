@@ -1,0 +1,207 @@
+
+-- ************************************************************************
+--  Name     : SNMP MIB for OpenScape Contact Center Extensions
+--                                                                      
+--  Author   : Gary Krengel, SER ISS CC CAI, 
+--               Unify GmbH & Co. KG        
+--                                                                     
+--  Purpose  : status report for processes and Server Notification 
+-- ************************************************************************
+
+OSCCE-TRAP-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+	NOTIFICATION-TYPE, OBJECT-TYPE, MODULE-IDENTITY, 
+	Integer32
+		FROM SNMPv2-SMI
+	NOTIFICATION-GROUP, OBJECT-GROUP
+		FROM SNMPv2-CONF
+	TEXTUAL-CONVENTION, DisplayString
+		FROM SNMPv2-TC
+	senProducts
+		FROM SEN-ROOT-MIB;
+
+-- SNMP MIB for OpenScape Contact Center Extensions
+
+oscce MODULE-IDENTITY
+	LAST-UPDATED "201404021100Z"
+	ORGANIZATION 
+		"Unify GmbH & Co. KG"
+	CONTACT-INFO 
+		"Gary Krengel, SER ISS CC CAI
+		gary.krengel@unify.com"
+	DESCRIPTION 
+		"status report for processes and Server Notification"
+
+	REVISION "201404021204Z"
+	DESCRIPTION 
+		"V 7.0.0.1"
+::= { senProducts 5 }
+
+
+DateTimeStamp ::= TEXTUAL-CONVENTION
+	DISPLAY-HINT 	"4a-2a-2a,2a:2a:2a"
+	STATUS     current
+	DESCRIPTION 
+		"A date-time specification. Displays Time in UTC."
+	SYNTAX  OCTET STRING (SIZE(14))
+
+
+oscceNumberOfProcessEntries  OBJECT-TYPE
+	SYNTAX     Integer32 (1..2147483187)
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The number of entries in the oscceProcessGroupTable"
+	::= { oscceProcessGroup 1 }
+
+oscceProcessGroupTable  OBJECT-TYPE
+	SYNTAX SEQUENCE OF OscceProcessGroupEntry
+	MAX-ACCESS not-accessible
+	STATUS     current
+	DESCRIPTION 
+		"This table shows the contents of process entries. 
+		 A process provides some kind of functionality for the Server."
+	::= { oscceProcessGroup 2 }
+
+oscceProcessGroupEntry  OBJECT-TYPE
+	SYNTAX 	OscceProcessGroupEntry
+	MAX-ACCESS not-accessible
+	STATUS     current
+	DESCRIPTION 
+		"The process table entries."
+	INDEX { oscceProcessID }
+	::= { oscceProcessGroupTable 1 }
+
+OscceProcessGroupEntry ::= SEQUENCE {
+	oscceProcessID
+		Integer32,
+	oscceProcessDisplayName
+		DisplayString,
+	oscceProcessHostname
+		DisplayString,
+	oscceProcessState
+		DisplayString,
+	oscceProcessTimestamp
+		DateTimeStamp,
+	oscceProcessInfo
+		DisplayString
+}
+
+oscceProcessID  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The unique identifier of the process."
+	::= { oscceProcessGroupEntry 1 }
+
+oscceProcessDisplayName  OBJECT-TYPE
+	SYNTAX     DisplayString (SIZE(255))
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The processname."
+	::= { oscceProcessGroupEntry 2 }
+
+oscceProcessHostname  OBJECT-TYPE
+	SYNTAX     DisplayString (SIZE(255))
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The Computername of the host where the process is running."
+	::= { oscceProcessGroupEntry 3 }
+
+oscceProcessState  OBJECT-TYPE
+	SYNTAX     DisplayString (SIZE(255))
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The state of the process."
+	::= { oscceProcessGroupEntry 4 }
+
+oscceProcessTimestamp  OBJECT-TYPE
+	SYNTAX     DateTimeStamp
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Timestamp of message in UTC."
+	::= { oscceProcessGroupEntry 5 }
+
+oscceProcessInfo  OBJECT-TYPE
+	SYNTAX     DisplayString (SIZE(255))
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Additional Information from the process."
+	::= { oscceProcessGroupEntry 6 }
+
+oscceNotifyServer  NOTIFICATION-TYPE
+	OBJECTS { oscceNotifyServerTyp, 
+		oscceNotifyServerHostname, 
+		oscceNotifyServerState, 
+		oscceNotifyServerTimestamp, 
+		oscceNotifyServerInfoField }
+	STATUS     current
+	DESCRIPTION 
+		"If the status of a process changes,  a Trap/Notification will be send to the management
+		station containing the ServerTyp, Hostname, ServerState, Timestamp in UTC and
+		additional Information Field.
+		"
+	::= { oscceNotifyServerGroup 1 }
+
+oscceNotifyServerTyp  OBJECT-TYPE
+	SYNTAX     DisplayString (SIZE(255))
+	MAX-ACCESS accessible-for-notify
+	STATUS     current
+	DESCRIPTION 
+		"The Typ of the Server: MAIN, STANDBY, ADDITIONAL."
+	::= { oscceNotifyServerGroup 2 }
+
+oscceNotifyServerHostname  OBJECT-TYPE
+	SYNTAX     DisplayString (SIZE(255))
+	MAX-ACCESS accessible-for-notify
+	STATUS     current
+	DESCRIPTION 
+		"The Computername of the host where the Server is running."
+	::= { oscceNotifyServerGroup 3 }
+
+oscceNotifyServerState  OBJECT-TYPE
+	SYNTAX     DisplayString (SIZE(255))
+	MAX-ACCESS accessible-for-notify
+	STATUS     current
+	DESCRIPTION 
+		"The State of the Server."
+	::= { oscceNotifyServerGroup 4 }
+
+oscceNotifyServerTimestamp  OBJECT-TYPE
+	SYNTAX     DateTimeStamp
+	MAX-ACCESS accessible-for-notify
+	STATUS     current
+	DESCRIPTION 
+		"Timestamp of message in UTC."
+	::= { oscceNotifyServerGroup 5 }
+
+oscceNotifyServerInfoField  OBJECT-TYPE
+	SYNTAX     DisplayString (SIZE(255))
+	MAX-ACCESS accessible-for-notify
+	STATUS     current
+	DESCRIPTION 
+		"Additional Information from the Server."
+	::= { oscceNotifyServerGroup 6 }
+
+oscceProcessGroup  OBJECT-GROUP
+	OBJECTS { oscceNumberOfProcessEntries }
+	STATUS     current
+	DESCRIPTION 
+		""
+	::= { oscce 1 }
+
+oscceNotifyServerGroup  NOTIFICATION-GROUP
+	NOTIFICATIONS { oscceNotifyServer }
+	STATUS     current
+	DESCRIPTION 
+		""
+	::= { oscce 2 }
+END
+

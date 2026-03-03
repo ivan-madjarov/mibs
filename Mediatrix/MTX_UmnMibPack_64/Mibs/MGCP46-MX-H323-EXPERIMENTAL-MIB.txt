@@ -1,0 +1,118 @@
+-- ****************************************************************************
+-- ****************************************************************************
+--
+--             Copyright(c) 2003 Mediatrix Telecom, Inc.
+--
+--  NOTICE:
+--   This document contains information that is confidential and proprietary
+--   to Mediatrix Telecom, Inc.
+--
+--   Mediatrix Telecom, Inc. reserves all rights to this document as well as
+--   to the Intellectual Property of the document and the technology and
+--   know-how that it includes and represents.
+--
+--   This publication cannot be reproduced, neither in whole nor in part in
+--   any form whatsoever without written prior approval by
+--   Mediatrix Telecom, Inc.
+--
+--   Mediatrix Telecom, Inc. reserves the right to revise this publication
+--   and make changes at any time and without the obligation to notify any
+--   person and/or entity of such revisions and/or changes.
+--
+-- ****************************************************************************
+-- ****************************************************************************
+
+MGCP46-MX-H323-EXPERIMENTAL-MIB
+DEFINITIONS ::= BEGIN
+
+IMPORTS
+        MODULE-IDENTITY,
+        OBJECT-IDENTITY,
+        OBJECT-TYPE,
+        Unsigned32
+    FROM SNMPv2-SMI
+        OBJECT-GROUP,
+        MODULE-COMPLIANCE
+    FROM SNMPv2-CONF
+        MxIpHostName,
+        MxEnableState
+    FROM MX-TC
+        mediatrixExperimental
+    FROM MX-SMI;
+
+h323ExperimentalMIB MODULE-IDENTITY
+    LAST-UPDATED "0303060000Z"
+    ORGANIZATION "Mediatrix Telecom, Inc."
+    CONTACT-INFO "Mediatrix Telecom, Inc.
+                  4229, Garlock Street
+                  Sherbrooke (Quebec)
+                  Canada
+                  Phone: (819) 829-8749
+                  "
+    DESCRIPTION "This MIB contains H.323 experimental and interopability configuration objects."
+
+    -- ************************************************************************
+    -- Revision history
+    -- ************************************************************************
+    REVISION    "0303060000Z"
+    DESCRIPTION "March 06, 2003
+                    Creation"
+    ::= { mediatrixExperimental 60 }
+
+h323ExperimentalMIBObjects   OBJECT IDENTIFIER ::= { h323ExperimentalMIB 1 }
+h323ExperimentalConformance  OBJECT IDENTIFIER ::= { h323ExperimentalMIB 2 }
+
+
+    -- ************************************************************************
+    -- Interopability Group
+    -- ************************************************************************
+    h323Interop OBJECT IDENTIFIER ::= { h323ExperimentalMIBObjects 5 }
+
+        h323RegAsGateway OBJECT-TYPE
+            SYNTAX      MxEnableState
+            MAX-ACCESS  read-write
+            STATUS      current
+            DESCRIPTION "Indicates if the unit registers as a gateway.
+
+                         This variable applies only to H.323 terminal. A H.323 terminal is an H.323 unit
+                         with only FXS ports.
+
+                         disable : the unit registers as a H.323 terminal.
+
+                         enable  : the unit registers as a gateway. The unit registers with an empty
+                                   supported voice prefix (gateway field of the registrationRequest
+                                   message). Certain gatekeepers require this distinctive feature.
+                                   From the user point of view, this behavior is transparent and has no
+                                   impact on the use of the unit."
+            DEFVAL { disable }
+            ::=  {  h323Interop 5 }
+
+    -- ************************************************************************
+    -- Conformance information
+    -- ************************************************************************
+    h323ExperimentalCompliances OBJECT IDENTIFIER ::= { h323ExperimentalConformance 1 }
+
+    h323ExperimentalBasicComplVer1 MODULE-COMPLIANCE
+        STATUS      current
+        DESCRIPTION "Minimal definitions for the H.323 experimental group."
+        MODULE -- This Module
+            MANDATORY-GROUPS {
+                                h323ExperimentalGroupVer1
+                             }
+        ::= { h323ExperimentalCompliances 5 }
+
+    -- ************************************************************************
+    -- MIB variable grouping
+    -- ************************************************************************
+    h323ExperimentalGroups OBJECT IDENTIFIER ::= { h323ExperimentalConformance 2 }
+
+    h323ExperimentalGroupVer1 OBJECT-GROUP
+        OBJECTS {
+                    h323RegAsGateway
+                }
+        STATUS      current
+        DESCRIPTION "This group holds the objects that define the H.323
+                     experimental group."
+        ::= { h323ExperimentalGroups 5 }
+
+END

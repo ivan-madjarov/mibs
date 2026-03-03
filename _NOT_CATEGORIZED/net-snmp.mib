@@ -1,0 +1,136 @@
+NET-SNMP-MIB DEFINITIONS ::= BEGIN
+
+--
+-- Top-level infrastructure of the Net-SNMP project enterprise MIB tree
+--
+
+--IMPORTS
+--   MODULE-IDENTITY, enterprises FROM SNMPv2-SMI;
+--
+--netSnmp MODULE-IDENTITY
+--    LAST-UPDATED "200201300000Z"
+--    ORGANIZATION "www.net-snmp.org"
+--    CONTACT-INFO    
+--	 "postal:   Wes Hardaker
+--                    P.O. Box 382
+--                    Davis CA  95617
+--
+--          email:    net-snmp-coders@lists.sourceforge.net"
+--    DESCRIPTION
+--	"Top-level infrastructure of the Net-SNMP project enterprise MIB tree"
+--    REVISION     "200201300000Z"
+--    DESCRIPTION
+--	"First draft"
+--    ::= { enterprises 8072}
+
+--
+    IMPORTS
+       enterprises, Counter, Gauge, TimeTicks
+                    FROM RFC1155-SMI
+       OBJECT-TYPE
+                    FROM RFC-1212
+       TRAP-TYPE
+                    FROM RFC-1215;
+
+    netSnmp  OBJECT IDENTIFIER ::= { enterprises 8072 }
+
+
+--
+--  Net-SNMP enterprise-specific management objects
+--
+
+netSnmpObjects              OBJECT IDENTIFIER ::= {netSnmp 1}
+-- netSnmpExamples             OBJECT IDENTIFIER ::= {netSnmp 2}
+netSnmpEnumerations         OBJECT IDENTIFIER ::= {netSnmp 3}
+netSnmpModuleIDs            OBJECT IDENTIFIER ::= {netSnmpEnumerations 1}
+netSnmpAgentOIDs            OBJECT IDENTIFIER ::= {netSnmpEnumerations 2}
+netSnmpDomains              OBJECT IDENTIFIER ::= {netSnmpEnumerations 3}
+netSnmpExperimental         OBJECT IDENTIFIER ::= {netSnmp 9999}
+
+--
+-- A subtree specifically designed for private testing purposes.
+-- No "public" management objects should ever be defined within this tree.
+--
+-- It is provided for private experimentation, prior to transferring a MIB
+-- structure to another part of the overall OID tree
+--
+netSnmpPlaypen              OBJECT IDENTIFIER ::= {netSnmpExperimental 9999}
+
+
+--
+--  Notifications
+--
+
+--netSnmpNotificationPrefix   OBJECT IDENTIFIER ::= {netSnmp 4}
+--netSnmpNotifications        OBJECT IDENTIFIER ::= {netSnmpNotificationPrefix 0}
+--netSnmpNotificationObjects  OBJECT IDENTIFIER ::= {netSnmpNotificationPrefix 1}
+
+netSnmpNotifications        OBJECT IDENTIFIER ::= {netSnmp 4}
+
+
+--
+--  Conformance
+--     (No laughing at the back!)
+--
+
+netSnmpConformance          OBJECT IDENTIFIER ::= {netSnmp 5}
+netSnmpCompliances          OBJECT IDENTIFIER ::= {netSnmpConformance 1}
+netSnmpGroups               OBJECT IDENTIFIER ::= {netSnmpConformance 2}
+
+
+--
+--  Notifications relating to the basic operation of the agent
+--
+
+
+nsNotifyStart TRAP-TYPE
+       ENTERPRISE   netSnmpNotifications
+       DESCRIPTION  "An indication that the agent has started running."
+	--#TYPE         "The agent has started running."
+	--#SUMMARY      "An indication that the agent has started running."
+	--#SEVERITY     INFORMATIONAL
+	--#STATE        OPERATIONAL
+	::= 1
+
+nsNotifyShutdown TRAP-TYPE
+       ENTERPRISE   netSnmpNotifications
+       DESCRIPTION  "An indication that the agent is in the process of being shut down."
+	--#TYPE         "The agent is in the process of being shut down."
+	--#SUMMARY      "An indication that the agent is in the process of being shut down."
+	--#SEVERITY     INFORMATIONAL
+	--#STATE        OPERATIONAL
+	::= 2
+
+nsNotifyRestart TRAP-TYPE
+       ENTERPRISE   netSnmpNotifications
+       DESCRIPTION  "An indication that the agent has been restarted.
+	 This does not imply anything about whether the configuration has
+	 changed or not (unlike the standard coldStart or warmStart traps)"
+	--#TYPE         "The agent has been restarted."
+	--#SUMMARY      "An indication that the agent has been restarted."
+	--#SEVERITY     INFORMATIONAL
+	--#STATE        OPERATIONAL
+	 ::= 3
+
+-- nsNotifyStart        NOTIFICATION-TYPE
+--     STATUS	current
+--     DESCRIPTION
+-- 	"An indication that the agent has started running."
+--     ::= { netSnmpNotifications 1 }
+--    
+-- nsNotifyShutdown     NOTIFICATION-TYPE
+--     STATUS current
+--     DESCRIPTION
+-- 	"An indication that the agent is in the process of being shut down."
+--     ::= { netSnmpNotifications 2 }
+-- 
+-- nsNotifyRestart      NOTIFICATION-TYPE
+--     STATUS	current
+--     DESCRIPTION
+-- 	"An indication that the agent has been restarted.
+-- 	 This does not imply anything about whether the configuration has
+-- 	 changed or not (unlike the standard coldStart or warmStart traps)"
+--     ::= { netSnmpNotifications 3 }
+    
+
+END

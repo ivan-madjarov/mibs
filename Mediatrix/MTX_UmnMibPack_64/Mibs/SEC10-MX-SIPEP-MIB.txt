@@ -1,0 +1,1871 @@
+-- ****************************************************************************
+-- ****************************************************************************
+--             Copyright(c) 2004 Mediatrix Telecom, Inc.
+--  NOTICE:
+--   This document contains information that is confidential and proprietary
+--   to Mediatrix Telecom, Inc.
+--   Mediatrix Telecom, Inc. reserves all rights to this document as well as
+--   to the Intellectual Property of the document and the technology and
+--   know-how that it includes and represents.
+--   This publication cannot be reproduced, neither in whole nor in part in
+--   any form whatsoever without written prior approval by
+--   Mediatrix Telecom, Inc.
+--   Mediatrix Telecom, Inc. reserves the right to revise this publication
+--   and make changes at any time and without the obligation to notify any
+--   person and/or entity of such revisions and/or changes.
+-- ****************************************************************************
+-- ****************************************************************************
+  
+SEC10-MX-SIPEP-MIB
+DEFINITIONS ::= BEGIN
+
+IMPORTS
+        MODULE-IDENTITY,
+        OBJECT-TYPE,
+        Unsigned32
+    FROM SNMPv2-SMI
+        MODULE-COMPLIANCE,
+        OBJECT-GROUP
+    FROM SNMPv2-CONF
+        MxEnableState,
+        MxActivationState,
+        MxIpHostName,
+        MxIpPort,
+        MxAdvancedIpPort,
+        MxIpSubnetMask,
+        MxDigitMap
+    FROM MX-TC
+        MxUInt64,
+        MxFloat32,
+        MxIpHostNamePort,
+        MxIpAddr,
+        MxIpAddrPort,
+        MxIpAddrMask,
+        MxUri,
+        MxUrl
+    FROM MX-TC2
+        mediatrixServices       
+    FROM MX-SMI2;
+
+sipEpMIB MODULE-IDENTITY                                                       
+    LAST-UPDATED   "0603200000Z"                                               
+    ORGANIZATION " Mediatrix Telecom, Inc. "                                   
+    CONTACT-INFO " Mediatrix Telecom, Inc.                                     
+                   4229, Garlock Street                                        
+                   Sherbrooke (Quebec)                                         
+                   Canada                                                      
+                   Phone: (819) 829-8749                                       
+                   "                                                           
+    DESCRIPTION  " SIP Endpoint                                                
+                                                                               
+                   The SIP Endpoint service is a voice over IP gateway based on
+                   the SIP protocol suite.                                     
+                   "                                                           
+    -- *************************************************************************
+                                                                               
+    -- Revision history                                                        
+                                                                               
+    -- *************************************************************************
+    REVISION       "0603200000Z"                                               
+    DESCRIPTION  " Initial Revision "                                          
+    ::= { mediatrixServices 1400 }                                             
+
+sipEpMIBObjects OBJECT IDENTIFIER ::= { sipEpMIB 1 }
+
+-- Scalar:  Network Interface                                                  
+                                                                               
+networkInterface OBJECT-TYPE                                                   
+    SYNTAX        OCTET STRING ( SIZE(1..10) )                                 
+    MAX-ACCESS    read-write                                                   
+    STATUS        current                                                      
+    DESCRIPTION " Network Interface                                            
+                                                                               
+                  The network on which the service listens for incoming SIP    
+                  traffic.                                                     
+                                                                               
+                  The value must match one of the                              
+                  'networkInterfacesStatusInterfaceName' values in the         
+                  'networkInterfacesStatusTable' table.                        
+                                                                               
+                  This value applies to all transports (e.g., UDP, TCP, etc.). 
+                                                                               
+                                                                               
+                  "                                                            
+    DEFVAL        { "Lan1" }                                                   
+    ::= { sipEpMIBObjects 100 }                                                
+
+-- Scalar:  SIP Port                                                           
+                                                                               
+port OBJECT-TYPE                                                               
+    SYNTAX        MxAdvancedIpPort                                             
+    MAX-ACCESS    read-write                                                   
+    STATUS        current                                                      
+    DESCRIPTION " SIP Port                                                     
+                                                                               
+                  Port on which the service listens for incoming SIP traffic.  
+                                                                               
+                  This value applies to all transports (e.g., UDP, TCP, etc.). 
+                                                                               
+                  Note: If set to 0, the unit uses the default SIP port (5060).
+                                                                               
+                                                                               
+                  "                                                            
+    DEFVAL        { 0 }                                                        
+    ::= { sipEpMIBObjects 200 }                                                
+
+-- *****************************************************************************
+                                                                               
+-- Table:  Endpoints                                                           
+                                                                               
+-- *****************************************************************************
+                                                                               
+endpointsAssociationInfoTable OBJECT-TYPE                                      
+    SYNTAX        SEQUENCE OF EndpointsAssociationInfoEntry                    
+    MAX-ACCESS    not-accessible                                               
+    STATUS        current                                                      
+    DESCRIPTION " Endpoints                                                    
+                                                                               
+                  This table shows the association between the line and        
+                  endpoint.                                                    
+                  "                                                            
+    ::= { sipEpMIBObjects 300 }                                                
+                                                                               
+                                                                               
+    endpointsAssociationInfoEntry OBJECT-TYPE                                  
+        SYNTAX         EndpointsAssociationInfoEntry                           
+        MAX-ACCESS     not-accessible                                          
+        STATUS         current                                                 
+        DESCRIPTION  " A row in the Endpoints. "                               
+        INDEX          {                                                       
+                           index                                               
+                       }                                                       
+                                                                               
+        ::= { endpointsAssociationInfoTable 1 }                                
+                                                                               
+    EndpointsAssociationInfoEntry ::= SEQUENCE                                 
+    {                                                                          
+          index       Unsigned32,                                              
+          epId        OCTET STRING,                                            
+          lineId      OCTET STRING                                             
+    }                                                                          
+                                                                               
+    -- Index:  Row Index                                                       
+                                                                               
+    endpointsAssociationInfoIndex OBJECT-TYPE                                  
+        SYNTAX         Unsigned32                                              
+        MAX-ACCESS     read-only                                               
+        STATUS         current                                                 
+        DESCRIPTION  " Row Index                                               
+                                                                               
+                       Number that identifies a line in other tables.          
+                       "                                                       
+        ::= { endpointsAssociationInfoEntry 100 }                              
+                                                                               
+    -- Columnar:  Endpoint Identifier                                          
+                                                                               
+    endpointsAssociationInfoEpId OBJECT-TYPE                                   
+        SYNTAX         OCTET STRING                                            
+        MAX-ACCESS     read-only                                               
+        STATUS         current                                                 
+        DESCRIPTION  " Endpoint Identifier                                     
+                                                                               
+                       String that identifies an endpoint in other tables.     
+                       "                                                       
+        ::= { endpointsAssociationInfoEntry 200 }                              
+                                                                               
+    -- Columnar:  Line Identifier                                              
+                                                                               
+    endpointsAssociationInfoLineId OBJECT-TYPE                                 
+        SYNTAX         OCTET STRING                                            
+        MAX-ACCESS     read-only                                               
+        STATUS         current                                                 
+        DESCRIPTION  " Line Identifier                                         
+                                                                               
+                       String that identifies a line in other tables.          
+                       "                                                       
+        ::= { endpointsAssociationInfoEntry 300 }                              
+                                                                               
+                                                                               
+-- End of table:  Endpoints                                                    
+
+-- *****************************************************************************
+                                                                               
+-- Table:  User Agent SIP                                                      
+                                                                               
+-- *****************************************************************************
+                                                                               
+userAgentTable OBJECT-TYPE                                                     
+    SYNTAX        SEQUENCE OF UserAgentEntry                                   
+    MAX-ACCESS    not-accessible                                               
+    STATUS        current                                                      
+    DESCRIPTION " User Agent SIP                                               
+                                                                               
+                  This table holds the user agent configuration variables. A   
+                  user agent is a logical entity that can act as both a client 
+                  and a server for the duration of a dialog. The information   
+                  contained in this table will be used to dynamically create   
+                  the To, From and Contact headers used in the request sent by 
+                  the UAC (User Agent Client).                                 
+                  "                                                            
+    ::= { sipEpMIBObjects 400 }                                                
+                                                                               
+                                                                               
+    userAgentEntry OBJECT-TYPE                                                 
+        SYNTAX         UserAgentEntry                                          
+        MAX-ACCESS     not-accessible                                          
+        STATUS         current                                                 
+        DESCRIPTION  " A row in the User Agent SIP. "                          
+        INDEX          {                                                       
+                           epId                                                
+                       }                                                       
+                                                                               
+        ::= { userAgentTable 1 }                                               
+                                                                               
+    UserAgentEntry ::= SEQUENCE                                                
+    {                                                                          
+        epId         OCTET STRING,                                             
+        username     OCTET STRING,                                             
+        friendlyName OCTET STRING                                              
+    }                                                                          
+                                                                               
+    -- Index:  Endpoint Identifier                                             
+                                                                               
+    userAgentEpId OBJECT-TYPE                                                  
+        SYNTAX         OCTET STRING                                            
+        MAX-ACCESS     read-only                                               
+        STATUS         current                                                 
+        DESCRIPTION  " Endpoint Identifier                                     
+                                                                               
+                       String that identifies an endpoint in other tables.     
+                       "                                                       
+        ::= { userAgentEntry 100 }                                             
+                                                                               
+    -- Columnar:  User Name                                                    
+                                                                               
+    userAgentUsername OBJECT-TYPE                                              
+        SYNTAX        OCTET STRING ( SIZE(0..255) )                            
+        MAX-ACCESS    read-write                                               
+        STATUS        current                                                  
+        DESCRIPTION " User Name                                                
+                                                                               
+                      A string that uniquely identifies this endpoint in the   
+                      domain. For example, a telephone number.                 
+                                                                               
+                      This string is used when creating the Contact and From   
+                      headers. The SIP From header carries the permanent       
+                      location (IP address, home domain) where the endpoint is.
+                      The SIP Contact header carries the CURRENT location (IP  
+                      address) where the endpoint can be reached.              
+                                                                               
+                      Contact headers are used in two ways:                    
+                                                                               
+                      First, contacts are registered to the SIP registrar. This
+                      enables callers to be redirected to the endpoint's       
+                      current location.                                        
+                                                                               
+                      Second, a contact header is sent along with any request  
+                      the UA sends (e.g.: INVITE), and is used by the target UA
+                      as a return address for later requests sent by the target
+                      to this endpoint.                                        
+                                                                               
+                                                                               
+                      "                                                        
+        DEFVAL        { "" }                                                   
+        ::= { userAgentEntry 200 }                                             
+                                                                               
+    -- Columnar:  Friendly Name                                                
+                                                                               
+    userAgentFriendlyName OBJECT-TYPE                                          
+        SYNTAX        OCTET STRING ( SIZE(0..255) )                            
+        MAX-ACCESS    read-write                                               
+        STATUS        current                                                  
+        DESCRIPTION " Friendly Name                                            
+                                                                               
+                      Friendly name for SIP User Agent. A friendly name or     
+                      display name is meant to contain a descriptive version of
+                      the URI and is intended to be displayed to a user        
+                      interface.                                               
+                      "                                                        
+        DEFVAL        { "" }                                                   
+        ::= { userAgentEntry 300 }                                             
+                                                                               
+                                                                               
+-- End of table:  User Agent SIP                                               
+
+-- *****************************************************************************
+                                                                               
+-- Group:  Proxy                                                               
+                                                                               
+-- *****************************************************************************
+                                                                               
+proxyGroup OBJECT IDENTIFIER                                                   
+    ::= { sipEpMIBObjects 500 }                                                
+                                                                               
+                                                                               
+    -- Scalar:  Default Static Home Domain Proxy Server Host.                  
+                                                                               
+    defaultStaticProxyHomeDomainHost OBJECT-TYPE                               
+        SYNTAX        MxIpHostNamePort                                         
+        MAX-ACCESS    read-write                                               
+        STATUS        current                                                  
+        DESCRIPTION " Default Static Home Domain Proxy Server Host.            
+                                                                               
+                      SIP proxy server FQDN and port.                          
+                                                                               
+                      An intermediary entity that acts as both a server and a  
+                      client for the purpose of making requests on behalf of   
+                      other clients. A proxy server primarily plays the role of
+                      routing, which means its job is to ensure that a request 
+                      is passed on to another entity that can further process  
+                      the request. Proxies are also useful for enforcing policy
+                      and for firewall traversal. A proxy interprets, and, if  
+                      necessary, rewrites parts of a request message before    
+                      forwarding it.                                           
+                                                                               
+                      Note: If the host corresponds to a domain name that is   
+                      bound to a SRV record, the port must be set to 0 for the 
+                      unit to perform DNS SRV queries; otherwise only A type   
+                      record lookups will be used.                             
+                                                                               
+                                                                               
+                      "                                                        
+        DEFVAL        { 192.168.10.10:0 }                                      
+        ::= { proxyGroup 100 }                                                 
+                                                                               
+    -- Scalar:  Default Static Outboud Proxy Server Host                       
+                                                                               
+    defaultStaticProxyOutboundHost OBJECT-TYPE                                 
+        SYNTAX        MxIpHostNamePort                                         
+        MAX-ACCESS    read-write                                               
+        STATUS        current                                                  
+        DESCRIPTION " Default Static Outboud Proxy Server Host                 
+                                                                               
+                      SIP outbound proxy server FQDN and port                  
+                                                                               
+                      To disable the outbound proxy, set it to '0.0.0.0'.      
+                                                                               
+                      From RFC 3261: A proxy that receives requests from a     
+                      client, even though it may not be the server resolved by 
+                      the Request-URI. Typically, a UA is manually configured  
+                      with an outbound proxy, or can learn about one through   
+                      auto-configuration protocols.                            
+                                                                               
+                      When enabled, the initial route for all SIP requests will
+                      contain the outbound proxy address, suffixed with the    
+                      loose routing parameter 'lr'. The Request-URI still      
+                      contains the home domain proxy address. Requests are     
+                      directed to the first route (the outbound proxy).        
+                                                                               
+                      Note: If the host corresponds to a domain name that is   
+                      bound to a SRV record, the port must be set to 0 for the 
+                      unit to perform DNS SRV queries; otherwise only A type   
+                      record lookups will be used.                             
+                                                                               
+                                                                               
+                      "                                                        
+        ::= { proxyGroup 200 }                                                 
+                                                                               
+-- End of group:  Proxy                                                        
+
+-- ****************************************************************************
+                                                                              
+-- Group:  Session Timer                                                      
+                                                                              
+-- ****************************************************************************
+                                                                              
+sessionTimerGroup OBJECT IDENTIFIER                                           
+    ::= { sipEpMIBObjects 600 }                                               
+                                                                              
+                                                                              
+    -- Scalar:  Default Enable/Disable Session Expiration Services            
+                                                                              
+    defaultSessionTimerEnable OBJECT-TYPE                                     
+        SYNTAX        MxEnableState                                           
+        MAX-ACCESS    read-write                                              
+        STATUS        current                                                 
+        DESCRIPTION " Default Enable/Disable Session Expiration Services      
+                                                                              
+                      Enables/Disables the session expiration services.       
+                                                                              
+                      Disabling this service is not recommended since it will 
+                      make 'dead' calls impossible to detect.                 
+                                                                              
+                      Questions and Answers:                                  
+                                                                              
+                      Q - What is the session timer extension?                
+                                                                              
+                      A - The session timer extension allows the detection of 
+                      the premature end of a call caused by a network problem 
+                      or a peer's failure.                                    
+                                                                              
+                      The session timer mechanism resends an INVITE every n   
+                      seconds. A sucessful response (200 OK) to this INVITE   
+                      means that the peer is still alive and reachable. A     
+                      timeout to this INVITE may mean that there are problems 
+                      in the signaling path, or that the peer is simply not   
+                      there anymore. In that case the call will be shut down  
+                      by using normal SIP means.                              
+                                                                              
+                      Q - SDP in Session Timer reINVITEs:                     
+                                                                              
+                      A - The reINVITE is sent with the last SDP that was     
+                      negotiated. Reception of a session timer reINVITE should
+                      not modify the connection characteristics.              
+                                                                              
+                      Q - Relation between minimum and maximum values:        
+                                                                              
+                      A - A UA that receives a Session-Expires header whose   
+                      value is smaller than the minimum it is willing to      
+                      accept will reply a 422 Timer too low to the INVITE and 
+                      terminate the call. The phone will not ring.            
+                                                                              
+                      It is up to the caller to decide what to do when it     
+                      receives a 422 to its INVITE. The service will          
+                      automatically retry the INVITE, with a Session-Expires  
+                      value equal to the minimum value that the UAS was ready 
+                      to accept (found in the Min-SE header). This means that 
+                      the maximum value as set in the service might not be    
+                      followed. This has the advantageous effect of           
+                      establishing the call even if the two endpoints have    
+                      conflicting values. The service will also keep retrying 
+                      as long as it gets 422 answers with different Min-SE    
+                      values.                                                 
+                                                                              
+                      Q - Who refreshes?                                      
+                                                                              
+                      A - Re-sending a session timer INVITE is referred to as 
+                      refreshing the session. Normally, the UAS that receives 
+                      the INVITE will have the last word on who refreshes. The
+                      service will always let the UAC (caller) do the         
+                      refreshes if the caller supports session timers. In the 
+                      case the caller does not support session timers, the    
+                      service will assume the role of the refresher.          
+                                                                              
+                                                                              
+                      "                                                       
+        DEFVAL        { enable }                                              
+        ::= { sessionTimerGroup 100 }                                         
+                                                                              
+    -- Scalar:  Default Minimum Session Expiration Delay                      
+                                                                              
+    defaultSessionTimerMinimumExpirationDelay OBJECT-TYPE                     
+        SYNTAX        Unsigned32 ( 180..3600 )                                
+        MAX-ACCESS    read-write                                              
+        STATUS        current                                                 
+        DESCRIPTION " Default Minimum Session Expiration Delay                
+                                                                              
+                      Minimum value for the periodical session refreshes.     
+                                                                              
+                      This value is reflected in the Min-SE header.           
+                                                                              
+                      The Min-SE value is a threshold under which proxies and/
+                      or UAs on the signaling path are not allowed to go.     
+                                                                              
+                      Increasing the minimum helps to reduce network traffic, 
+                      but also makes 'dead' calls longer to detect.           
+                                                                              
+                      This value is expressed in seconds (s).                 
+                                                                              
+                      Also see DefaultSessionTimerMaximumExpirationDelay.     
+                                                                              
+                                                                              
+                      "                                                       
+        DEFVAL        { 1800 }                                                
+        ::= { sessionTimerGroup 200 }                                         
+                                                                              
+    -- Scalar:  Default Maximum Session Expiration Delay                      
+                                                                              
+    defaultSessionTimerMaximumExpirationDelay OBJECT-TYPE                     
+        SYNTAX        Unsigned32 ( 180..3600 )                                
+        MAX-ACCESS    read-write                                              
+        STATUS        current                                                 
+        DESCRIPTION " Default Maximum Session Expiration Delay                
+                                                                              
+                      Suggested maximum time for the periodical session       
+                      refreshes.                                              
+                                                                              
+                      This value is reflected in the Session-Expires header.  
+                                                                              
+                      Increasing the maximum helps to reduce network traffic, 
+                      but also makes 'dead' calls longer to detect.           
+                                                                              
+                      This value is expressed in seconds (s).                 
+                                                                              
+                      Also see DefaultSessionTimerMinimumExpirationDelay.     
+                                                                              
+                                                                              
+                      "                                                       
+        DEFVAL        { 3600 }                                                
+        ::= { sessionTimerGroup 300 }                                         
+                                                                              
+-- End of group:  Session Timer                                               
+
+-- ****************************************************************************
+                                                                              
+-- Group:  Authentication Group                                               
+                                                                              
+-- ****************************************************************************
+                                                                              
+authenticationGroup OBJECT IDENTIFIER                                         
+    ::= { sipEpMIBObjects 700 }                                               
+                                                                              
+                                                                              
+    -- ************************************************************************
+                                                                              
+    -- Table:  SIP Authentication Configuration                               
+                                                                              
+    -- ************************************************************************
+                                                                              
+    authenticationTable OBJECT-TYPE                                           
+        SYNTAX        SEQUENCE OF AuthenticationEntry                         
+        MAX-ACCESS    not-accessible                                          
+        STATUS        current                                                 
+        DESCRIPTION " SIP Authentication Configuration                        
+                                                                              
+                      This table holds the user agent authentication          
+                      configuration variables. Authentication information adds
+                      some level of security.                                 
+                      "                                                       
+        ::= { authenticationGroup 100 }                                       
+                                                                              
+                                                                              
+        authenticationEntry OBJECT-TYPE                                       
+            SYNTAX         AuthenticationEntry                                
+            MAX-ACCESS     not-accessible                                     
+            STATUS         current                                            
+            DESCRIPTION  " A row in the SIP Authentication Configuration. "   
+            INDEX          {                                                  
+                               index                                          
+                           }                                                  
+                                                                              
+            ::= { authenticationTable 1 }                                     
+                                                                              
+        AuthenticationEntry ::= SEQUENCE                                      
+        {                                                                     
+            index      Unsigned32,                                            
+            applyTo    INTEGER,                                               
+            epId       OCTET STRING,                                          
+            realm      OCTET STRING,                                          
+            username   OCTET STRING,                                          
+            password   OCTET STRING                                           
+        }                                                                     
+                                                                              
+        -- Index:  Authentication Entry Index                                 
+                                                                              
+        authenticationIndex OBJECT-TYPE                                       
+            SYNTAX         Unsigned32                                         
+            MAX-ACCESS     read-only                                          
+            STATUS         current                                            
+            DESCRIPTION  " Authentication Entry Index                         
+                                                                              
+                           Authentication index for this row.                 
+                           "                                                  
+            ::= { authenticationEntry 100 }                                   
+                                                                              
+        -- Columnar:  Entity to Apply the Authentication Entry                
+                                                                              
+        authenticationApplyTo OBJECT-TYPE                                     
+            SYNTAX        INTEGER { unit(100) , endpoint(200) }               
+            MAX-ACCESS    read-write                                          
+            STATUS        current                                             
+            DESCRIPTION " Entity to Apply the Authentication Entry            
+                                                                              
+                          Selects the entity to apply the authentication      
+                          entry.                                              
+                                                                              
+                            * Unit: The authentication entry applies to the   
+                              unit.                                           
+                            * Endpoint: The authentication entry applies to a 
+                              specific endpoint.                              
+                                                                              
+                                                                              
+                          "                                                   
+            DEFVAL        { unit }                                            
+            ::= { authenticationEntry 200 }                                   
+                                                                              
+        -- Columnar:  Endpoint Identification                                 
+                                                                              
+        authenticationEpId OBJECT-TYPE                                        
+            SYNTAX        OCTET STRING                                        
+            MAX-ACCESS    read-write                                          
+            STATUS        current                                             
+            DESCRIPTION " Endpoint Identification                             
+                                                                              
+                          String that identifies an endpoint in other tables. 
+                          Used only if the variable 'ApplyTo' is set to       
+                          'Endpoint'.                                         
+                          "                                                   
+            DEFVAL        { "" }                                              
+            ::= { authenticationEntry 300 }                                   
+                                                                              
+        -- Columnar:  Authentication Realm                                    
+                                                                              
+        authenticationRealm OBJECT-TYPE                                       
+            SYNTAX        OCTET STRING ( SIZE(0..128) )                       
+            MAX-ACCESS    read-write                                          
+            STATUS        current                                             
+            DESCRIPTION " Authentication Realm                                
+                                                                              
+                          When authentication informations are required from  
+                          users, the realm identifies who requested the       
+                          information.                                        
+                          "                                                   
+            DEFVAL        { "" }                                              
+            ::= { authenticationEntry 400 }                                   
+                                                                              
+        -- Columnar:  Authentification User Name                              
+                                                                              
+        authenticationUsername OBJECT-TYPE                                    
+            SYNTAX        OCTET STRING ( SIZE(0..128) )                       
+            MAX-ACCESS    read-write                                          
+            STATUS        current                                             
+            DESCRIPTION " Authentification User Name                          
+                                                                              
+                          A string that uniquely identifies this entity in the
+                          realm, used for authentication purposes. The user   
+                          name always maps to a password.                     
+                          "                                                   
+            DEFVAL        { "" }                                              
+            ::= { authenticationEntry 500 }                                   
+                                                                              
+        -- Columnar:  Authentication Password                                 
+                                                                              
+        authenticationPassword OBJECT-TYPE                                    
+            SYNTAX         OCTET STRING ( SIZE(0..128) )                      
+            MAX-ACCESS     read-write                                         
+            STATUS         current                                            
+            DESCRIPTION  " Authentication Password                            
+                                                                              
+                           User password.                                     
+                           "                                                  
+            DEFVAL         { "" }                                             
+            ::= { authenticationEntry 600 }                                   
+                                                                              
+                                                                              
+    -- End of table:  SIP Authentication Configuration                        
+                                                                              
+-- End of group:  Authentication Group                                        
+
+-- *****************************************************************************
+                                                                               
+-- Group:  Registration Group                                                  
+                                                                               
+-- *****************************************************************************
+                                                                               
+registrationGroup OBJECT IDENTIFIER                                            
+    ::= { sipEpMIBObjects 800 }                                                
+                                                                               
+                                                                               
+    -- Scalar:  Registration Refresh Time                                      
+                                                                               
+    registrationRefreshTime OBJECT-TYPE                                        
+        SYNTAX        Unsigned32 ( 0..600 )                                    
+        MAX-ACCESS    read-write                                               
+        STATUS        current                                                  
+        DESCRIPTION " Registration Refresh Time                                
+                                                                               
+                      In SIP, a registration is valid for a period of time     
+                      defined by the registrar. Once a unit is registered, the 
+                      SIP protocol requires the User Agent to refresh this     
+                      registration before the registration expires. Typically, 
+                      this re-registration must be completed before the ongoing
+                      registration expires, so that the User Agent's           
+                      registration state does not change (i.e., remains        
+                      'registered').                                           
+                                                                               
+                      This variable defines the time, relative to the end of   
+                      the registration, at which a registered unit will begin  
+                      updating its registration.                               
+                                                                               
+                      For example, if the registration lasts 60 minutes and    
+                      RegistrationRefreshTime is set to 43, the unit will send 
+                      new REGISTER requests 59 minutes and 17 seconds after the
+                      reception of the registration acknowledgement (43 seconds
+                      before the end of the registration period).              
+                                                                               
+                      Setting RegistrationRefreshTime to 0 means that the User 
+                      Agent will fall into the 'unregistered' state BEFORE     
+                      sending the re-REGISTER requests.                        
+                                                                               
+                      This value is expressed in seconds (s).                  
+                                                                               
+                                                                               
+                      "                                                        
+        DEFVAL        { 60 }                                                   
+        ::= { registrationGroup 200 }                                          
+                                                                               
+    -- Scalar:  Proposed Expiration Value In Registration                      
+                                                                               
+    registrationProposedExpirationValue OBJECT-TYPE                            
+        SYNTAX        Unsigned32 ( 0..86400 )                                  
+        MAX-ACCESS    read-write                                               
+        STATUS        current                                                  
+        DESCRIPTION " Proposed Expiration Value In Registration                
+                                                                               
+                      Configures the suggested expiration delay of a contact in
+                      the SIP REGISTER.                                        
+                                                                               
+                      Set the value to 0 to disable the expiration proposition.
+                                                                               
+                      This value does not modify the delay before a            
+                      re-REGISTER. The delay is the expires of the contact in  
+                      the 200 OK response to the REGISTER minus the value set  
+                      in the 'RegistrationRefreshTime' variable. If the expires
+                      of the contact in the 200 OK response to the REGISTER is 
+                      not present or badly formatted, then the delay is the    
+                      default registration expires minus the value set in the  
+                      'RegistrationRefreshTime' variable.                      
+                                                                               
+                      See also the 'RegistrationRefreshTime' variable.         
+                                                                               
+                      This value is expressed in seconds (s).                  
+                                                                               
+                                                                               
+                      "                                                        
+        DEFVAL        { 0 }                                                    
+        ::= { registrationGroup 300 }                                          
+                                                                               
+    -- Scalar:  Unregistered Behavior                                          
+                                                                               
+    registrationUnregisteredBehavior OBJECT-TYPE                               
+        SYNTAX        MxEnableState                                            
+        MAX-ACCESS    read-write                                               
+        STATUS        current                                                  
+        DESCRIPTION " Unregistered Behavior                                    
+                                                                               
+                      Specifies whether an endpoint should remain enabled or   
+                      not when not registered.                                 
+                                                                               
+                        * Disable: When an endpoint is not registered, it is   
+                          disabled. This prevents the user from making or      
+                          receiving calls. Picking up the handset yields a fast
+                          busy tone and incoming INVITEs receive a '403        
+                          Forbidden' response.                                 
+                        * Enable: When an endpoint is not registered, it is    
+                          still enabled. The user can receive and initiate     
+                          outgoing calls. Note that since the endpoint is not  
+                          registered to a registrar, the public address of the 
+                          endpoint is not available to the outside world, so   
+                          the endpoint will most likely be unreachable except  
+                          through direct IP calling.                           
+                                                                               
+                                                                               
+                      "                                                        
+        DEFVAL        { disable }                                              
+        ::= { registrationGroup 400 }                                          
+                                                                               
+    -- Scalar:  Default Static Registrar Server Host                           
+                                                                               
+    defaultStaticRegistrarServerHost OBJECT-TYPE                               
+        SYNTAX        MxIpHostNamePort                                         
+        MAX-ACCESS    read-write                                               
+        STATUS        current                                                  
+        DESCRIPTION " Default Static Registrar Server Host                     
+                                                                               
+                      SIP registrar server FQDN and port.                      
+                                                                               
+                      A registrar is a server that accepts REGISTER requests   
+                      and places the information it receives in those requests 
+                      into the location service for the domain it handles.     
+                                                                               
+                      Note: If the host corresponds to a domain name that is   
+                      bound to a SRV record, the port must be set to 0 for the 
+                      unit to perform DNS SRV queries; otherwise only type A   
+                      record lookups will be used.                             
+                                                                               
+                                                                               
+                      "                                                        
+        DEFVAL        { 192.168.10.10:0 }                                      
+        ::= { registrationGroup 500 }                                          
+                                                                               
+-- End of group:  Registration Group                                           
+
+-- *****************************************************************************
+                                                                               
+-- Group:  Transport Group                                                     
+                                                                               
+-- *****************************************************************************
+                                                                               
+transportGroup OBJECT IDENTIFIER                                               
+    ::= { sipEpMIBObjects 900 }                                                
+                                                                               
+                                                                               
+    -- Scalar:  Enable/Disable Transport Registration                          
+                                                                               
+    transportRegistrationEnable OBJECT-TYPE                                    
+        SYNTAX        MxEnableState                                            
+        MAX-ACCESS    read-write                                               
+        STATUS        current                                                  
+        DESCRIPTION " Enable/Disable Transport Registration                    
+                                                                               
+                      Indicates whether the unit must include its supported    
+                      transports in its registrations.                         
+                                                                               
+                      If enabled, then the unit registers with one contact for 
+                      each transport that is currently enabled. Each of these  
+                      contacts contains a 'transport' parameter.               
+                                                                               
+                                                                               
+                      "                                                        
+        DEFVAL        { disable }                                              
+        ::= { transportGroup 100 }                                             
+                                                                               
+    -- Scalar:  Enable/Disable Transport Contact                               
+                                                                               
+    transportContactEnable OBJECT-TYPE                                         
+        SYNTAX        MxEnableState                                            
+        MAX-ACCESS    read-write                                               
+        STATUS        current                                                  
+        DESCRIPTION " Enable/Disable Transport Contact                         
+                                                                               
+                      Indicates whether the unit must include its supported    
+                      transport in all SIP messages that have the contact      
+                      header, except for the REGISTER message (see the         
+                      'TransportRegistrationEnable' variable).                 
+                                                                               
+                      If enabled, then the unit sends SIP messages with the    
+                      'transport' parameter in the contact header.             
+                                                                               
+                      It is either set to 'transport=tcp' when TCP is enabled  
+                      and UDP is disabled, 'transport=udp' when UDP is enabled 
+                      and TCP disabled or no transport parameter when both TCP 
+                      and UDP are enabled.                                     
+                                                                               
+                                                                               
+                      "                                                        
+        DEFVAL        { disable }                                              
+        ::= { transportGroup 200 }                                             
+                                                                               
+    -- *************************************************************************
+                                                                               
+    -- Table:  Transport Configuration                                         
+                                                                               
+    -- *************************************************************************
+                                                                               
+    transportConfigTable OBJECT-TYPE                                           
+        SYNTAX        SEQUENCE OF TransportConfigEntry                         
+        MAX-ACCESS    not-accessible                                           
+        STATUS        current                                                  
+        DESCRIPTION " Transport Configuration                                  
+                                                                               
+                      This table contains the informations pertaining to the   
+                      supported transports. It is indexed by transport number  
+                      (Udp, Tcp).                                              
+                      "                                                        
+        ::= { transportGroup 300 }                                             
+                                                                               
+                                                                               
+        transportConfigEntry OBJECT-TYPE                                       
+            SYNTAX         TransportConfigEntry                                
+            MAX-ACCESS     not-accessible                                      
+            STATUS         current                                             
+            DESCRIPTION  " A row in the Transport Configuration. "             
+            INDEX          {                                                   
+                               index                                           
+                           }                                                   
+                                                                               
+            ::= { transportConfigTable 1 }                                     
+                                                                               
+        TransportConfigEntry ::= SEQUENCE                                      
+        {                                                                      
+             index    INTEGER,                                                 
+             enable   MxEnableState,                                           
+             qValue   OCTET STRING                                             
+        }                                                                      
+                                                                               
+        -- Index:  Transport Index                                             
+                                                                               
+        transportConfigIndex OBJECT-TYPE                                       
+            SYNTAX         INTEGER { udp(100) , tcp(200) }                     
+            MAX-ACCESS     read-only                                           
+            STATUS         current                                             
+            DESCRIPTION  " Transport Index                                     
+                                                                               
+                           Transport index for this row.                       
+                                                                               
+                             * Udp: Index for the UDP transport.               
+                             * Tcp: Index for the TCP transport.               
+                                                                               
+                                                                               
+                           "                                                   
+            ::= { transportConfigEntry 100 }                                   
+                                                                               
+        -- Columnar:  Enable/Disable Transport                                 
+                                                                               
+        transportConfigEnable OBJECT-TYPE                                      
+            SYNTAX         MxEnableState                                       
+            MAX-ACCESS     read-write                                          
+            STATUS         current                                             
+            DESCRIPTION  " Enable/Disable Transport                            
+                                                                               
+                           Enables or disables a specific transport.           
+                           "                                                   
+            DEFVAL         { enable }                                          
+            ::= { transportConfigEntry 200 }                                   
+                                                                               
+        -- Columnar:  Q Value                                                  
+                                                                               
+        transportConfigQValue OBJECT-TYPE                                      
+            SYNTAX        OCTET STRING ( SIZE(0..5) )                          
+            MAX-ACCESS    read-write                                           
+            STATUS        current                                              
+            DESCRIPTION " Q Value                                              
+                                                                               
+                          Indicates the priority of a specific transport.      
+                                                                               
+                          A qvalue parameter is added to each contact. This    
+                          only applies if the transport-specific registration  
+                          is enabled (see 'TransportRegistrationEnable').      
+                                                                               
+                          Qvalues give each transport a weight, indicating the 
+                          degree of preference for that transport. A higher    
+                          value means higher preference.                       
+                                                                               
+                          The format of the qvalue string must follow the RFC  
+                          3261 ABNF (a floating point value between 0.000 and  
+                          1.000). If an empty string is specified, no qvalue is
+                          set in the contacts.                                 
+                                                                               
+                                                                               
+                          "                                                    
+            DEFVAL        { "" }                                               
+            ::= { transportConfigEntry 300 }                                   
+                                                                               
+                                                                               
+    -- End of table:  Transport Configuration                                  
+                                                                               
+-- End of group:  Transport Group                                              
+
+-- ****************************************************************************
+                                                                              
+-- Group:  Penalty Box                                                        
+                                                                              
+--                                                                            
+-- ****************************************************************************
+                                                                              
+penaltyBoxGroup OBJECT IDENTIFIER                                             
+    ::= { sipEpMIBObjects 1000 }                                              
+                                                                              
+                                                                              
+    -- Scalar:  Penalty Box Enable                                            
+                                                                              
+    penaltyBoxEnable OBJECT-TYPE                                              
+        SYNTAX        MxEnableState                                           
+        MAX-ACCESS    read-write                                              
+        STATUS        current                                                 
+        DESCRIPTION " Penalty Box Enable                                      
+                                                                              
+                      Indicates whether the unit uses the penalty box feature.
+                                                                              
+                      The penalty box feature is used when a given host       
+                      address times out. When the address times out, it is put
+                      into the penalty box for a given amount of time. During 
+                      that time, the address in question is considered as     
+                      'non-responding' for all requests.                      
+                                                                              
+                      This feature is most useful when using multiple servers 
+                      and some of them are down. It makes sure that users wait
+                      a minimal period of time before trying a secondary host.
+                                                                              
+                      The penalty box is always 'active'. This means that even
+                      if the feature is disabled, IP addresses are marked as  
+                      invalid, but they are still tried. The advantage is that
+                      when the feature is enabled, IP addresses that were     
+                      already marked as invalid are instantly put into the    
+                      penalty box.                                            
+                                                                              
+                      Also see 'PenaltyBoxTime'.                              
+                                                                              
+                                                                              
+                      "                                                       
+        DEFVAL        { disable }                                             
+        ::= { penaltyBoxGroup 100 }                                           
+                                                                              
+    -- Scalar:  Penalty Box Time                                              
+                                                                              
+    penaltyBoxTime OBJECT-TYPE                                                
+        SYNTAX        Unsigned32 ( 30..7200 )                                 
+        MAX-ACCESS    read-write                                              
+        STATUS        current                                                 
+        DESCRIPTION " Penalty Box Time                                        
+                                                                              
+                      Amount of time that a host spends in the penalty box.   
+                                                                              
+                      An IP address is put into the penalty box for the       
+                      current 'PenaltyBoxEnable'. Changing the                
+                      'PenaltyBoxTime' does not affect IP addresses that are  
+                      already in the penalty box. In other words, the         
+                      'PenaltyBoxTime' only affects new entries in the penalty
+                      box.                                                    
+                                                                              
+                      This value is expressed in seconds (s).                 
+                                                                              
+                      Also see 'PenaltyBoxEnable'.                            
+                                                                              
+                                                                              
+                      "                                                       
+        DEFVAL        { 300 }                                                 
+        ::= { penaltyBoxGroup 200 }                                           
+                                                                              
+-- End of group:  Penalty Box                                                 
+
+-- *****************************************************************************
+                                                                                
+-- Group:  Interop Group                                                        
+                                                                                
+-- *****************************************************************************
+                                                                                
+interopGroup OBJECT IDENTIFIER                                                  
+     ::= { sipEpMIBObjects 50000 }                                              
+                                                                                
+                                                                                
+     -- Scalar:  Replaces                                                       
+                                                                                
+     interopReplacesType OBJECT-TYPE                                            
+         SYNTAX        INTEGER { doNotUseReplaces(100) , useReplacesWithRequire 
+                       (200) , useReplacesNoRequire(300) }                      
+         MAX-ACCESS    read-write                                               
+         STATUS        current                                                  
+         DESCRIPTION " Replaces                                                 
+                                                                                
+                       Configures the Replaces header mechanism used in a       
+                       transfer. When supported by the target of the transfer,  
+                       Replaces ensures a more seamless transfer by permitting  
+                       the initiating party to effectively replace a current    
+                       call by another instead of disconnecting the call to be  
+                       replaced and creating a second call.                     
+                                                                                
+                         * DoNotUseReplaces: The Replaces header is not used.   
+                         * UseReplacesWithRequire: The Replaces header is used. 
+                           It can be seen in the Refer-To header found in the   
+                           REFER request sent by the transferor. It can also be 
+                           seen in the INVITE sent by the transferee. The target
+                           that supports Replaces uses its information to merge 
+                           the new INVITE with an existing call specified in the
+                           Replaces header. The transferee requires the use of  
+                           the Replaces extension for proper completion of the  
+                           transfer. If the Replaces extension is not supported 
+                           by the target of the transfer, the unit goes into a  
+                           fallback algorithm to retry the transfer using       
+                           Replaces by reversing the roles of the target and the
+                           transferee (by resending the REFER to the initial    
+                           target instead of the initial transferee). As a last 
+                           resort (if none of the participants supports         
+                           replaces), the transfer is carried out without using 
+                           the Replaces extension.                              
+                         * UseReplacesNoRequire: The Replaces header is used. It
+                           can be seen in the Refer-To header found in the REFER
+                           request sent by the transferor. It can also be seen  
+                           in the INVITE sent by the transferee. The target that
+                           supports Replaces uses its information to merge the  
+                           new INVITE with an existing call specified in the    
+                           Replaces header.                                     
+                                                                                
+                       This disables the transfer fallback. The Replaces        
+                       information is still present, but no check is made that  
+                       it is effectively used to complete the transfer.         
+                                                                                
+                                                                                
+                       "                                                        
+         DEFVAL        { useReplacesWithRequire }                               
+         ::= { interopGroup 100 }                                               
+                                                                                
+     -- Scalar:  Transfer Version                                               
+                                                                                
+     interopTransferVersion OBJECT-TYPE                                         
+         SYNTAX        INTEGER { transfer02(100) , transfer05UsingRefer02(200) }
+         MAX-ACCESS    read-write                                               
+         STATUS        current                                                  
+         DESCRIPTION " Transfer Version                                         
+                                                                                
+                       Selects the version of the transfer draft that the unit  
+                       uses. The provisioned version is used for initiating     
+                       transfers and receiving them. Transfer versions other    
+                       than those provisioned will not work.                    
+                                                                                
+                         * Transfer02: The unit executes transfers by using the 
+                           methods described in the now expired                 
+                           'draft-ietf-sip-cc-transfer-02.txt'. Its use is      
+                           deprecated and this setting should be used for       
+                           backwards compatibility issues only.                 
+                         * Transfer05UsingRefer02: The unit executes transfers  
+                           by using the methods described in the more recent    
+                           'draft-ietf-sip-cc-transfer-05.txt'. This draft      
+                           version contains several enhancements over the       
+                           previous ones. Among others, it is possible to use   
+                           the Replaces header to provide a more seamless       
+                           attended transfer to the user. This method also uses 
+                           'draft-ietf-sip-refer-02.txt'. This setting should be
+                           used if you don't need to interop with               
+                           transfer02-enabled parties.                          
+                                                                                
+                                                                                
+                       "                                                        
+         DEFVAL        { transfer05UsingRefer02 }                               
+         ::= { interopGroup 200 }                                               
+                                                                                
+     -- Scalar:  Session Timer Version                                          
+                                                                                
+     interopSessionTimerVersion OBJECT-TYPE                                     
+         SYNTAX        INTEGER { sessionTimer04(100) , sessionTimer08(200) }    
+         MAX-ACCESS    read-write                                               
+         STATUS        current                                                  
+         DESCRIPTION " Session Timer Version                                    
+                                                                                
+                       Selects the version of the session timer draft that the  
+                       unit uses. Session timer versions other than those       
+                       provisioned may not work because of backwards            
+                       compatibility issues between the versions.               
+                                                                                
+                         * SessionTimer04: The unit uses the session timer      
+                           extension as described in the now expired            
+                           'draft-ietf-sip-session-timer-04.txt'. Its use is    
+                           deprecated and this setting should be used for       
+                           backwards compatibility issues only.                 
+                         * SessionTimer08: The unit uses the session timer      
+                           extension as described in the more recent            
+                           'draft-ietf-sip-session-timer-08.txt'. This draft    
+                           version contains several enhancements over the       
+                           previous ones, including the use of the Min-SE       
+                           header. This setting should be used if you don't need
+                           to interop with session timer v4-enabled parties.    
+                                                                                
+                                                                                
+                       "                                                        
+         DEFVAL        { sessionTimer08 }                                       
+         ::= { interopGroup 300 }                                               
+                                                                                
+     -- Scalar:  Transmission Timeout                                           
+                                                                                
+     interopTransmissionTimeout OBJECT-TYPE                                     
+         SYNTAX        Unsigned32 ( 1..32 )                                     
+         MAX-ACCESS    read-write                                               
+         STATUS        current                                                  
+         DESCRIPTION " Transmission Timeout                                     
+                                                                                
+                       Changes the time to wait for a response or an ACK before 
+                       considering a transaction timed out. This corresponds to 
+                       timers B, F and H for all transport protocols and timer J
+                       for UDP. These timers are defined in section A of RFC    
+                       3261.                                                    
+                                                                                
+                       This timeout affects the number of retransmissions.      
+                       Retransmissions continue to follow the timing guidelines 
+                       described in RFC 3261.                                   
+                                                                                
+                       For example, if using DNS SRV and multiple entries are   
+                       present, this value is the time spent waiting for answers
+                       from each entry.                                         
+                                                                                
+                       This value is expressed in seconds (s).                  
+                                                                                
+                                                                                
+                       "                                                        
+         DEFVAL        { 32 }                                                   
+         ::= { interopGroup 400 }                                               
+                                                                                
+     -- Scalar:  Replaces Version                                               
+                                                                                
+     interopReplacesVersion OBJECT-TYPE                                         
+         SYNTAX        INTEGER { replaces01(100) , replaces03(200) }            
+         MAX-ACCESS    read-write                                               
+         STATUS        current                                                  
+         DESCRIPTION " Replaces Version                                         
+                                                                                
+                       Selects the version of the ietf-sip-replaces draft to    
+                       which conform. The provisioned version affects the way   
+                       blind transfers are executed.                            
+                                                                                
+                       Replaces01: When following the 'sip-replaces-01' draft,  
+                       the Transferor is allowed to use a REFER with Replaces   
+                       when proceeding to initiate a blind transfer. This, in   
+                       turn, results in the Transferee including a Replaces     
+                       header in its INVITE to the Transfer Target.             
+                                                                                
+                       Replaces03: The 'sip-replaces-03' draft forbids the use  
+                       of Replaces in the case of a blind transfer. When        
+                       initiating one, the Transferor first CANCELs its call    
+                       with the Target and then issues a REFER without Replaces 
+                       to the Transferee.                                       
+                                                                                
+                                                                                
+                       "                                                        
+         DEFVAL        { replaces01 }                                           
+         ::= { interopGroup 500 }                                               
+                                                                                
+     -- Scalar:  Enable/Disable Symmetric UDP Source Port                       
+                                                                                
+     interopSymmetricUdpSourcePortEnable OBJECT-TYPE                            
+         SYNTAX        MxEnableState                                            
+         MAX-ACCESS    read-write                                               
+         STATUS        current                                                  
+         DESCRIPTION " Enable/Disable Symmetric UDP Source Port                 
+                                                                                
+                       Indicates whether the unit always uses the same local    
+                       port when sending SIP traffic over UDP.                  
+                                                                                
+                       Symmetric UDP ports are sometimes needed to traverse NAT/
+                       Firewall devices.                                        
+                                                                                
+                       Note that when changing this setting, all destinations   
+                       are automatically thrown out of the penalty box, when    
+                       applicable.                                              
+                                                                                
+                         * enable: SIP signaling sent over UDP originates from  
+                           the same port as the port on which the user agent is 
+                           listening. This is configured in the 'PortConfig'    
+                           variable. When enabled, ICMP messages are not        
+                           processed, which means that unreachable targets will 
+                           take longer to detect.                               
+                         * disable: SIP signaling over UDP uses a               
+                           randomly-generated originating port. ICMP errors are 
+                           processed correctly.                                 
+                                                                                
+                                                                                
+                       "                                                        
+         DEFVAL        { enable }                                               
+         ::= { interopGroup 600 }                                               
+                                                                                
+     -- Scalar:  Max Forwards Value                                             
+                                                                                
+     interopMaxForwardsValue OBJECT-TYPE                                        
+         SYNTAX        Integer32 ( -1..200 )                                    
+         MAX-ACCESS    read-write                                               
+         STATUS        current                                                  
+         DESCRIPTION " Max Forwards Value                                       
+                                                                                
+                       Sets the value used in the Max-Forwards header, in       
+                       conformance with RFC 3261.                               
+                                                                                
+                       When this value is positive, the Max-Forwards header is  
+                       inserted in sent SIP requests.                           
+                                                                                
+                       To disable inclusion of this header in SIP requests, set 
+                       the value to '-1'.                                       
+                                                                                
+                                                                                
+                       "                                                        
+         DEFVAL        { -1 }                                                   
+         ::= { interopGroup 700 }                                               
+                                                                                
+     -- Scalar:  Enable/Disable Sending of User-Agent Header                    
+                                                                                
+     interopSendUaHeaderEnable OBJECT-TYPE                                      
+         SYNTAX         MxEnableState                                           
+         MAX-ACCESS     read-write                                              
+         STATUS         current                                                 
+         DESCRIPTION  " Enable/Disable Sending of User-Agent Header             
+                                                                                
+                        Enables/Disables sending of the SIP User-Agent header.  
+                        "                                                       
+         DEFVAL         { enable }                                              
+         ::= { interopGroup 800 }                                               
+                                                                                
+     -- Scalar:  Enable/Disable SDP Direction Attribute                         
+                                                                                
+     interopSdpDirectionAttributeEnable OBJECT-TYPE                             
+         SYNTAX        MxEnableState                                            
+         MAX-ACCESS    read-write                                               
+         STATUS        current                                                  
+         DESCRIPTION " Enable/Disable SDP Direction Attribute                   
+                                                                                
+                       Indicates if the SDP direction attribute is present in   
+                       the initial INVITE sent by the unit and if the direction 
+                       attribute present in the SDP received from the peer is   
+                       ignored or not.                                          
+                                                                                
+                       When disabled, the application uses the RFC 2543 method  
+                       to put a session on hold:                                
+                                                                                
+                         * No direction attribute is present in the SDP sent by 
+                           the unit.                                            
+                         * Any direction attribute found in the SDP received    
+                           from the peer is ignored by the unit.                
+                         * To put an endpoint on hold, a SDP containing a       
+                           connection address of '0.0.0.0' is sent.             
+                                                                                
+                       When enabled, the application uses the RFC 3264 method to
+                       put a session on hold:                                   
+                                                                                
+                         * The unit always sends the direction attribute in the 
+                           SDP of the initial INVITE.                           
+                         * The initial handshake determines if the peer supports
+                           the direction attribute or not.                      
+                         * If present in the SDP, the direction attribute is    
+                           preferred over the connection address to transmit    
+                           session modification information.                    
+                                                                                
+                                                                                
+                       "                                                        
+         DEFVAL        { enable }                                               
+         ::= { interopGroup 900 }                                               
+                                                                                
+     -- Scalar:  On Hold SDP Stream Direction                                   
+                                                                                
+     interopOnHoldSdpStreamDirection OBJECT-TYPE                                
+         SYNTAX        INTEGER { inactive(100) , sendonly(200) }                
+         MAX-ACCESS    read-write                                               
+         STATUS        current                                                  
+         DESCRIPTION " On Hold SDP Stream Direction                             
+                                                                                
+                       Indicates the direction attribute and the meaning of the 
+                       connection address '0.0.0.0' sent in the SDP when an     
+                       endpoint is put on hold.                                 
+                                                                                
+                         * Inactive: The stream is put on hold by marking it as 
+                           inactive.                                            
+                         * Sendonly: The stream is put on hold by marking it as 
+                           sendonly. This method is in conformance with RFC     
+                           3264.                                                
+                                                                                
+                                                                                
+                       "                                                        
+         DEFVAL        { inactive }                                             
+         ::= { interopGroup 1000 }                                              
+                                                                                
+     -- Scalar:  Local Ring on Provisional Response                             
+                                                                                
+     interopLocalRingOnProvisionalResponse OBJECT-TYPE                          
+         SYNTAX        MxEnableState                                            
+         MAX-ACCESS    read-write                                               
+         STATUS        current                                                  
+         DESCRIPTION " Local Ring on Provisional Response                       
+                                                                                
+                       Specifies if the local ring should be started upon       
+                       receiving a '18x Provisional' response without SDP.      
+                                                                                
+                       Note that this variable does not affect the behavior in  
+                       case the '18x Provisional' response contains SDP.        
+                                                                                
+                         * Disable: The local ring is not started on a '18x     
+                           Provisional' response without SDP, except for a '180 
+                           Ringing' message.                                    
+                         * Enable: The local ring is started on any '18x        
+                           Provisional' response without SDP.                   
+                                                                                
+                                                                                
+                       "                                                        
+         DEFVAL        { disable }                                              
+         ::= { interopGroup 1100 }                                              
+                                                                                
+     -- Scalar:  SDP Origin Line Session ID and Version Max Length              
+                                                                                
+     interopSdpOriginLineSessionIdAndVersionMaxLength OBJECT-TYPE               
+         SYNTAX        INTEGER { max32bits(100) , max64bits(200) }              
+         MAX-ACCESS    read-write                                               
+         STATUS        current                                                  
+         DESCRIPTION " SDP Origin Line Session ID and Version Max Length        
+                                                                                
+                       The maximum length of the session ID and the session     
+                       version number in the origin line (o=) of the SDP.       
+                                                                                
+                         * Max-32bits: The session ID and the session version   
+                           number are represented with a 32 bit integer. They   
+                           have a maximum length of 10 digits.                  
+                         * Max-64bits: The session ID and the session version   
+                           number are represented with a 64 bit integer. They   
+                           have a maximum length of 20 digits.                  
+                                                                                
+                                                                                
+                       "                                                        
+         DEFVAL        { max64bits }                                            
+         ::= { interopGroup 1200 }                                              
+                                                                                
+     -- Scalar:  Referred By Config                                             
+                                                                                
+     interopReferredByConfig OBJECT-TYPE                                        
+         SYNTAX        INTEGER { useSipStackDefault(100) , useLocalUrl(200) }   
+         MAX-ACCESS    read-write                                               
+         STATUS        current                                                  
+         DESCRIPTION " Referred By Config                                       
+                                                                                
+                       Configures usage of the Referred-By field used in a SIP  
+                       REFER message.                                           
+                                                                                
+                         * UseSipStackDefault: Let the SIP stack populate the   
+                           Referred-By header field.                            
+                         * UseLocalUrl: Use the local URL to populate the       
+                           Referred-By header field.                            
+                                                                                
+                                                                                
+                       "                                                        
+         DEFVAL        { useSipStackDefault }                                   
+         ::= { interopGroup 1300 }                                              
+                                                                                
+     -- Scalar:  Enable/Disable Lock DNS SRV Record Per Call                    
+                                                                                
+     interopLockDnsSrvRecordPerCallEnable OBJECT-TYPE                           
+         SYNTAX        MxEnableState                                            
+         MAX-ACCESS    read-write                                               
+         STATUS        current                                                  
+         DESCRIPTION " Enable/Disable Lock DNS SRV Record Per Call              
+                                                                                
+                       Configures the behavior of the DNS SRV feature.          
+                                                                                
+                         * Disable: The behavior follows RFC 3263.              
+                         * Enable: All messages during a call or registration   
+                           use the same SRV record.                             
+                                                                                
+                                                                                
+                       "                                                        
+         DEFVAL        { disable }                                              
+         ::= { interopGroup 1400 }                                              
+                                                                                
+     -- Scalar:  Enable/Disable Reuse of Credential                             
+                                                                                
+     interopReuseCredentialEnable OBJECT-TYPE                                   
+         SYNTAX        MxEnableState                                            
+         MAX-ACCESS    read-write                                               
+         STATUS        current                                                  
+         DESCRIPTION " Enable/Disable Reuse of Credential                       
+                                                                                
+                       Configures how to reuse the credential in different      
+                       transactions of the same call or registration.           
+                                                                                
+                         * Disable: Do not reuse the credential negotiated in   
+                           previous transactions.                               
+                         * Enable: Reuse the credential negotiated in previous  
+                           transactions.                                        
+                                                                                
+                                                                                
+                       "                                                        
+         DEFVAL        { enable }                                               
+         ::= { interopGroup 1500 }                                              
+                                                                                
+     -- Scalar:  Ringing Response Code                                          
+                                                                                
+     interopRingingResponseCode OBJECT-TYPE                                     
+         SYNTAX        INTEGER { send180Ringing(100) , send183WithSdp(200) }    
+         MAX-ACCESS    read-write                                               
+         STATUS        current                                                  
+         DESCRIPTION " Ringing Response Code                                    
+                                                                                
+                       Configures the response code sent back when the endpoint 
+                       starts ringing.                                          
+                                                                                
+                         * Send180Ringing: Send out a '180 Ringing' response    
+                           without a body.                                      
+                         * Send183WithSdp: Return a '183 Session Progress'      
+                           packet with SDP (needed if the endpoint is required  
+                           to generate ringback on connection).                 
+                                                                                
+                                                                                
+                       "                                                        
+         DEFVAL        { send180Ringing }                                       
+         ::= { interopGroup 1600 }                                              
+                                                                                
+     -- Scalar:  Reject Code For No Ressource                                   
+                                                                                
+     interopRejectCodeForNoRessource OBJECT-TYPE                                
+         SYNTAX        INTEGER { temporarilyUnavailable(100) , busyHere(200) }  
+         MAX-ACCESS    read-write                                               
+         STATUS        current                                                  
+         DESCRIPTION " Reject Code For No Ressource                             
+                                                                                
+                       Configures the rejection code used when all lines of the 
+                       group are unavailable.                                   
+                                                                                
+                         * TemporarilyUnavailable: The '480 Temporarily         
+                           Unavailable' rejection code is used.                 
+                         * BusyHere: The '486 Busy Here' rejection code is used.
+                                                                                
+                                                                                
+                       "                                                        
+         DEFVAL        { temporarilyUnavailable }                               
+         ::= { interopGroup 1700 }                                              
+                                                                                
+     -- Scalar:  Branch Matching Method                                         
+                                                                                
+     interopBranchMatchingMethod OBJECT-TYPE                                    
+         SYNTAX        INTEGER { rfc2543(100) , rfc3261(200) }                  
+         MAX-ACCESS    read-write                                               
+         STATUS        current                                                  
+         DESCRIPTION " Branch Matching Method                                   
+                                                                                
+                       Configures the method used to match incoming SIP packets 
+                       with a branch.                                           
+                                                                                
+                         * Rfc2543: Follow the method described in RFC 2543     
+                           (section 10.1.2).                                    
+                         * Rfc3261: Follow the method described in RFC 3261     
+                           (section 8.1.1.7).                                   
+                                                                                
+                                                                                
+                       "                                                        
+         DEFVAL        { rfc3261 }                                              
+         ::= { interopGroup 1800 }                                              
+                                                                                
+     -- Scalar:  Enable/Disable Ignore Via Branch Id In Cancel                  
+                                                                                
+     interopIgnoreViaBranchIdInCancelEnable OBJECT-TYPE                         
+         SYNTAX        MxEnableState                                            
+         MAX-ACCESS    read-write                                               
+         STATUS        current                                                  
+         DESCRIPTION " Enable/Disable Ignore Via Branch Id In Cancel            
+                                                                                
+                       Specifies whether the SIP stack's transaction matching   
+                       procedure ignores the Via header field's branch parameter
+                       in CANCEL requests with no To tag.                       
+                                                                                
+                         * Disable: The transaction matching procedure behaves  
+                           according to section 17.2.3 of RFC 3261.             
+                         * Enable: The branch parameter is not used as a        
+                           transaction matching criterion for CANCEL requests   
+                           with no To tag.                                      
+                                                                                
+                                                                                
+                       "                                                        
+         DEFVAL        { disable }                                              
+         ::= { interopGroup 1900 }                                              
+                                                                                
+     -- Scalar:  Default Registration Expiration                                
+                                                                                
+     interopDefaultRegistrationExpiration OBJECT-TYPE                           
+         SYNTAX        Unsigned32 ( 1..86400 )                                  
+         MAX-ACCESS    read-write                                               
+         STATUS        current                                                  
+         DESCRIPTION " Default Registration Expiration                          
+                                                                                
+                       Configures the default registration expiration. This     
+                       value is used when the contact in a registration response
+                       contains no expires or the expires is badly formatted. In
+                       this case, the delay before a re-REGISTER is the value   
+                       set in the 'InteropDefaultRegistrationExpiration'        
+                       variable minus the value set in the                      
+                       'RegistrationRefreshTime' variable.                      
+                                                                                
+                       The recommended value in RFC 3261 (section 10.2) is 3600.
+                                                                                
+                       This value is expressed in seconds (s).                  
+                                                                                
+                                                                                
+                       "                                                        
+         DEFVAL        { 3600 }                                                 
+         ::= { interopGroup 2000 }                                              
+                                                                                
+     -- Scalar:  Authentication QOP                                             
+                                                                                
+     interopAuthenticationQop OBJECT-TYPE                                       
+         SYNTAX        INTEGER { auth(100) , authInt(200) }                     
+         MAX-ACCESS    read-write                                               
+         STATUS        current                                                  
+         DESCRIPTION " Authentication QOP                                       
+                                                                                
+                       Specifies the quality of protection the SIP User Agent   
+                       should apply to its authentication request.              
+                                                                                
+                         * Auth: The SIP User Agent applies authentication only.
+                         * AuthInt: The SIP User Agent applies authentication   
+                           with integrity protection (see RFC 2617).            
+                                                                                
+                                                                                
+                       "                                                        
+         DEFVAL        { auth }                                                 
+         ::= { interopGroup 2100 }                                              
+                                                                                
+     -- Scalar:  Enable/Disable Use DTMF Payload Type Found In Answer           
+                                                                                
+     interopUseDtmfPayloadTypeFoundInAnswer OBJECT-TYPE                         
+         SYNTAX        MxEnableState                                            
+         MAX-ACCESS    read-write                                               
+         STATUS        current                                                  
+         DESCRIPTION " Enable/Disable Use DTMF Payload Type Found In Answer     
+                                                                                
+                       The default behavior when sending an initial offer that  
+                       contains an RFC 2833 payload type is to keep using that  
+                       payload type even if the response comes back with a      
+                       different one. When this variable is enabled, the unit   
+                       rather uses the payload type found in the answer. The    
+                       variable does not affect the behavior when receiving an  
+                       offer.                                                   
+                                                                                
+                         * Disable: Keep using the initial payload type.        
+                         * Enable: Use the RFC 2833 payload type found in the   
+                           received answer.                                     
+                                                                                
+                       This variable only has an effect when the                
+                       DefaultDtmfTransportMethod variable is set to            
+                       'OutOfBandUsingRtp'.                                     
+                                                                                
+                                                                                
+                       "                                                        
+         DEFVAL        { disable }                                              
+         ::= { interopGroup 2200 }                                              
+                                                                                
+     -- Scalar:  Outbound Proxy Configuration                                   
+                                                                                
+     interopOutboundProxyType OBJECT-TYPE                                       
+         SYNTAX        INTEGER { looseRouter(100) , strictRouter(200) }         
+         MAX-ACCESS    read-write                                               
+         STATUS        current                                                  
+         DESCRIPTION " Outbound Proxy Configuration                             
+                                                                                
+                       Provisions the type of routing that the configured       
+                       outbound proxy does.                                     
+                                                                                
+                         * LooseRouter: This is the most current method for SIP 
+                           routing, as per RFC 3261, and will become the        
+                           standard behavior once RFC 3261 compliance is        
+                           achieved. See the DefaultStaticProxyOutboundHost     
+                           variable for a description.                          
+                         * StrictRouter: Pre-RFC 3261, RFC 2543 compatible SIP  
+                           routing.                                             
+                                                                                
+                       The initial route for all SIP requests contains the home 
+                       domain proxy address (the Request-URI). Requests are     
+                       directed to the outbound proxy.                          
+                                                                                
+                       In other words, the Request-URI is constructed as usual, 
+                       using the home domain proxy and the user name, but is    
+                       used in the route set. The Request-URI is filled by the  
+                       outbound proxy address.                                  
+                                                                                
+                       Also see 'DefaultStaticProxyHomeDomainHost'.             
+                                                                                
+                                                                                
+                       "                                                        
+         DEFVAL        { looseRouter }                                          
+         ::= { interopGroup 2300 }                                              
+                                                                                
+     -- Scalar:  Register Home Domain Override                                  
+                                                                                
+     interopRegisterHomeDomainOverride OBJECT-TYPE                              
+         SYNTAX        OCTET STRING ( SIZE(0..255) )                            
+         MAX-ACCESS    read-write                                               
+         STATUS        current                                                  
+         DESCRIPTION " Register Home Domain Override                            
+                                                                                
+                       Home domain override configuration. If not empty, the    
+                       address of record in the register uses this string       
+                       instead of the home domain proxy (refer to the variable  
+                       'DefaultStaticProxyHomeDomainHost').                     
+                       "                                                        
+         DEFVAL        { "" }                                                   
+         ::= { interopGroup 2400 }                                              
+                                                                                
+     -- Scalar:  Outbound Proxy Configuration                                   
+                                                                                
+     interopIgnoreUsernameParam OBJECT-TYPE                                     
+         SYNTAX        MxEnableState                                            
+         MAX-ACCESS    read-write                                               
+         STATUS        current                                                  
+         DESCRIPTION " Outbound Proxy Configuration                             
+                                                                                
+                       When enabled, the username parameter is ignored for      
+                       routing an incoming call to line.                        
+                       "                                                        
+         DEFVAL        { disable }                                              
+         ::= { interopGroup 2500 }                                              
+                                                                                
+     -- *************************************************************************
+                                                                                
+     -- Group:  DTMF Group                                                      
+                                                                                
+     -- *************************************************************************
+                                                                                
+     interopDtmfGroup OBJECT IDENTIFIER                                         
+         ::= { interopGroup 50000 }                                             
+                                                                                
+                                                                                
+         -- Scalar:  DTMF Transport Method With SIP                             
+                                                                                
+         interopDtmfTransportMethod OBJECT-TYPE                                 
+             SYNTAX        INTEGER { draftChoudhuriSipInfoDigit00(100) ,        
+                           infoDtmfRelay(200) }                                 
+             MAX-ACCESS    read-write                                           
+             STATUS        current                                              
+             DESCRIPTION " DTMF Transport Method With SIP                       
+                                                                                
+                           Configures the method used to transmit DTMFs over the
+                           SIP protocol.                                        
+                                                                                
+                           This variable is effective only if the endpoint is   
+                           configured to use the DTMF out-of-band by protocol   
+                           transport method ('OutOfBandUsingSignalingProtocol'; 
+                           refer to the variable DefaultDtmfTransportMethod).   
+                                                                                
+                             * DraftChoudhuriSipInfoDigit00: Transmit DTMFs by  
+                               using the method defined in the draft            
+                               'draft-choudhuri-sip-info-digit-00'.             
+                             * InfoDtmfRelay: Transmit DTMFs by using a custom  
+                               method.                                          
+                                                                                
+                           This custom method requires no SDP negotiation and   
+                           uses a SIP INFO message with a content of type       
+                           'application/dtmf-relay'.                            
+                                                                                
+                                                                                
+                           "                                                    
+             DEFVAL        { draftChoudhuriSipInfoDigit00 }                     
+             ::= { interopDtmfGroup 100 }                                       
+                                                                                
+         -- Scalar:  DTMF Duration                                              
+                                                                                
+         interopDtmfTransportDuration OBJECT-TYPE                               
+             SYNTAX        Integer32 ( 50..2000 )                               
+             MAX-ACCESS    read-write                                           
+             STATUS        current                                              
+             DESCRIPTION " DTMF Duration                                        
+                                                                                
+                           Configures the DTMF duration sent in the INFO message
+                           when using the 'InfoDtmfRelay' method (refer to the  
+                           InteropDtmfTransportMethod variable).                
+                                                                                
+                           This value is expressed in milliseconds (ms).        
+                                                                                
+                                                                                
+                           "                                                    
+             DEFVAL        { 100 }                                              
+             ::= { interopDtmfGroup 200 }                                       
+                                                                                
+     -- End of group:  DTMF Group                                               
+                                                                                
+-- End of group:  Interop Group                                                 
+
+-- *****************************************************************************
+                                                                               
+-- Group:  Debug Group                                                         
+                                                                               
+-- *****************************************************************************
+                                                                               
+debugGroup OBJECT IDENTIFIER                                                   
+    ::= { sipEpMIBObjects 51000 }                                              
+                                                                               
+                                                                               
+    -- Scalar:  Enable/Disable Debug Signaling Log                             
+                                                                               
+    debugSignalingLogEnable OBJECT-TYPE                                        
+        SYNTAX        MxEnableState                                            
+        MAX-ACCESS    read-write                                               
+        STATUS        current                                                  
+        DESCRIPTION " Enable/Disable Debug Signaling Log                       
+                                                                               
+                      Enables the logging client debugging tool for IP         
+                      telephony signaling.                                     
+                      "                                                        
+        DEFVAL        { disable }                                              
+        ::= { debugGroup 100 }                                                 
+                                                                               
+    -- Scalar:  Debug Signaling Log Host                                       
+                                                                               
+    debugSignalingLogHost OBJECT-TYPE                                          
+        SYNTAX         MxIpHostNamePort                                        
+        MAX-ACCESS     read-write                                              
+        STATUS         current                                                 
+        DESCRIPTION  " Debug Signaling Log Host                                
+                                                                               
+                       Logging client FQDN and port.                           
+                                                                               
+                       The default port is 6000.                               
+                                                                               
+                                                                               
+                       "                                                       
+        DEFVAL         { 192.168.10.10:0 }                                     
+        ::= { debugGroup 200 }                                                 
+                                                                               
+    -- Scalar:  Debug Snapshot Time                                            
+                                                                               
+    debugContextSnapshotTime OBJECT-TYPE                                       
+        SYNTAX        Unsigned32 ( 0..10080 )                                  
+        MAX-ACCESS    read-write                                               
+        STATUS        current                                                  
+        DESCRIPTION " Debug Snapshot Time                                      
+                                                                               
+                      Sets the time between snapshots.                         
+                                                                               
+                      The list of contexts currently in use in the sipFramework
+                      and sipApplication are periodically output as debug-level
+                      syslog messages.                                         
+                                                                               
+                      Note that for this feature to work, the system log       
+                      severity level must be set to 'debug', and the syslog    
+                      feature must be properly configured.                     
+                                                                               
+                      Note that enabling this feature also triggers an instant 
+                      snapshot.                                                
+                                                                               
+                      To disable this feature, set this variable to zero (0).  
+                                                                               
+                      This value is expressed in minutes (min).                
+                                                                               
+                                                                               
+                      "                                                        
+        DEFVAL        { 0 }                                                    
+        ::= { debugGroup 300 }                                                 
+                                                                               
+-- End of group:  Debug Group                                                  
+
+-- *****************************************************************************
+                                                                               
+-- Group:  Notification Messages Configuration                                 
+                                                                               
+-- *****************************************************************************
+                                                                               
+notificationsGroup OBJECT IDENTIFIER                                           
+    ::= { sipEpMIBObjects 60010 }                                              
+                                                                               
+                                                                               
+    -- Scalar:  Minimal Severity of Notification                               
+                                                                               
+    minSeverity OBJECT-TYPE                                                    
+        SYNTAX        INTEGER { disable(0) , debug(100) , info(200) , warning  
+                      (300) , error(400) , critical (500) }                    
+        MAX-ACCESS    read-write                                               
+        STATUS        current                                                  
+        DESCRIPTION " Minimal Severity of Notification                         
+                                                                               
+                      Sets the minimal severity to issue a notification message
+                      incoming from this service.                              
+                                                                               
+                        * Disable: No notification is issued.                  
+                        * Debug: All notification messages are issued.         
+                        * Info: Notification messages with severity            
+                          'Informational' and higher are issued.               
+                        * Warning: Notification messages with severity         
+                          'Warning' and higher are issued.                     
+                        * Error: Notification messages with severity 'Error'   
+                          and higher are issued.                               
+                        * Critical: Notification messages with severity        
+                          'Critical' are issued.                               
+                                                                               
+                                                                               
+                      "                                                        
+        DEFVAL        { warning }                                              
+        ::= { notificationsGroup 100 }                                         
+                                                                               
+-- End of group:  Notification Messages Configuration                          
+
+-- ****************************************************************************
+                                                                              
+-- Group:  Configuration Settings                                             
+                                                                              
+-- ****************************************************************************
+                                                                              
+configurationGroup OBJECT IDENTIFIER                                          
+    ::= { sipEpMIBObjects 60020 }                                             
+                                                                              
+                                                                              
+    -- Scalar:  Need Restart                                                  
+                                                                              
+    needRestartInfo OBJECT-TYPE                                               
+        SYNTAX        INTEGER { no(0) , yes(100) }                            
+        MAX-ACCESS    read-only                                               
+        STATUS        current                                                 
+        DESCRIPTION " Need Restart                                            
+                                                                              
+                      Indicates if the service needs to be restarted for its  
+                      configuration to fully take effect.                     
+                                                                              
+                        * Yes: Service needs to be restarted.                 
+                        * No: Service does not need to be restarted.          
+                                                                              
+                      Services can be restarted by using the command          
+                      Scm.ServiceCommands.Restart.                            
+                                                                              
+                                                                              
+                      "                                                       
+        ::= { configurationGroup 100 }                                        
+                                                                              
+-- End of group:  Configuration Settings                                      
+
+END

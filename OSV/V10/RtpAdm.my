@@ -1,0 +1,168 @@
+--
+-- $Copyright:
+-- Copyright (c) 2009-2021 UNIFY, ATOS
+-- All rights reserved
+-- $
+--
+
+
+
+FTS-RTP-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+    MODULE-IDENTITY, OBJECT-TYPE, OBJECT-IDENTITY,
+    NOTIFICATION-TYPE                    FROM SNMPv2-SMI
+
+    TEXTUAL-CONVENTION, DisplayString	 FROM SNMPv2-TC
+
+    enterprises                          FROM RFC1155-SMI;
+
+--
+-- Siemens-specific branch
+--
+
+    siemens OBJECT-IDENTITY
+	STATUS current
+	DESCRIPTION
+	    "The authoritative identity of the enterprise Siemens AG."
+	::= { enterprises 4329 }
+
+    iandcProducts OBJECT-IDENTITY
+	STATUS current
+	DESCRIPTION
+	    "References to I&C product names in the admin branch."
+	::= { siemens 1 }
+
+	reliantTelcoPlatform OBJECT-IDENTITY
+	    STATUS  current
+	    DESCRIPTION
+		"The product entry for the Resilient Telco Platform (named
+		 Reliant Telco Platform earlier)."
+	    ::= { iandcProducts 2 }
+
+    iandcAdmin OBJECT-IDENTITY
+	STATUS current
+	DESCRIPTION
+	    "The I&C product-specific MIBs."
+	::= { siemens 2 }
+
+--
+-- Resilient Telco Platform-related MOs
+--
+
+    rtp MODULE-IDENTITY
+	LAST-UPDATED "1907301600Z"
+	ORGANIZATION "UNIFY, ATOS"
+	CONTACT-INFO "E-mail: ccs_support_portal@atos.net"
+
+	DESCRIPTION
+	    "The MIB module describes the top level of the Managed Objects of
+	     the Resilient Telco Platform (RTP)"
+
+	REVISION "9908061800Z"
+	DESCRIPTION
+	    "Names of Siemens sub-OIDs changed from admin to iandcAdmin,
+	     from products to iandcProducts.
+	     OIDs under rtpConfigurationMgmt, rtpFaultMgmt and rtpSystemMgmt
+	     moved into separate MIB modules."
+
+	REVISION "9907221800Z"
+	DESCRIPTION
+	    "The initial draft version of this MIB module."
+
+	REVISION "0001041800Z"
+	DESCRIPTION
+	    "Module header information updated."
+
+	REVISION "0504211800Z"
+	DESCRIPTION
+	    "Changed module name to FSC-RTP-MIB to resolve naming conflict
+	     with RFC 2959.
+	     Module header information updated."
+
+	REVISION "1907301600Z"
+	DESCRIPTION
+	    "Vendor: UNIFY, ATOS."
+
+	::= { iandcAdmin 1 }
+
+
+--
+-- Textual conventions used in the RTP MIB:
+--
+
+    Boolean ::= TEXTUAL-CONVENTION
+	STATUS      current
+	DESCRIPTION "Represents a boolean value in the Siemens MIB."
+	SYNTAX      INTEGER { false(0), true(1) }
+
+
+    TimeIntervalMillis ::= TEXTUAL-CONVENTION
+	STATUS       current
+	DESCRIPTION
+		"A period of time, measured in units of milliseconds."
+	SYNTAX       INTEGER (0..2147483647)
+
+
+    TimeStampSeconds ::= TEXTUAL-CONVENTION
+	STATUS       current
+	DESCRIPTION
+		"A timestamp in seconds since 01.Jan.1970, 00:00:00h UTC."
+	SYNTAX       INTEGER (0..2147483647)
+
+
+--
+-- The RTP MIB
+--
+
+
+    rtpConfigurationMgmt OBJECT-IDENTITY
+	STATUS current
+	DESCRIPTION
+	    "The RTP Configuration Management MOs."
+	::= { rtp 1 }
+
+    rtpFaultMgmt OBJECT-IDENTITY
+	STATUS current
+	DESCRIPTION
+	    "The RTP Fault Management MOs."
+	::= { rtp 2 }
+
+    rtpPerformanceMgmt OBJECT-IDENTITY
+	STATUS current
+	DESCRIPTION
+	    "The RTP Performance Management MOs."
+	::= { rtp 3 }
+
+    rtpSecurityMgmt OBJECT-IDENTITY
+	STATUS current
+	DESCRIPTION
+	    "The RTP Security Management MOs."
+	::= { rtp 4 }
+
+    rtpSystemMgmt OBJECT-IDENTITY
+	STATUS current
+	DESCRIPTION
+	    "The RTP System Management MOs."
+	::= { rtp 5 }
+
+    rtpApplicationLevelMgmt OBJECT-IDENTITY
+	STATUS current
+	DESCRIPTION
+	    "The RTP Application-Level Management MOs (not part of the RTP)."
+	::= { rtp 6 }
+
+    rtpProductEntry OBJECT-TYPE
+	SYNTAX OBJECT IDENTIFIER
+	MAX-ACCESS  read-only
+	STATUS  current
+	DESCRIPTION
+	    "A reference to the product entry for the Resilient Telco Platform:
+	     iso.org.dod.internet.private.enterprises.siemens.products.
+							  reliantTelcoPlatform
+	     (This is a requirement from the Siemens-internal MIB
+	      administration.)"
+	::= { rtp 7 }
+
+END
+

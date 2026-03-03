@@ -1,0 +1,3998 @@
+APAIII-PROVISIONNING-MIB21 DEFINITIONS ::= BEGIN
+
+IMPORTS
+	Unsigned32, enterprises
+	FROM SNMPv2-SMI;
+		
+mediatrix		OBJECT IDENTIFIER			::=  {	enterprises  4935  }
+
+experimental	OBJECT IDENTIFIER			::=  {	mediatrix  1  }
+
+products		OBJECT IDENTIFIER			::=  {	experimental  1  }
+
+voIpGateway		OBJECT IDENTIFIER			::=  {	products  1  }
+
+apaIII			OBJECT IDENTIFIER			::=  {	voIpGateway  2  }
+
+provisionningMib MODULE-IDENTITY
+	LAST-UPDATED	"0012010000Z"
+	ORGANIZATION	"Mediatrix Telecom, inc."
+	CONTACT-INFO	"Mediatrix Telecom, inc."
+	DESCRIPTION
+		"Mediatrix Telecom APA III MIB."
+	REVISION	"0012010000Z"
+	DESCRIPTION
+		"01-12-00:	   creation (bkaran)"
+	::=  {	apaIII  1	}
+
+provisionningMibVersion OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..25))
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"MIB version."
+	DEFVAL { "1.0" }
+	::=  {	provisionningMib  1	}
+
+analogGatewayID OBJECT-TYPE
+	SYNTAX	INTEGER (0..3)
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"APA III model.
+		 0 = APA III-1
+		 1 = APA III-4 FXS
+		 2 = APA III-4 FXO
+		 3 = APA III-4 FXS/FXO"
+	DEFVAL { 1 }
+	::=  {	provisionningMib  2	}
+
+interfaceGroup	OBJECT IDENTIFIER			::=  {	provisionningMib  3	}
+
+interfaceQoSSignalingDSFieldValue OBJECT-TYPE
+	SYNTAX	INTEGER (0..255)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Signaling QoS Differentiated Services field value."
+	DEFVAL { 184 }
+	::=  {	interfaceGroup	1  }
+
+interfaceQoSMediaDSFieldValue OBJECT-TYPE
+	SYNTAX	INTEGER (0..255)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Media QoS Differentiated Services field value."
+	DEFVAL { 184 }
+	::=  {	interfaceGroup	2  }
+
+interfaceMacAddress OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..50))
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"APA III Ethernet MAC address."
+	DEFVAL { "0090F8FFFFFF" }
+	::=  {	interfaceGroup	3  }
+
+interfaceUseDhcp OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select the provenance of the APA III network configuration.
+		 0 = Static
+		 1 = DHCP"
+	DEFVAL { 1 }
+	::=  {	interfaceGroup	4  }
+
+interfaceDhcpServerIp OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"DHCP server IP address. 
+		 The field is empty if no DHCP server was found."
+	DEFVAL { "" }
+	::=  {	interfaceGroup	5  }
+
+interfaceStaticGroup	OBJECT IDENTIFIER			::=  {	interfaceGroup	6  }
+
+interfaceStaticPrimDnsIp OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Static primary DNS server IP address."
+	DEFVAL { "192.168.0.10" }
+	::=  {	interfaceStaticGroup  1  }
+
+interfaceStaticSecDnsIp OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Static secondary DNS server IP address."
+	DEFVAL { "192.168.0.10" }
+	::=  {	interfaceStaticGroup  2  }
+
+interfaceStaticDefaultRouterIp OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Static default router IP address."
+	DEFVAL { "192.168.0.10" }
+	::=  {	interfaceStaticGroup  3  }
+
+interfaceStaticSubnetMaskIp OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Static subnet mask."
+	DEFVAL { "255.255.255.0" }
+	::=  {	interfaceStaticGroup  4  }
+
+interfaceStaticLocalIp OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Static local IP address."
+	DEFVAL { "192.168.0.1" }
+	::=  {	interfaceStaticGroup  5  }
+
+interfaceDhcpGroup	OBJECT IDENTIFIER			::=  {	interfaceGroup	7  }
+
+interfaceDhcpPrimDnsIp OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"Primary DNS server IP address provided by DHCP server."
+	DEFVAL { "192.168.0.10" }
+	::=  {	interfaceDhcpGroup	1  }
+
+interfaceDhcpSecDnsIp OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"Secondary DNS server IP address provided by DHCP server."
+	DEFVAL { "192.168.0.10" }
+	::=  {	interfaceDhcpGroup	2  }
+
+interfaceDhcpDefaultRouterIp OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"Default router IP address provided by DHCP server."
+	DEFVAL { "192.168.0.10" }
+	::=  {	interfaceDhcpGroup	3  }
+
+interfaceDhcpSubnetMaskIp OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"Subnet mask provided by DHCP server."
+	DEFVAL { "255.255.255.0" }
+	::=  {	interfaceDhcpGroup	4  }
+
+interfaceDhcpLocalIp OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"Local IP address provided by DHCP server."
+	DEFVAL { "192.168.0.1" }
+	::=  {	interfaceDhcpGroup	5  }
+
+interfaceQoSGroup	OBJECT IDENTIFIER			::=  {	interfaceGroup	8  }
+
+interfaceQoSSignalingIeee8021QFilterEnable OBJECT-TYPE
+	SYNTAX  Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enabling IEEE 802.1Q VLAN user priority 
+		tagging for VoIP signaling packet. 
+		This filter applies to any VoIP signaling 
+		protocol in use (e.g. MGCP or SIP). 
+		When the filter is disabled (as well as VLAN), 
+		no tag is added to the Ethernet header. 
+		Otherwise, each signaling packet is 
+		tagged with the user priority defined below.
+		0 = Disable
+		1 = Enable"
+	DEFVAL { 0 }
+	::= {  interfaceQoSGroup 1 }
+
+interfaceQoSSignalingIeee8021QUserPriority OBJECT-TYPE
+	SYNTAX  Unsigned32 (0..7)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"IEEE 802.1Q VLAN user priority value for VoIP 
+		signaling packet. This value is used to set 
+		the user priority in the TCI field of the VLAN tag. 
+		Tagging user priority is applied only when the 
+		filter is enabled. In the case where the filter 
+		for signaling protocol is disabled and the VLAN 
+		option is enabled, the default user priority 
+		declared under the VLAN group will be used. 
+		Otherwise, the user priority set for signaling 
+		has precedence over the VLAN default user priority.
+		7 = High priority
+		0 = Low priority"
+	DEFVAL { 6 }
+	::= {  interfaceQoSGroup 2 }
+
+interfaceQoSMediaIeee8021QFilterEnable OBJECT-TYPE
+	SYNTAX  Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enabling IEEE 802.1Q VLAN user priority 
+		tagging for VoIP media packet. This filter 
+		applies to any VoIP media protocol in use 
+		(e.g. RTP, T.38). When the filter is disabled 
+		(as well as VLAN), no tag is added to the Ethernet 
+		header. Otherwise, each signaling packet is tagged 
+		with the user priority defined below.
+		0 = Disable
+		1 = Enable"
+	DEFVAL { 0 }
+	::= {  interfaceQoSGroup 3 }
+
+interfaceQoSMediaIeee8021QUserPriority OBJECT-TYPE
+	SYNTAX  Unsigned32 (0..7)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"IEEE 802.1Q VLAN user priority value for VoIP 
+		media packet. This value is used to set the 
+		user priority in the TCI field of the VLAN tag. 
+		Tagging user priority is applied only when the 
+		filter is enabled. In the case where the filter 
+		for media protocol is disabled and the VLAN 
+		option is enabled, the default user priority 
+		declared under the VLAN group will be used. 
+		Otherwise, the user priority set for media 
+		has precedence over the VLAN default user priority.
+		7 = High priority
+		0 = Low priority"
+	DEFVAL { 6 }
+	::= {  interfaceQoSGroup 4 }
+
+interfaceVlanGroup	OBJECT IDENTIFIER			::=  {	interfaceGroup	9  }
+
+interfaceVlanIeee8021QTaggingEnable OBJECT-TYPE
+	SYNTAX  Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enabling IEEE 802.1Q VLAN tagging. With this 
+		option enabled, all packets are tagged with 
+		the Virtual ID (VID) specified below. The 
+		default user priority is to be applied in case 
+		of general protocol or when signaling or media 
+		protocol filtering is disabled.
+		WARNING: Enable this option only on compatible LAN 
+		with equipment supporting the VLAN tagging. Otherwise, 
+		the Unit may be unreachable. In this case, please use 
+		the reset button to access and disable VLAN tagging -
+		in the reset mode, tagging is not permitted. See IEEE 
+		802.1Q for more information on this topic.
+		0 = Disable
+		1 = Enable"
+	DEFVAL { 0 }
+	::= {  interfaceVlanGroup 1 }
+
+interfaceVlanIeee8021QVirtualLanID OBJECT-TYPE
+	SYNTAX  Unsigned32 (1..4095)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"IEEE 802.1Q Virtual LAN ID. This is the VID to 
+		be applied in the TCI field when tagging is enabled. 
+		The value 1 is the default Port VID (PVID) for bridge 
+		port. The 4095 VID (0xFFF) is reserved for implementation 
+		use and it shall not be used in tag header.
+		NOTE: As per standard, some bridges may not support 
+		the full range of VID."
+	DEFVAL { 1 }
+	::= {  interfaceVlanGroup 2 }
+
+interfaceVlanIeee8021QDefaultUserPriority OBJECT-TYPE
+	SYNTAX  Unsigned32 (0..7)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"IEEE 802.1Q Virtual LAN default user priority. 
+		This is the user priority to be applied in the 
+		TCI field when tagging is enabled. This value 
+		applies to all protocols for which no priority 
+		filtering is enabled (e.g. ARP, ICMP)
+		7 = High priority
+		0 = Low priority"
+	DEFVAL { 6 }
+	::= {  interfaceVlanGroup 3 }
+					 
+signalingProtocolsGroup OBJECT IDENTIFIER	::=  {  provisionningMib  4  }
+	
+signalingProtocolsSwitch OBJECT-TYPE
+	SYNTAX  Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Signaling protocol in use.
+		0 = MGCP
+		1 = SIP"
+	DEFVAL { 1 }
+	::= {  signalingProtocolsGroup 1 }
+
+apaManagerGroup OBJECT IDENTIFIER			::=  {	provisionningMib  5	}
+
+apaManagerEnable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable the APA Manager.
+		 0 = Disable
+		 1 = Enable"
+	DEFVAL { 1 }
+	::=  {	apaManagerGroup  1	}
+
+apaManagerUseDhcp OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select the provenance of the APA Manager configuration.
+		 0 = Static
+		 1 = DHCP"
+	DEFVAL { 1 }
+	::=  {	apaManagerGroup  2	}
+
+apaManagerTrapRetransmissionPeriod OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..4294967295)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"TRAP retransmission period in msec."
+	DEFVAL { 60000 }
+	::=  {	apaManagerGroup  3	}
+
+apaManagerTrapRetransmissionRetryCount OBJECT-TYPE
+	SYNTAX	INTEGER (-1..2147483647)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"TRAP retransmission retry count.
+		 -1 = infinite (always retransmit)"
+	DEFVAL { 10 }
+	::=  {	apaManagerGroup  4	}
+
+apaManagerStaticGroup	OBJECT IDENTIFIER		::=  {	apaManagerGroup  6	}
+
+apaManagerStaticPrimHost OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Static APA Manager IP address or domain name."
+	DEFVAL { "192.168.0.10" }
+	::=  {	apaManagerStaticGroup  1  }
+
+apaManagerStaticPrimTrapPort OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..65535)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Static APA Manager IP port number on which traps must be sent."
+	DEFVAL { 162 }
+	::=  {	apaManagerStaticGroup  2  }
+
+apaManagerDhcpGroup OBJECT IDENTIFIER			::=  {	apaManagerGroup  7	}
+
+apaManagerDhcpVendorSpecificCode OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..254)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"DHCP APA Manager vendor specific code."
+	DEFVAL { 200 }
+	::=  {	apaManagerDhcpGroup  1	}
+
+apaManagerDhcpPrimHost OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"APA Manager IP address or domain name provided by DHCP server."
+	DEFVAL { "192.168.0.10" }
+	::=  {	apaManagerDhcpGroup  2	}
+
+apaManagerDhcpPrimTrapPort OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..65535)
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"APA Manager IP port number, provided by DHCP server, on which traps must be sent."
+	DEFVAL { 162 }
+	::=  {	apaManagerDhcpGroup  3	}
+
+
+apaUIGroup		OBJECT IDENTIFIER			::=  {	provisionningMib  6	}
+
+apaUIMapRuleGroup	OBJECT IDENTIFIER			::=  {	apaUIGroup	1  }
+
+apaUIMapRule1Group	OBJECT IDENTIFIER			::=  {	apaUIMapRuleGroup  1  }
+
+apaUIMapRule1Enable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable Dial Map Rule #1.
+		 0 = Disable
+		 1 = Enable"
+	DEFVAL { 1 }
+	::=  {	apaUIMapRule1Group	1  }
+
+apaUIMapRule1DialMap OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Rule #1 Dial Map."
+	DEFVAL { "x.T" }
+	::=  {	apaUIMapRule1Group	2  }
+
+apaUIMapRule1IsValid OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"Rule #1 Dial Map validity.
+		 0 = Not valid
+		 1 = Valid"
+	DEFVAL { 0 }
+	::=  {	apaUIMapRule1Group	3  }
+
+apaUIMapRule1RemDigitEnable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select if digits must be removed from the dialed number for Dial Map Rule #1.
+		 0 = Disable (do not remove digits)
+		 1 = Enable (remove digits)"
+	DEFVAL { 0 }
+	::=  {	apaUIMapRule1Group	4  }
+
+apaUIMapRule1RemDigitCount OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..15)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Number of digits to remove from the dialed number for Dial Map Rule #1."
+	DEFVAL { 0 }
+	::=  {	apaUIMapRule1Group	5  }
+
+apaUIMapRule1PrefixEnable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select if digits must be prefixed to the dialed number for Dial Map Rule #1.
+		 0 = Disable (do not prefix digits)
+		 1 = Enable (prefix digits)"
+	DEFVAL { 1 }
+	::=  {	apaUIMapRule1Group	6  }
+
+apaUIMapRule1PrefixDigit OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..2)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select the digits to prefix to the dialed number for Dial Map Rule #1.
+		 0 = Prefix Area Code
+		 1 = Prefix Country Code
+		 2 = Prefix Country Code and Area Code"
+	DEFVAL { 2 }
+	::=  {	apaUIMapRule1Group	7  }
+
+apaUIMapRule2Group	OBJECT IDENTIFIER			::=  {	apaUIMapRuleGroup  2  }
+
+apaUIMapRule2Enable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable Dial Map Rule #2.
+		 0 = Disable
+		 1 = Enable"
+	DEFVAL { 1 }
+	::=  {	apaUIMapRule2Group	1  }
+
+apaUIMapRule2DialMap OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Rule #2 Dial Map."
+	DEFVAL { "x.T" }
+	::=  {	apaUIMapRule2Group	2  }
+
+apaUIMapRule2IsValid OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"Rule #2 Dial Map validity.
+		 0 = Not valid
+		 1 = Valid"
+	DEFVAL { 0 }
+	::=  {	apaUIMapRule2Group	3  }
+
+apaUIMapRule2RemDigitEnable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select if digits must be removed from the dialed number for Dial Map Rule #2.
+		 0 = Disable (do not remove digits)
+		 1 = Enable (remove digits)"
+	DEFVAL { 0 }
+	::=  {	apaUIMapRule2Group	4  }
+
+apaUIMapRule2RemDigitCount OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..15)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Number of digits to remove from the dialed number for Dial Map Rule #2."
+	DEFVAL { 0 }
+	::=  {	apaUIMapRule2Group	5  }
+
+apaUIMapRule2PrefixEnable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select if digits must be prefixed to the dialed number for Dial Map Rule #2.
+		 0 = Disable (do not prefix digits)
+		 1 = Enable (prefix digits)"
+	DEFVAL { 1 }
+	::=  {	apaUIMapRule2Group	6  }
+
+apaUIMapRule2PrefixDigit OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..2)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select the digits to prefix to the dialed number for Dial Map Rule #2.
+		 0 = Prefix Area Code
+		 1 = Prefix Country Code
+		 2 = Prefix Country Code and Area Code"
+	DEFVAL { 2 }
+	::=  {	apaUIMapRule2Group	7  }
+
+apaUIMapRule3Group	OBJECT IDENTIFIER			::=  {	apaUIMapRuleGroup  3  }
+
+apaUIMapRule3Enable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable Dial Map Rule #3.
+		 0 = Disable
+		 1 = Enable"
+	DEFVAL { 1 }
+	::=  {	apaUIMapRule3Group	1  }
+
+apaUIMapRule3DialMap OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Rule #3 Dial Map."
+	DEFVAL { "x.T" }
+	::=  {	apaUIMapRule3Group	2  }
+
+apaUIMapRule3IsValid OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"Rule #3 Dial Map validity.
+		 0 = Not valid
+		 1 = Valid"
+	DEFVAL { 0 }
+	::=  {	apaUIMapRule3Group	3  }
+
+apaUIMapRule3RemDigitEnable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select if digits must be removed from the dialed number for Dial Map Rule #3.
+		 0 = Disable (do not remove digits)
+		 1 = Enable (remove digits)"
+	DEFVAL { 0 }
+	::=  {	apaUIMapRule3Group	4  }
+
+apaUIMapRule3RemDigitCount OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..15)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Number of digits to remove from the dialed number for Dial Map Rule #3."
+	DEFVAL { 0 }
+	::=  {	apaUIMapRule3Group	5  }
+
+apaUIMapRule3PrefixEnable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select if digits must be prefixed to the dialed number for Dial Map Rule #3.
+		 0 = Disable (do not prefix digits)
+		 1 = Enable (prefix digits)"
+	DEFVAL { 1 }
+	::=  {	apaUIMapRule3Group	6  }
+
+apaUIMapRule3PrefixDigit OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..2)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select the digits to prefix to the dialed number for Dial Map Rule #3.
+		 0 = Prefix Area Code
+		 1 = Prefix Country Code
+		 2 = Prefix Country Code and Area Code"
+	DEFVAL { 2 }
+	::=  {	apaUIMapRule3Group	7  }
+
+apaUIMapRule4Group	OBJECT IDENTIFIER			::=  {	apaUIMapRuleGroup  4  }
+
+apaUIMapRule4Enable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable Dial Map Rule #4.
+		 0 = Disable
+		 1 = Enable"
+	DEFVAL { 1 }
+	::=  {	apaUIMapRule4Group	1  }
+
+apaUIMapRule4DialMap OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Rule #4 Dial Map."
+	DEFVAL { "x.T" }
+	::=  {	apaUIMapRule4Group	2  }
+
+apaUIMapRule4IsValid OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"Rule #4 Dial Map validity.
+		 0 = Not valid
+		 1 = Valid"
+	DEFVAL { 0 }
+	::=  {	apaUIMapRule4Group	3  }
+
+apaUIMapRule4RemDigitEnable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select if digits must be removed from the dialed number for Dial Map Rule #4.
+		 0 = Disable (do not remove digits)
+		 1 = Enable (remove digits)"
+	DEFVAL { 0 }
+	::=  {	apaUIMapRule4Group	4  }
+
+apaUIMapRule4RemDigitCount OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..15)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Number of digits to remove from the dialed number for Dial Map Rule #4."
+	DEFVAL { 0 }
+	::=  {	apaUIMapRule4Group	5  }
+
+apaUIMapRule4PrefixEnable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select if digits must be prefixed to the dialed number for Dial Map Rule #4.
+		 0 = Disable (do not prefix digits)
+		 1 = Enable (prefix digits)"
+	DEFVAL { 1 }
+	::=  {	apaUIMapRule4Group	6  }
+
+apaUIMapRule4PrefixDigit OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..2)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select the digits to prefix to the dialed number for Dial Map Rule #4.
+		 0 = Prefix Area Code
+		 1 = Prefix Country Code
+		 2 = Prefix Country Code and Area Code"
+	DEFVAL { 2 }
+	::=  {	apaUIMapRule4Group	7  }
+
+apaUIServicesGroup	OBJECT IDENTIFIER			::=  {	apaUIGroup	2  }
+
+apaUIServicesPort1Group OBJECT IDENTIFIER			::=  {	apaUIServicesGroup	1  }
+
+apaUIServicesPort1CallForwardUnconditionalGroup OBJECT IDENTIFIER			::=  {	apaUIServicesPort1Group 1  }
+
+apaUIServicesPort1CallForwardUnconditionalEnable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Unconditionally enable the Call Forward on port #1.
+		 0 = Disable
+		 1 = Enable"
+	DEFVAL { 0 }
+	::=  {	apaUIServicesPort1CallForwardUnconditionalGroup 1  }
+
+apaUIServicesPort1CallForwardUnconditionalAddress OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Address to which the phone call will be unconditionally forwarded.
+		 Address format = 'userInfo@host:portNumber' where 
+		 userInfo   = user name or telephone number (optional),
+		 host       = domain name or IP address,
+		 portNumber = port number (optional)."
+	DEFVAL { "" }
+	::=  {	apaUIServicesPort1CallForwardUnconditionalGroup 2  }
+
+apaUIServicesPort1CallForwardUnconditionalEnableStarNumber OBJECT-TYPE
+	SYNTAX	Unsigned32 (10..99)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Digits to dial after the star key to unconditionally enable the Call Forward."
+	DEFVAL { 25 }
+	::=  {	apaUIServicesPort1CallForwardUnconditionalGroup 3  }
+
+apaUIServicesPort1CallForwardUnconditionalDisableStarNumber OBJECT-TYPE
+	SYNTAX	Unsigned32 (10..99)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Digits to dial after the star key to disable the unconditional Call Forward."
+	DEFVAL { 26 }
+	::=  {	apaUIServicesPort1CallForwardUnconditionalGroup 4  }
+
+apaUIServicesPort1CallForwardBusyGroup OBJECT IDENTIFIER			::=  {	apaUIServicesPort1Group 2  }
+
+apaUIServicesPort1CallForwardBusyEnable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable the Call Forward when busy on port #1.
+		 0 = Disable
+		 1 = Enable"
+	DEFVAL { 0 }
+	::=  {	apaUIServicesPort1CallForwardBusyGroup	1  }
+
+apaUIServicesPort1CallForwardBusyAddress OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Address to which the phone call will be forwarded if the line is busy.
+		 Address format = 'userInfo@host:portNumber' where 
+		 userInfo   = user name or telephone number (optional),
+		 host       = domain name or IP address,
+		 portNumber = port number (optional)."
+	DEFVAL { "" }
+	::=  {	apaUIServicesPort1CallForwardBusyGroup	2  }
+
+apaUIServicesPort1CallForwardNoAnswerGroup OBJECT IDENTIFIER			::=  {	apaUIServicesPort1Group 3  }
+
+apaUIServicesPort1CallForwardNoAnswerEnable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable the Call Forward on no answer on port #1.
+		 0 = Disable
+		 1 = Enable"
+	DEFVAL { 0 }
+	::=  {	apaUIServicesPort1CallForwardNoAnswerGroup	1  }
+
+apaUIServicesPort1CallForwardNoAnswerAddress OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Address to which the phone call will be forwarded if there is no answer.
+		 Address format = 'userInfo@host:portNumber' where 
+		 userInfo   = user name or telephone number (optional),
+		 host       = domain name or IP address,
+		 portNumber = port number (optional)."
+	DEFVAL { "" }
+	::=  {	apaUIServicesPort1CallForwardNoAnswerGroup	2  }
+
+apaUIServicesPort1CallForwardNoAnswerNumberOfRings OBJECT-TYPE
+	SYNTAX	Unsigned32 (1..8)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Number of phone rings before forwarding the incoming call." 
+	DEFVAL { 3 }
+	::=  {	apaUIServicesPort1CallForwardNoAnswerGroup	3  }
+
+apaUIServicesPort1CallWaitingGroup OBJECT IDENTIFIER			::=  {	apaUIServicesPort1Group 4  }
+
+apaUIServicesPort1CallWaitingEnable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable emission of the call watiting tone on port #1.
+		 0 = Disable
+		 1 = Enable"
+	DEFVAL { 1 }
+	::=  {	apaUIServicesPort1CallWaitingGroup 1  }
+
+apaUIServicesPort1CallWaitingDisableStarNumber OBJECT-TYPE
+	SYNTAX	Unsigned32 (10..99)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Digits to dial after the star key in order to disable the call waiting tone
+		 on a per call basis."
+	DEFVAL { 70 }
+	::=  {	apaUIServicesPort1CallWaitingGroup 2  }
+
+apaUIServicesPort1CallWaitingEnableStarNumber OBJECT-TYPE
+	SYNTAX	Unsigned32 (10..99)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Digits to dial after the star key in order to enable the call waiting tone
+		 on a per call basis."
+	DEFVAL { 71 }
+	::=  {	apaUIServicesPort1CallWaitingGroup 3  }
+
+apaUIServicesPort2Group OBJECT IDENTIFIER			::=  {	apaUIServicesGroup	2  }
+
+apaUIServicesPort2CallForwardUnconditionalGroup OBJECT IDENTIFIER			::=  {	apaUIServicesPort2Group 1  }
+
+apaUIServicesPort2CallForwardUnconditionalEnable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Unconditionally enable the Call Forward on port #2.
+		 0 = Disable
+		 1 = Enable"
+	DEFVAL { 0 }
+	::=  {	apaUIServicesPort2CallForwardUnconditionalGroup 1  }
+
+apaUIServicesPort2CallForwardUnconditionalAddress OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Address to which the phone call will be unconditionally forwarded.
+		 Address format = 'userInfo@host:portNumber' where 
+		 userInfo   = user name or telephone number (optional),
+		 host       = domain name or IP address,
+		 portNumber = port number (optional)."
+	DEFVAL { "" }
+	::=  {	apaUIServicesPort2CallForwardUnconditionalGroup 2  }
+
+apaUIServicesPort2CallForwardUnconditionalEnableStarNumber OBJECT-TYPE
+	SYNTAX	Unsigned32 (10..99)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Digits to dial after the star key to unconditionally enable the Call Forward."
+	DEFVAL { 25 }
+	::=  {	apaUIServicesPort2CallForwardUnconditionalGroup 3  }
+
+apaUIServicesPort2CallForwardUnconditionalDisableStarNumber OBJECT-TYPE
+	SYNTAX	Unsigned32 (10..99)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Digits to dial after the star key to disable the unconditional Call Forward."
+	DEFVAL { 26 }
+	::=  {	apaUIServicesPort2CallForwardUnconditionalGroup 4  }
+
+apaUIServicesPort2CallForwardBusyGroup OBJECT IDENTIFIER			::=  {	apaUIServicesPort2Group 2  }
+
+apaUIServicesPort2CallForwardBusyEnable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable the Call Forward when busy on port #2.
+		 0 = Disable
+		 1 = Enable"
+	DEFVAL { 0 }
+	::=  {	apaUIServicesPort2CallForwardBusyGroup	1  }
+
+apaUIServicesPort2CallForwardBusyAddress OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Address to which the phone call will be forwarded if the line is busy.
+		 Address format = 'userInfo@host:portNumber' where 
+		 userInfo   = user name or telephone number (optional),
+		 host       = domain name or IP address,
+		 portNumber = port number (optional)."
+	DEFVAL { "" }
+	::=  {	apaUIServicesPort2CallForwardBusyGroup	2  }
+
+apaUIServicesPort2CallForwardNoAnswerGroup OBJECT IDENTIFIER			::=  {	apaUIServicesPort2Group 3  }
+
+apaUIServicesPort2CallForwardNoAnswerEnable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable the Call Forward on no answer on port #2.
+		 0 = Disable
+		 1 = Enable"
+	DEFVAL { 0 }
+	::=  {	apaUIServicesPort2CallForwardNoAnswerGroup	1  }
+
+apaUIServicesPort2CallForwardNoAnswerAddress OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Address to which the phone call will be forwarded if there is no answer.
+		 Address format = 'userInfo@host:portNumber' where 
+		 userInfo   = user name or telephone number (optional),
+		 host       = domain name or IP address,
+		 portNumber = port number (optional)."
+	DEFVAL { "" }
+	::=  {	apaUIServicesPort2CallForwardNoAnswerGroup	2  }
+
+apaUIServicesPort2CallForwardNoAnswerNumberOfRings OBJECT-TYPE
+	SYNTAX	Unsigned32 (1..8)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Number of phone rings before forwarding the incoming call." 
+	DEFVAL { 3 }
+	::=  {	apaUIServicesPort2CallForwardNoAnswerGroup	3  }
+
+apaUIServicesPort2CallWaitingGroup OBJECT IDENTIFIER			::=  {	apaUIServicesPort2Group 4  }
+
+apaUIServicesPort2CallWaitingEnable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable emission of the call watiting tone on port #2.
+		 0 = Disable
+		 1 = Enable"
+	DEFVAL { 1 }
+	::=  {	apaUIServicesPort2CallWaitingGroup 1  }
+
+apaUIServicesPort2CallWaitingDisableStarNumber OBJECT-TYPE
+	SYNTAX	Unsigned32 (10..99)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Digits to dial after the star key in order to disable the call waiting tone
+		 on a per call basis."
+	DEFVAL { 70 }
+	::=  {	apaUIServicesPort2CallWaitingGroup 2  }
+
+apaUIServicesPort2CallWaitingEnableStarNumber OBJECT-TYPE
+	SYNTAX	Unsigned32 (10..99)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Digits to dial after the star key in order to enable the call waiting tone
+		 on a per call basis."
+	DEFVAL { 71 }
+	::=  {	apaUIServicesPort2CallWaitingGroup 3  }
+
+apaUIServicesPort3Group OBJECT IDENTIFIER			::=  {	apaUIServicesGroup	3  }
+
+apaUIServicesPort3CallForwardUnconditionalGroup OBJECT IDENTIFIER			::=  {	apaUIServicesPort3Group 1  }
+
+apaUIServicesPort3CallForwardUnconditionalEnable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Unconditionally enable the Call Forward on port #3.
+		 0 = Disable
+		 1 = Enable"
+	DEFVAL { 0 }
+	::=  {	apaUIServicesPort3CallForwardUnconditionalGroup 1  }
+
+apaUIServicesPort3CallForwardUnconditionalAddress OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Address to which the phone call will be unconditionally forwarded.
+		 Address format = 'userInfo@host:portNumber' where 
+		 userInfo   = user name or telephone number (optional),
+		 host       = domain name or IP address,
+		 portNumber = port number (optional)."
+	DEFVAL { "" }
+	::=  {	apaUIServicesPort3CallForwardUnconditionalGroup 2  }
+
+apaUIServicesPort3CallForwardUnconditionalEnableStarNumber OBJECT-TYPE
+	SYNTAX	Unsigned32 (10..99)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Digits to dial after the star key to unconditionally enable the Call Forward."
+	DEFVAL { 25 }
+	::=  {	apaUIServicesPort3CallForwardUnconditionalGroup 3  }
+
+apaUIServicesPort3CallForwardUnconditionalDisableStarNumber OBJECT-TYPE
+	SYNTAX	Unsigned32 (10..99)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Digits to dial after the star key to disable the unconditional Call Forward."
+	DEFVAL { 26 }
+	::=  {	apaUIServicesPort3CallForwardUnconditionalGroup 4  }
+
+apaUIServicesPort3CallForwardBusyGroup OBJECT IDENTIFIER			::=  {	apaUIServicesPort3Group 2  }
+
+apaUIServicesPort3CallForwardBusyEnable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable the Call Forward when busy on port #3.
+		 0 = Disable
+		 1 = Enable"
+	DEFVAL { 0 }
+	::=  {	apaUIServicesPort3CallForwardBusyGroup	1  }
+
+apaUIServicesPort3CallForwardBusyAddress OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Address to which the phone call will be forwarded if the line is busy.
+		 Address format = 'userInfo@host:portNumber' where 
+		 userInfo   = user name or telephone number (optional),
+		 host       = domain name or IP address,
+		 portNumber = port number (optional)."
+	DEFVAL { "" }
+	::=  {	apaUIServicesPort3CallForwardBusyGroup	2  }
+
+apaUIServicesPort3CallForwardNoAnswerGroup OBJECT IDENTIFIER			::=  {	apaUIServicesPort3Group 3  }
+
+apaUIServicesPort3CallForwardNoAnswerEnable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable the Call Forward on no answer on port #3.
+		 0 = Disable
+		 1 = Enable"
+	DEFVAL { 0 }
+	::=  {	apaUIServicesPort3CallForwardNoAnswerGroup	1  }
+
+apaUIServicesPort3CallForwardNoAnswerAddress OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Address to which the phone call will be forwarded if there is no answer.
+		 Address format = 'userInfo@host:portNumber' where 
+		 userInfo   = user name or telephone number (optional),
+		 host       = domain name or IP address,
+		 portNumber = port number (optional)."
+	DEFVAL { "" }
+	::=  {	apaUIServicesPort3CallForwardNoAnswerGroup	2  }
+
+apaUIServicesPort3CallForwardNoAnswerNumberOfRings OBJECT-TYPE
+	SYNTAX	Unsigned32 (1..8)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Number of phone rings before forwarding the incoming call." 
+	DEFVAL { 3 }
+	::=  {	apaUIServicesPort3CallForwardNoAnswerGroup	3  }
+
+apaUIServicesPort3CallWaitingGroup OBJECT IDENTIFIER			::=  {	apaUIServicesPort3Group 4  }
+
+apaUIServicesPort3CallWaitingEnable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable emission of the call watiting tone on port #3.
+		 0 = Disable
+		 1 = Enable"
+	DEFVAL { 1 }
+	::=  {	apaUIServicesPort3CallWaitingGroup 1  }
+
+apaUIServicesPort3CallWaitingDisableStarNumber OBJECT-TYPE
+	SYNTAX	Unsigned32 (10..99)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Digits to dial after the star key in order to disable the call waiting tone
+		 on a per call basis."
+	DEFVAL { 70 }
+	::=  {	apaUIServicesPort3CallWaitingGroup 2  }
+
+apaUIServicesPort3CallWaitingEnableStarNumber OBJECT-TYPE
+	SYNTAX	Unsigned32 (10..99)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Digits to dial after the star key in order to enable the call waiting tone
+		 on a per call basis."
+	DEFVAL { 71 }
+	::=  {	apaUIServicesPort3CallWaitingGroup 3  }
+
+apaUIServicesPort4Group OBJECT IDENTIFIER			::=  {	apaUIServicesGroup	4  }
+
+apaUIServicesPort4CallForwardUnconditionalGroup OBJECT IDENTIFIER			::=  {	apaUIServicesPort4Group 1  }
+
+apaUIServicesPort4CallForwardUnconditionalEnable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Unconditionally enable the Call Forward on port #4.
+		 0 = Disable
+		 1 = Enable"
+	DEFVAL { 0 }
+	::=  {	apaUIServicesPort4CallForwardUnconditionalGroup 1  }
+
+apaUIServicesPort4CallForwardUnconditionalAddress OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Address to which the phone call will be unconditionally forwarded.
+		 Address format = 'userInfo@host:portNumber' where 
+		 userInfo   = user name or telephone number (optional),
+		 host       = domain name or IP address,
+		 portNumber = port number (optional)."
+	DEFVAL { "" }
+	::=  {	apaUIServicesPort4CallForwardUnconditionalGroup 2  }
+
+apaUIServicesPort4CallForwardUnconditionalEnableStarNumber OBJECT-TYPE
+	SYNTAX	Unsigned32 (10..99)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Digits to dial after the star key to unconditionally enable the Call Forward."
+	DEFVAL { 25 }
+	::=  {	apaUIServicesPort4CallForwardUnconditionalGroup 3  }
+
+apaUIServicesPort4CallForwardUnconditionalDisableStarNumber OBJECT-TYPE
+	SYNTAX	Unsigned32 (10..99)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Digits to dial after the star key to disable the unconditional Call Forward."
+	DEFVAL { 26 }
+	::=  {	apaUIServicesPort4CallForwardUnconditionalGroup 4  }
+
+apaUIServicesPort4CallForwardBusyGroup OBJECT IDENTIFIER			::=  {	apaUIServicesPort4Group 2  }
+
+apaUIServicesPort4CallForwardBusyEnable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable the Call Forward when busy on port #4.
+		 0 = Disable
+		 1 = Enable"
+	DEFVAL { 0 }
+	::=  {	apaUIServicesPort4CallForwardBusyGroup	1  }
+
+apaUIServicesPort4CallForwardBusyAddress OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Address to which the phone call will be forwarded if the line is busy.
+		 Address format = 'userInfo@host:portNumber' where 
+		 userInfo   = user name or telephone number (optional),
+		 host       = domain name or IP address,
+		 portNumber = port number (optional)."
+	DEFVAL { "" }
+	::=  {	apaUIServicesPort4CallForwardBusyGroup	2  }
+
+apaUIServicesPort4CallForwardNoAnswerGroup OBJECT IDENTIFIER			::=  {	apaUIServicesPort4Group 3  }
+
+apaUIServicesPort4CallForwardNoAnswerEnable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable the Call Forward on no answer on port #4.
+		 0 = Disable
+		 1 = Enable"
+	DEFVAL { 0 }
+	::=  {	apaUIServicesPort4CallForwardNoAnswerGroup	1  }
+
+apaUIServicesPort4CallForwardNoAnswerAddress OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Address to which the phone call will be forwarded if there is no answer.
+		 Address format = 'userInfo@host:portNumber' where 
+		 userInfo   = user name or telephone number (optional),
+		 host       = domain name or IP address,
+		 portNumber = port number (optional)."
+	DEFVAL { "" }
+	::=  {	apaUIServicesPort4CallForwardNoAnswerGroup	2  }
+
+apaUIServicesPort4CallForwardNoAnswerNumberOfRings OBJECT-TYPE
+	SYNTAX	Unsigned32 (1..8)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Number of phone rings before forwarding the incoming call." 
+	DEFVAL { 3 }
+	::=  {	apaUIServicesPort4CallForwardNoAnswerGroup	3  }
+
+apaUIServicesPort4CallWaitingGroup OBJECT IDENTIFIER			::=  {	apaUIServicesPort4Group 4  }
+
+apaUIServicesPort4CallWaitingEnable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable emission of the call watiting tone on port #4.
+		 0 = Disable
+		 1 = Enable"
+	DEFVAL { 1 }
+	::=  {	apaUIServicesPort4CallWaitingGroup 1  }
+
+apaUIServicesPort4CallWaitingDisableStarNumber OBJECT-TYPE
+	SYNTAX	Unsigned32 (10..99)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Digits to dial after the star key in order to disable the call waiting tone
+		 on a per call basis."
+	DEFVAL { 70 }
+	::=  {	apaUIServicesPort4CallWaitingGroup 2  }
+
+apaUIServicesPort4CallWaitingEnableStarNumber OBJECT-TYPE
+	SYNTAX	Unsigned32 (10..99)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Digits to dial after the star key in order to enable the call waiting tone
+		 on a per call basis."
+	DEFVAL { 71 }
+	::=  {	apaUIServicesPort4CallWaitingGroup 3  }
+
+gatewayGroup	OBJECT IDENTIFIER			::=  {	provisionningMib  7	}
+
+gatewayGeneralDialPrefix OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Prefix that must be dialed before any other numbers on a port used in FXO mode."
+	DEFVAL { "" }
+	::=  {	gatewayGroup  1  }
+
+gatewayPort1Group	OBJECT IDENTIFIER			::=  {	gatewayGroup  2  }
+
+gatewayPort1PermissionMode OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..2)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select port #1 configuration used in FXO mode.
+		 0 = Net to PSTN
+		 1 = PSTN to Net
+		 2 = Both directions"
+	DEFVAL { 2 }
+	::=  {	gatewayPort1Group  1  }
+
+gatewayPort1RedirectEnable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable the redirection of incoming calls on port #1 used in FXO mode.
+		 0 = Disable (IP dial tone)
+		 1 = Enable  (Redirected to address 'gatewayPort1RedirectToAddress')"
+	DEFVAL { 0 }
+	::=  {	gatewayPort1Group  2  }
+
+gatewayPort1RedirectToAddress OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Address to which incoming calls on port #1 are redirected."
+	DEFVAL { "" }
+	::=  {	gatewayPort1Group  3  }
+
+gatewayPort2Group	OBJECT IDENTIFIER			::=  {	gatewayGroup  3  }
+
+gatewayPort2PermissionMode OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..2)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select port #2 configuration used in FXO mode.
+		 0 = Net to PSTN
+		 1 = PSTN to Net
+		 2 = Both directions"
+	DEFVAL { 2 }
+	::=  {	gatewayPort2Group  1  }
+
+gatewayPort2RedirectEnable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable the redirection of incoming calls on port #2 used in FXO mode.
+		 0 = Disable (IP dial tone)
+		 1 = Enable  (Redirected to address 'gatewayPort2RedirectToAddress')"
+	DEFVAL { 0 }
+	::=  {	gatewayPort2Group  2  }
+
+gatewayPort2RedirectToAddress OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Address to which incoming calls on port #2 are redirected."
+	DEFVAL { "" }
+	::=  {	gatewayPort2Group  3  }
+
+gatewayPort3Group	OBJECT IDENTIFIER			::=  {	gatewayGroup  4  }
+
+gatewayPort3PermissionMode OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..2)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select port #3 configuration used in FXO mode.
+		 0 = Net to PSTN
+		 1 = PSTN to Net
+		 2 = Both directions"
+	DEFVAL { 2 }
+	::=  {	gatewayPort3Group  1  }
+
+gatewayPort3RedirectEnable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable the redirection of incoming calls on port #3 used in FXO mode.
+		 0 = Disable (IP dial tone)
+		 1 = Enable  (Redirected to address 'gatewayPort3RedirectToAddress')"
+	DEFVAL { 0 }
+	::=  {	gatewayPort3Group  2  }
+
+gatewayPort3RedirectToAddress OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Address to which incoming calls on port #3 are redirected."
+	DEFVAL { "" }
+	::=  {	gatewayPort3Group  3  }
+
+gatewayPort4Group	OBJECT IDENTIFIER			::=  {	gatewayGroup  5  }
+
+gatewayPort4PermissionMode OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..2)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select port #4 configuration used in FXO mode.
+		 0 = Net to PSTN
+		 1 = PSTN to Net
+		 2 = Both directions"
+	DEFVAL { 2 }
+	::=  {	gatewayPort4Group  1  }
+
+gatewayPort4RedirectEnable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable the redirection of incoming calls on port #4 used in FXO mode.
+		 0 = Disable (IP dial tone)
+		 1 = Enable  (Redirected to address 'gatewayPort4RedirectToAddress')"
+	DEFVAL { 0 }
+	::=  {	gatewayPort4Group  2  }
+
+gatewayPort4RedirectToAddress OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Address to which incoming calls on port #4 are redirected."
+	DEFVAL { "" }
+	::=  {	gatewayPort4Group  3  }
+
+gatewayPermLocalSameACGroup OBJECT IDENTIFIER			::=  {	gatewayGroup  6  }
+
+gatewayPermLocalSameACPrefix OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Prefix that must be dialed before the destination number.
+		 The field is empty when no prefix is required. 	  
+		 (The destination call is local with the same area code as 'countryAreaCode'.)"
+	DEFVAL { "" }
+	::=  {	gatewayPermLocalSameACGroup  1	}
+
+gatewayPermLocalSameACAllowed OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Semi-colon separated list of numbers allowed to be called on a port used in FXO mode.
+		 (The destination call is local with the same area code as 'countryAreaCode'.)"
+	DEFVAL { "" }
+	::=  {	gatewayPermLocalSameACGroup  2	}
+
+gatewayPermLocalSameACAllowAll OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select which numbers are allowed to be called on a port used in FXO mode.
+		 0 = Only numbers in field 'gatewayPermLocalSameACAllowed'
+		 1 = All numbers
+		 (The destination call is local with the same area code as 'countryAreaCode'.)"
+	DEFVAL { 0 }
+	::=  {	gatewayPermLocalSameACGroup  3	}
+
+gatewayPermLocalDiffACGroup OBJECT IDENTIFIER			::=  {	gatewayGroup  7  }
+
+gatewayPermLocalDiffACPrefix OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Prefix that must be dialed before the destination number.
+		 The field is empty when no prefix is required.
+		 (The destination call is local with a different area code than 'countryAreaCode'.)"
+	DEFVAL { "" }
+	::=  {	gatewayPermLocalDiffACGroup  1	}
+
+gatewayPermLocalDiffACAllowed OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Semi-colon separated list of numbers allowed to be called on a port used in FXO mode.
+		 (The destination call is local with a different area code than 'countryAreaCode'.)"
+	DEFVAL { "" }
+	::=  {	gatewayPermLocalDiffACGroup  2	}
+
+gatewayPermLocalDiffACAllowAll OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select which numbers are allowed to be called on a port used in FXO mode.
+		 0 = Only numbers in field 'gatewayPermLocalSameACAllowed'
+		 1 = All numbers
+		 (The destination call is local with a different area code than 'countryAreaCode'.)"
+	DEFVAL { 0 }
+	::=  {	gatewayPermLocalDiffACGroup  3	}
+
+gatewayPermLongDistSameACGroup	OBJECT IDENTIFIER			::=  {	gatewayGroup  8  }
+
+gatewayPermLongDistSameACPrefix OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Prefix that must be dialed before the destination number.
+		 The field is empty when no prefix is required.
+		 (The destination call is long distance with the same area code as 'countryAreaCode'.)"
+	DEFVAL { "" }
+	::=  {	gatewayPermLongDistSameACGroup	1  }
+
+gatewayPermLongDistSameACAllowed OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Semi-colon separated list of numbers allowed to be called on a port used in FXO mode.
+		 (The destination call is long distance with the same area code as 'countryAreaCode'.)"
+	DEFVAL { "" }
+	::=  {	gatewayPermLongDistSameACGroup	2  }
+
+gatewayPermLongDistSameACAllowAll OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select which numbers are allowed to be called on a port used in FXO mode.
+		 0 = Only numbers in field 'gatewayPermLocalSameACAllowed'
+		 1 = All numbers
+		 (The destination call is long distance with the same area code as 'countryAreaCode'.)"
+	DEFVAL { 0 }
+	::=  {	gatewayPermLongDistSameACGroup	3  }
+
+gatewayPermLongDistDiffACGroup	OBJECT IDENTIFIER			::=  {	gatewayGroup  9  }
+
+gatewayPermLongDistDiffACPrefix OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Prefix that must be dialed before the destination number.
+		 The field is empty when no prefix is required.
+		 (The destination call is long distance with a different area code than 'countryAreaCode'.)"
+	DEFVAL { "" }
+	::=  {	gatewayPermLongDistDiffACGroup	1  }
+
+gatewayPermLongDistDiffACAllowed OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Semi-colon separated list of numbers allowed to be called on a port used in FXO mode.
+		 (The destination call is long distance with a different area code than 'countryAreaCode'.)"
+	DEFVAL { "" }
+	::=  {	gatewayPermLongDistDiffACGroup	2  }
+
+gatewayPermLongDistDiffACAllowAll OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select which numbers are allowed to be called on a port used in FXO mode.
+		 0 = Only numbers in field 'gatewayPermLocalSameACAllowed'
+		 1 = All numbers
+		 (The destination call is long distance with a different area code than 'countryAreaCode'.)"
+	DEFVAL { 0 }
+	::=  {	gatewayPermLongDistDiffACGroup	3  }
+
+gatewayPermLongDistDiffCCGroup	OBJECT IDENTIFIER			::=  {	gatewayGroup  10  }
+
+gatewayPermLongDistDiffCCPrefix OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Prefix that must be dialed before the destination number.
+		 The field is empty when no prefix is required.
+		 (The destination call is long distance with a different country code than 'countryCountryCode'.)"
+	DEFVAL { "" }
+	::=  {	gatewayPermLongDistDiffCCGroup	1  }
+
+gatewayPermLongDistDiffCCAllowed OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Semi-colon separated list of numbers allowed to be called on a port used in FXO mode.
+		 (The destination call is long distance with a different country code than 'countryCountryCode'.)"
+	DEFVAL { "" }
+	::=  {	gatewayPermLongDistDiffCCGroup	2  }
+
+gatewayPermLongDistDiffCCAllowAll OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select which numbers are allowed to be called on a port used in FXO mode.
+		 0 = Only numbers in field 'gatewayPermLocalSameACAllowed' 
+		 1 = All numbers
+		 (The destination call is long distance with a different country code than 'countryCountryCode'.)"
+	DEFVAL { 0 }
+	::=  {	gatewayPermLongDistDiffCCGroup	3  }
+
+countryGroup	OBJECT IDENTIFIER			::=  {	provisionningMib  8	}
+
+countryCountryCode OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..999)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Country code associated to the current location of the APA III."
+	DEFVAL { 1 }
+	::=  {	countryGroup  1  }
+
+countryAreaCode OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..99999)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Area code associated to the current location of the APA III."
+	DEFVAL { 819 }
+	::=  {	countryGroup  2  }
+
+countrySelection OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..14)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select the default country that may be used for configuration.
+		 0 = Use Custom Configuration
+		 1 = North America 1
+		 2 = North America 2
+		 3 = Austria
+		 4 = France
+		 5 = Germany 1
+		 6 = Germany 2
+		 7 = UK
+		 8 = Italy
+		 9 = Spain
+		10 = Switzerland
+		11 = Sweden
+		12 = Australia
+		13 = Japan
+		14 = Israel"
+	DEFVAL { 1 }
+	::=  {	countryGroup  3  }
+
+countryForceConfiguration OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"If the value is set to 1, every custom configuration selection will be 
+		 overridden by the selected country configuration in countrySelection.
+		 0 = Do not override
+		 1 = Override any custom configuration selection"
+	DEFVAL { 1 }
+	::=  {	countryGroup  4  }
+
+portGroup		OBJECT IDENTIFIER			::=  {	provisionningMib  9	}
+
+port1Group		OBJECT IDENTIFIER			::=  {	portGroup  1  }
+
+port1Enable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable APA III port #1.
+			0 = Disable
+			1 = Enable"
+	DEFVAL { 1 }
+	::=  {	port1Group	1  }
+
+port1AnalogLineType OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"The analog telephone line type parameter defines the type of analog line used. 
+         Ground Start ensures proper Far End Disconnect between an FXO port and the PSTN.
+			0 = Loop Start
+			1 = Ground Start"
+	DEFVAL { 0 }
+	::=  {	port1Group	2  }
+
+port1DspGroup	OBJECT IDENTIFIER			::=  {	port1Group	3  }
+
+port1DspMaxJitterBufferLen OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..500)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #1 maximum jitter buffer length in msec."
+	DEFVAL { 150 }
+	::=  {	port1DspGroup  1  }
+
+port1DspTargetJitterBufferLen OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..500)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #1 target jitter buffer length in msec."
+	DEFVAL { 50 }
+	::=  {	port1DspGroup  2  }
+
+port1DspAdaptativityJitterBuffer OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #1 adaptative jitter buffer.
+		 0 = OFF
+		 1 = ON"
+	DEFVAL { 1 }
+	::=  {	port1DspGroup  3  }
+
+port1DspVoiceActivityDetection OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..2)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #1 Voice Activity Detection (VAD).
+		 0 = OFF
+		 1 = Transparent
+		 2 = Conservative"
+	DEFVAL { 2 }
+	::=  {	port1DspGroup  4  }
+
+port1DspEchoCancelControl OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #1 echo cancel control
+		 0 = OFF
+		 1 = ON"
+	DEFVAL { 1 }
+	::=  {	port1DspGroup  5  }
+
+port1DspUserGainGroup	OBJECT IDENTIFIER			::=  {	port1DspGroup  6  }
+
+port1DspUserGainInputOffset OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(1..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #1 user input gain offset in dB."
+	DEFVAL { "-6" }
+	::=  {	port1DspUserGainGroup  1  }
+
+port1DspUserGainOutputOffset OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(1..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #1 user output gain offset in dB."
+	DEFVAL { "-6" }
+	::=  {	port1DspUserGainGroup  2  }
+
+port1DspCountrySpecificGroup	OBJECT IDENTIFIER			::=  {	port1DspGroup  7  }
+
+port1DspCountrySpecificLoopCurrent OBJECT-TYPE
+	SYNTAX	Unsigned32 (20..70)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #1 country specific loop current."
+	DEFVAL { 30 }
+	::=  {	port1DspCountrySpecificGroup  1  }
+
+port1DspCountrySpecificGainGroup	OBJECT IDENTIFIER			::=  {	port1DspCountrySpecificGroup  2  }
+
+port1DspCountrySpecificGainConfiguration OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select port #1 country specific gain configuration.
+		 0 = Custom configuration
+		 1 = Default country configuration"
+	DEFVAL { 1 }
+	::=  {	port1DspCountrySpecificGainGroup  1  }
+
+port1DspCountrySpecificGainBaseInput OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..65535)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #1 country specific base input gain."
+	DEFVAL { 3648 }
+	::=  {	port1DspCountrySpecificGainGroup  2  }
+
+port1DspCountrySpecificGainBaseOutput OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..65535)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #1 country specific base output gain."
+	DEFVAL { 3029 }
+	::=  {	port1DspCountrySpecificGainGroup  3  }
+
+port1DspCountrySpecificGainBaseInputOffset OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(1..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #1 country specific base input gain offset in dB."
+	DEFVAL { "0" }
+	::=  {	port1DspCountrySpecificGainGroup  4  }
+
+port1DspCountrySpecificGainBaseOutputOffset OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(1..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #1 country specific base output gain offset in dB."
+	DEFVAL { "0" }
+	::=  {	port1DspCountrySpecificGainGroup  5  }
+
+port1DspCodecGroup	OBJECT IDENTIFIER			::=  {	port1DspGroup  8  }
+
+port1DspPreferredCodec OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(1..2))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select preferred port #1 codec.
+		 0 = G.711 u-Law (PCMU)
+		 1 = G.711 a-Law (PCMA)
+		 2 = G.723.1
+		 3 = G.729.AB"
+	DEFVAL { "0" }
+	::=  {	port1DspCodecGroup	1  }
+
+port1DspCodecG711aLawGroup	OBJECT IDENTIFIER			::=  {	port1DspCodecGroup	2  }
+
+port1DspCodecG711aLawEnable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable G.711 a-Law (PCMA) on port #1.
+		 0 = Disable
+		 1 = Enable"
+	DEFVAL { 1 }
+	::=  {	port1DspCodecG711aLawGroup	1  }
+
+port1DspCodecG711aLawPTimeMin OBJECT-TYPE
+	SYNTAX	Unsigned32 (10..80)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #1 minimum packetization time (ptime) for PCMA in msec."
+	DEFVAL { 20 }
+	::=  {	port1DspCodecG711aLawGroup	2  }
+
+port1DspCodecG711aLawPTimeMax OBJECT-TYPE
+	SYNTAX	Unsigned32 (10..80)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #1 maximum packetization time (ptime) for PCMA in msec."
+	DEFVAL { 80 }
+	::=  {	port1DspCodecG711aLawGroup	3  }
+
+port1DspCodecG711uLawGroup	OBJECT IDENTIFIER			::=  {	port1DspCodecGroup	3  }
+
+port1DspCodecG711uLawEnable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable G.711 u-Law (PCMU) on Port #1.
+		 0 = Disable
+		 1 = Enable"
+	DEFVAL { 1 }
+	::=  {	port1DspCodecG711uLawGroup	1  }
+
+port1DspCodecG711uLawPTimeMin OBJECT-TYPE
+	SYNTAX	Unsigned32 (10..80)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #1 minimum packetization time (ptime) for PCMU in msec."
+	DEFVAL { 20 }
+	::=  {	port1DspCodecG711uLawGroup	2  }
+
+port1DspCodecG711uLawPTimeMax OBJECT-TYPE
+	SYNTAX	Unsigned32 (10..80)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #1 maximum packetization time (ptime) for PCMU in msec."
+	DEFVAL { 80 }
+	::=  {	port1DspCodecG711uLawGroup	3  }
+
+port1DspCodecG7231Group OBJECT IDENTIFIER			::=  {	port1DspCodecGroup	4  }
+
+port1DspCodecG7231Enable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable G.723.1 on port #1.
+		 0 = Disable
+		 1 = Enable"
+	DEFVAL { 1 }
+	::=  {	port1DspCodecG7231Group  1	}
+
+port1DspCodecG7231PTimeMin OBJECT-TYPE
+	SYNTAX	Unsigned32 (30..30)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #1 minimum packetization time (ptime) for G.723.1 in msec."
+	DEFVAL { 30 }
+	::=  {	port1DspCodecG7231Group  2	}
+
+port1DspCodecG7231PTimeMax OBJECT-TYPE
+	SYNTAX	Unsigned32 (30..30)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #1 maximum packetization time (ptime) for G.723.1 in msec."
+	DEFVAL { 30 }
+	::=  {	port1DspCodecG7231Group  3	}
+
+port1DspCodecG7231BaudRate OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #1 baud rate value for G.723.1.
+		 0 = 6.3Kbps
+		 1 = 5.3Kbps"
+	DEFVAL { 0 }
+	::=  {	port1DspCodecG7231Group  4	}
+
+port1DspCodecG729ABGroup	OBJECT IDENTIFIER			::=  {	port1DspCodecGroup	5  }
+
+port1DspCodecG729ABEnable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable G.729.AB on port #1.
+		 0 = Disable
+		 1 = Enable"
+	DEFVAL { 1 }
+	::=  {	port1DspCodecG729ABGroup  1  }
+
+port1DspCodecG729ABPTimeMin OBJECT-TYPE
+	SYNTAX	Unsigned32 (10..40)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #1 minimum packetization time (ptime) for G.729.AB in msec.
+		 WARNING: Valid values are 10, 20, 30, and 40. The default value is used if the value is invalid."
+	DEFVAL { 10 }
+	::=  {	port1DspCodecG729ABGroup  2  }
+
+port1DspCodecG729ABPTimeMax OBJECT-TYPE
+	SYNTAX	Unsigned32 (10..40)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #1 maximum packetization time (ptime) for G.729.AB in msec.
+		 WARNING: Valid values are 10, 20, 30, and 40. The default value is used if the value is invalid."
+	DEFVAL { 40 }
+	::=  {	port1DspCodecG729ABGroup  3  }
+
+port1DspCodecT38Group	OBJECT IDENTIFIER			::=  {	port1DspCodecGroup	6  }
+
+port1DspCodecT38Enable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable T.38 on port #1.
+		 0 = Disable
+		 1 = Enable"
+	DEFVAL { 1 }
+	::=  {	port1DspCodecT38Group  1  }
+
+port1Type OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"Port #1 mode in use.
+		 0 = FXS
+		 1 = FXO"
+	DEFVAL { 0 }
+	::=  {	port1Group	4  }
+
+port1ConfigurationMode OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select the port mode to be used if port #1 is a dual function port.
+		 0 = FXS
+		 1 = FXO"
+	DEFVAL { 0 }
+	::=  {  port1Group  5  }
+
+port1DtmfGroup OBJECT IDENTIFIER ::= { port1Group 6 }
+
+port1DtmfTransport OBJECT-TYPE
+	SYNTAX Unsigned32 (0..2)
+	MAX-ACCESS read-write
+	STATUS current
+	DESCRIPTION "Attribute to select the type of DTMF transport.
+				 0 = In band
+				 1 = Out-of-Band using Signaling Protocol
+				 2 = Out-of-Band using RTP DTMF payload"
+	DEFVAL { 2 }
+	::= { port1DtmfGroup 1 }
+
+port2Group		OBJECT IDENTIFIER			::=  {	portGroup  2  }
+
+port2Enable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable APA III port #2.
+			0 = Disable
+			1 = Enable"
+	DEFVAL { 1 }
+	::=  {	port2Group	1  }
+
+port2AnalogLineType OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"The analog telephone line type parameter defines the type of analog line used. 
+         Ground Start ensures proper Far End Disconnect between an FXO port and the PSTN.
+			0 = Loop Start
+			1 = Ground Start"
+	DEFVAL { 0 }
+	::=  {	port2Group	2  }
+
+port2DspGroup	OBJECT IDENTIFIER			::=  {	port2Group	3  }
+
+port2DspMaxJitterBufferLen OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..500)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #2 maximum jitter buffer length in msec."
+	DEFVAL { 150 }
+	::=  {	port2DspGroup  1  }
+
+port2DspTargetJitterBufferLen OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..500)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #2 target jitter buffer length in msec."
+	DEFVAL { 50 }
+	::=  {	port2DspGroup  2  }
+
+port2DspAdaptativityJitterBuffer OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #2 adaptative jitter buffer.
+		 0 = OFF
+		 1 = ON"
+	DEFVAL { 1 }
+	::=  {	port2DspGroup  3  }
+
+port2DspVoiceActivityDetection OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..2)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #2 Voice Activity Detection (VAD).
+		 0 = OFF
+		 1 = Transparent
+		 2 = Conservative"
+	DEFVAL { 2 }
+	::=  {	port2DspGroup  4  }
+
+port2DspEchoCancelControl OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #2 echo cancel control
+		 0 = OFF
+		 1 = ON"
+	DEFVAL { 1 }
+	::=  {	port2DspGroup  5  }
+
+port2DspUserGainGroup	OBJECT IDENTIFIER			::=  {	port2DspGroup  6  }
+
+port2DspUserGainInputOffset OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(1..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #2 user input gain offset in dB."
+	DEFVAL { "-6" }
+	::=  {	port2DspUserGainGroup  1  }
+
+port2DspUserGainOutputOffset OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(1..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #2 user output gain offset in dB."
+	DEFVAL { "-6" }
+	::=  {	port2DspUserGainGroup  2  }
+
+port2DspCountrySpecificGroup	OBJECT IDENTIFIER			::=  {	port2DspGroup  7  }
+
+port2DspCountrySpecificLoopCurrent OBJECT-TYPE
+	SYNTAX	Unsigned32 (20..70)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #2 country specific loop current."
+	DEFVAL { 30 }
+	::=  {	port2DspCountrySpecificGroup  1  }
+
+port2DspCountrySpecificGainGroup	OBJECT IDENTIFIER			::=  {	port2DspCountrySpecificGroup  2  }
+
+port2DspCountrySpecificGainConfiguration OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select port #2 country specific gain configuration.
+		 0 = Custom configuration
+		 1 = Default country configuration"
+	DEFVAL { 1 }
+	::=  {	port2DspCountrySpecificGainGroup  1  }
+
+port2DspCountrySpecificGainBaseInput OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..65535)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #2 country specific base input gain."
+	DEFVAL { 3648 }
+	::=  {	port2DspCountrySpecificGainGroup  2  }
+
+port2DspCountrySpecificGainBaseOutput OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..65535)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #2 country specific base output gain."
+	DEFVAL { 3029 }
+	::=  {	port2DspCountrySpecificGainGroup  3  }
+
+port2DspCountrySpecificGainBaseInputOffset OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(1..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #2 country specific base input gain offset in dB."
+	DEFVAL { "0" }
+	::=  {	port2DspCountrySpecificGainGroup  4  }
+
+port2DspCountrySpecificGainBaseOutputOffset OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(1..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #2 country specific base output gain offset in dB."
+	DEFVAL { "0" }
+	::=  {	port2DspCountrySpecificGainGroup  5  }
+
+port2DspCodecGroup	OBJECT IDENTIFIER			::=  {	port2DspGroup  8  }
+
+port2DspPreferredCodec OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(1..2))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select preferred port #2 codec.
+		 0 = G.711 u-Law (PCMU)
+		 1 = G.711 a-Law (PCMA)
+		 2 = G.723.1
+		 3 = G.729.AB"
+	DEFVAL { "0" }
+	::=  {	port2DspCodecGroup	1  }
+
+port2DspCodecG711aLawGroup	OBJECT IDENTIFIER			::=  {	port2DspCodecGroup	2  }
+
+port2DspCodecG711aLawEnable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable G.711 a-Law (PCMA) on port #2.
+		 0 = Disable
+		 1 = Enable"
+	DEFVAL { 1 }
+	::=  {	port2DspCodecG711aLawGroup	1  }
+
+port2DspCodecG711aLawPTimeMin OBJECT-TYPE
+	SYNTAX	Unsigned32 (10..80)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #2 minimum packetization time (ptime) for PCMA in msec."
+	DEFVAL { 20 }
+	::=  {	port2DspCodecG711aLawGroup	2  }
+
+port2DspCodecG711aLawPTimeMax OBJECT-TYPE
+	SYNTAX	Unsigned32 (10..80)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #2 maximum packetization time (ptime) for PCMA in msec."
+	DEFVAL { 80 }
+	::=  {	port2DspCodecG711aLawGroup	3  }
+
+port2DspCodecG711uLawGroup	OBJECT IDENTIFIER			::=  {	port2DspCodecGroup	3  }
+
+port2DspCodecG711uLawEnable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable G.711 u-Law (PCMU) on Port #2.
+		 0 = Disable
+		 1 = Enable"
+	DEFVAL { 1 }
+	::=  {	port2DspCodecG711uLawGroup	1  }
+
+port2DspCodecG711uLawPTimeMin OBJECT-TYPE
+	SYNTAX	Unsigned32 (10..80)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #2 minimum packetization time (ptime) for PCMU in msec."
+	DEFVAL { 20 }
+	::=  {	port2DspCodecG711uLawGroup	2  }
+
+port2DspCodecG711uLawPTimeMax OBJECT-TYPE
+	SYNTAX	Unsigned32 (10..80)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #2 maximum packetization time (ptime) for PCMU in msec."
+	DEFVAL { 80 }
+	::=  {	port2DspCodecG711uLawGroup	3  }
+
+port2DspCodecG7231Group OBJECT IDENTIFIER			::=  {	port2DspCodecGroup	4  }
+
+port2DspCodecG7231Enable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable G.723.1 on port #2.
+		 0 = Disable
+		 1 = Enable"
+	DEFVAL { 1 }
+	::=  {	port2DspCodecG7231Group  1	}
+
+port2DspCodecG7231PTimeMin OBJECT-TYPE
+	SYNTAX	Unsigned32 (30..30)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #2 minimum packetization time (ptime) for G.723.1 in msec."
+	DEFVAL { 30 }
+	::=  {	port2DspCodecG7231Group  2	}
+
+port2DspCodecG7231PTimeMax OBJECT-TYPE
+	SYNTAX	Unsigned32 (30..30)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #2 maximum packetization time (ptime) for G.723.1 in msec."
+	DEFVAL { 30 }
+	::=  {	port2DspCodecG7231Group  3	}
+
+port2DspCodecG7231BaudRate OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #2 baud rate value for G.723.1.
+		 0 = 6.3Kbps
+		 1 = 5.3Kbps"
+	DEFVAL { 0 }
+	::=  {	port2DspCodecG7231Group  4	}
+
+port2DspCodecG729ABGroup	OBJECT IDENTIFIER			::=  {	port2DspCodecGroup	5  }
+
+port2DspCodecG729ABEnable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable G.729.AB on port #2.
+		 0 = Disable
+		 1 = Enable"
+	DEFVAL { 1 }
+	::=  {	port2DspCodecG729ABGroup  1  }
+
+port2DspCodecG729ABPTimeMin OBJECT-TYPE
+	SYNTAX	Unsigned32 (10..40)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #2 minimum packetization time (ptime) for G.729.AB in msec.
+		 WARNING: Valid values are 10, 20, 30, and 40. The default value is used if the value is invalid."
+	DEFVAL { 10 }
+	::=  {	port2DspCodecG729ABGroup  2  }
+
+port2DspCodecG729ABPTimeMax OBJECT-TYPE
+	SYNTAX	Unsigned32 (10..40)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #2 maximum packetization time (ptime) for G.729.AB in msec.
+		 WARNING: Valid values are 10, 20, 30, and 40. The default value is used if the value is invalid."
+	DEFVAL { 40 }
+	::=  {	port2DspCodecG729ABGroup  3  }
+
+port2DspCodecT38Group	OBJECT IDENTIFIER			::=  {	port2DspCodecGroup	6  }
+
+port2DspCodecT38Enable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable T.38 on port #2.
+		 0 = Disable
+		 1 = Enable"
+	DEFVAL { 1 }
+	::=  {	port2DspCodecT38Group  1  }
+
+port2Type OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"Port #2 mode in use.
+		 0 = FXS
+		 1 = FXO"
+	DEFVAL { 0 }
+	::=  {	port2Group	4  }
+
+port2ConfigurationMode OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select the port mode to be used if port #2 is a dual function port.
+		 0 = FXS
+		 1 = FXO"
+	DEFVAL { 0 }
+	::=  {	port2Group	5  }
+
+port2DtmfGroup OBJECT IDENTIFIER ::= { port2Group 6 }
+
+port2DtmfTransport OBJECT-TYPE
+	SYNTAX Unsigned32 (0..2)
+	MAX-ACCESS read-write
+	STATUS current
+	DESCRIPTION "Attribute to select the type of DTMF transport.
+				 0 = In band
+				 1 = Out-of-Band using Signaling Protocol
+				 2 = Out-of-Band using RTP DTMF payload"
+	DEFVAL { 2 }
+	::= { port2DtmfGroup 1 }
+
+port3Group		OBJECT IDENTIFIER			::=  {	portGroup  3  }
+
+port3Enable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable APA III port #3.
+			0 = Disable
+			1 = Enable"
+	DEFVAL { 1 }
+	::=  {	port3Group	1  }
+
+port3AnalogLineType OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"The analog telephone line type parameter defines the type of analog line used. 
+         Ground Start ensures proper Far End Disconnect between an FXO port and the PSTN.
+			0 = Loop Start
+			1 = Ground Start"
+	DEFVAL { 0 }
+	::=  {	port3Group	2  }
+
+port3DspGroup	OBJECT IDENTIFIER			::=  {	port3Group	3  }
+
+port3DspMaxJitterBufferLen OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..500)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #3 maximum jitter buffer length in msec."
+	DEFVAL { 150 }
+	::=  {	port3DspGroup  1  }
+
+port3DspTargetJitterBufferLen OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..500)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #3 target jitter buffer length in msec."
+	DEFVAL { 50 }
+	::=  {	port3DspGroup  2  }
+
+port3DspAdaptativityJitterBuffer OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #3 adaptative jitter buffer.
+		 0 = OFF
+		 1 = ON"
+	DEFVAL { 1 }
+	::=  {	port3DspGroup  3  }
+
+port3DspVoiceActivityDetection OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..2)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #3 Voice Activity Detection (VAD).
+		 0 = OFF
+		 1 = Transparent
+		 2 = Conservative"
+	DEFVAL { 2 }
+	::=  {	port3DspGroup  4  }
+
+port3DspEchoCancelControl OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #3 echo cancel control
+		 0 = OFF
+		 1 = ON"
+	DEFVAL { 1 }
+	::=  {	port3DspGroup  5  }
+
+port3DspUserGainGroup	OBJECT IDENTIFIER			::=  {	port3DspGroup  6  }
+
+port3DspUserGainInputOffset OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(1..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #3 user input gain offset in dB."
+	DEFVAL { "-6" }
+	::=  {	port3DspUserGainGroup  1  }
+
+port3DspUserGainOutputOffset OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(1..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #3 user output gain offset in dB."
+	DEFVAL { "-6" }
+	::=  {	port3DspUserGainGroup  2  }
+
+port3DspCountrySpecificGroup	OBJECT IDENTIFIER			::=  {	port3DspGroup  7  }
+
+port3DspCountrySpecificLoopCurrent OBJECT-TYPE
+	SYNTAX	Unsigned32 (20..70)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #3 country specific loop current."
+	DEFVAL { 30 }
+	::=  {	port3DspCountrySpecificGroup  1  }
+
+port3DspCountrySpecificGainGroup	OBJECT IDENTIFIER			::=  {	port3DspCountrySpecificGroup  2  }
+
+port3DspCountrySpecificGainConfiguration OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select port #3 country specific gain configuration.
+		 0 = Custom configuration
+		 1 = Default country configuration"
+	DEFVAL { 1 }
+	::=  {	port3DspCountrySpecificGainGroup  1  }
+
+port3DspCountrySpecificGainBaseInput OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..65535)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #3 country specific base input gain."
+	DEFVAL { 3648 }
+	::=  {	port3DspCountrySpecificGainGroup  2  }
+
+port3DspCountrySpecificGainBaseOutput OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..65535)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #3 country specific base output gain."
+	DEFVAL { 3029 }
+	::=  {	port3DspCountrySpecificGainGroup  3  }
+
+port3DspCountrySpecificGainBaseInputOffset OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(1..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #3 country specific base input gain offset in dB."
+	DEFVAL { "0" }
+	::=  {	port3DspCountrySpecificGainGroup  4  }
+
+port3DspCountrySpecificGainBaseOutputOffset OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(1..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #3 country specific base output gain offset in dB."
+	DEFVAL { "0" }
+	::=  {	port3DspCountrySpecificGainGroup  5  }
+
+port3DspCodecGroup	OBJECT IDENTIFIER			::=  {	port3DspGroup  8  }
+
+port3DspPreferredCodec OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(1..2))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select preferred port #3 codec.
+		 0 = G.711 u-Law (PCMU)
+		 1 = G.711 a-Law (PCMA)
+		 2 = G.723.1
+		 3 = G.729.AB"
+	DEFVAL { "0" }
+	::=  {	port3DspCodecGroup	1  }
+
+port3DspCodecG711aLawGroup	OBJECT IDENTIFIER			::=  {	port3DspCodecGroup	2  }
+
+port3DspCodecG711aLawEnable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable G.711 a-Law (PCMA) on port #3.
+		 0 = Disable
+		 1 = Enable"
+	DEFVAL { 1 }
+	::=  {	port3DspCodecG711aLawGroup	1  }
+
+port3DspCodecG711aLawPTimeMin OBJECT-TYPE
+	SYNTAX	Unsigned32 (10..80)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #3 minimum packetization time (ptime) for PCMA in msec."
+	DEFVAL { 20 }
+	::=  {	port3DspCodecG711aLawGroup	2  }
+
+port3DspCodecG711aLawPTimeMax OBJECT-TYPE
+	SYNTAX	Unsigned32 (10..80)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #3 maximum packetization time (ptime) for PCMA in msec."
+	DEFVAL { 80 }
+	::=  {	port3DspCodecG711aLawGroup	3  }
+
+port3DspCodecG711uLawGroup	OBJECT IDENTIFIER			::=  {	port3DspCodecGroup	3  }
+
+port3DspCodecG711uLawEnable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable G.711 u-Law (PCMU) on Port #3.
+		 0 = Disable
+		 1 = Enable"
+	DEFVAL { 1 }
+	::=  {	port3DspCodecG711uLawGroup	1  }
+
+port3DspCodecG711uLawPTimeMin OBJECT-TYPE
+	SYNTAX	Unsigned32 (10..80)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #3 minimum packetization time (ptime) for PCMU in msec."
+	DEFVAL { 20 }
+	::=  {	port3DspCodecG711uLawGroup	2  }
+
+port3DspCodecG711uLawPTimeMax OBJECT-TYPE
+	SYNTAX	Unsigned32 (10..80)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #3 maximum packetization time (ptime) for PCMU in msec."
+	DEFVAL { 80 }
+	::=  {	port3DspCodecG711uLawGroup	3  }
+
+port3DspCodecG7231Group OBJECT IDENTIFIER			::=  {	port3DspCodecGroup	4  }
+
+port3DspCodecG7231Enable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable G.723.1 on port #3.
+		 0 = Disable
+		 1 = Enable"
+	DEFVAL { 1 }
+	::=  {	port3DspCodecG7231Group  1	}
+
+port3DspCodecG7231PTimeMin OBJECT-TYPE
+	SYNTAX	Unsigned32 (30..30)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #3 minimum packetization time (ptime) for G.723.1 in msec."
+	DEFVAL { 30 }
+	::=  {	port3DspCodecG7231Group  2	}
+
+port3DspCodecG7231PTimeMax OBJECT-TYPE
+	SYNTAX	Unsigned32 (30..30)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #3 maximum packetization time (ptime) for G.723.1 in msec."
+	DEFVAL { 30 }
+	::=  {	port3DspCodecG7231Group  3	}
+
+port3DspCodecG7231BaudRate OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #3 baud rate value for G.723.1.
+		 0 = 6.3Kbps
+		 1 = 5.3Kbps"
+	DEFVAL { 0 }
+	::=  {	port3DspCodecG7231Group  4	}
+
+port3DspCodecG729ABGroup	OBJECT IDENTIFIER			::=  {	port3DspCodecGroup	5  }
+
+port3DspCodecG729ABEnable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable G.729.AB on port #3.
+		 0 = Disable
+		 1 = Enable"
+	DEFVAL { 1 }
+	::=  {	port3DspCodecG729ABGroup  1  }
+
+port3DspCodecG729ABPTimeMin OBJECT-TYPE
+	SYNTAX	Unsigned32 (10..40)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #3 minimum packetization time (ptime) for G.729.AB in msec.
+		 WARNING: Valid values are 10, 20, 30, and 40. The default value is used if the value is invalid."
+	DEFVAL { 10 }
+	::=  {	port3DspCodecG729ABGroup  2  }
+
+port3DspCodecG729ABPTimeMax OBJECT-TYPE
+	SYNTAX	Unsigned32 (10..40)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #3 maximum packetization time (ptime) for G.729.AB in msec.
+		 WARNING: Valid values are 10, 20, 30, and 40. The default value is used if the value is invalid."
+	DEFVAL { 40 }
+	::=  {	port3DspCodecG729ABGroup  3  }
+
+port3DspCodecT38Group	OBJECT IDENTIFIER			::=  {	port3DspCodecGroup	6  }
+
+port3DspCodecT38Enable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable T.38 on port #3.
+		 0 = Disable
+		 1 = Enable"
+	DEFVAL { 1 }
+	::=  {	port3DspCodecT38Group  1  }
+
+port3Type OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"Port #3 mode in use.
+		 0 = FXS
+		 1 = FXO"
+	DEFVAL { 0 }
+	::=  {	port3Group	4  }
+
+port3ConfigurationMode OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select the port mode to be used if port #3 is a dual function port.
+		 0 = FXS
+		 1 = FXO"
+	DEFVAL { 0 }
+	::=  {	port3Group	5  }
+
+port3DtmfGroup OBJECT IDENTIFIER ::= { port3Group 6 }
+
+port3DtmfTransport OBJECT-TYPE
+	SYNTAX Unsigned32 (0..2)
+	MAX-ACCESS read-write
+	STATUS current
+	DESCRIPTION "Attribute to select the type of DTMF transport.
+				 0 = In band
+				 1 = Out-of-Band using Signaling Protocol
+				 2 = Out-of-Band using RTP DTMF payload"
+	DEFVAL { 2 }
+	::= { port3DtmfGroup 1 }
+
+port4Group		OBJECT IDENTIFIER			::=  {	portGroup  4  }
+
+port4Enable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable APA III port #4.
+			0 = Disable
+			1 = Enable"
+	DEFVAL { 1 }
+	::=  {	port4Group	1  }
+
+port4AnalogLineType OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"The analog telephone line type parameter defines the type of analog line used. 
+         Ground Start ensures proper Far End Disconnect between an FXO port and the PSTN.
+			0 = Loop Start
+			1 = Ground Start"
+	DEFVAL { 0 }
+	::=  {	port4Group	2  }
+
+port4DspGroup	OBJECT IDENTIFIER			::=  {	port4Group	3  }
+
+port4DspMaxJitterBufferLen OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..500)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #4 maximum jitter buffer length in msec."
+	DEFVAL { 150 }
+	::=  {	port4DspGroup  1  }
+
+port4DspTargetJitterBufferLen OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..500)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #4 target jitter buffer length in msec."
+	DEFVAL { 50 }
+	::=  {	port4DspGroup  2  }
+
+port4DspAdaptativityJitterBuffer OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #4 adaptative jitter buffer.
+		 0 = OFF
+		 1 = ON"
+	DEFVAL { 1 }
+	::=  {	port4DspGroup  3  }
+
+port4DspVoiceActivityDetection OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..2)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #4 Voice Activity Detection (VAD).
+		 0 = OFF
+		 1 = Transparent
+		 2 = Conservative"
+	DEFVAL { 2 }
+	::=  {	port4DspGroup  4  }
+
+port4DspEchoCancelControl OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #4 echo cancel control
+		 0 = OFF
+		 1 = ON"
+	DEFVAL { 1 }
+	::=  {	port4DspGroup  5  }
+
+port4DspUserGainGroup	OBJECT IDENTIFIER			::=  {	port4DspGroup  6  }
+
+port4DspUserGainInputOffset OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(1..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #4 user input gain offset in dB."
+	DEFVAL { "-6" }
+	::=  {	port4DspUserGainGroup  1  }
+
+port4DspUserGainOutputOffset OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(1..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #4 user output gain offset in dB."
+	DEFVAL { "-6" }
+	::=  {	port4DspUserGainGroup  2  }
+
+port4DspCountrySpecificGroup	OBJECT IDENTIFIER			::=  {	port4DspGroup  7  }
+
+port4DspCountrySpecificLoopCurrent OBJECT-TYPE
+	SYNTAX	Unsigned32 (20..70)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #4 country specific loop current."
+	DEFVAL { 30 }
+	::=  {	port4DspCountrySpecificGroup  1  }
+
+port4DspCountrySpecificGainGroup	OBJECT IDENTIFIER			::=  {	port4DspCountrySpecificGroup  2  }
+
+port4DspCountrySpecificGainConfiguration OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select port #4 country specific gain configuration.
+		 0 = Custom configuration
+		 1 = Default country configuration"
+	DEFVAL { 1 }
+	::=  {	port4DspCountrySpecificGainGroup  1  }
+
+port4DspCountrySpecificGainBaseInput OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..65535)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #4 country specific base input gain."
+	DEFVAL { 3648 }
+	::=  {	port4DspCountrySpecificGainGroup  2  }
+
+port4DspCountrySpecificGainBaseOutput OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..65535)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #4 country specific base output gain."
+	DEFVAL { 3029 }
+	::=  {	port4DspCountrySpecificGainGroup  3  }
+
+port4DspCountrySpecificGainBaseInputOffset OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(1..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #4 country specific base input gain offset in dB."
+	DEFVAL { "0" }
+	::=  {	port4DspCountrySpecificGainGroup  4  }
+
+port4DspCountrySpecificGainBaseOutputOffset OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(1..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #4 country specific base output gain offset in dB."
+	DEFVAL { "0" }
+	::=  {	port4DspCountrySpecificGainGroup  5  }
+
+port4DspCodecGroup	OBJECT IDENTIFIER			::=  {	port4DspGroup  8  }
+
+port4DspPreferredCodec OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(1..2))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select preferred port #4 codec.
+		 0 = G.711 u-Law (PCMU)
+		 1 = G.711 a-Law (PCMA)
+		 2 = G.723.1
+		 3 = G.729.AB"
+	DEFVAL { "0" }
+	::=  {	port4DspCodecGroup	1  }
+
+port4DspCodecG711aLawGroup	OBJECT IDENTIFIER			::=  {	port4DspCodecGroup	2  }
+
+port4DspCodecG711aLawEnable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable G.711 a-Law (PCMA) on port #4.
+		 0 = Disable
+		 1 = Enable"
+	DEFVAL { 1 }
+	::=  {	port4DspCodecG711aLawGroup	1  }
+
+port4DspCodecG711aLawPTimeMin OBJECT-TYPE
+	SYNTAX	Unsigned32 (10..80)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #4 minimum packetization time (ptime) for PCMA in msec."
+	DEFVAL { 20 }
+	::=  {	port4DspCodecG711aLawGroup	2  }
+
+port4DspCodecG711aLawPTimeMax OBJECT-TYPE
+	SYNTAX	Unsigned32 (10..80)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #4 maximum packetization time (ptime) for PCMA in msec."
+	DEFVAL { 80 }
+	::=  {	port4DspCodecG711aLawGroup	3  }
+
+port4DspCodecG711uLawGroup	OBJECT IDENTIFIER			::=  {	port4DspCodecGroup	3  }
+
+port4DspCodecG711uLawEnable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable G.711 u-Law (PCMU) on Port #4.
+		 0 = Disable
+		 1 = Enable"
+	DEFVAL { 1 }
+	::=  {	port4DspCodecG711uLawGroup	1  }
+
+port4DspCodecG711uLawPTimeMin OBJECT-TYPE
+	SYNTAX	Unsigned32 (10..80)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #4 minimum packetization time (ptime) for PCMU in msec."
+	DEFVAL { 20 }
+	::=  {	port4DspCodecG711uLawGroup	2  }
+
+port4DspCodecG711uLawPTimeMax OBJECT-TYPE
+	SYNTAX	Unsigned32 (10..80)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #4 maximum packetization time (ptime) for PCMU in msec."
+	DEFVAL { 80 }
+	::=  {	port4DspCodecG711uLawGroup	3  }
+
+port4DspCodecG7231Group OBJECT IDENTIFIER			::=  {	port4DspCodecGroup	4  }
+
+port4DspCodecG7231Enable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable G.723.1 on port #4.
+		 0 = Disable
+		 1 = Enable"
+	DEFVAL { 1 }
+	::=  {	port4DspCodecG7231Group  1	}
+
+port4DspCodecG7231PTimeMin OBJECT-TYPE
+	SYNTAX	Unsigned32 (30..30)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #4 minimum packetization time (ptime) for G.723.1 in msec."
+	DEFVAL { 30 }
+	::=  {	port4DspCodecG7231Group  2	}
+
+port4DspCodecG7231PTimeMax OBJECT-TYPE
+	SYNTAX	Unsigned32 (30..30)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #4 maximum packetization time (ptime) for G.723.1 in msec."
+	DEFVAL { 30 }
+	::=  {	port4DspCodecG7231Group  3	}
+
+port4DspCodecG7231BaudRate OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #4 baud rate value for G.723.1.
+		 0 = 6.3Kbps
+		 1 = 5.3Kbps"
+	DEFVAL { 0 }
+	::=  {	port4DspCodecG7231Group  4	}
+
+port4DspCodecG729ABGroup	OBJECT IDENTIFIER			::=  {	port4DspCodecGroup	5  }
+
+port4DspCodecG729ABEnable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable G.729.AB on port #4.
+		 0 = Disable
+		 1 = Enable"
+	DEFVAL { 1 }
+	::=  {	port4DspCodecG729ABGroup  1  }
+
+port4DspCodecG729ABPTimeMin OBJECT-TYPE
+	SYNTAX	Unsigned32 (10..40)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #4 minimum packetization time (ptime) for G.729.AB in msec.
+		 WARNING: Valid values are 10, 20, 30, and 40. The default value is used if the value is invalid."
+	DEFVAL { 10 }
+	::=  {	port4DspCodecG729ABGroup  2  }
+
+port4DspCodecG729ABPTimeMax OBJECT-TYPE
+	SYNTAX	Unsigned32 (10..40)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Port #4 maximum packetization time (ptime) for G.729.AB in msec.
+		 WARNING: Valid values are 10, 20, 30, and 40. The default value is used if the value is invalid."
+	DEFVAL { 40 }
+	::=  {	port4DspCodecG729ABGroup  3  }
+
+port4DspCodecT38Group	OBJECT IDENTIFIER			::=  {	port4DspCodecGroup	6  }
+
+port4DspCodecT38Enable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable T.38 on port #4.
+		 0 = Disable
+		 1 = Enable"
+	DEFVAL { 1 }
+	::=  {	port4DspCodecT38Group  1  }
+
+port4Type OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"Port #4 mode in use.
+		 0 = FXS
+		 1 = FXO"
+	DEFVAL { 0 }
+	::=  {	port4Group	4  }
+
+port4ConfigurationMode OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select the port mode to be used if port #4 is a dual function port.
+		 0 = FXS
+		 1 = FXO"
+	DEFVAL { 0 }
+	::=  {	port4Group	5  }
+
+port4DtmfGroup OBJECT IDENTIFIER ::= { port4Group 6 }
+
+port4DtmfTransport OBJECT-TYPE
+	SYNTAX Unsigned32 (0..2)
+	MAX-ACCESS read-write
+	STATUS current
+	DESCRIPTION "Attribute to select the type of DTMF transport.
+				 0 = In band
+				 1 = Out-of-Band using Signaling Protocol
+				 2 = Out-of-Band using RTP DTMF payload"
+	DEFVAL { 2 }
+	::= { port4DtmfGroup 1 }
+
+portSilenceDetectionMode OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..3)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Options for silence detection.
+		Value: 0 - Disable
+			   1 - Disconnect if silence detected on SCN side
+			   2 - Disconnect if silence detected on IP side
+			   3 - Disconnect only when both sides have become silent"
+	DEFVAL { 0 }
+	::=  {	portGroup	5  }
+
+portSilenceDetectionTimeout OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..300)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"SilenceDetection timeout in seconds."
+	DEFVAL { 300 }
+	::=  {	portGroup	6  }
+
+portForcedEndOfCallEnable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable call interruption if unsuccessfull.
+		   0 - Disable
+		   1 - Enable"
+	DEFVAL { 1 }
+	::=  {	portGroup	7  }
+
+portForcedEndOfCallTimeout OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..180)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"ForcedEndOfCall timeout in seconds."
+	DEFVAL { 30 }
+	::=  {	portGroup	8  }
+
+syslogGroup 	OBJECT IDENTIFIER			::=  {	provisionningMib  10  }
+
+syslogMsgEnable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable the Syslog deamon messages.
+		 0 = Disable
+		 1 = Enable"
+	DEFVAL { 1 }
+	::=  {	syslogGroup  1	}
+
+syslogTracingMask OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..5)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select the Syslog mask.
+		 0 = Absolutely no Tracing
+		 1 = Critical errors
+		 2 = Error conditions
+		 3 = Warning conditions
+		 4 = Informational messages
+		 5 = Debug-level messages (use with care)
+		 Higher level mask includes lower level masks.
+		 e.g.: Error conditions (2) include Critical errors (1)"
+	DEFVAL { 4 }
+	::=  {	syslogGroup  2	}
+
+syslogUseDhcp OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select the provenance of the Syslog configuration.
+		 0 = Static
+		 1 = DHCP"
+	DEFVAL { 1 }
+	::=  {	syslogGroup  3	}
+
+syslogStaticGroup	OBJECT IDENTIFIER			::=  {	syslogGroup  4	}
+
+syslogStaticHost OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Static Syslog server IP address or domain name."
+	DEFVAL { "192.168.0.10" }
+	::=  {	syslogStaticGroup  1  }
+
+syslogStaticPort OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..65535)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Static Syslog server IP port number."
+	DEFVAL { 514 }
+	::=  {	syslogStaticGroup  2  }
+
+syslogDhcpGroup OBJECT IDENTIFIER			::=  {	syslogGroup  5	}
+
+syslogDhcpVendorSpecificCode OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..254)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"DHCP Syslog server vendor specific code."
+	DEFVAL { 110 }
+	::=  {	syslogDhcpGroup  1	}
+
+syslogDhcpHost OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"Syslog server IP address or domain name provided by DHCP Server."
+	DEFVAL { "192.168.0.10" }
+	::=  {	syslogDhcpGroup  2	}
+
+syslogDhcpPort OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..65535)
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"Syslog server IP port number provided by DHCP server."
+	DEFVAL { 514 }
+	::=  {	syslogDhcpGroup  3	}
+
+tftpGroup		OBJECT IDENTIFIER			::=  {	provisionningMib  11  }
+
+tftpFileName OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..50))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"APA III software file name to download from TFTP server."
+	DEFVAL { "apa.bin" }
+	::=  {	tftpGroup  1  }
+
+tftpEmergencyFileName OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..50))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Emergency APA III software file name to download when the Rescue application starts."
+	DEFVAL { "apa_emergency.bin" }
+	::=  {	tftpGroup  2  }
+
+tftpUseDhcp OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select the provenance of the TFTP server configuration.
+		 0 = Static
+		 1 = DHCP"
+	DEFVAL { 1 }
+	::=  {	tftpGroup  3  }
+
+tftpTimeOut OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..255)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Connection time-out value."
+	DEFVAL { 30 }
+	::=  {	tftpGroup  4  }
+
+tftpBlockSize OBJECT-TYPE
+	SYNTAX	Unsigned32 (128..65535)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Default block size."
+	DEFVAL { 1024 }
+	::=  {	tftpGroup  5  }
+
+tftpDownloadStatus OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..4)
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"TFTP APA III software file download status.
+		 0 = Idle
+		 1 = Success
+		 2 = Fail
+		 3 = In Progress
+		 4 = Abort"
+	DEFVAL { 0 }
+	::=  {	tftpGroup  6  }
+
+tftpServerStaticGroup	OBJECT IDENTIFIER			::=  {	tftpGroup  7  }
+
+tftpServerStaticHost OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Static TFTP server IP address or domain name."
+	DEFVAL { "192.168.0.10" }
+	::=  {	tftpServerStaticGroup  1  }
+
+tftpServerStaticPort OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..65535)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Static TFTP server IP port number."
+	DEFVAL { 69 }
+	::=  {	tftpServerStaticGroup  2  }
+
+tftpServerStaticEmergencyHost OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Static emergency TFTP server IP address or domain name."
+	DEFVAL { "192.168.0.10" }
+	::=  {	tftpServerStaticGroup  3  }
+
+tftpServerStaticEmergencyPort OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..65535)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Static emergency TFTP server IP port number."
+	DEFVAL { 69 }
+	::=  {	tftpServerStaticGroup  4  }
+
+tftpServerDhcpGroup OBJECT IDENTIFIER			::=  {	tftpGroup  8  }
+
+tftpServerDhcpVendorSpecificCode OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..254)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"DHCP TFTP server vendor specific code."
+	DEFVAL { 117 }
+	::=  {	tftpServerDhcpGroup  1	}
+
+tftpServerDhcpHost OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"TFTP server IP address or domain name provided by DHCP server."
+	DEFVAL { "192.168.0.10" }
+	::=  {	tftpServerDhcpGroup  2	}
+
+tftpServerDhcpPort OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..65535)
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"TFTP server IP port number provided by DHCP server."
+	DEFVAL { 69 }
+	::=  {	tftpServerDhcpGroup  3	}
+
+tftpServerDhcpEmergencyVendorSpecificCode OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..254)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"DHCP emergency TFTP server vendor specific code."
+	DEFVAL { 118 }
+	::=  {	tftpServerDhcpGroup  4	}
+
+tftpServerDhcpEmergencyHost OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"Emergency TFTP server IP address or domain name provided by DHCP server."
+	DEFVAL { "192.168.0.10" }
+	::=  {	tftpServerDhcpGroup  5	}
+
+tftpServerDhcpEmergencyPort OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..65535)
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"Emergency TFTP server IP port number provided by DHCP server."
+	DEFVAL { 69 }
+	::=  {	tftpServerDhcpGroup  6	}
+
+apaByPassGroup	OBJECT IDENTIFIER			::=  {	provisionningMib  12  }
+
+apaByPassModeAlwaysEnable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Always enable APA III bypass mode.
+		 0 = Disable
+		 1 = Enable"
+	DEFVAL { 0 }
+	::=  {	apaByPassGroup	1  }
+
+apaByPassModeLanFailEnable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable APA III bypass mode on a LAN failure.
+		 0 = Disable
+		 1 = Enable"
+	DEFVAL { 0 }
+	::=  {	apaByPassGroup	2  }
+
+apaByPassModeServerFailEnable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable APA III bypass mode on a server (SIP Server, MGCP Call Agent) connection failure.
+		 0 = Disable
+		 1 = Enable"
+	DEFVAL { 0 }
+	::=  {	apaByPassGroup	3  }
+
+apaSystemGroup	OBJECT IDENTIFIER			::=  {	provisionningMib  13  }
+
+apaSystemOperationalStatusConfigFile OBJECT-TYPE
+	SYNTAX	INTEGER (0..4)
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"TFTP system operational config file download status.
+		 0 = Idle
+		 1 = Success
+		 2 = Fail
+		 3 = In Progress
+		 4 = Listening"
+	DEFVAL { 0 }
+	::=  {	apaSystemGroup	1  }
+
+apaSystemLastRomCheck OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"Last ROM check status.
+		 0 = Fail
+		 1 = Success"
+	DEFVAL { 0 }
+	::=  {	apaSystemGroup	2  }
+
+apaSystemLastRamCheck OBJECT-TYPE
+	SYNTAX	INTEGER (-1..1)
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"Last RAM check status.
+		 -1 = Not tested
+		  0 = Fail
+		  1 = Success"
+	DEFVAL { -1 }
+	::=  {	apaSystemGroup	3  }
+
+apaSystemHardwareVersion OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(1..255))
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"APA III hardware version."
+	DEFVAL { "rev. X" }
+	::=  {	apaSystemGroup	4  }
+
+apaSystemSoftwareVersion OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(1..255))
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"APA III software version."
+	DEFVAL { "0.0.0.0" }
+	::=  {	apaSystemGroup	5  }
+
+apaCmdGroup 	OBJECT IDENTIFIER			::=  {	provisionningMib  14  }
+
+apaCmdStartTelnetBenchTest OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Instruct the APA III to reboot in Telnet bench test mode.
+		 0 = Off
+		 1 = On"
+	DEFVAL { 0 }
+	::=  {	apaCmdGroup  1	}
+
+apaCmdMode OBJECT-TYPE
+	SYNTAX	INTEGER (0..8)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Not implemented ... for future use only.
+		 ---------------------------------------
+		 Select the APA III command mode. 
+		 0 = Enable the Apa III
+		 1 = Disable the Apa III
+		 2 = ReEnable the Apa III
+		 3 = Abrupt Restart (software reset immediately)
+		 4 = Graceful Restart (software reset when all calls have terminated)
+		 5 = Abrupt Shutdown (harware reset immediately)
+		 6 = Graceful Shutdown (harware reset when all calls have terminated)
+		 7 = Reset all statistics
+		 8 = Other"
+	DEFVAL { 0 }
+	::=  {	apaCmdGroup  2	}
+
+apaCmdConfigurationMode OBJECT-TYPE
+	SYNTAX	INTEGER (-1..2)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select the APA III configuration mode. 
+		 -1 = Request and wait for the Config File. A Config File Trap Info is 
+			  sent to the Apa Manager to request a config file upload.	The value 
+			  is set back to 0 after the file is received.
+			  NOTE: The mode must be set to 1 to apply any new settings. 
+		  0 = Record any changes (TFTP or SNMP) - Changes are recorded but won't be
+			  applied until the mode is set back to Commit.
+		  1 = Commit all changes - In this mode changes are automatically applied.
+			  NOTE: Some changes may require to reboot the system to take effect.
+		  2 = Undo all recorded changes - All changes recorded will be dismissed.
+			  The mode is set back to 1 afterward."
+	DEFVAL { -1 }
+	::=  {	apaCmdGroup  3	}
+
+apaCmdCheckRom OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Check the validity of the ROM.
+		 0 = Off
+		 1 = On"
+	DEFVAL { 0 }
+	::=  {	apaCmdGroup  4	}
+
+apaCmdCheckRam OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Check the validity of the RAM.
+		 0 = Of
+		 1 = On"
+	DEFVAL { 0 }
+	::=  {	apaCmdGroup  5	}
+
+apaCmdDownloadSoftware OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Instruct the APA III to download a software file from the TFTP server.
+		 0 = Off
+		 1 = On"
+	DEFVAL { 0 }
+	::=  {	apaCmdGroup  6	}
+
+apaCmdRestart OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Instruct the APA III to reboot.
+		 0 = Off
+		 1 = On"
+	DEFVAL { 0 }
+	::=  {	apaCmdGroup  7	}
+
+apaCmdRequestConfiguration OBJECT-TYPE
+	SYNTAX	INTEGER (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select the APA III request configuration.
+		 0 = Do not need to transfer the Config File
+		 1 = Request the Config File through TFTP"
+	DEFVAL { 1 }
+	::=  {	apaCmdGroup  8	}
+
+snmpGroup		OBJECT IDENTIFIER			::=  {	provisionningMib  15  }
+
+snmpAgentPort OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..65535)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"SNMP Agent port number on which the unit must listen for SNMP requests."
+	DEFVAL { 161 }
+	::=  {	snmpGroup  1  }
+
+snmpSystemDescription OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"A textual description of the entity.  This value should include 
+		 the full name and version identification of the system's 
+		 hardware type, software operating-system, and networking software."
+	DEFVAL { "" }
+	::=  {	snmpGroup  2  }
+
+snmpSystemObjectID OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(1..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"The vendor's authoritative identification of the network management subsystem 
+		 contained in the entity.  This value is allocated within the SMI enterprises 
+		 subtree (1.3.6.1.4.1) and provides an easy and unambiguous means for determining
+		 `what kind of box' is being managed.  For example, if vendor `Flintstones, Inc.' 
+		 was assigned the subtree 1.3.6.1.4.1.4242, it could assign the identifier
+		 1.3.6.1.4.1.4242.1.1 to its `Fred Router'."
+	DEFVAL { "1.3.6.1.4.1.4935.1.1.1.2" }
+	::=  {	snmpGroup  3  }
+
+snmpSystemContact OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"The textual identification of the contact person for this managed node, 
+		 together with information on how to contact this person.  If no contact 
+		 information is known, the value is the zero-length string."
+	DEFVAL { "" }
+	::=  {	snmpGroup  4  }
+
+snmpSystemName OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"An administratively-assigned name for this managed node.
+		 By convention, this is the node's fully-qualified domain name.  
+		 If the name is unknown, the value is the zero-length string."
+	DEFVAL { "" }
+	::=  {	snmpGroup  5  }
+
+snmpSystemLocation OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"The physical location of this node (e.g., `telephone closet, 3rd floor').  
+		 If the location is unknown, the value is the zero-length string."
+	DEFVAL { "" }
+	::=  {	snmpGroup  6  }
+
+snmpSystemService OBJECT-TYPE
+	SYNTAX	Unsigned32 (1..127)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"A value which indicates the set of services that this entity may 
+		 potentially offers.  The value is a sum.  This sum initially takes 
+		 the value zero, Then, for each layer, L, in the range 1 through 7, 
+		 that this node performs transactions for, 2 raised to (L - 1) is 
+		 added to the sum.
+		 For example, a node which performs only routing functions would 
+		 have a value of 4 (2^(3-1)).  In contrast, a node which is a host 
+		 offering application services would have a value of 
+		 72 (2^(4-1) + 2^(7-1)).  Note that in the context of the Internet 
+		 suite of protocols, values should be calculated accordingly:
+		 layer	 functionality
+		   1	   physical (e.g., repeaters)
+		   2	   datalink/subnetwork (e.g., bridges)
+		   3	   internet (e.g., supports the IP)
+		   4	   end-to-end  (e.g., supports the TCP)
+		   7	   applications (e.g., supports the SMTP)			  
+		 For systems including OSI protocols, layers 5 and 6 may also be counted."
+	DEFVAL { 72 }
+	::=  {	snmpGroup  7  }
+
+apaInfoGroup	OBJECT IDENTIFIER			::=  {	provisionningMib  16  }
+
+apaInfoInterfaceGroup	OBJECT IDENTIFIER			::=  {	apaInfoGroup  1  }
+
+apaInfoInterfacePrimDnsIpAddress OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"Primary DNS server IP address."
+	DEFVAL { "192.168.0.10" }
+	::=  {	apaInfoInterfaceGroup  1  }
+
+apaInfoInterfaceSecDnsIpAddress OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"Secondary DNS server IP address."
+	DEFVAL { "192.168.0.10" }
+	::=  {	apaInfoInterfaceGroup  2  }
+
+apaInfoInterfaceDefaultRouterIpAddress OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"Default router IP address."
+	DEFVAL { "192.168.0.10" }
+	::=  {	apaInfoInterfaceGroup  3  }
+
+apaInfoInterfaceSubnetMask OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"Subnet mask."
+	DEFVAL { "255.255.255.0" }
+	::=  {	apaInfoInterfaceGroup  4  }
+
+apaInfoInterfaceIpAddress OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"Local IP address."
+	DEFVAL { "192.168.0.1" }
+	::=  {	apaInfoInterfaceGroup  5  }
+
+apaInfoTftpGroup	OBJECT IDENTIFIER			::=  {	apaInfoGroup  2  }
+
+apaInfoTftpWhoProvide OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"Provenance of the TFTP server configuration.
+		 0 = Static
+		 1 = DHCP"
+	DEFVAL { 1 }
+	::=  {	apaInfoTftpGroup  1  }
+
+apaInfoTftpFileName OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"APA III software file name to download from TFTP server."
+	DEFVAL { "apa.bin" }
+	::=  {	apaInfoTftpGroup  2  }
+
+apaInfoTftpIpAddress OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"TFTP server IP address."
+	DEFVAL { "192.168.0.10" }
+	::=  {	apaInfoTftpGroup  3  }
+
+apaInfoTftpPort OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..65535)
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"TFTP server IP port number."
+	DEFVAL { 69 }
+	::=  {	apaInfoTftpGroup  4  }
+
+apaInfoFileConfigGroup	OBJECT IDENTIFIER			::=  {	apaInfoGroup  3  }
+
+apaInfoFileConfigFileName OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"Config File name to download from TFTP Server."
+	DEFVAL { "apa.cfg" }
+	::=  {	apaInfoFileConfigGroup	1  }
+
+apaInfoFileConfigFileVersion OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"Config File version to download from TFTP Server."
+	DEFVAL { "0" }
+	::=  {	apaInfoFileConfigGroup	2  }
+
+apaInfoFileConfigFileStatus OBJECT-TYPE
+	SYNTAX	INTEGER (0..4)
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"TFTP system operational config file download status
+		 0 = Idle
+		 1 = Success
+		 2 = Fail
+		 3 = In Progress
+		 4 = Listening"
+	DEFVAL { 0 }
+	::=  {	apaInfoFileConfigGroup	3  }
+																		
+configTrapGroup OBJECT IDENTIFIER			::=  {	provisionningMib  17  }
+
+configTrapApaConfigInformation NOTIFICATION-TYPE
+	OBJECTS { analogGatewayID,
+			  interfaceMacAddress,
+			  apaCmdRequestConfiguration }
+	STATUS current
+	DESCRIPTION "The APA Manager is trapped with the Analog Gateway ID, the MAC address
+				 and the request configuration of the APA (the APA requests a configuration 
+				 from the Apa Manager)."
+	::= { configTrapGroup 700 }
+
+configTrapApaStatusInformation NOTIFICATION-TYPE
+	OBJECTS { interfaceMacAddress,
+			  apaCmdConfigurationMode }
+	STATUS current
+	DESCRIPTION "The APA Manager is trapped with the MAC address and the configuration 
+				 mode of the APA (the APA confirms its configuration mode modification)."
+	::= { configTrapGroup 800 }
+
+configTrapApaStatusConfigFile NOTIFICATION-TYPE
+	OBJECTS { interfaceMacAddress,
+			  apaSystemOperationalStatusConfigFile }
+	STATUS current
+	DESCRIPTION "The APA Manager is trapped with the MAC address and the config file 
+				 download status."
+	::= { configTrapGroup 900 }
+
+sntpGroup OBJECT IDENTIFIER			::=  {	provisionningMib  18  }
+
+sntpEnable OBJECT-TYPE
+	SYNTAX  Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable SNTP Client.
+		0= Disable
+		1= Enable"
+	DEFVAL { 0 }
+	::= {  sntpGroup 1 }
+
+sntpSynchronizationPeriod OBJECT-TYPE
+	SYNTAX  Unsigned32 (1..1440)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Interval in minutes between SNTP request made to the SNTP server.
+		1440 minutes = 24 hours"
+	DEFVAL { 1440 }
+	::= {  sntpGroup 2 }
+
+sntpSynchronizationPeriodOnError OBJECT-TYPE
+	SYNTAX  Unsigned32 (1..1440)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Interval in minutes after sending a SNTP time request to the SNTP server 
+		and we don't receive any response of it.
+		1440 minutes = 24 hours"
+	DEFVAL { 60 }
+	::= {  sntpGroup 3 }
+
+sntpUseDhcp OBJECT-TYPE
+	SYNTAX  Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select the provenance of the SNTP Server network configuration.
+		0= Static
+		1= Dhcp"
+	DEFVAL { 0 }
+	::= {  sntpGroup 4 }
+
+sntpStaticGroup OBJECT IDENTIFIER			::=  {	sntpGroup  5  }
+
+sntpStaticHost OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Static SNTP server IP address or domain name."
+	DEFVAL { "192.168.0.10" }
+	::=  {	sntpStaticGroup  1  }
+
+sntpStaticPort OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..65535)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Static SNTP server IP port number."
+	DEFVAL { 123 }
+	::=  {	sntpStaticGroup  2  }
+
+sntpDhcpGroup OBJECT IDENTIFIER			::=  {	sntpGroup  6  }
+
+sntpDhcpVendorSpecificCode OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..254)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"DHCP SNTP server vendor specific code."
+	DEFVAL { 208 }
+	::=  {	sntpDhcpGroup  1  }
+
+sntpDhcpHost OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"SNTP server IP address or domain name provided by DHCP server."
+	DEFVAL { "192.168.0.10" }
+	::=  {	sntpDhcpGroup  2  }
+
+sntpDhcpPort OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..65535)
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"SNTP server IP port number provided by DHCP server."
+	DEFVAL { 123 }
+	::=  {	sntpDhcpGroup  3  }
+
+sntpTimeZoneConfigGroup OBJECT IDENTIFIER			::=  {	sntpGroup  7  }
+
+sntpTimeZoneUseTimeZoneSelection OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable the use of pre-configured time zone selection available.
+		 0 = Use custom time zone configuration.
+		 1 = Use pre-configured time zone selection available."
+	DEFVAL { 1 }
+	::=  {	sntpTimeZoneConfigGroup  1  }
+
+sntpTimeZoneTimeZoneSelection OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..10)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Pre-configured time zone selection. 
+		NOTE: The clock is automatically adjusted for daylight saving time changes if applicable.
+		0 = Pacific Time (Canada & US)          (GMT - 8h)
+		1 = Mountain Time (Canada & US)         (GMT - 7h)
+		2 = Central Time (Canada & US)          (GMT - 6h)
+		3 = Eastern Time (Canada & US)          (GMT - 5h)
+		4 = Atlantic Time (Canada)              (GMT - 4h)
+		5 = GMT Standard Time
+		6 = W. Europe Standard Time             (GMT + 1h)
+		7 = China Standard Time                 (GMT + 8h)
+		8 = Tokyo Standard Time                 (GMT + 9h)
+		9 = Central Australia Standard Time     (GMT + 9h30)
+		10 = Australia Eastern Standard Time    (GMT + 10h)"
+	DEFVAL { 1 }
+	::=  {	sntpTimeZoneConfigGroup  2  }
+
+sntpTimeZoneCustomTimeZoneConfiguration OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Custom time zone configuration using POSIX strings format."
+	DEFVAL { "EST5DST4,M4.1.0/02:00:00,M10.5.0/02:00:00" }
+	::=  {	sntpTimeZoneConfigGroup  3  }
+
+sntpTimeZoneCustomTimeZoneIsValid OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"Validate custom time zone entered.
+				 0 = Not valid.
+				 1 = Valid."
+	DEFVAL { 0 }
+	::=  {	sntpTimeZoneConfigGroup  4  }
+
+
+END

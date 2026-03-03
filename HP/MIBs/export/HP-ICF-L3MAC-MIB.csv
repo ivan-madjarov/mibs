@@ -1,0 +1,10 @@
+HP-ICF-L3MAC-MIB,1.3.6.1.4.1.11.2.14.11.5.1.36,hpicfL3MacConfigMIB,""200608081600Z"  -- AUGUST 08, 2006",READ-ONLY,"Hewlett Packard Company 8000 Foothills Blvd. Roseville, CA 95747"
+HP-ICF-L3MAC-MIB,1.3.6.1.4.1.11.2.14.11.5.1.36.1,hpicfL3MacConfigObjects,"OBJECT IDENTIFIER",READ-ONLY,
+HP-ICF-L3MAC-MIB,1.3.6.1.4.1.11.2.14.11.5.1.36.1.1,hpicfL3MacConfigIfTable,"SEQUENCE OF HPICFL3MACCONFIGIFENTRY",NOT-ACCESSIBLE,"This table contains l3-mac configuration information of each vlan interface."
+HP-ICF-L3MAC-MIB,1.3.6.1.4.1.11.2.14.11.5.1.36.1.1.1,hpicfL3MacConfigIfEntry,SEQUENCE,NOT-ACCESSIBLE,"An entry in the hpicfL3MacConfigIfEntry contains the l3-mac feature specific configuration information. This table augments the ifRcvAddressTable."
+HP-ICF-L3MAC-MIB,1.3.6.1.4.1.11.2.14.11.5.1.36.1.1.1.1,hpicfL3MacConfigIfAdvTimer,INTEGER,READ-WRITE,"Timeout in seconds when an advertisement pkt will be sent out with the ifRcvAddressAddress of this entry as the source mac so that the downstream switches learn this mac-address."
+HP-ICF-L3MAC-MIB,1.3.6.1.4.1.11.2.14.11.5.1.36.2,hpicfL3MacConfigConformance,"OBJECT IDENTIFIER",READ-WRITE,
+HP-ICF-L3MAC-MIB,1.3.6.1.4.1.11.2.14.11.5.1.36.2.1,hpicfL3MacConfigMIBCompliances,"OBJECT IDENTIFIER",READ-WRITE,
+HP-ICF-L3MAC-MIB,1.3.6.1.4.1.11.2.14.11.5.1.36.2.1.1,hpicfL3MacConfigMIBCompliance,MODULE-COMPLIANCE,READ-WRITE,"The compliance statement for HP routers running L3-Mac feature and implementing the HP-ICF-L3MAC-MIB."
+HP-ICF-L3MAC-MIB,1.3.6.1.4.1.11.2.14.11.5.1.36.2.2,hpicfL3MacConfigMIBGroups,"OBJECT IDENTIFIER",READ-WRITE,
+HP-ICF-L3MAC-MIB,1.3.6.1.4.1.11.2.14.11.5.1.36.2.2.1,hpicfL3MacConfigGroup,OBJECT-GROUP,READ-WRITE,"A collection of HP proprietary objects to support L3-Mac feature on HP routers."

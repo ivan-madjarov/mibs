@@ -1,0 +1,436 @@
+-- MIB file created 18-Sep-2009 10:14:49, by
+--   SMICng version 2.2.11-beta(PRO)(Solaris), January 20, 2001. Enterprise key cisco.com
+
+CISCO-ENVMON-MIB DEFINITIONS ::= BEGIN
+
+-- From file: "CISCO-ENVMON-MIB.my"
+-- Compile options "4 7 F H N O W 03 06 0B 0G 0N 0T"
+
+IMPORTS
+    DisplayString, TruthValue
+            FROM SNMPv2-TC-v1
+    ciscoMgmt
+            FROM CISCO-SMI
+    Gauge
+            FROM RFC1155-SMI
+    OBJECT-TYPE
+            FROM RFC-1212
+    TRAP-TYPE
+            FROM RFC-1215;
+
+cisco MODULE-IDENTITY
+	LAST-UPDATED "200001110000Z"
+	ORGANIZATION "Cisco Systems, Inc."
+	CONTACT-INFO
+		"	Cisco Systems
+			Customer Service
+
+		Postal: 170 West Tasman Drive
+			San Jose, CA  95134
+			USA
+
+		   Tel: +1 800 553-NETS
+
+		E-mail: cs-snmp@cisco.com"
+	DESCRIPTION
+		"The Structure of Management Information for the
+		Cisco enterprise."
+	REVISION      "200001110000Z"
+	DESCRIPTION
+		"Added ciscoPolicy, ciscoPolicyAuto, ciscoPIB, and
+                ciscoPibToMib."
+	REVISION      "9704090000Z"
+	DESCRIPTION
+		"Added ciscoPartnerProducts to generate sysObjectID
+		for partner platforms"
+	REVISION      "9505160000Z"
+	DESCRIPTION
+		"New oid assignments for Cisco REPEATER MIB and others."
+	REVISION      "9404262000Z"
+	DESCRIPTION
+		"Initial version of this MIB module."
+	::= { enterprises 9 }	-- assigned by IANA
+
+ciscoMgmt OBJECT-IDENTITY
+	STATUS	current
+	DESCRIPTION
+		"ciscoMgmt is the main subtree for new mib development."
+	::= { cisco 9 }
+
+ciscoEnvMonMIB OBJECT IDENTIFIER ::= { ciscoMgmt 13 }
+-- MODULE-IDENTITY
+--  LastUpdated
+--    200312010000Z
+--  OrgName
+--    Cisco Systems, Inc.
+--  ContactInfo
+--           Cisco Systems
+--            Customer Service
+--    
+--    Postal: 170 W Tasman Drive
+--            San Jose, CA  95134
+--            USA
+--    
+--       Tel: +1 800 553-NETS
+--    
+--    E-mail: cs-snmp@cisco.com
+--  Descr
+--    The MIB module to describe the status of the Environmental
+--    Monitor on those devices which support one.
+--  RevDate
+--    200312010000Z
+--  RevDescr
+--    Added c37xx (13) and other (14) as values for 
+--     ciscoEnvMonPresent
+--  RevDate
+--    200311250000Z
+--  RevDescr
+--    Added ciscoEnvMonMIBMiscNotifGroup.
+--  RevDate
+--    200210150000Z
+--  RevDescr
+--    Added c7600(12) as values for ciscoEnvMonPresent
+--  RevDate
+--    200207170000Z
+--  RevDescr
+--    Added optional groups ciscoEnvMonEnableStatChangeGroup
+--     and ciscoEnvMonStatChangeNotifGroup.
+--  RevDate
+--    200202040000Z
+--  RevDescr
+--    Added osr7600(11) as values 
+--    for ciscoEnvMonPresent
+--  RevDate
+--    200108300000Z
+--  RevDescr
+--    Added c10000(10) as values for ciscoEnvMonPresent
+--  RevDate
+--    200108160000Z
+--  RevDescr
+--    Added cat4000(9) as values for ciscoEnvMonPresent
+--  RevDate
+--    200105070000Z
+--  RevDescr
+--    Added cat6000(7),ubr7200(8) 
+--    as values for ciscoEnvMonPresent
+--  RevDate
+--    200001310000Z
+--  RevDescr
+--    Add notFunctioning to CiscoEnvMonState.
+--  RevDate
+--    9810220000Z
+--  RevDescr
+--    Renamed enumerated value internalRPS(5) as 
+--     internalRedundant(5) and added description for
+--     ciscoEnvMonSupplySource enumerated values.
+--  RevDate
+--    9808050000Z
+--  RevDescr
+--    Add enumerated value internalRPS(5) to 
+--    ciscoEnvMonSupplySource.
+--  RevDate
+--    9611120000Z
+--  RevDescr
+--    Add monitoring support for c3600 series router
+--  RevDate
+--    9508150000Z
+--  RevDescr
+--    Specify a correct (non-negative) range for several
+--    index objects.
+--  RevDate
+--    9503130000Z
+--  RevDescr
+--    Miscellaneous changes including monitoring support
+--    for c7000 series redundant power supplies.
+
+ciscoEnvMonObjects OBJECT IDENTIFIER ::= { ciscoEnvMonMIB 1 }
+ciscoEnvMonMIBNotificationEnables OBJECT IDENTIFIER ::= { ciscoEnvMonMIB 2 }
+ciscoEnvMonMIBNotificationPrefix OBJECT IDENTIFIER ::= { ciscoEnvMonMIB 3 }
+ciscoEnvMonMIBNotifications OBJECT IDENTIFIER ::= { ciscoEnvMonMIBNotificationPrefix 0 }
+ciscoEnvMonMIBConformance OBJECT IDENTIFIER ::= { ciscoEnvMonMIB 4 }
+ciscoEnvMonMIBCompliances OBJECT IDENTIFIER ::= { ciscoEnvMonMIBConformance 1 }
+ciscoEnvMonMIBGroups OBJECT IDENTIFIER ::= { ciscoEnvMonMIBConformance 2 }
+
+
+ciscoEnvMonShutdownNotification TRAP-TYPE
+-- Reverse mappable trap
+    ENTERPRISE ciscoEnvMonMIBNotificationPrefix
+--  Status
+--    mandatory
+    DESCRIPTION
+        "A ciscoEnvMonShutdownNotification is sent if the environmental
+        monitor detects a testpoint reaching a critical state
+        and is about to initiate a shutdown.  This notification 
+        contains no objects so that it may be encoded and sent in the
+        shortest amount of time possible.  Even so, management
+        applications should not rely on receiving such a notification
+        as it may not be sent before the shutdown completes."
+    ::= 1
+
+ciscoEnvMonVoltageNotification TRAP-TYPE
+-- Reverse mappable trap
+    ENTERPRISE ciscoEnvMonMIBNotificationPrefix
+    VARIABLES {
+        ciscoEnvMonVoltageStatusDescr, 
+        ciscoEnvMonVoltageStatusValue, ciscoEnvMonVoltageState }
+--  Status
+--    deprecated
+    DESCRIPTION
+        "A ciscoEnvMonVoltageNotification is sent if the voltage 
+        measured at a given testpoint is outside the normal range 
+        for the testpoint (i.e. is at the warning, critical, or
+        shutdown stage).  Since such a notification is usually 
+        generated before the shutdown state is reached, it can 
+        convey more data and has a better chance of being sent 
+        than does the ciscoEnvMonShutdownNotification.
+        This notification is deprecated in favour of
+        ciscoEnvMonVoltStatusChangeNotif."
+    ::= 2
+
+ciscoEnvMonTemperatureNotification TRAP-TYPE
+-- Reverse mappable trap
+    ENTERPRISE ciscoEnvMonMIBNotificationPrefix
+    VARIABLES {
+        ciscoEnvMonTemperatureStatusDescr, 
+        ciscoEnvMonTemperatureStatusValue, 
+        ciscoEnvMonTemperatureState }
+--  Status
+--    deprecated
+    DESCRIPTION
+        "A ciscoEnvMonTemperatureNotification is sent if the 
+        temperature measured at a given testpoint is outside 
+        the normal range for the testpoint (i.e. is at the warning, 
+        critical, or shutdown stage).  Since such a Notification 
+        is usually generated before the shutdown state is reached,
+        it can convey more data and has a better chance of being
+        sent than does the ciscoEnvMonShutdownNotification.
+        This notification is deprecated in favour of 
+        ciscoEnvMonTempStatusChangeNotif."
+    ::= 3
+
+ciscoEnvMonFanNotification TRAP-TYPE
+-- Reverse mappable trap
+    ENTERPRISE ciscoEnvMonMIBNotificationPrefix
+    VARIABLES {
+        ciscoEnvMonFanStatusDescr, ciscoEnvMonFanState }
+--  Status
+--    deprecated
+    DESCRIPTION
+        "A ciscoEnvMonFanNotification is sent if any one of
+        the fans in the fan array (where extant) fails. 
+        Since such a notification is usually generated before 
+        the shutdown state is reached, it can convey more 
+        data and has a better chance of being sent
+        than does the ciscoEnvMonShutdownNotification.
+        This notification is deprecated in favour of
+        ciscoEnvMonFanStatusChangeNotif."
+    ::= 4
+
+ciscoEnvMonRedundantSupplyNotification TRAP-TYPE
+-- Reverse mappable trap
+    ENTERPRISE ciscoEnvMonMIBNotificationPrefix
+    VARIABLES {
+        ciscoEnvMonSupplyStatusDescr, ciscoEnvMonSupplyState }
+--  Status
+--    deprecated
+    DESCRIPTION
+        "A ciscoEnvMonRedundantSupplyNotification is sent if
+        the redundant power supply (where extant) fails. 
+        Since such a notification is usually generated before 
+        the shutdown state is reached, it can convey more 
+        data and has a better chance of being sent
+        than does the ciscoEnvMonShutdownNotification.
+        This notification is deprecated in favour of 
+        ciscoEnvMonSuppStatusChangeNotif."
+    ::= 5
+
+ciscoEnvMonVoltStatusChangeNotif TRAP-TYPE
+-- Reverse mappable trap
+    ENTERPRISE ciscoEnvMonMIBNotificationPrefix
+    VARIABLES {
+        ciscoEnvMonVoltageStatusDescr, 
+        ciscoEnvMonVoltageStatusValue, ciscoEnvMonVoltageState }
+--  Status
+--    mandatory
+    DESCRIPTION
+        "A ciscoEnvMonVoltStatusChangeNotif is sent if there is 
+         change in the state of a device being monitored
+         by ciscoEnvMonVoltageState."
+    ::= 6
+
+ciscoEnvMonTempStatusChangeNotif TRAP-TYPE
+-- Reverse mappable trap
+    ENTERPRISE ciscoEnvMonMIBNotificationPrefix
+    VARIABLES {
+        ciscoEnvMonTemperatureStatusDescr, 
+        ciscoEnvMonTemperatureStatusValue, 
+        ciscoEnvMonTemperatureState }
+--  Status
+--    mandatory
+    DESCRIPTION
+        "A ciscoEnvMonTempStatusChangeNotif is sent if there 
+         is change in the state of a device being monitored
+         by ciscoEnvMonTemperatureState."
+    ::= 7
+
+ciscoEnvMonFanStatusChangeNotif TRAP-TYPE
+-- Reverse mappable trap
+    ENTERPRISE ciscoEnvMonMIBNotificationPrefix
+    VARIABLES {
+        ciscoEnvMonFanStatusDescr, ciscoEnvMonFanState }
+--  Status
+--    mandatory
+    DESCRIPTION
+        "A ciscoEnvMonFanStatusChangeNotif is sent if there 
+         is change in the state of a device being monitored
+         by ciscoEnvMonFanState."
+    ::= 8
+
+ciscoEnvMonSuppStatusChangeNotif TRAP-TYPE
+-- Reverse mappable trap
+    ENTERPRISE ciscoEnvMonMIBNotificationPrefix
+    VARIABLES {
+        ciscoEnvMonSupplyStatusDescr, ciscoEnvMonSupplyState }
+--  Status
+--    mandatory
+    DESCRIPTION
+        "A ciscoEnvMonSupplyStatChangeNotif is sent if there 
+         is change in the state of a device being monitored
+         by ciscoEnvMonSupplyState."
+    ::= 9
+
+ciscoEnvMonMIBGroup OBJECT IDENTIFIER ::= { ciscoEnvMonMIBGroups 1 }
+-- OBJECT-GROUP
+--  Status
+--    deprecated
+--  Descr
+--    A collection of objects providing environmental 
+--    monitoring capability to a cisco chassis. This group 
+--    is deprecated in favour of ciscoEnvMonMIBGroupRev.
+--  objects
+--    ciscoEnvMonPresent, ciscoEnvMonVoltageStatusDescr, 
+--    ciscoEnvMonVoltageStatusValue, ciscoEnvMonVoltageThresholdLow, 
+--    ciscoEnvMonVoltageThresholdHigh, 
+--    ciscoEnvMonVoltageLastShutdown, ciscoEnvMonVoltageState, 
+--    ciscoEnvMonTemperatureStatusDescr, 
+--    ciscoEnvMonTemperatureStatusValue, 
+--    ciscoEnvMonTemperatureThreshold, 
+--    ciscoEnvMonTemperatureLastShutdown, 
+--    ciscoEnvMonTemperatureState, ciscoEnvMonFanStatusDescr, 
+--    ciscoEnvMonFanState, ciscoEnvMonSupplyStatusDescr, 
+--    ciscoEnvMonSupplyState, ciscoEnvMonSupplySource, 
+--    ciscoEnvMonAlarmContacts, 
+--    ciscoEnvMonEnableShutdownNotification, 
+--    ciscoEnvMonEnableVoltageNotification, 
+--    ciscoEnvMonEnableTemperatureNotification, 
+--    ciscoEnvMonEnableFanNotification, 
+--    ciscoEnvMonEnableRedundantSupplyNotification
+
+ciscoEnvMonMIBGroupRev OBJECT IDENTIFIER ::= { ciscoEnvMonMIBGroups 2 }
+-- OBJECT-GROUP
+--  Status
+--    mandatory
+--  Descr
+--    A collection of objects providing environmental 
+--     monitoring capability to a cisco chassis.
+--  objects
+--    ciscoEnvMonPresent, ciscoEnvMonVoltageStatusDescr, 
+--    ciscoEnvMonVoltageStatusValue, ciscoEnvMonVoltageThresholdLow, 
+--    ciscoEnvMonVoltageThresholdHigh, 
+--    ciscoEnvMonVoltageLastShutdown, ciscoEnvMonVoltageState, 
+--    ciscoEnvMonTemperatureStatusDescr, 
+--    ciscoEnvMonTemperatureStatusValue, 
+--    ciscoEnvMonTemperatureThreshold, 
+--    ciscoEnvMonTemperatureLastShutdown, 
+--    ciscoEnvMonTemperatureState, ciscoEnvMonFanStatusDescr, 
+--    ciscoEnvMonFanState, ciscoEnvMonSupplyStatusDescr, 
+--    ciscoEnvMonSupplyState, ciscoEnvMonSupplySource, 
+--    ciscoEnvMonAlarmContacts, 
+--    ciscoEnvMonEnableShutdownNotification
+
+ciscoEnvMonEnableStatChangeGroup OBJECT IDENTIFIER ::= { ciscoEnvMonMIBGroups 3 }
+-- OBJECT-GROUP
+--  Status
+--    mandatory
+--  Descr
+--    A collection of objects providing enabling/disabling
+--     of the status change notifications for environmental 
+--     monitoring.
+--  objects
+--    ciscoEnvMonEnableStatChangeNotif
+
+ciscoEnvMonMIBNotifGroup OBJECT IDENTIFIER ::= { ciscoEnvMonMIBGroups 4 }
+-- NOTIFICATION-GROUP
+--  Status
+--    mandatory
+--  Descr
+--    A notification group providing shutdown notification
+--     for environmental monitoring. 
+--  notifications
+--    ciscoEnvMonShutdownNotification
+
+ciscoEnvMonStatChangeNotifGroup OBJECT IDENTIFIER ::= { ciscoEnvMonMIBGroups 5 }
+-- NOTIFICATION-GROUP
+--  Status
+--    mandatory
+--  Descr
+--    A collection of notifications providing the status 
+--     change for environmental monitoring.
+--  notifications
+--    ciscoEnvMonVoltStatusChangeNotif, 
+--    ciscoEnvMonTempStatusChangeNotif, 
+--    ciscoEnvMonFanStatusChangeNotif, 
+--    ciscoEnvMonSuppStatusChangeNotif
+
+ciscoEnvMonMIBMiscNotifGroup OBJECT IDENTIFIER ::= { ciscoEnvMonMIBGroups 6 }
+-- NOTIFICATION-GROUP
+--  Status
+--    deprecated
+--  Descr
+--    A collection of various notifications for the 
+--    enviromental monitoring mib module. The notifications
+--    the group and the group are both in deprecated state.
+--    The notifications in the group were deprecated in 
+--    favour of notifications in
+--    ciscoEnvMonStatChangeNotifGroup.
+--  notifications
+--    ciscoEnvMonVoltageNotification, 
+--    ciscoEnvMonTemperatureNotification, 
+--    ciscoEnvMonFanNotification, 
+--    ciscoEnvMonRedundantSupplyNotification
+
+ciscoEnvMonMIBCompliance OBJECT IDENTIFIER ::= { ciscoEnvMonMIBCompliances 1 }
+-- MODULE-COMPLIANCE
+--  Status
+--    deprecated
+--  Descr
+--    The compliance statement for entities which implement
+--    the Cisco Environmental Monitor MIB. This is
+--    deprecated and new compliance
+--    ciscoEnvMonMIBComplianceRev1 is added.
+--  Module
+--    >>current<<
+--   MandGroup
+--    ciscoEnvMonMIBGroup
+
+ciscoEnvMonMIBComplianceRev1 OBJECT IDENTIFIER ::= { ciscoEnvMonMIBCompliances 2 }
+-- MODULE-COMPLIANCE
+--  Status
+--    mandatory
+--  Descr
+--    The compliance statement for entities which implement
+--    the Cisco Environmental Monitor MIB.
+--  Module
+--    >>current<<
+--   MandGroup
+--    ciscoEnvMonMIBGroupRev
+--   MandGroup
+--    ciscoEnvMonMIBNotifGroup
+--   OptGroup
+--    ciscoEnvMonEnableStatChangeGroup
+--   OptGroup
+--    ciscoEnvMonStatChangeNotifGroup
+
+
+END
+

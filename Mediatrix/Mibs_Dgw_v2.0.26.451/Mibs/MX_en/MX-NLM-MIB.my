@@ -1,0 +1,679 @@
+-- ****************************************************************************
+-- ****************************************************************************
+--             Copyright(c) 2004 Mediatrix Telecom, Inc.
+--  NOTICE:
+--   This document contains information that is confidential and proprietary
+--   to Mediatrix Telecom, Inc.
+--   Mediatrix Telecom, Inc. reserves all rights to this document as well as
+--   to the Intellectual Property of the document and the technology and
+--   know-how that it includes and represents.
+--   This publication cannot be reproduced, neither in whole nor in part in
+--   any form whatsoever without written prior approval by
+--   Mediatrix Telecom, Inc.
+--   Mediatrix Telecom, Inc. reserves the right to revise this publication
+--   and make changes at any time and without the obligation to notify any
+--   person and/or entity of such revisions and/or changes.
+-- ****************************************************************************
+-- ****************************************************************************
+
+
+MX-NLM-MIB
+DEFINITIONS ::= BEGIN
+
+IMPORTS
+        MODULE-IDENTITY,
+        OBJECT-TYPE,
+        Unsigned32,
+        Integer32
+    FROM SNMPv2-SMI
+        MODULE-COMPLIANCE,
+        OBJECT-GROUP
+    FROM SNMPv2-CONF
+        MxEnableState,
+        MxActivationState,
+        MxIpHostName,
+        MxIpAddress,
+        MxIpPort,
+        MxAdvancedIpPort,
+        MxIpSubnetMask,
+        MxDigitMap
+    FROM MX-TC
+        MxUInt64,
+        MxFloat32,
+        MxIpHostNamePort,
+        MxIpAddr,
+        MxIpAddrPort,
+        MxIpAddrMask,
+        MxUri,
+        MxUrl
+    FROM MX-TC2
+        mediatrixServices
+    FROM MX-SMI2;
+
+nlmMIB MODULE-IDENTITY
+ LAST-UPDATED   "0511080000Z"
+ ORGANIZATION " Mediatrix Telecom, Inc. "
+ CONTACT-INFO " Mediatrix Telecom, Inc.
+                4229, Garlock Street
+                Sherbrooke (Quebec)
+                Canada
+                Phone: (819) 829-8749
+                "
+ DESCRIPTION  " Notifications and Logging Manager
+
+                NLM configures how to handle log entries.
+                "
+ -- ****************************************************************************
+ 
+ -- Revision history
+ -- ****************************************************************************
+ REVISION       "0511080000Z"
+ DESCRIPTION  " Initial Revision "
+ REVISION       "0801250000Z"
+ DESCRIPTION  " Increase DiagnosticTracesFilter DataRange to 512 "
+ REVISION       "1205170000Z"
+ DESCRIPTION  " Added the events table and the InsertEvent command. "
+ REVISION       "1301230000Z"
+ DESCRIPTION  " Added table LocalLog. Modified description of Events.Criteria
+                and Events.Action. "
+ REVISION       "1304030000Z"
+ DESCRIPTION  " Added parameters Activation and Index to the InsertEvent
+                command. "
+ REVISION       "1304100000Z"
+ DESCRIPTION  " Added variable SyslogMessageFormat. "
+ ::= { mediatrixServices 1100 }
+
+nlmMIBObjects OBJECT IDENTIFIER ::= { nlmMIB 1 }
+
+-- ****************************************************************************
+
+-- Group:Syslog
+
+-- ****************************************************************************
+
+syslogGroup OBJECT IDENTIFIER
+ ::= { nlmMIBObjects 100 }
+ -- Scalar:Remote Host
+
+ syslogRemoteHost OBJECT-TYPE
+  SYNTAX        MxIpHostNamePort
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Remote Host
+
+                Host name and port number of the device that archives log
+                entries sent by syslog transport. Specifying no port (or port
+                0) sends notification to port 514.
+                "
+  DEFVAL        { "" }
+  ::= { syslogGroup 100 }
+
+ -- Scalar:Message Format
+
+ syslogMessageFormat OBJECT-TYPE
+  SYNTAX        OCTET STRING ( SIZE(0..1024) )
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Message Format
+
+                Specifies the format of a syslog notification.
+
+                Formal Syntax Description:
+
+                  * Precision = DIGIT
+                  * Width = DIGIT
+                  * MacroId = (ALPHA / '_')
+                  * Macro = %[Width]|[.Precision]|[Width.Precision]MacroId
+
+                The Width field is the minimum width of the converted
+                argument. If the converted argument has fewer characters than
+                the specified field width, then it is padded with spaces. If
+                the converted argument has more characters than the specified
+                field width, the field width is extended to whatever is
+                required. The Precision field specifies the maximum number of
+                characters to be printed from a string.
+
+                Examples: message = 'The button is pressed.'
+
+                  * Syslog : %message --> 'The button is pressed.'
+                  * Syslog : %25message --> 'The button is pressed.   '
+                  * Syslog : %10.5message --> 'The b     '
+                  * Syslog : %5.10message --> 'The button'
+                  * Syslog : %.5message --> 'The b'
+
+                Syslog Notification predefined macros:
+
+                Control characters
+
+                  * %% : %
+
+                Syslog notification macros
+
+                  * %msgid : The notification numkey.
+                  * %mac : Lowercase MAC address of the device.
+                  * %serial : Serial number of the device.
+                  * %serviceid : The numkey of the service that issued the
+                    notification.
+                  * %servicetextkey : The textkey of the service that issued
+                    the notification.
+                  * %servicename : The display name of the service that issued
+                    the notification.
+                  * %message : The message text of the notification.
+                  * %mfpname : The firmware name.
+                  * %version : The firmware version.
+                  * %profile : The firmware profile.
+
+
+                "
+  DEFVAL        { "%servicetextkey: %serviceid-%servicename: %msgid-%message"
+                }
+  ::= { syslogGroup 200 }
+
+-- End of group:Syslog
+
+-- *****************************************************************************
+
+-- Table:Events
+
+-- *****************************************************************************
+
+eventsTable OBJECT-TYPE
+ SYNTAX        SEQUENCE OF EventsEntry
+ MAX-ACCESS    not-accessible
+ STATUS        current
+ DESCRIPTION " Events
+
+               This table contains the rules that define how events are
+               filtered and routed.
+               "
+ ::= { nlmMIBObjects 200 }
+ eventsEntry OBJECT-TYPE
+  SYNTAX        EventsEntry
+  MAX-ACCESS    not-accessible
+  STATUS        current
+  DESCRIPTION " A row in table Events. "
+  INDEX         {
+                  eventsIndex
+                }
+
+  ::= { eventsTable 1 }
+
+ EventsEntry ::= SEQUENCE
+ {
+   eventsIndex        Unsigned32,
+   eventsActivation   MxEnableState,
+   eventsType         INTEGER,
+   eventsCriteria     OCTET STRING,
+   eventsAction       INTEGER,
+   eventsConfigStatus INTEGER,
+   eventsDelete       INTEGER
+ }
+
+ -- Index:Index
+
+ eventsIndex OBJECT-TYPE
+  SYNTAX        Unsigned32
+  MAX-ACCESS    read-only
+  STATUS        current
+  DESCRIPTION " Index
+
+                Unique identifier of the row in the table.
+                "
+  ::= { eventsEntry 100 }
+
+ -- Row command:Delete
+
+ eventsDelete OBJECT-TYPE
+  SYNTAX        INTEGER { noOp(0), delete(10) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Delete
+
+                Delete this row.
+                "
+  DEFVAL        { noOp }
+  ::= { eventsEntry 10000 }
+
+ -- Columnar:Activation
+
+ eventsActivation OBJECT-TYPE
+  SYNTAX        MxEnableState
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Activation
+
+                Current activation state for the routing rule defined in this
+                table entry.
+
+                  * Enable: This action is enabled for this table entry.
+                  * Disable: This action is disabled for this table entry.
+
+
+                "
+  DEFVAL        { enable }
+  ::= { eventsEntry 200 }
+
+ -- Columnar:Event Type
+
+ eventsType OBJECT-TYPE
+  SYNTAX        INTEGER { notification(100) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Event Type
+
+                Type of system event for which the routing rule applies.
+
+                Currently, the only type of event supported is the system
+                notification.
+
+
+                "
+  DEFVAL        { notification }
+  ::= { eventsEntry 300 }
+
+ -- Columnar:Expression Criteria
+
+ eventsCriteria OBJECT-TYPE
+  SYNTAX        OCTET STRING ( SIZE(0..512) )
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Expression Criteria
+
+                Expression that an event must match in order to apply the
+                specified action. An expression can contain several 'basic'
+                criteria, separated by commas. The syntax accepts a group of
+                inclusion criteria followed by a group of exclusion criteria.
+                The group of exclusion criteria begins with a hyphen (-).
+
+                A basic criteria has the following syntax:
+
+                (Service NumKey || All).(Notification Numkey || Severity level
+                || All)
+
+                  * Keyword All can be used to specify a criteria that applies
+                    to all services or all notifications.
+                  * Severity level is specified using a single letter: W for
+                    Warnings, I for Information, C for Critical, D for Debug, E
+                    for Error.
+                  * Several basic criteria can be specified on the same line,
+                    separated by commas.
+                  * Criteria can specify inclusion or exclusion. A group of
+                    exclusion criteria can follow the group of inclusion
+                    criteria. The group of exclusion criteria must begin with a
+                    hyphen (-).
+                  * Matching an inclusion criteria causes the action to be
+                    executed unless an exclusion criteria is also matched.
+                  * Exclusion criteria have precedence over inclusion citeria.
+
+                Instead of using an expression such as described above, the
+                single keyword 'All' can be used to accept any notification
+                from any service.
+
+                If the whole expression is empty, the criteria never matches
+                any notification and no action is executed.
+
+                Spaces can be present before or after a basic criteria.
+                However, spaces are not accepted within a basic criteria, i.e.
+                before or after the dot.
+
+                Examples
+
+                Basic criteria for Service ISDN (service number key = 1850),
+                Message 'Physical link state changed to up' (message number key
+                = 5): Basic criteria is 1850.5
+
+                Expression 1850.All,1600.200,1600.W,-1850.500,1600.300
+
+                  * 1850.All,1600.200,1600.W are inclusion criteria and
+                  * All notifications from service 1850, except notification
+                    500, will match the expression.
+                  * All notifications from service 1600 with Warning level,
+                    except notification 300, will match the expression.
+                  * Notification 200 from service 1600 will match the
+                    expression, no matter the severity level.
+
+
+                "
+  DEFVAL        { "" }
+  ::= { eventsEntry 400 }
+
+ -- Columnar:Action
+
+ eventsAction OBJECT-TYPE
+  SYNTAX        INTEGER { sendViaSyslog(100) , sendViaSip(200) , logLocally
+                (300) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Action
+
+                Action to apply to the system event if the criteria matches.
+
+                The possible actions are:
+
+                  * SendViaSyslog: The event notification is sent using syslog
+                    as transport.
+                  * SendViaSip: The event notification is sent using SIP Notify
+                    as transport.
+                  * LogLocally: The event notification is logged in LocalLog.
+
+
+                "
+  DEFVAL        { sendViaSyslog }
+  ::= { eventsEntry 500 }
+
+ -- Columnar:Configuration Status
+
+ eventsConfigStatus OBJECT-TYPE
+  SYNTAX        INTEGER { valid(100) , invalid(200) , notSupported(300) }
+  MAX-ACCESS    read-only
+  STATUS        current
+  DESCRIPTION " Configuration Status
+
+                Configuration status of the row.
+
+                It indicates whether the configuration of the row is valid.
+
+                  * Valid: The current content of the fields Type, Criteria and
+                    Action is valid.
+                  * Invalid: The current content of the fields Type, Criteria
+                    and Action is not valid.
+                  * NotSupported: The current content of the fields Type,
+                    Criteria and Action is valid but not supported. A possible
+                    reason could be resource limitation, for instance.
+
+
+                "
+  ::= { eventsEntry 600 }
+
+
+-- End of table:Events
+
+-- ****************************************************************************
+
+-- Group:Local log
+
+-- ****************************************************************************
+
+localLogGroup OBJECT IDENTIFIER
+ ::= { nlmMIBObjects 300 }
+ -- Scalar:Maximum number of entries
+
+ localLogMaxNbEntries OBJECT-TYPE
+  SYNTAX        Unsigned32
+  MAX-ACCESS    read-only
+  STATUS        current
+  DESCRIPTION " Maximum number of entries
+
+                Maximum number of entries that the local log can contain. When
+                adding a new entry while the local log is full, the oldest
+                entry is erased to make room for the new one.
+                "
+  ::= { localLogGroup 100 }
+
+ -- Scalar:Number of error entries
+
+ localLogNbErrorEntries OBJECT-TYPE
+  SYNTAX        Unsigned32
+  MAX-ACCESS    read-only
+  STATUS        current
+  DESCRIPTION " Number of error entries
+
+                Current number of error entries in the local log.
+                "
+  ::= { localLogGroup 200 }
+
+ -- Scalar:Number of critical entries
+
+ localLogNbCriticalEntries OBJECT-TYPE
+  SYNTAX        Unsigned32
+  MAX-ACCESS    read-only
+  STATUS        current
+  DESCRIPTION " Number of critical entries
+
+                Current number of critical entries in the local log.
+                "
+  ::= { localLogGroup 300 }
+
+ -- ***************************************************************************
+ 
+ -- Table:LocalLogMessages
+
+ -- ***************************************************************************
+ 
+ localLogMessagesTable OBJECT-TYPE
+  SYNTAX          SEQUENCE OF LocalLogMessagesEntry
+  MAX-ACCESS      not-accessible
+  STATUS          current
+  DESCRIPTION   " LocalLogMessages
+
+                  This table contains the entries of the local log.
+                  "
+  ::= { localLogGroup 500 }
+  localLogMessagesEntry OBJECT-TYPE
+   SYNTAX        LocalLogMessagesEntry
+   MAX-ACCESS    not-accessible
+   STATUS        current
+   DESCRIPTION " A row in table LocalLogMessages. "
+   INDEX         {
+                   localLogMessagesIndex
+                 }
+
+   ::= { localLogMessagesTable 1 }
+
+  LocalLogMessagesEntry ::= SEQUENCE
+  {
+    localLogMessagesIndex          Unsigned32,
+    localLogMessagesLocalTime      OCTET STRING,
+    localLogMessagesServiceNumkey  Unsigned32,
+    localLogMessagesNotificationId Unsigned32,
+    localLogMessagesSeverity       INTEGER,
+    localLogMessagesServiceTextkey OCTET STRING,
+    localLogMessagesMessage        OCTET STRING
+  }
+
+  -- Index:Index
+
+  localLogMessagesIndex OBJECT-TYPE
+   SYNTAX        Unsigned32
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Index
+
+                 Unique identifier of the row in the table.
+                 "
+   ::= { localLogMessagesEntry 100 }
+
+  -- Columnar:Local Time
+
+  localLogMessagesLocalTime OBJECT-TYPE
+   SYNTAX        OCTET STRING
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Local Time
+
+                 Local date and time at which the log entry was inserted.
+                 Format is YYYY-MM-DD HH:MM:SS.
+                 "
+   ::= { localLogMessagesEntry 200 }
+
+  -- Columnar:Service Numkey
+
+  localLogMessagesServiceNumkey OBJECT-TYPE
+   SYNTAX        Unsigned32
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Service Numkey
+
+                 Numerical identifier of the service that issued the log
+                 entry.
+                 "
+   ::= { localLogMessagesEntry 300 }
+
+  -- Columnar:Notification Id
+
+  localLogMessagesNotificationId OBJECT-TYPE
+   SYNTAX        Unsigned32
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Notification Id
+
+                 Numerical identifier of the notification message.
+                 "
+   ::= { localLogMessagesEntry 400 }
+
+  -- Columnar:Severity
+
+  localLogMessagesSeverity OBJECT-TYPE
+   SYNTAX        INTEGER { critical(500) , error(400) , warning(300) ,
+                 information(200) , debug(100) }
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Severity
+
+                 Severity of the log entry.
+                 "
+   ::= { localLogMessagesEntry 500 }
+
+  -- Columnar:Service Textkey
+
+  localLogMessagesServiceTextkey OBJECT-TYPE
+   SYNTAX        OCTET STRING
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Service Textkey
+
+                 Textual identifier of the service that issued the log entry.
+                 "
+   ::= { localLogMessagesEntry 600 }
+
+  -- Columnar:Message
+
+  localLogMessagesMessage OBJECT-TYPE
+   SYNTAX        OCTET STRING
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Message
+
+                 The readable content of the log message.
+                 "
+   ::= { localLogMessagesEntry 700 }
+
+
+ -- End of table:LocalLogMessages
+
+-- End of group:Local log
+
+-- ****************************************************************************
+
+-- Group:Technical Assistance Center
+
+-- ****************************************************************************
+
+tacGroup OBJECT IDENTIFIER
+ ::= { nlmMIBObjects 10000 }
+ -- Scalar:Diagnostic Traces
+
+ diagnosticTracesEnable OBJECT-TYPE
+  SYNTAX        MxEnableState
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Diagnostic Traces
+
+                Enables traces allowing the Technical Assistance Centre to
+                further assist in resolving some issues.
+
+                Enabling this feature issues a lot of messages to the syslog
+                host. These messages may be filtered using the
+                DiagnosticTracesFilter variable.
+
+
+                "
+  DEFVAL        { disable }
+  ::= { tacGroup 100 }
+
+ -- Scalar:Diagnostic Traces Filter
+
+ diagnosticTracesFilter OBJECT-TYPE
+  SYNTAX        OCTET STRING ( SIZE(0..512) )
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Diagnostic Traces Filter
+
+                Filter applied to diagnostic traces. An empty filter means
+                that all diagnostic traces are enabled.
+                "
+  DEFVAL        { "" }
+  ::= { tacGroup 200 }
+
+-- End of group:Technical Assistance Center
+
+-- ****************************************************************************
+
+-- Group:Notification Messages Configuration
+
+-- ****************************************************************************
+
+notificationsGroup OBJECT IDENTIFIER
+ ::= { nlmMIBObjects 60010 }
+ -- Scalar:Minimal Severity of Notification
+
+ minSeverity OBJECT-TYPE
+  SYNTAX        INTEGER { disable(0) , debug(100) , info(200) , warning(300) ,
+                error(400) , critical (500) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Minimal Severity of Notification
+
+                Sets the minimal severity to issue a notification message
+                incoming from this service.
+
+                  * Disable: No notification is issued.
+                  * Debug: All notification messages are issued.
+                  * Info: Notification messages with severity 'Informational'
+                    and higher are issued.
+                  * Warning: Notification messages with severity 'Warning' and
+                    higher are issued.
+                  * Error: Notification messages with severity 'Error' and
+                    higher are issued.
+                  * Critical: Notification messages with severity 'Critical'
+                    are issued.
+
+
+                "
+  DEFVAL        { warning }
+  ::= { notificationsGroup 100 }
+
+-- End of group:Notification Messages Configuration
+
+-- ****************************************************************************
+
+-- Group:Configuration Settings
+
+-- ****************************************************************************
+
+configurationGroup OBJECT IDENTIFIER
+ ::= { nlmMIBObjects 60020 }
+ -- Scalar:Need Restart
+
+ needRestartInfo OBJECT-TYPE
+  SYNTAX        INTEGER { no(0) , yes(100) }
+  MAX-ACCESS    read-only
+  STATUS        current
+  DESCRIPTION " Need Restart
+
+                Indicates if the service needs to be restarted for its
+                configuration to fully take effect.
+
+                  * Yes: Service needs to be restarted.
+                  * No: Service does not need to be restarted.
+
+                Services can be restarted by using the command
+                Scm.ServiceCommands.Restart.
+
+
+                "
+  ::= { configurationGroup 100 }
+
+-- End of group:Configuration Settings
+
+END

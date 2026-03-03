@@ -1,0 +1,688 @@
+SIP-MIB21 DEFINITIONS ::= BEGIN
+
+IMPORTS
+	Unsigned32, enterprises
+	FROM SNMPv2-SMI;
+		
+mediatrix			OBJECT IDENTIFIER		::=  {	enterprises  4935  }
+
+experimental		OBJECT IDENTIFIER		::=  {	mediatrix  1  }
+
+products			OBJECT IDENTIFIER		::=  {	experimental  1  }
+
+voIpGateway			OBJECT IDENTIFIER		::=  {	products  1  }
+
+signalingProtocols	OBJECT IDENTIFIER		::=  {	voIpGateway  3  }
+
+sipMib MODULE-IDENTITY
+	LAST-UPDATED	"0012010000Z"
+	ORGANIZATION	"Mediatrix Telecom, inc."
+	CONTACT-INFO	"Mediatrix Telecom, inc."
+	DESCRIPTION
+		"Mediatrix Telecom APA III MIB."
+	REVISION	"0012010000Z"
+	DESCRIPTION
+		"01-12-00:	   creation (bkaran)"
+	::=  {	signalingProtocols  2	}
+
+sipMibVersion OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..25))
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"MIB version."
+	DEFVAL { "1.0" }
+	::=  {	sipMib  1	}
+
+sipUAGroup	OBJECT IDENTIFIER	::=  {	sipMib  2  }
+
+sipUAPort OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..65535)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"SIP User Agent IP port number."
+	DEFVAL { 5060 }
+	::=  {	sipUAGroup	1  }
+
+sipUAProtocoleVersion OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"SIP stack protocol version."
+	DEFVAL { "2.0" }
+	::=  {	sipUAGroup	2  }
+
+sipUAServiceOperStatus OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"Not implemented ... for future use only."
+	DEFVAL { "" }
+	::=  {	sipUAGroup	3  }
+
+sipUAServiceAdminStatus OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"Not implemented ... for future use only."
+	DEFVAL { "" }
+	::=  {	sipUAGroup	4  }
+
+sipUAServiceStartTime OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"Not implemented ... for future use only."
+	DEFVAL { "" }
+	::=  {	sipUAGroup	5  }
+
+sipUALogGroup	OBJECT IDENTIFIER			::=  {	sipUAGroup	6  }
+
+sipUALogEnable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Enable the SIP logging client (allow the stack to log SIP packets).
+		 0 = Disable
+		 1 = Enable"
+	DEFVAL { 0 }
+	::=  {	sipUALogGroup  1  }
+
+sipUALogUseDhcp OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select the provenance of the SIP logging client configuration.
+		 0 = Static
+		 1 = DHCP"
+	DEFVAL { 1 }
+	::=  {	sipUALogGroup  2  }
+
+sipUALogStaticGroup OBJECT IDENTIFIER			::=  {	sipUALogGroup  3  }
+
+sipUALogStaticHost OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Static SIP logging client IP address or domain name."
+	DEFVAL { "192.168.0.10" }
+	::=  {	sipUALogStaticGroup  1	}
+
+sipUALogStaticPort OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..65535)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Static SIP logging client IP port number."
+	DEFVAL { 6000 }
+	::=  {	sipUALogStaticGroup  2	}
+
+sipUALogDhcpGroup	OBJECT IDENTIFIER			::=  {	sipUALogGroup  4  }
+
+sipUALogDhcpVendorSpecificCode OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..254)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"DHCP SIP logging client vendor specific code."
+	DEFVAL { 202 }
+	::=  {	sipUALogDhcpGroup  1  }
+
+sipUALogDhcpHost OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"Logging client IP address or domain name provided by DHCP server."
+	DEFVAL { "192.168.0.10" }
+	::=  {	sipUALogDhcpGroup  2  }
+
+sipUALogDhcpPort OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..65535)
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"Logging client IP port number provided by DHCP server."
+	DEFVAL { 6000 }
+	::=  {	sipUALogDhcpGroup  3  }
+
+sipUAServerGroup	OBJECT IDENTIFIER			::=  {	sipUAGroup	7  }
+
+sipUAServerOutboundProxyEnable OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Not implemented ... for future use only.
+		 ---------------------------------------
+		 0 = Disable
+		 1 = Enable"
+	DEFVAL { 0 }
+	::=  {	sipUAServerGroup  1  }
+
+sipUAServerUseDhcp OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select the provenance of the SIP server configuration.
+		 0 = Static
+		 1 = DHCP"
+	DEFVAL { 1 }
+	::=  {	sipUAServerGroup  2  }
+
+sipUAServerStaticGroup	OBJECT IDENTIFIER			::=  {	sipUAServerGroup  3  }
+
+sipUAServerStaticRegistrarHost OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Static SIP registrar server IP address or domain name."
+	DEFVAL { "192.168.0.10" }
+	::=  {	sipUAServerStaticGroup	1  }
+
+sipUAServerStaticRegistrarPort OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..65535)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Static SIP registrar server IP port number."
+	DEFVAL { 5060 }
+	::=  {	sipUAServerStaticGroup	2  }
+
+sipUAServerStaticProxyHost OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Static SIP proxy server IP address or domain name."
+	DEFVAL { "192.168.0.10" }
+	::=  {	sipUAServerStaticGroup	3  }
+
+sipUAServerStaticProxyPort OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..65535)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Static SIP proxy server IP port number."
+	DEFVAL { 5060 }
+	::=  {	sipUAServerStaticGroup	4  }
+
+sipUAServerStaticOutboundProxyHost OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Not implemented ... for future use only.
+		 ---------------------------------------
+		 Static SIP outbound proxy server IP address or domain name."
+	DEFVAL { "192.168.0.10" }
+	::=  {	sipUAServerStaticGroup	5  }
+
+sipUAServerStaticOutboundProxyPort OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..65535)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Not implemented ... for future use only.
+		 ---------------------------------------
+		 Static SIP outbound proxy server IP port number."
+	DEFVAL { 5060 }
+	::=  {	sipUAServerStaticGroup	6  }
+
+sipUAServerDhcpGroup	OBJECT IDENTIFIER			::=  {	sipUAServerGroup  4  }
+
+sipUAServerDhcpRegistrarVendorSpecificCode OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..254)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"DHCP SIP registrar server vendor specific code."
+	DEFVAL { 203 }
+	::=  {	sipUAServerDhcpGroup  1  }
+
+sipUAServerDhcpRegistrarHost OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"SIP registrar server IP address or domain name provided by DHCP server."
+	DEFVAL { "192.168.0.10" }
+	::=  {	sipUAServerDhcpGroup  2  }
+
+sipUAServerDhcpRegistrarPort OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..65535)
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"SIP registrar server IP port number provided by DHCP server."
+	DEFVAL { 5060 }
+	::=  {	sipUAServerDhcpGroup  3  }
+
+sipUAServerDhcpProxyVendorSpecificCode OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..254)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"DHCP SIP proxy server vendor specific code."
+	DEFVAL { 204 }
+	::=  {	sipUAServerDhcpGroup  4  }
+
+sipUAServerDhcpProxyHost OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"SIP proxy server IP address or domain name provided by DHCP server."
+	DEFVAL { "192.168.0.10" }
+	::=  {	sipUAServerDhcpGroup  5  }
+
+sipUAServerDhcpProxyPort OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..65535)
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"SIP proxy server IP port number provided by DHCP server."
+	DEFVAL { 5060 }
+	::=  {	sipUAServerDhcpGroup  6  }
+
+sipUAServerDhcpOutboundProxyVendorSpecificCode OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..254)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Not implemented ... for future use only.
+		 ---------------------------------------
+		 DHCP SIP outbound proxy server vendor specific code."
+	DEFVAL { 205 }
+	::=  {	sipUAServerDhcpGroup  7  }
+
+sipUAServerDhcpOutboundProxyHost OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"SIP outbound proxy server IP address or domain name provided by DHCP server."
+	DEFVAL { "192.168.0.10" }
+	::=  {	sipUAServerDhcpGroup  8  }
+
+sipUAServerDhcpOutboundProxyPort OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..65535)
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"SIP outbound proxy server IP port number provided by DHCP server."
+	DEFVAL { 5060 }
+	::=  {	sipUAServerDhcpGroup  9  }
+
+sipUA1Group 	OBJECT IDENTIFIER			::=  {	sipUAGroup	8  }
+
+sipUA1PrefixCCAndAC OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select if the Country Code and Area Code must be prefixed to the main alias for SIP User Agent #1. 
+		 0 = Do not prefix Country Code and Area Code 
+		 1 = Prefix Country Code and Area Code"
+	DEFVAL { 1 }
+	::=  {	sipUA1Group  1	}
+
+sipUA1MainAlias OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Main alias for SIP User Agent #1.
+		 An alias is either a user name or a telephone number."
+	DEFVAL { "3331111" }
+	::=  {	sipUA1Group  2	}
+
+sipUA1FriendlyName OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Friendly name for SIP User Agent #1."
+	DEFVAL { "Port 1" }
+	::=  {	sipUA1Group  3	}
+
+sipUA1OtherAliases OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..2048))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Semi-colon separated list of other aliases for SIP User Agent #1.
+		 An alias is either a user name or a telephone number."
+	DEFVAL { "" }
+	::=  {	sipUA1Group  4	}
+
+sipUA1AuthGroup OBJECT IDENTIFIER			::=  {	sipUA1Group  5	}
+
+sipUA1AuthUsrPwd OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..2048))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Username and password used for authentification. This value are used only by this port."
+	DEFVAL {  }
+	::=  {	sipUA1AuthGroup  1	}
+
+sipUA1AuthValid OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"This value is set to:
+		 1 = Value sipUA1AuthUsrPwd is valid.
+		 0 = Value sipUA1AuthUsrPwd have a syntax error."
+	DEFVAL {  }
+	::=  {	sipUA1AuthGroup  2	}
+
+
+sipUA1MustUseSessionTimers OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select if the session timer must be use.
+		 0 = Don't use session timer.
+		 1 = Must use session timer."
+	DEFVAL { 0 }
+	::=  {	sipUA1Group  6  }
+
+sipUA1MaximumSessionExpirationDelay OBJECT-TYPE
+	SYNTAX	Unsigned32 (30..65535)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Set the maximun session expiration delay in second. This value was used if sipUA1MustUseSessionTimers is set to 1."
+	DEFVAL { 60 }
+	::=  {	sipUA1Group  7  }
+
+sipUA2Group 	OBJECT IDENTIFIER			::=  {	sipUAGroup	9  }
+
+sipUA2PrefixCCAndAC OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select if the Country Code and Area Code must be prefixed to the main alias for SIP User Agent #2. 
+		 0 = Do not prefix Country Code and Area Code 
+		 1 = Prefix Country Code and Area Code"
+	DEFVAL { 1 }
+	::=  {	sipUA2Group  1	}
+
+sipUA2MainAlias OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Main alias for SIP User Agent #2.
+		 An alias is either a user name or a telephone number."
+	DEFVAL { "3332222" }
+	::=  {	sipUA2Group  2	}
+
+sipUA2FriendlyName OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Friendly name for SIP User Agent #2."
+	DEFVAL { "Port 2" }
+	::=  {	sipUA2Group  3	}
+
+sipUA2OtherAliases OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..2048))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Semi-colon separated list of other aliases for SIP User Agent #2.
+		 An alias is either a user name or a telephone number."
+	DEFVAL { "" }
+	::=  {	sipUA2Group  4	}
+
+sipUA2AuthGroup OBJECT IDENTIFIER			::=  {	sipUA2Group  5	}
+
+sipUA2AuthUsrPwd OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..2048))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Username and password used for authentification. This value are used only by this port."
+	DEFVAL {  }
+	::=  {	sipUA2AuthGroup  1	}
+
+sipUA2AuthValid OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"This value is set to:
+		 1 = Value sipUA2AuthUsrPwd is valid.
+		 0 = Value sipUA2AuthUsrPwd have a syntax error."
+	DEFVAL {  }
+	::=  {	sipUA2AuthGroup  2	}
+
+sipUA2MustUseSessionTimers OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select if the session timer must be use.
+		 0 = Don't use session timer.
+		 1 = Must use session timer."
+	DEFVAL { 0 }
+	::=  {	sipUA2Group  6  }
+
+sipUA2MaximumSessionExpirationDelay OBJECT-TYPE
+	SYNTAX	Unsigned32 (30..65535)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Set the maximun session expiration delay in second. This value was used if sipUA2MustUseSessionTimers is set to 1."
+	DEFVAL { 60 }
+	::=  {	sipUA2Group  7  }
+
+sipUA3Group 	OBJECT IDENTIFIER			::=  {	sipUAGroup	10	}
+
+sipUA3PrefixCCAndAC OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select if the Country Code and Area Code must be prefixed to the main alias for SIP User Agent #3. 
+		 0 = Do not prefix Country Code and Area Code 
+		 1 = Prefix Country Code and Area Code"
+	DEFVAL { 1 }
+	::=  {	sipUA3Group  1	}
+
+sipUA3MainAlias OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Main alias for SIP User Agent #3.
+		 An alias is either a user name or a telephone number."
+	DEFVAL { "3333333" }
+	::=  {	sipUA3Group  2	}
+
+sipUA3FriendlyName OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Friendly name for SIP User Agent #3."
+	DEFVAL { "Port 3" }
+	::=  {	sipUA3Group  3	}
+
+sipUA3OtherAliases OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..2048))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Semi-colon separated list of other aliases for SIP User Agent #3.
+		 An alias is either a user name or a telephone number."
+	DEFVAL { "" }
+	::=  {	sipUA3Group  4	}
+
+sipUA3AuthGroup OBJECT IDENTIFIER			::=  {	sipUA3Group  5	}
+
+sipUA3AuthUsrPwd OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..2048))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Username and password used for authentification. This value are used only by this port."
+	DEFVAL {  }
+	::=  {	sipUA3AuthGroup  1	}
+
+sipUA3AuthValid OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"This value is set to:
+		 1 = Value sipUA3AuthUsrPwd is valid.
+		 0 = Value sipUA3AuthUsrPwd have a syntax error."
+	DEFVAL {  }
+	::=  {	sipUA3AuthGroup  2	}
+
+sipUA3MustUseSessionTimers OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select if the session timer must be use.
+		 0 = Don't use session timer.
+		 1 = Must use session timer."
+	DEFVAL { 0 }
+	::=  {	sipUA3Group  6  }
+
+sipUA3MaximumSessionExpirationDelay OBJECT-TYPE
+	SYNTAX	Unsigned32 (30..65535)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Set the maximun session expiration delay in second. This value was used if sipUA3MustUseSessionTimers is set to 1."
+	DEFVAL { 60 }
+	::=  {	sipUA3Group  7  }
+
+sipUA4Group 	OBJECT IDENTIFIER			::=  {	sipUAGroup	11	}
+
+sipUA4PrefixCCAndAC OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select if the Country Code and Area Code must be prefixed to the main alias for SIP User Agent #4. 
+		 0 = Do not prefix Country Code and Area Code 
+		 1 = Prefix Country Code and Area Code"
+	DEFVAL { 1 }
+	::=  {	sipUA4Group  1	}
+
+sipUA4MainAlias OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Main alias for SIP User Agent #4.
+		 An alias is either a user name or a telephone number."
+	DEFVAL { "3334444" }
+	::=  {	sipUA4Group  2	}
+
+sipUA4FriendlyName OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..255))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Friendly name for SIP User Agent #4."
+	DEFVAL { "Port 4" }
+	::=  {	sipUA4Group  3	}
+
+sipUA4OtherAliases OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..2048))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Semi-colon separated list of other aliases for SIP User Agent #4.
+		 An alias is either a user name or a telephone number."
+	DEFVAL { "" }
+	::=  {	sipUA4Group  4	}
+
+sipUA4AuthGroup OBJECT IDENTIFIER			::=  {	sipUA4Group  5	}
+
+sipUA4AuthUsrPwd OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..2048))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Username and password used for authentification. This value are used only by this port."
+	DEFVAL {  }
+	::=  {	sipUA4AuthGroup  1	}
+
+sipUA4AuthValid OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"This value is set to:
+		 1 = Value sipUA4AuthUsrPwd is valid.
+		 0 = Value sipUA4AuthUsrPwd have a syntax error."
+	DEFVAL {  }
+	::=  {	sipUA4AuthGroup  2	}
+
+sipUA4MustUseSessionTimers OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select if the session timer must be use.
+		 0 = Don't use session timer.
+		 1 = Must use session timer."
+	DEFVAL { 0 }
+	::=  {	sipUA4Group  6  }
+
+sipUA4MaximumSessionExpirationDelay OBJECT-TYPE
+	SYNTAX	Unsigned32 (30..65535)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Set the maximun session expiration delay in second. This value was used if sipUA4MustUseSessionTimers is set to 1."
+	DEFVAL { 60 }
+	::=  {	sipUA4Group  7  }
+
+sipUAAuthGroup	OBJECT IDENTIFIER			::=  {	sipUAGroup	12	}
+
+sipUAAuthUsrPwd OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..2048))
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Username and password used for authentification. This value are used by all port."
+	DEFVAL {  }
+	::=  {	sipUAAuthGroup	1  }
+
+sipUAAuthValid OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"This value is set to:
+		 1 = Value sipUAAuthUsrPwd is valid.
+		 0 = Value sipUAAuthUsrPwd have a syntax error."
+	DEFVAL { 1 }
+	::=  {	sipUAAuthGroup	2  }
+
+
+
+END

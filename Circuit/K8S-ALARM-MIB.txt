@@ -1,0 +1,112 @@
+K8S-ALARM-MIB DEFINITIONS ::= BEGIN
+
+-- ==================================================================
+-- Copyright @ 2020 Unify GmbH & Co. KG
+--
+-- All Rights Reserved.
+--
+-- Reproduction of this document is authorized on condition that
+-- this copyright notice is included.
+--
+-- This MIB document embodies proprietary intellectual property of Unify,
+-- which retains all title and ownership in this MIB, including any revisions.
+--
+-- This module will be extended, as required.
+--
+-- Unify reserves the right to make changes in specification and other
+-- information contained in this document without prior notice. The reader
+-- should consult Unify to determine whether any such changes have been made.
+--
+-- Copyright @ 2020 Unify GmbH & Co. KG
+
+-- ==================================================================
+
+
+IMPORTS
+    MODULE-IDENTITY, OBJECT-TYPE, Integer32, NOTIFICATION-TYPE, enterprises        FROM SNMPv2-SMI
+    DisplayString, RowStatus                                                                                     FROM SNMPv2-TC
+    senProducts                                                                                                        FROM SEN-ROOT-MIB;
+
+        ansiblek8s                OBJECT IDENTIFIER ::= { senProducts 66 }
+                                -- Ansible product-specific MIBs
+                                --                = senProducts         66
+                                --                = enterprises sen   1 66
+                                --                = enterprises 32804 1 66
+                                --                = 1 3 6 1 4 1 32804 1 66
+
+
+        alarms                MODULE-IDENTITY
+        LAST-UPDATED        "202101150000Z"
+        ORGANIZATION        "Unify"
+        CONTACT-INFO        "Lazaros Triantafyllidis
+                                        E-mail:        lazaros.triantafyllidis@atos.net"
+
+        DESCRIPTION        "This MIB module implements SNMP Alarms.
+                            An alarm is uniquely identified by the trap name
+                            (mainly the last two numbers of the trap OID)
+                            and the neName.
+                            An alarm trap is a trap with a non-cleared severity.
+                            It is cleared by the same trap
+                            with the same neName and a severity of clear.
+                            An existing alarm can be modified by a trap with the
+                            same OID and neName but with one or more modified values,
+                            e.g. for severity, nodes, or faultyObject"
+
+        ::= { ansiblek8s 1 }
+
+        trapParameters              OBJECT IDENTIFIER ::= { ansiblek8s 2 }
+        rabbitMQ                    OBJECT IDENTIFIER ::= { alarms 1 }
+        elasticSearch               OBJECT IDENTIFIER ::= { alarms 2 }
+
+
+        rabbitMQ
+
+        id                     OBJECT-TYPE
+        SYNTAX                     DisplayString
+        MAX-ACCESS                 not-accessible
+        STATUS                     current
+        DESCRIPTION                "name of the network element sending the alarm"
+        ::= { trapParameters 1 }
+
+        severity                     OBJECT-TYPE
+        SYNTAX                     DisplayString
+        MAX-ACCESS                 not-accessible
+        STATUS                     current
+        DESCRIPTION                "name of the network element sending the alarm"
+        ::= { trapParameters 2 }
+
+
+        description                OBJECT-TYPE
+        SYNTAX                     DisplayString
+        MAX-ACCESS                 not-accessible
+        STATUS                     current
+        DESCRIPTION                "name of the network element sending the alarm"
+        ::= { trapParameters 3 }
+
+
+        RabbitMQTooManyConnections NOTIFICATION-TYPE
+        OBJECTS        {        id,
+                                severity,
+                                description   }
+        STATUS                current
+        DESCRIPTION        " RabbitMQ instance has too many connections (> 1000)."
+        ::= { rabbitMQ 1 }
+
+
+        RabbitMQNodeDown NOTIFICATION-TYPE
+        OBJECTS        {        id,
+                                severity,
+                                description   }
+        STATUS                current
+        DESCRIPTION        "Less than 3 nodes running in RabbitMQ cluster."
+        ::= { rabbitMQ 2 }
+
+        ElasticsearchClusterYellow NOTIFICATION-TYPE
+        OBJECTS        {        id,
+                                severity,
+                                description   }
+        STATUS                current
+        DESCRIPTION        "Elastic Cluster Yellow status."
+        ::= { elasticSearch 1 }
+
+END

@@ -1,0 +1,259 @@
+         CCTRAPS-MIB DEFINITIONS ::= BEGIN
+
+         IMPORTS
+                 MODULE-IDENTITY, NOTIFICATION-TYPE, OBJECT-TYPE, enterprises
+                         FROM SNMPv2-SMI
+                 DisplayString
+                         FROM SNMPv2-TC;
+
+         intervoice MODULE-IDENTITY
+            LAST-UPDATED "201010221009Z"
+            ORGANIZATION "www.intervoice.com"
+            CONTACT-INFO
+               "TBD"
+               DESCRIPTION
+                   "Top-level infrastructure of Intervoice tree"
+         REVISION     "201010221009Z"
+         DESCRIPTION
+             "Initial revision of SNMP V2 CCTRAP MIB Module"
+         ::= {enterprises 1336 }
+
+         cctraps OBJECT IDENTIFIER ::= { intervoice  1 }
+
+         trapItems OBJECT IDENTIFIER ::= { cctraps  1 }
+
+         ccTrapObjects OBJECT IDENTIFIER ::= { cctraps 4 0 }
+
+--
+
+         ccResendTrapsFrom OBJECT-TYPE
+             SYNTAX INTEGER
+             MAX-ACCESS read-write
+             STATUS current
+             DESCRIPTION
+                    "Alert will resend all traps after this sequence number."
+             ::= { cctraps 3 }
+
+-- trap items
+
+         ccTrapAlarmID OBJECT-TYPE
+             SYNTAX  INTEGER
+             MAX-ACCESS  read-only
+             STATUS  current
+             DESCRIPTION
+                    "Intervoice trap sequence number."
+             ::= { trapItems  1 }
+         
+         ccTrapReportingServer OBJECT-TYPE
+             SYNTAX  DisplayString
+             MAX-ACCESS  read-only
+             STATUS  current
+             DESCRIPTION
+                    "The reporting server's IP."
+             ::= { trapItems  2 }
+         
+         ccTrapAlarmNumber OBJECT-TYPE
+             SYNTAX  INTEGER
+             MAX-ACCESS  read-only
+             STATUS  current
+             DESCRIPTION
+                    "Intervoice error number."
+             ::= { trapItems  3 }
+         
+         ccTrapPerceivedSeverity OBJECT-TYPE
+             SYNTAX  INTEGER {
+                          cleared(1),
+                          indeterminate(2),
+                          critical(3),
+                          major(4),
+                          minor(5),
+                          info(6)
+                        }
+             MAX-ACCESS  read-only
+             STATUS  current
+             DESCRIPTION
+                    "The severity of the error."
+             ::= { trapItems  4 }
+         
+         ccTrapServer OBJECT-TYPE
+             SYNTAX  DisplayString
+             MAX-ACCESS  read-only
+             STATUS  current
+             DESCRIPTION
+                    "The server IP which the trap is generated on."
+             ::= { trapItems  5 }
+         
+         ccTrapTimeStamp OBJECT-TYPE
+             SYNTAX  DisplayString
+             MAX-ACCESS  read-only
+             STATUS  current
+             DESCRIPTION
+                    "The time stamp of the trap."
+             ::= { trapItems  6 }
+         
+         ccTrapDescription OBJECT-TYPE
+             SYNTAX  DisplayString
+             MAX-ACCESS  read-only
+             STATUS  current
+             DESCRIPTION
+                    "The description of the error."
+             ::= { trapItems  7 }
+         
+         ccTrapAdditionalData OBJECT-TYPE
+             SYNTAX  DisplayString
+             MAX-ACCESS  read-only
+             STATUS  current
+             DESCRIPTION
+                    "The raw trap data."
+             ::= { trapItems  8 }
+
+         ccTrapAlarmType OBJECT-TYPE
+             SYNTAX  DisplayString
+             MAX-ACCESS  read-only
+             STATUS  current
+             DESCRIPTION
+                    "Event Alarm, Node State Alarm, System State Alarm, 
+                     Node Reset State Alarm, System Reset State Alarm."
+             ::= { trapItems  9 }
+
+         ccTrapResourceID OBJECT-TYPE
+             SYNTAX  INTEGER
+             MAX-ACCESS  read-only
+             STATUS  current
+             DESCRIPTION
+                    "resource ID."
+             ::= { trapItems  10 }
+
+         ccTrapProbableCause OBJECT-TYPE
+             SYNTAX  DisplayString
+             MAX-ACCESS  read-only
+             STATUS  current
+             DESCRIPTION
+                    "Probable cause."
+             ::= { trapItems  11 }
+
+         ccTrapSuggestedCorrectiveAction OBJECT-TYPE
+             SYNTAX  DisplayString
+             MAX-ACCESS  read-only
+             STATUS  current
+             DESCRIPTION
+                    "Suggested corrective action."
+             ::= { trapItems  12 }
+
+-- trap objects
+
+         clearedTraps NOTIFICATION-TYPE
+             OBJECTS   {ccTrapAlarmID,
+                          ccTrapReportingServer,
+                          ccTrapAlarmNumber,  
+                          ccTrapPerceivedSeverity, 
+                          ccTrapServer,
+                          ccTrapResourceID,
+                          ccTrapTimeStamp, 
+                          ccTrapAdditionalData,
+                          ccTrapDescription, 
+                          ccTrapAlarmType,
+                          ccTrapProbableCause,
+                          ccTrapSuggestedCorrectiveAction
+                         }
+             STATUS current
+             DESCRIPTION
+                   "A clear alarm is generated in IVI central alarm server."
+             ::= { ccTrapObjects 1 }
+
+         indeterminateTraps NOTIFICATION-TYPE
+             OBJECTS   {ccTrapAlarmID,
+                          ccTrapReportingServer,
+                          ccTrapAlarmNumber,  
+                          ccTrapPerceivedSeverity, 
+                          ccTrapServer,
+                          ccTrapResourceID,
+                          ccTrapTimeStamp, 
+                          ccTrapAdditionalData,
+                          ccTrapDescription, 
+                          ccTrapAlarmType,
+                          ccTrapProbableCause,
+                          ccTrapSuggestedCorrectiveAction
+                         }
+             STATUS current
+             DESCRIPTION
+                    "An indeterminate alarm is generated in IVI central alarm server."
+             ::= { ccTrapObjects 2 }
+
+         criticalTraps NOTIFICATION-TYPE
+             OBJECTS   {ccTrapAlarmID,
+                          ccTrapReportingServer,
+                          ccTrapAlarmNumber,  
+                          ccTrapPerceivedSeverity, 
+                          ccTrapServer,
+                          ccTrapResourceID,
+                          ccTrapTimeStamp, 
+                          ccTrapAdditionalData,
+                          ccTrapDescription, 
+                          ccTrapAlarmType,
+                          ccTrapProbableCause,
+                          ccTrapSuggestedCorrectiveAction
+                         }
+             STATUS current
+             DESCRIPTION
+                    "A critical alarm is generated in IVI central alarm server."
+             ::= { ccTrapObjects 3 }
+
+         majorTraps NOTIFICATION-TYPE
+             OBJECTS   {ccTrapAlarmID,
+                          ccTrapReportingServer,
+                          ccTrapAlarmNumber,  
+                          ccTrapPerceivedSeverity, 
+                          ccTrapServer,
+                          ccTrapResourceID,
+                          ccTrapTimeStamp, 
+                          ccTrapAdditionalData,
+                          ccTrapDescription, 
+                          ccTrapAlarmType,
+                          ccTrapProbableCause,
+                          ccTrapSuggestedCorrectiveAction
+                         }
+             STATUS current
+             DESCRIPTION
+                    "A major alarm is generated in IVI central alarm server."
+             ::= { ccTrapObjects 4 }
+
+         minorTraps NOTIFICATION-TYPE
+             OBJECTS   {ccTrapAlarmID,
+                          ccTrapReportingServer,
+                          ccTrapAlarmNumber,  
+                          ccTrapPerceivedSeverity, 
+                          ccTrapServer,
+                          ccTrapResourceID,
+                          ccTrapTimeStamp, 
+                          ccTrapAdditionalData,
+                          ccTrapDescription, 
+                          ccTrapAlarmType,
+                          ccTrapProbableCause,
+                          ccTrapSuggestedCorrectiveAction
+                         }
+             STATUS current
+             DESCRIPTION
+                    "A minor alarm is generated in IVI central alarm server."
+             ::= { ccTrapObjects 5 }
+
+         infoTraps NOTIFICATION-TYPE
+             OBJECTS   {ccTrapAlarmID,
+                          ccTrapReportingServer,
+                          ccTrapAlarmNumber,  
+                          ccTrapPerceivedSeverity, 
+                          ccTrapServer,
+                          ccTrapResourceID,
+                          ccTrapTimeStamp, 
+                          ccTrapAdditionalData,
+                          ccTrapDescription, 
+                          ccTrapAlarmType,
+                          ccTrapProbableCause,
+                          ccTrapSuggestedCorrectiveAction
+                         }
+             STATUS current
+             DESCRIPTION
+                    "An informational alarm is generated in IVI central alarm server."
+             ::= { ccTrapObjects 6 }
+
+         END

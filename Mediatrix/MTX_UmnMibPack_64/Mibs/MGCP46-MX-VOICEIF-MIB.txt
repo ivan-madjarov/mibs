@@ -1,0 +1,803 @@
+-- ****************************************************************************
+-- ****************************************************************************
+--
+--             Copyright(c) 2001-2004 Mediatrix Telecom, Inc.
+--
+--  NOTICE:
+--   This document contains information that is confidential and proprietary
+--   to Mediatrix Telecom, Inc.
+--
+--   Mediatrix Telecom, Inc. reserves all rights to this document as well as
+--   to the Intellectual Property of the document and the technology and
+--   know-how that it includes and represents.
+--
+--   This publication cannot be reproduced, neither in whole nor in part in
+--   any form whatsoever without written prior approval by
+--   Mediatrix Telecom, Inc.
+--
+--   Mediatrix Telecom, Inc. reserves the right to revise this publication
+--   and make changes at any time and without the obligation to notify any
+--   person and/or entity of such revisions and/or changes.
+--
+-- ****************************************************************************
+-- ****************************************************************************
+
+MGCP46-MX-VOICEIF-MIB
+DEFINITIONS ::= BEGIN
+
+IMPORTS
+        MODULE-IDENTITY,
+        OBJECT-TYPE,
+        Integer32,
+        Unsigned32
+    FROM SNMPv2-SMI
+        MODULE-COMPLIANCE,
+        OBJECT-GROUP
+    FROM SNMPv2-CONF
+        ifIndex
+    FROM RFC1213-MIB
+        MxFloatingPoint,
+        MxEnableState
+    FROM MX-TC
+        mediatrixConfig
+    FROM MX-SMI;
+
+voiceIfMIB MODULE-IDENTITY
+    LAST-UPDATED "200408230000Z"
+    ORGANIZATION "Mediatrix Telecom, Inc."
+    CONTACT-INFO "Mediatrix Telecom, Inc.
+                  4229, Garlock Street
+                  Sherbrooke (Quebec)
+                  Canada
+                  Phone: (819) 829-8749
+                  "
+    DESCRIPTION  "This MIB provides information to configure voice interface
+                  (such as analog line, etc.) on a per interface basis."
+    -- ************************************************************************
+    -- Revision history
+    -- ************************************************************************
+    REVISION    "200408230000Z"
+    DESCRIPTION "Removed variables voiceIfNlpThresholdLevel and 
+                 voiceIfG723VoiceActivityDetectionEnablefor the 1.4.9 branch."
+    REVISION    "0308120000Z"
+    DESCRIPTION "August 12, 2003
+                    Updated voiceIfG723VoiceActivityDetectionEnable description
+                    to be hardware specific.
+                 August 6, 2003
+                    added voiceIfG723VoiceActivityDetectionEnable.
+                 July 24, 2003
+                    added voiceIfG729VoiceActivityDetectionEnable.
+                 July 21, 2003
+                    Added voiceIfNlpThresholdLevel variable.
+                 June 20, 2003
+                    voiceIfEchoCancellationEnable MAX-ACCESS is now
+                    'read-only'.
+                 May 21, 2003
+                    voiceIfEchoCancellationEnable STATUS is now 'deprecated'.
+                 May 1, 2003
+                    Update the voiceIfCodecG723Enable DESCRIPTION to remove
+                    confusion about the choices meaning
+                 April 1, 2003
+                    Removed incorrect information from DESCRIPTION of some MIB
+                    variables
+                 February 11, 2003
+                    Changed the default value of voiceIfMaxJitterBufferLength,
+                    from 150 to 125 to make sure it is suitable for all
+                    hardware platforms.
+                 January 16, 2003
+                    Changed the description of voiceIfDtmfTransport.
+                 December 19, 2002
+                    The variables voiceIfBaseGainConfigurationSource,
+                    voiceIfBaseInputGain, voiceIfBaseOutputGain,
+                    voiceIfBaseInputGainOffset, voiceIfBaseOutputGainOffset
+                    are deprecated because voiceIfUserInputGainOffset and
+                    voiceIfUserOutputGainOffset allow the administrator to
+                    customize the gains in a simple way. The use of the
+                    deprecated variable was error-prone.
+                 September 16, 2002
+                    Improved voiceIfVoiceActivityDetectionEnable and
+                    voiceIfG711ComfortNoiseGenerationEnable (variable name,
+                    values names and description).
+                 August 30, 2002
+                    Updated range and default values of
+                    voiceIfCodecGXXXMinPTime and voiceIfCodecGXXXMaxPTime to
+                    reflect values supported by RTP.
+                 August 12, 2002
+                    Performed editions in some DESCRIPTIONs to clarify.
+                 July 31, 2002
+                    Explained the way voiceIfCodecGXXXMinPTime and
+                    voiceIfCodecGXXXMaxPTime are interpreted in SIP.
+                 June 6, 2002
+                    Added 120 as option for voiceIfCodecG723MinPTime and
+                    voiceIfCodecG723MaxPTime.
+                    Modified the allowed value range for
+                    voiceIfTargetJitterBufferLength and
+                    voiceIfMaxJitterBufferLength.
+                 April 26, 2002
+                    Added signalingProtocolDependent choice in voiceIfDtmfTransport.
+                 January 11, 2002
+                    Added voiceIfBaseGainConfigurationSource variable.
+                    Changed DEFVAL of the voiceIfUserInputGainOffset,
+                    voiceIfUserOutputGainOffset, voiceIfBaseInputGain and
+                    voiceIfBaseOutputGain.
+                 August 22, 2001
+                    Creation"
+    ::= { mediatrixConfig 30 }
+
+voiceIfMIBObjects  OBJECT IDENTIFIER ::= { voiceIfMIB 1 }
+voiceIfConformance OBJECT IDENTIFIER ::= { voiceIfMIB 2 }
+
+    -- ************************************************************************
+    -- Voice interface configuration Table
+    -- ************************************************************************
+    voiceIfTable OBJECT-TYPE
+        SYNTAX      SEQUENCE OF VoiceIfEntry
+        MAX-ACCESS  not-accessible
+        STATUS      current
+        DESCRIPTION "A table of configuration for each voice over IP interface."
+        ::= { voiceIfMIBObjects 10 }
+
+        voiceIfEntry OBJECT-TYPE
+            SYNTAX      VoiceIfEntry
+            MAX-ACCESS  not-accessible
+            STATUS      current
+            DESCRIPTION "A row in the voiceIfTable used to configure each port."
+            INDEX       {
+                         ifIndex
+                        }
+            ::= { voiceIfTable 1 }
+
+            VoiceIfEntry ::= SEQUENCE
+            {
+                voiceIfAdaptativeJitterBufferEnable     INTEGER,
+                voiceIfTargetJitterBufferLength         Unsigned32,
+                voiceIfMaxJitterBufferLength            Unsigned32,
+                voiceIfG711VoiceActivityDetectionEnable INTEGER,
+                voiceIfEchoCancellationEnable           INTEGER,
+                voiceIfG711ComfortNoiseGenerationEnable INTEGER,
+                voiceIfBaseGainConfigurationSource      INTEGER,
+                voiceIfUserInputGainOffset              MxFloatingPoint,
+                voiceIfUserOutputGainOffset             MxFloatingPoint,
+                voiceIfBaseInputGain                    Unsigned32,
+                voiceIfBaseOutputGain                   Unsigned32,
+                voiceIfBaseInputGainOffset              MxFloatingPoint,
+                voiceIfBaseOutputGainOffset             MxFloatingPoint,
+                voiceIfG729VoiceActivityDetectionEnable MxEnableState
+            }
+
+
+            voiceIfAdaptativeJitterBufferEnable OBJECT-TYPE
+                SYNTAX      INTEGER {
+                                     disable(0),
+                                     enable(1)
+                                    }
+                MAX-ACCESS  read-write
+                STATUS      current
+                DESCRIPTION "Jitter is an abrupt and unwanted variation of one or more signal
+                             characteristics, such as the interval between successive pulses,
+                             or the frequency or phase of successive cycles. An adaptive jitter
+                             buffer usually consists of an elastic buffer in which the signal is
+                             temporarily stored and then retransmitted at a rate based on the
+                             average rate of the incoming signal."
+                DEFVAL      { enable }
+                ::= { voiceIfEntry 5 }
+
+            voiceIfTargetJitterBufferLength OBJECT-TYPE
+                SYNTAX      Unsigned32 (0..300)
+                MAX-ACCESS  read-write
+                STATUS      current
+                DESCRIPTION "The adaptive jitter buffer attempts to hold packets to the target
+                             holding time. This is the minimum delay the jitter buffer adds to
+                             the system. The target jitter buffer length is in ms. The target
+                             jitter buffer MUST be equal to or smaller than the maximum jitter buffer."
+                DEFVAL      { 30 }
+                ::= { voiceIfEntry 6 }
+
+            voiceIfMaxJitterBufferLength OBJECT-TYPE
+                SYNTAX      Unsigned32 (0..300)
+                MAX-ACCESS  read-write
+                STATUS      current
+                DESCRIPTION "This is the maximum jitter the adaptive jitter buffer can handle.
+                             The jitter buffer length is in ms. The maximum jitter buffer MUST
+                             be equal to or greater than the target jitter buffer. The maximum jitter
+                             buffer length allowed on some Mediatrix products is smaller than
+                             300 ms."
+                DEFVAL      { 125 }
+                ::= { voiceIfEntry 7 }
+
+            voiceIfG711VoiceActivityDetectionEnable OBJECT-TYPE
+                SYNTAX      INTEGER {
+                                     disable(0),
+                                     transparent(1),
+                                     conservative(2)
+                                    }
+                MAX-ACCESS  read-write
+                STATUS      current
+                DESCRIPTION "If Voice Activity Detection (VAD) is enabled, then
+                             speech frames are only sent during talkspurts (periods
+                             of audio activity).
+
+                             During silence periods, no speech frames are sent,
+                             but Comfort Noise (CN) packets containing
+                             information about background noise may be sent
+                             (c.f. draft-ietf-avt-rtp-cn-05.txt). This variable
+                             specifies the sensitivity of the VAD algorithm to
+                             silence periods.
+
+                             disable      : VAD disabled
+                             transparent  : VAD enabled - low sensitivity to
+                                            silence period)
+                             conservative : VAD enabled - normal sensitivity to
+                                            silence period"
+                DEFVAL      { conservative }
+                ::= { voiceIfEntry 10 }
+
+            voiceIfEchoCancellationEnable OBJECT-TYPE
+                SYNTAX      INTEGER {
+                                   disable(0),
+                                   enable(1)
+                               }
+                MAX-ACCESS  read-only
+                STATUS      deprecated
+                DESCRIPTION "An echo is a signal that has been reflected or otherwise returned
+                             with sufficient magnitude and delay to be perceived. The echo
+                             cancellation is usually an active process in which echo signals are
+                             measured and cancelled or eliminated by combining an inverted signal
+                             with the echo signal.
+
+                             This object is deprecated. This means some agents may implement it and
+                             some agents may not implement it."
+                DEFVAL      { enable }
+                ::= { voiceIfEntry 11 }
+
+            voiceIfG711ComfortNoiseGenerationEnable OBJECT-TYPE
+                SYNTAX      INTEGER {
+                                      disable(0),
+                                      whiteNoise(1),
+                                      customNoise(2)
+                                    }
+                MAX-ACCESS  read-write
+                STATUS      current
+                DESCRIPTION "During silence periods, Comfort Noise (CN) packets
+                             containing information about background noise may
+                             be received (c.f. draft-ietf-avt-rtp-cn-05.txt).
+
+                             If Comfort Noise Generation (CNG) is enabled, then
+                             those packets are used to generate local comfort
+                             noise. This variable specifies the type of this
+                             comfort noise. Changing this variable requires a
+                             reboot of the unit in order to take effect.
+
+                             Note that G.723 and G.729 CNG is not configurable
+                             because it is built-in in the codec, while it is
+                             generic in G.711.
+
+                             disable     : CNG disabled
+                             whiteNoise  : CNG enabled - white noise
+                             customNoise : CNG enabled - custom noise (better)"
+                DEFVAL      { customNoise }
+                ::= { voiceIfEntry 12 }
+
+            voiceIfBaseGainConfigurationSource OBJECT-TYPE
+                SYNTAX      INTEGER {
+                                      useCustomConfiguration(0),
+                                      useDefaultCountryConfiguration(1)
+                                    }
+                MAX-ACCESS read-write
+                STATUS     deprecated
+                DESCRIPTION "Specify how the base gain is configured.
+                             When using the custom configuration, you must set the following variables:
+                                voiceIfBaseInputGain,
+                                voiceIfBaseOutputGain,
+                                voiceIfBaseInputGainOffset,
+                                voiceIfBaseOutputGainOffset.
+                             Warning: Custom configuration should be used with care.
+
+                             This object is deprecated. This means some agents may implement it and some
+                             agents may not implement it."
+                DEFVAL      { useDefaultCountryConfiguration }
+                ::= { voiceIfEntry 17 }
+
+            voiceIfUserInputGainOffset OBJECT-TYPE
+                SYNTAX      MxFloatingPoint
+                MAX-ACCESS  read-write
+                STATUS      current
+                DESCRIPTION "The user input gain offset is added to the base input gain to
+                             compute the total input gain. The user input gain is in dB."
+                DEFVAL      { "0" }
+                ::= { voiceIfEntry 20 }
+
+            voiceIfUserOutputGainOffset OBJECT-TYPE
+                SYNTAX      MxFloatingPoint
+                MAX-ACCESS  read-write
+                STATUS      current
+                DESCRIPTION "The user output gain offset is added to the base output gain to
+                             compute the total output gain. The user ouput gain is in dB."
+                DEFVAL      { "0" }
+                ::= { voiceIfEntry 21 }
+
+            voiceIfBaseInputGain OBJECT-TYPE
+                SYNTAX      Unsigned32 (0..65535)
+                MAX-ACCESS  read-write
+                STATUS      deprecated
+                DESCRIPTION "The base input gain. This is an absolute value which is used
+                             in conjunction with the user input gain and the base input gain
+                             offset to compute the total input gain.
+
+                             This object is deprecated. This means some agents may implement it and some
+                             agents may not implement it."
+                DEFVAL      { 5785 }
+                ::= { voiceIfEntry 22 }
+
+            voiceIfBaseOutputGain OBJECT-TYPE
+                SYNTAX      Unsigned32 (0..65535)
+                MAX-ACCESS  read-write
+                STATUS      deprecated
+                DESCRIPTION "The base output gain. This is an absolute value which is used
+                             in conjunction with the user output gain and the base output gain
+                             offset to compute the total output gain.
+
+                             This object is deprecated. This means some agents may implement it and some
+                             agents may not implement it."
+                DEFVAL      { 2052 }
+                ::= { voiceIfEntry 23 }
+
+            voiceIfBaseInputGainOffset OBJECT-TYPE
+                SYNTAX      MxFloatingPoint
+                MAX-ACCESS  read-write
+                STATUS      deprecated
+                DESCRIPTION "The base input gain offset. This value is used in the calibration
+                             to adjust the total input gain to an offset in dB from the base input
+                             gain. This value is in dB.
+
+                             This object is deprecated. This means some agents may implement it and some
+                             agents may not implement it."
+                DEFVAL      { "0" }
+                ::= { voiceIfEntry 24 }
+
+            voiceIfBaseOutputGainOffset OBJECT-TYPE
+                SYNTAX      MxFloatingPoint
+                MAX-ACCESS  read-write
+                STATUS      deprecated
+                DESCRIPTION "The base output gain offset. This value is used in the calibration
+                             to adjust the total output gain to an offset in dB from the base output
+                             gain. This value is in dB.
+
+                             This object is deprecated. This means some agents may implement it and some
+                             agents may not implement it."
+                DEFVAL      { "0" }
+                ::= { voiceIfEntry 25 }
+
+           voiceIfG729VoiceActivityDetectionEnable OBJECT-TYPE
+                SYNTAX      MxEnableState
+                MAX-ACCESS  read-write
+                STATUS      current
+                DESCRIPTION "If Voice Activity Detection (VAD) is enabled, then
+                             speech frames are only sent during talkspurts (periods
+                             of audio activity).
+
+                             During silence periods, no speech frames are sent,
+                             but Comfort Noise (CN) packets containing
+                             information about background noise may be sent
+                             in accordance with annex B of G.729.
+
+                             disable      : G.729 uses annex A only
+                             enable       : G.729 annex A is used with annex B"
+                DEFVAL      { enable }
+                ::= { voiceIfEntry 50 }
+
+    -- ************************************************************************
+    -- Voice interface codec configuration table parameters
+    -- ************************************************************************
+    voiceIfCodecTable OBJECT-TYPE
+        SYNTAX      SEQUENCE OF VoiceIfCodecEntry
+        MAX-ACCESS  not-accessible
+        STATUS      current
+        DESCRIPTION "This table holds the parameters that define the
+                     codecs used.
+
+                     PCMA and PCMU are specified in ITU-T Recommendation G.711. Audio
+                     data is encoded as eight bits per sample, after logarithmic
+                     scaling. PCMU denotes mu-law scaling, PCMA A-law scaling.
+
+                     G723.1 is specified in ITU Recommendation G.723.1, Dual-rate speech
+                     coder for multimedia communications transmitting at 5.3 and 6.3
+                     kbit/s. This Recommendation specifies a coded representation that can
+                     be used for compressing the speech signal component of multi-media
+                     services at a very low bit rate. Audio is encoded in 30 ms frames.
+                     A G.723.1 frame can be one of three sizes: 24 octets (6.3 kb/s frame),
+                     20 octets (5.3 kb/s frame), or 4 octets. These 4-octet frames are
+                     called SID frames (Silence Insertion Descriptor) and are used to
+                     specify comfort noise parameters.
+
+                     G729 is specified in ITU-T Recommendation G.729, Coding of speech at
+                     8 kbit/s using conjugate structure-algebraic code excited linear
+                     prediction (CS-ACELP). For all data rates, the sampling frequency
+                     (and RTP timestamp clock rate) is 8000 Hz. A voice activity detector
+                     (VAD) and comfort noise generator (CNG) algorithm in Annex B of G.729
+                     is RECOMMENDED for digital simultaneous voice and data applications
+                     and can be used in conjunction with G.729 or G.729 Annex A. A G.729
+                     or G.729 Annex A frame contains 10 octets, while the G.729 Annex B
+                     comfort noise frame occupies 2 octets."
+        ::= { voiceIfMIBObjects 20 }
+
+        voiceIfCodecEntry OBJECT-TYPE
+            SYNTAX      VoiceIfCodecEntry
+            MAX-ACCESS  not-accessible
+            STATUS      current
+            DESCRIPTION "Codec table parameter entries."
+            INDEX       {
+                         ifIndex
+                        }
+            ::= { voiceIfCodecTable 1 }
+
+            VoiceIfCodecEntry ::= SEQUENCE
+                {
+                    voiceIfCodecPreferred       INTEGER,
+                    voiceIfCodecPcmuEnable      INTEGER,
+                    voiceIfCodecPcmuMinPTime    Unsigned32,
+                    voiceIfCodecPcmuMaxPTime    Unsigned32,
+                    voiceIfCodecPcmaEnable      INTEGER,
+                    voiceIfCodecPcmaMinPTime    Unsigned32,
+                    voiceIfCodecPcmaMaxPTime    Unsigned32,
+                    voiceIfCodecG723Enable      INTEGER,
+                    voiceIfCodecG723MinPTime    Unsigned32,
+                    voiceIfCodecG723MaxPTime    Unsigned32,
+                    voiceIfCodecG729Enable      INTEGER,
+                    voiceIfCodecG729MinPTime    Unsigned32,
+                    voiceIfCodecG729MaxPTime    Unsigned32
+                }
+
+            voiceIfCodecPreferred OBJECT-TYPE
+                SYNTAX      INTEGER {
+                                     pcmu(1),
+                                     pcma(2),
+                                     g723(3),
+                                     g729(4)
+                                    }
+                MAX-ACCESS  read-write
+                STATUS      current
+                DESCRIPTION "Indicates the preferred type of codec for voice
+                             transmission. If the selected codec is disabled,
+                             this preferred type of codec will be ignored."
+                DEFVAL      { pcmu }
+                ::= { voiceIfCodecEntry 1 }
+
+            voiceIfCodecPcmuEnable OBJECT-TYPE
+                SYNTAX      INTEGER {
+                                     disable(0),
+                                     enable(1)
+                                    }
+                MAX-ACCESS  read-write
+                STATUS      current
+                DESCRIPTION "Indicates if the codec can be selected for voice
+                             transmission. If enabled, this codec will be listed
+                             as supported for this specific endpoint. Otherwise,
+                             it will be ignored."
+                DEFVAL      { enable }
+                ::= { voiceIfCodecEntry 5 }
+
+            voiceIfCodecPcmuMinPTime OBJECT-TYPE
+                SYNTAX      Unsigned32 (10..100)
+                MAX-ACCESS  read-write
+                STATUS      current
+                DESCRIPTION "Lower boundary for the packetization period of
+                             the given codec.
+
+                             PCMU -> (10ms..100ms)
+
+                             This value is expressed in ms, with increments of
+                             1 ms.
+
+                             This variable's semantics are different depending on
+                             protocol and/or hardware platforms.
+                             Please refer to the documentation shipped with your
+                             device for more details."
+                DEFVAL      { 10 }
+                ::= { voiceIfCodecEntry 6 }
+
+            voiceIfCodecPcmuMaxPTime OBJECT-TYPE
+                SYNTAX      Unsigned32 (10..100)
+                MAX-ACCESS  read-write
+                STATUS      current
+                DESCRIPTION "Upper boundary for the packetization period of
+                             the given codec.
+
+                             PCMU -> (10ms..100ms)
+
+                             This value is expressed in ms, with increments of
+                             1 ms.
+
+                             This variable's semantics are different depending on
+                             protocol and/or hardware platforms.
+                             Please refer to the documentation shipped with your
+                             device for more details."
+                DEFVAL      { 100 }
+                ::= { voiceIfCodecEntry 7 }
+
+            voiceIfCodecPcmaEnable OBJECT-TYPE
+                SYNTAX      INTEGER {
+                                     disable(0),
+                                     enable(1)
+                                    }
+                MAX-ACCESS  read-write
+                STATUS      current
+                DESCRIPTION "Indicates if the codec can be selected for voice
+                             transmission. If enabled, this codec will be listed
+                             as supported for this specific endpoint. Otherwise,
+                             it will be ignored."
+                DEFVAL      { enable }
+                ::= { voiceIfCodecEntry 11 }
+
+            voiceIfCodecPcmaMinPTime OBJECT-TYPE
+                SYNTAX      Unsigned32 (10..100)
+                MAX-ACCESS  read-write
+                STATUS      current
+                DESCRIPTION "Lower boundary for the packetization period of
+                             the given codec.
+
+                             PCMA -> (10ms..100ms)
+
+                             This value is expressed in ms, with increments of
+                             1 ms.
+
+                             This variable's semantics are different depending on
+                             protocol and/or hardware platforms.
+                             Please refer to the documentation shipped with your
+                             device for more details."
+                DEFVAL      { 10 }
+                ::= { voiceIfCodecEntry 12 }
+
+            voiceIfCodecPcmaMaxPTime OBJECT-TYPE
+                SYNTAX      Unsigned32 (10..100)
+                MAX-ACCESS  read-write
+                STATUS      current
+                DESCRIPTION "Upper boundary for the packetization period of
+                             the given codec.
+
+                             PCMA -> (10ms..100ms)
+
+                             This value is expressed in ms, with increments of
+                             1 ms.
+
+                             This variable's semantics are different depending on
+                             protocol and/or hardware platforms.
+                             Please refer to the documentation shipped with your
+                             device for more details."
+                DEFVAL      { 100 }
+                ::= { voiceIfCodecEntry 13 }
+
+            voiceIfCodecG723Enable OBJECT-TYPE
+                SYNTAX      INTEGER {
+                                     disable(0),
+                                     g723-53kbs(1),
+                                     g723-63kbs(2)
+                                    }
+                MAX-ACCESS  read-write
+                STATUS      current
+                DESCRIPTION "Indicates if the codec can be selected for voice
+                             transmission. If not disabled, this codec is listed
+                             as supported for this specific endpoint. Otherwise,
+                             it is ignored.
+
+                             - disable: Disable G.723
+                             - g723-53kbs: Use G.723 at 5.3 kbps
+                             - g723-63kbs: Use G.723 at 6.3 kbps"
+                DEFVAL      { g723-63kbs }
+                ::= { voiceIfCodecEntry 17 }
+
+            voiceIfCodecG723MinPTime OBJECT-TYPE
+                SYNTAX      Unsigned32 (30|60|90|120)
+                MAX-ACCESS  read-write
+                STATUS      current
+                DESCRIPTION "Lower boundary for the packetization period of
+                             the given codec.
+
+                             G723 -> (30ms|60ms|90ms|120ms)
+
+                             This value is expressed in ms, with increments of
+                             30 ms.
+
+                             This variable's semantics are different depending on
+                             protocol and/or hardware platforms.
+                             Please refer to the documentation shipped with your
+                             device for more details."
+                DEFVAL      { 30 }
+                ::= { voiceIfCodecEntry 18 }
+
+            voiceIfCodecG723MaxPTime OBJECT-TYPE
+                SYNTAX      Unsigned32 (30|60|90|120)
+                MAX-ACCESS  read-write
+                STATUS      current
+                DESCRIPTION "Upper boundary for the packetization period of
+                             the given codec.
+
+                             G723 -> (30ms|60ms|90ms|120ms)
+
+                             This value is expressed in ms, with increments of
+                             30 ms.
+
+                             This variable's semantics are different depending on
+                             protocol and/or hardware platforms.
+                             Please refer to the documentation shipped with your
+                             device for more details."
+                DEFVAL      { 120 }
+                ::= { voiceIfCodecEntry 19 }
+
+            voiceIfCodecG729Enable OBJECT-TYPE
+                SYNTAX      INTEGER {
+                                     disable(0),
+                                     enable(1)
+                                    }
+                MAX-ACCESS  read-write
+                STATUS      current
+                DESCRIPTION "Indicates if the codec can be selected for voice
+                             transmission. If enabled, this codec will be listed
+                             as supported for this specific endpoint. Otherwise,
+                             it will be ignored."
+                DEFVAL      { enable }
+                ::= { voiceIfCodecEntry 23 }
+
+            voiceIfCodecG729MinPTime OBJECT-TYPE
+                SYNTAX      Unsigned32 (10|20|30|40|50|60|70|80|90|100)
+                MAX-ACCESS  read-write
+                STATUS      current
+                DESCRIPTION "Lower boundary for the packetization period of
+                             the given codec.
+
+                             G729 -> (10ms|20ms|30ms|40ms|50ms|60ms|70ms|80ms|90ms|100ms)
+
+                             This value is expressed in ms, with increments of
+                             10 ms.
+
+                             This variable's semantics are different depending on
+                             protocol and/or hardware platforms.
+                             Please refer to the documentation shipped with your
+                             device for more details."
+                DEFVAL      { 10 }
+                ::= { voiceIfCodecEntry 24 }
+
+            voiceIfCodecG729MaxPTime OBJECT-TYPE
+                SYNTAX      Unsigned32 (10|20|30|40|50|60|70|80|90|100)
+                MAX-ACCESS  read-write
+                STATUS      current
+                DESCRIPTION "Upper boundary for the packetization period of
+                             the given codec.
+
+                             G729 -> (10ms|20ms|30ms|40ms|50ms|60ms|70ms|80ms|90ms|100ms)
+
+                             This value is expressed in ms, with increments of
+                             10 ms.
+
+                             This variable's semantics are different depending on
+                             protocol and/or hardware platforms.
+                             Please refer to the documentation shipped with your
+                             device for more details."
+                DEFVAL      { 100 }
+                ::= { voiceIfCodecEntry 25 }
+
+    -- ************************************************************************
+    -- Voice DTMF transport configuration table parameters
+    -- ************************************************************************
+    voiceIfDtmfTransportTable OBJECT-TYPE
+        SYNTAX      SEQUENCE OF VoiceIfDtmfTransportEntry
+        MAX-ACCESS  not-accessible
+        STATUS      current
+        DESCRIPTION "This table holds the parameters that define the
+                     DTMF transport."
+        ::= { voiceIfMIBObjects 30 }
+
+        voiceIfDtmfTransportEntry OBJECT-TYPE
+            SYNTAX      VoiceIfDtmfTransportEntry
+            MAX-ACCESS  not-accessible
+            STATUS      current
+            DESCRIPTION "DTMF transport table parameter entries."
+            INDEX       {
+                         ifIndex
+                        }
+            ::= { voiceIfDtmfTransportTable 1 }
+
+            VoiceIfDtmfTransportEntry ::= SEQUENCE
+                {
+                    voiceIfDtmfTransport      INTEGER
+                }
+
+            voiceIfDtmfTransport OBJECT-TYPE
+                SYNTAX      INTEGER {
+                                     inBand(0),
+                                     outOfBandUsingRtp(1),
+                                     outOfBandUsingSignalingProtocol(2),
+                                     signalingProtocolDependent(3)
+                                    }
+                MAX-ACCESS  read-write
+                STATUS      current
+                DESCRIPTION "Type of DTMF transport. If signalingProtocolDependent is selected, the
+                             signaling protocol has the control to select the DTMF transport mode.
+
+                             This variable's semantics are different depending on protocol and/or
+                             hardware platforms. Please refer to the documentation shipped with your
+                             device for more details."
+                DEFVAL      { inBand }
+                ::= { voiceIfDtmfTransportEntry 1 }
+
+
+
+    -- ************************************************************************
+    -- Conformance information
+    -- ************************************************************************
+    voiceIfCompliances OBJECT IDENTIFIER ::= { voiceIfConformance 1 }
+
+    voiceIfComplVer1 MODULE-COMPLIANCE
+        STATUS      current
+        DESCRIPTION
+            "List of groups required to support analog ports parameters."
+        MODULE -- This Module
+            MANDATORY-GROUPS {
+                                 voiceIfBasicGroupVer1,
+                                 voiceIfCodecGroupVer1,
+                                 voiceIfDtmfTransportBasicGroupVer1
+                             }
+        ::= { voiceIfCompliances 1 }
+
+    -- ************************************************************************
+    -- MIB variable grouping
+    -- ************************************************************************
+    voiceIfGroups OBJECT IDENTIFIER ::= { voiceIfConformance 2 }
+
+    voiceIfCodecGroupVer1 OBJECT-GROUP
+        OBJECTS {
+                    voiceIfCodecPreferred,
+                    voiceIfCodecPcmuEnable,
+                    voiceIfCodecPcmuMinPTime,
+                    voiceIfCodecPcmuMaxPTime,
+                    voiceIfCodecPcmaEnable,
+                    voiceIfCodecPcmaMinPTime,
+                    voiceIfCodecPcmaMaxPTime,
+                    voiceIfCodecG723Enable,
+                    voiceIfCodecG723MinPTime,
+                    voiceIfCodecG723MaxPTime,
+                    voiceIfCodecG729Enable,
+                    voiceIfCodecG729MinPTime,
+                    voiceIfCodecG729MaxPTime
+                }
+        STATUS current
+        DESCRIPTION
+            "A collection of objects that defines a list of codecs and their packetization time."
+        ::= { voiceIfGroups 1 }
+
+    voiceIfBasicGroupVer1 OBJECT-GROUP
+        OBJECTS {
+                    voiceIfAdaptativeJitterBufferEnable,
+                    voiceIfTargetJitterBufferLength,
+                    voiceIfMaxJitterBufferLength,
+                    voiceIfG711VoiceActivityDetectionEnable,
+                    voiceIfEchoCancellationEnable,
+                    voiceIfG711ComfortNoiseGenerationEnable,
+                    voiceIfBaseGainConfigurationSource,
+                    voiceIfUserInputGainOffset,
+                    voiceIfUserOutputGainOffset,
+                    voiceIfBaseInputGain,
+                    voiceIfBaseOutputGain,
+                    voiceIfBaseInputGainOffset,
+                    voiceIfBaseOutputGainOffset,
+                    voiceIfG729VoiceActivityDetectionEnable
+                }
+        STATUS current
+        DESCRIPTION
+            "A collection of objects that defines the programmable parameters for the different
+            codecs."
+        ::= { voiceIfGroups 2 }
+
+    voiceIfDtmfTransportBasicGroupVer1 OBJECT-GROUP
+        OBJECTS {
+                    voiceIfDtmfTransport
+                }
+        STATUS current
+        DESCRIPTION
+            "A collection of objects that defines the programmable
+            parameters for the DTMF transport."
+        ::= { voiceIfGroups 3 }
+
+
+
+END

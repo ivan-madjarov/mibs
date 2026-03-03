@@ -1,0 +1,37 @@
+HP-VLAN,1.3.6.1.4.1.11,hp,"OBJECT IDENTIFIER",READ-ONLY,
+HP-VLAN,1.3.6.1.4.1.11.2,nm,"OBJECT IDENTIFIER",READ-ONLY,
+HP-VLAN,1.3.6.1.4.1.11.2.14,icf,"OBJECT IDENTIFIER",READ-ONLY,
+HP-VLAN,1.3.6.1.4.1.11.2.14.11,hpicfObjects,"OBJECT IDENTIFIER",READ-ONLY,
+HP-VLAN,1.3.6.1.4.1.11.2.14.11.5,hpicfSwitch,"OBJECT IDENTIFIER",READ-ONLY,
+HP-VLAN,1.3.6.1.4.1.11.2.14.11.5.1,hpSwitch,"OBJECT IDENTIFIER",READ-ONLY,
+HP-VLAN,1.3.6.1.4.1.11.2.14.11.5.1.3,hpVLAN,"OBJECT IDENTIFIER",READ-ONLY,
+HP-VLAN,1.3.6.1.4.1.11.2.14.11.5.1.3.1,hpVlanLevelOne,"9510200000Z",READ-ONLY,"Hewlett Packard Company 8000 Foothills Blvd. Roseville, CA 95747"
+HP-VLAN,1.3.6.1.4.1.11.2.14.11.5.1.3.1.1,hpVlanObjects,"OBJECT IDENTIFIER",READ-ONLY,
+HP-VLAN,1.3.6.1.4.1.11.2.14.11.5.1.3.1.1.1,hpVlanNumber,INTEGER32,READ-ONLY,"The number of currently defined VLANs in the device. Though VLANs should be created using contiguous VLAN IDs, this is not mandatory. Gaps in the VLAN ID sequence may also result from the deletion of existing VLANs. Therefore, this value represents the total number of VLANs in the device and should not be used to indicate the highest VLAN ID value currently in use."
+HP-VLAN,1.3.6.1.4.1.11.2.14.11.5.1.3.1.1.4,hpVlanIdentTable,"SEQUENCE OF HPVLANIDENTENTRY",NOT-ACCESSIBLE,"A table describing the various VLANs that are currently defined for this device."
+HP-VLAN,1.3.6.1.4.1.11.2.14.11.5.1.3.1.1.4.1,hpVlanIdentEntry,SEQUENCE,NOT-ACCESSIBLE,"The row in the hpVlanIdentTable containing the general VLAN information."
+HP-VLAN,1.3.6.1.4.1.11.2.14.11.5.1.3.1.1.4.1.1,hpVlanIdentIndex,INTEGER32,NOT-ACCESSIBLE,"The VLAN ID which uniquely identifies a row in this table."
+HP-VLAN,1.3.6.1.4.1.11.2.14.11.5.1.3.1.1.4.1.2,hpVlanIdentName,DISPLAYSTRING,READ-CREATE,"The user defined textual name that is associated with this VLAN."
+HP-VLAN,1.3.6.1.4.1.11.2.14.11.5.1.3.1.1.4.1.3,hpVlanIdentMode,INTEGER,READ-ONLY,"The mode of this VLAN. A VLAN can be either port-based or MAC address-based. A port-based VLAN supports a multiple addresses per VLAN port. A MAC addressbased VLAN supports multiple MAC addresses per port such that VLAN address tables must be consulted to determine the number of VLAN clients."
+HP-VLAN,1.3.6.1.4.1.11.2.14.11.5.1.3.1.1.4.1.4,hpVlanIdentStatus,INTEGER,READ-CREATE,"The status of a VLAN information entry."
+HP-VLAN,1.3.6.1.4.1.11.2.14.11.5.1.3.1.1.4.1.5,hpVlanDot1QID,INTEGER32,READ-CREATE,"The VLAN tag ID. 802.1Q"
+HP-VLAN,1.3.6.1.4.1.11.2.14.11.5.1.3.1.1.4.1.6,hpVlanIdentState,INTEGER,READ-ONLY,"Current state of the VLAN. If one port in the VLAN is up, then that VLAN is up, otherwise it is down."
+HP-VLAN,1.3.6.1.4.1.11.2.14.11.5.1.3.1.1.5,hpVlanMemberTable,"SEQUENCE OF HPVLANMEMBERENTRY",NOT-ACCESSIBLE,"A table describing the members of the various VLANs that are currently defined for this device. Interfaces can be associated with a pre-defined VLAN (i.e., VLANs can be created by grouping existing interfaces) by adding rows to this table. Likewise, deleting rows from this table removes the specified interface from the VLAN. Note that certain entries in this table will automatically be created when a VLAN is created, such as the entry associating a VLAN with its propVirtual interface to the management and/or forwarding entity on the device. These entries are read-only and can not be manipulated via the MIB."
+HP-VLAN,1.3.6.1.4.1.11.2.14.11.5.1.3.1.1.5.1,hpVlanMemberEntry,SEQUENCE,NOT-ACCESSIBLE,"The row in the hpVlanMemberTable containing the VLAN ID to Interface Group ifIndex mappings."
+HP-VLAN,1.3.6.1.4.1.11.2.14.11.5.1.3.1.1.5.1.1,hpVlanMemberIfIndex,INTEGER32,NOT-ACCESSIBLE,"The ifIndex value which uniquely identifies a row in the Interfaces Table. The corresponding row in the Interfaces Table must exist prior to the index being used in this table."
+HP-VLAN,1.3.6.1.4.1.11.2.14.11.5.1.3.1.1.5.1.2,hpVlanMemberIndex,INTEGER32,READ-CREATE,"The VLAN ID identifies the VLAN the interface is in. The corresponding row in the VLAN Ident Table must exist prior to the index being used in this table."
+HP-VLAN,1.3.6.1.4.1.11.2.14.11.5.1.3.1.1.6,hpVlanAddrTable,"SEQUENCE OF HPVLANADDRENTRY",NOT-ACCESSIBLE,"A table describing the MAC addresses that are currently associated with a specific VLAN. Entries are added to and deleted from this read-only table automatically as they are learned from the network."
+HP-VLAN,1.3.6.1.4.1.11.2.14.11.5.1.3.1.1.6.1,hpVlanAddrEntry,SEQUENCE,NOT-ACCESSIBLE,"The row in the hpVlanAddrTable containing the VLAN ID to MAC address mappings."
+HP-VLAN,1.3.6.1.4.1.11.2.14.11.5.1.3.1.1.6.1.1,hpVlanAddrIndex,INTEGER32,NOT-ACCESSIBLE,"The VLAN ID which uniquely identifies a row in the VLAN Ident Table. The corresponding row in the VLAN Ident Table must exist prior to the index being present in this table."
+HP-VLAN,1.3.6.1.4.1.11.2.14.11.5.1.3.1.1.6.1.2,hpVlanAddrPhysAddress,"OCTET STRING",READ-ONLY,"The MAC address of a node that is associated with a specific VLAN as identified by the object hpVlanAddrIndex."
+HP-VLAN,1.3.6.1.4.1.11.2.14.11.5.1.3.1.1.7,hpVlanIdentConfigStatus,OBJECT-TYPE,READ-ONLY,"The status of a VLAN information table. If one or more variables in this group were reconfigurated since last reboot and required reboot to take effect, the value of this variable will be set to notInService."
+HP-VLAN,1.3.6.1.4.1.11.2.14.11.5.1.3.1.1.8,hpVlanMemberTable2,OBJECT-TYPE,NOT-ACCESSIBLE,"A table describing the VLANs on each particular port along with tagging information."
+HP-VLAN,1.3.6.1.4.1.11.2.14.11.5.1.3.1.1.8.1,hpVlanMemberEntry2,SEQUENCE,NOT-ACCESSIBLE,"The row in the hpVlanMemberTable2 containing the VLAN ID to interface group ifIndex mappings as well the VLAN tagging information."
+HP-VLAN,1.3.6.1.4.1.11.2.14.11.5.1.3.1.1.8.1.1,hpVlanMemberTagged2,INTEGER,READ-WRITE,"Identifies whether the particular VLan on this port is tagged or not. 'no' denotes not a member of that vlan."
+HP-VLAN,1.3.6.1.4.1.11.2.14.11.5.1.3.1.2,hpVlanTraps,"OBJECT IDENTIFIER",READ-WRITE,
+HP-VLAN,1.3.6.1.4.1.11.2.14.11.5.1.3.1.3,hpVlanConformance,"OBJECT IDENTIFIER",READ-WRITE,
+HP-VLAN,1.3.6.1.4.1.11.2.14.11.5.1.3.1.3.1,hpVlanGroups,"OBJECT IDENTIFIER",READ-WRITE,
+HP-VLAN,1.3.6.1.4.1.11.2.14.11.5.1.3.1.3.1.1,hpVlanGeneralGroup,OBJECT-GROUP,READ-WRITE,"A collection of objects that provide general information about a configured VLAN. The organization of this group is such that it is assumed that all devices supporting VLANs associate an RFC 1573 interface with a VLAN even if only to allow default node-to-VLAN assignment."
+HP-VLAN,1.3.6.1.4.1.11.2.14.11.5.1.3.1.3.1.2,hpVlanAddressGroup,OBJECT-GROUP,READ-WRITE,"A collection of objects that contain VLAN to MAC address mapping data."
+HP-VLAN,1.3.6.1.4.1.11.2.14.11.5.1.3.1.3.2,hpVlanCompliances,"OBJECT IDENTIFIER",READ-WRITE,
+HP-VLAN,1.3.6.1.4.1.11.2.14.11.5.1.3.1.3.2.1,hpVlanCompliance,MODULE-COMPLIANCE,READ-WRITE,"The compliance statement for HP devices supporting the HP VLAN MIB."

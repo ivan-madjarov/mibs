@@ -1,0 +1,1467 @@
+--************************************************************************--
+--  Name     : SNMP MIB for Unify SharedServices                          --
+--                                                                        --
+--                                                                        --
+--  Date     : 18.03.2014                                                 --
+--                                                                        --
+--  Version  : 1.1.8                                                      --
+--                                                                        --
+--  Author   : Georgios Litsioulis, PH APPS DEVELOPMENT,                  --
+--             Unify GmbH & Co. KG, Athens                                --
+--                                                                        --
+--  Purpose  : status report for applications, containers and services;   --
+--             alarm forwarding                                           --
+--                                                                        --
+--                                                                        --
+--************************************************************************-- 
+
+--*HOC********************************************************************--
+--*                                                                      *--
+--*    HISTORY OF CHANGE:               VARIANTE: SharedServices V1.1.8  *--
+--*                                                                      *--
+--************************************************************************--
+--*VERS| DATE | CHANGES                                      | KZ | VGNO *--
+--*    |ddmmyy|                                              |    |      *--
+--************************************************************************--
+--* 01 |030806| new version for SharedServices V1.1.1        |rri |  N   *--
+--* 02 |120906| new naming without "svc"       V1.1.2        |rri |  N   *--
+--* 03 |240107| comments revised               V1.1.3        |rri |  N   *--
+--* 04 |141108| delete DateAndTime             V1.1.4        |ltr |  N   *--
+--* 05 |031111| add heartBeatTrap              V1.1.5        |nla |  N   *--
+--* 06 |031013| append serviceDisplayName to                 
+--*             serviceStatusChange trap       V1.1.6        |nla |  N   *--
+--* 07 |160114| change elements definition to                
+--*             obsolete for alarmTimestampOff               
+--*             and alarmTimestampReceived,                  
+--*             enhance description of alarmTrapTable           
+--*             element                        V1.1.7        |nla |  N   *--
+--* 08 |180314| Modify informational attributes V1.1.8       |nla |  N   *--
+--************************************************************************--
+
+   SharedServices-MIB DEFINITIONS ::= BEGIN
+ 
+   IMPORTS
+        MODULE-IDENTITY, OBJECT-TYPE, NOTIFICATION-TYPE, Integer32, 
+        Counter32 
+       FROM SNMPv2-SMI
+        TEXTUAL-CONVENTION 
+       FROM SNMPv2-TC
+        enterprises
+       FROM RFC1155-SMI
+        OBJECT-GROUP, NOTIFICATION-GROUP, MODULE-COMPLIANCE 
+       FROM SNMPv2-CONF ;
+
+
+-- Some MIB compilers require that the following lines
+-- which define the path to this MIB are added.
+
+-- tree              OBJECT IDENTIFIER ::= { iso(1) org(3) dod(6) internet(1) }
+-- private           OBJECT IDENTIFIER ::= { tree 4 }
+-- enterprises       OBJECT IDENTIFIER ::= { private 1 }
+-- siemens           OBJECT IDENTIFIER ::= { enterprises 4329 }
+-- com               OBJECT IDENTIFIER ::= { siemens 2 }
+
+   sharedServices        MODULE-IDENTITY
+       LAST-UPDATED  "1403180000Z" -- March 18, 2014
+       ORGANIZATION  "PH APPS DEVELOPMENT"
+       CONTACT-INFO  "Georgios Litsioulis, 
+                      Email: georgios.litsioulis@unify.com"
+       DESCRIPTION   "SNMP MIB Unify Shared services"
+       ::= { com 45 }
+
+   siemens           OBJECT IDENTIFIER ::= { enterprises 4329 }
+   com               OBJECT IDENTIFIER ::= { siemens 2 }
+
+
+   nodeGroup                 OBJECT IDENTIFIER ::= {sharedServices 1}
+   applicationGroup          OBJECT IDENTIFIER ::= {sharedServices 2}
+   containerGroup            OBJECT IDENTIFIER ::= {sharedServices 3}
+   serviceGroup              OBJECT IDENTIFIER ::= {sharedServices 4}
+   alarmGroup                OBJECT IDENTIFIER ::= {sharedServices 5}
+   trapGroup                 OBJECT IDENTIFIER ::= {sharedServices 90}
+   complianceGroup           OBJECT IDENTIFIER ::= {sharedServices 98}
+   complianceModules         OBJECT IDENTIFIER ::= {sharedServices 99}
+
+   
+--************************************************************************-- 
+--******                     textual conventions                    ******--
+--************************************************************************-- 
+
+   DisplayString ::= OCTET STRING
+       -- This data type is used to model textual information taken
+       -- from the NVT ASCII character set.  By convention, objects
+       -- with this syntax are declared as having SIZE (0..255)
+
+
+   Boolean ::=  INTEGER { true(1), false(0) }
+       -- encoding for alarm status:
+       -- 1 = alarm on
+       -- 0 = alarm off
+
+
+   Severity ::= INTEGER {
+                      normal(0),
+                      information(1),
+                      warning(2),
+                      minor(3),
+                      major(4),
+                      critical(5),
+                      unknown(6)
+                    }
+
+       -- States for node- /application- /container- and service- groups:
+       --                           DisplayString: 
+       -- started / executing    =  normal
+       -- started / configuring  =  warning
+       -- stopped                =  critical
+
+          
+
+--************************************************************************-- 
+--******                     Accessible Elements                    ******--
+--************************************************************************-- 
+ 
+    --*******************************************--
+    --************** Node Group *****************--
+    --*******************************************--
+
+    numberOfNodeEntries  OBJECT-TYPE
+        SYNTAX      INTEGER (1..2147483187)
+        MAX-ACCESS  read-only
+        STATUS      current
+        DESCRIPTION
+                    "The number of entries in the node table."
+        ::= { nodeGroup 1 }
+
+    numberOfNodeTraps  OBJECT-TYPE
+        SYNTAX      INTEGER (1..2147483187)
+        MAX-ACCESS  read-only
+        STATUS      current
+        DESCRIPTION
+                    "The number of traps which were sent to signal 
+                    status changes of the nodes."
+        ::= { nodeGroup 2 }
+
+    nodeTable  OBJECT-TYPE
+        SYNTAX      SEQUENCE OF NodeTableEntry
+        MAX-ACCESS  accessible-for-notify
+        STATUS      current
+        DESCRIPTION
+                    "This table shows the contents of node entries. 
+                    A node is a physical machine hosting 
+                    one or more containers."
+        ::= { nodeGroup 3 }
+
+
+    nodeTableEntry  OBJECT-TYPE
+        SYNTAX      NodeTableEntry
+        MAX-ACCESS  not-accessible
+        STATUS      current
+        DESCRIPTION
+                    "The node table entries."
+        INDEX { nodeGuid }
+        ::= { nodeTable 1 }
+
+
+    NodeTableEntry ::= SEQUENCE {
+           nodeGuid              DisplayString,
+           nodeDisplayName       DisplayString,
+           nodeIpAddress         DisplayString,
+           nodeDescription       DisplayString,
+           nodeContact           DisplayString,
+           nodeLocation          DisplayString,
+           nodeStatus            DisplayString,
+           nodeArchitecture      DisplayString,
+           nodeOsName            DisplayString,
+           nodeOsVersion         DisplayString,
+           nodeSnmpAgentVersion  DisplayString,
+           nodeMibVersion        DisplayString,
+           nodeMgmtURL           DisplayString,
+           nodeDocURL            DisplayString,
+           nodeIconURL           DisplayString
+        }
+
+
+    nodeGuid OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "The unique identifier of the node."
+        ::= { nodeTableEntry 1 }
+
+    nodeDisplayName OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "The nodename." 
+        ::= { nodeTableEntry 2 }
+    
+    nodeIpAddress OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "The ip address of the node." 
+        ::= { nodeTableEntry 3 }
+
+    nodeDescription OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "A description of the node."
+        ::= { nodeTableEntry 4 }
+    
+    nodeContact OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "The responsible administrator."
+        ::= { nodeTableEntry 5 }
+
+    nodeLocation OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+           "The location of the node."
+        ::= { nodeTableEntry 6 }
+
+    nodeStatus OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+           "The status of the node. 
+           Possible values are: normal, warning, critical."
+        ::= { nodeTableEntry 7 }
+
+    nodeArchitecture OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "The architecture of the node, 
+            e.g. x86, sunUltra, ..."
+        ::= { nodeTableEntry 8 }
+    
+    nodeOsName OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "The name of the operating system, 
+            e.g. Windows, Linux, ..."
+        ::= { nodeTableEntry 9 }
+    
+    nodeOsVersion OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "The version of the operating system."
+        ::= { nodeTableEntry 10 }
+
+    nodeSnmpAgentVersion OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "The version of the SNMP agent."
+        ::= { nodeTableEntry 11 }
+        
+    nodeMibVersion OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "The version of the Management Information Base." 
+        ::= { nodeTableEntry 12 }
+    
+    nodeMgmtURL OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "Points to a page with gives access to the 
+            configuration manager of the node if available."
+        ::= { nodeTableEntry 13 }
+    
+    nodeDocURL OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "Points to the documentation."
+        ::= { nodeTableEntry 14 }
+
+    nodeIconURL OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "Points to a file, which describes the location of the 
+            shape and the pixmaps for the icons to be used to display 
+            the node on the desktop map."
+        ::= { nodeTableEntry 15 }
+        
+
+    --********* Associated container ***********--
+
+    numberOfNodeContainerEntries  OBJECT-TYPE
+        SYNTAX      INTEGER (1..2147483187)
+        MAX-ACCESS  read-only
+        STATUS      current
+        DESCRIPTION
+                    "The number of containers which 
+                    are hosted by the nodes."
+        ::= { nodeGroup 4 }
+
+    nodeContainerTable  OBJECT-TYPE
+        SYNTAX      SEQUENCE OF NodeContainerTableEntry
+        MAX-ACCESS  accessible-for-notify
+        STATUS      current
+        DESCRIPTION
+                    "This table shows the containers 
+                     which are hosted by the nodes."
+        ::= { nodeGroup 5 }
+
+
+     nodeContainerTableEntry  OBJECT-TYPE
+             SYNTAX      NodeContainerTableEntry
+             MAX-ACCESS  not-accessible
+             STATUS      current
+             DESCRIPTION
+                         "The associated containers."
+             INDEX { nodeAssocNodeGuid ,   
+                     nodeAssocContainerGuid }
+             ::= { nodeContainerTable 1 }
+
+
+    NodeContainerTableEntry ::= SEQUENCE {
+          nodeAssocNodeGuid               DisplayString,
+          nodeAssocContainerGuid          DisplayString,
+          nodeAssocContainerDisplayName   DisplayString
+          }
+
+
+    nodeAssocNodeGuid OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "The unique identifier of the node."
+        ::= { nodeContainerTableEntry 1 }
+        
+    nodeAssocContainerGuid OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "The unique identifier of the associated container."
+        ::= { nodeContainerTableEntry 2 }
+            
+    nodeAssocContainerDisplayName OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "The display name of the associated container."
+        ::= { nodeContainerTableEntry 3 }
+        
+    
+    --*******************************************--
+    --************* application Group ***********--
+    --*******************************************--
+
+    numberOfApplicationEntries  OBJECT-TYPE
+        SYNTAX      INTEGER (1..2147483187)
+        MAX-ACCESS  read-only
+        STATUS      current
+        DESCRIPTION
+                    "The number of entries in the application table."
+        ::= { applicationGroup 1 }
+
+    numberOfApplicationTraps  OBJECT-TYPE
+        SYNTAX      INTEGER (1..2147483187)
+        MAX-ACCESS  read-only
+        STATUS      current
+        DESCRIPTION
+                    "The number of traps which were sent to signal 
+                     status changes of the applications."
+        ::= { applicationGroup 2 }
+
+
+    applicationTable  OBJECT-TYPE
+        SYNTAX      SEQUENCE OF ApplicationTableEntry
+        MAX-ACCESS  accessible-for-notify
+        STATUS      current
+        DESCRIPTION
+                    "This table shows the contents of application entries.
+                    Applications use services which are deployed to the nodes."
+        ::= { applicationGroup 3 }
+
+
+    applicationTableEntry  OBJECT-TYPE
+        SYNTAX      ApplicationTableEntry
+        MAX-ACCESS  not-accessible
+        STATUS      current
+        DESCRIPTION
+                    "The application table entries."
+        INDEX { applicationGuid }
+        ::= { applicationTable 1 }
+
+
+    ApplicationTableEntry ::= SEQUENCE {
+           applicationGuid             DisplayString,
+           applicationDisplayName      DisplayString,
+           applicationDescription      DisplayString,
+           applicationVersion          DisplayString,
+           applicationContact          DisplayString,
+           applicationStatus           DisplayString,
+           applicationMgmtURL          DisplayString,
+           applicationDocURL           DisplayString,
+           applicationIconURL          DisplayString
+        }
+
+
+    applicationGuid OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "The unique identifier of the application."
+        ::= { applicationTableEntry 1 }
+    
+    applicationDisplayName OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "The display name of the application."
+        ::= { applicationTableEntry 2 }
+
+    applicationDescription OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "A description of the application."
+        ::= { applicationTableEntry 3 }
+
+    applicationVersion OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "The version of the application."
+        ::= { applicationTableEntry 4 }                
+
+    applicationContact OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "The responsible administrator."
+        ::= { applicationTableEntry 5 }
+        
+    applicationStatus OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+           "The status of the application. 
+           Possible values are: normal, warning, critical."
+        ::= { applicationTableEntry 6 }
+
+    applicationMgmtURL OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "Points to an page with gives access to the configuration 
+            manager of the component if available."
+        ::= { applicationTableEntry 7 }
+    
+    applicationDocURL OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "Points to the documentation"
+        ::= { applicationTableEntry 8 }
+
+    applicationIconURL OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "Points to a file, which describes the location of the 
+            shape and the pixmaps for the icons to be used to display 
+            the application on the desktop map."
+        ::= { applicationTableEntry 9 }
+
+
+    --********* Associated services ***********--
+
+    numberOfApplicationServiceEntries  OBJECT-TYPE
+        SYNTAX      INTEGER (1..2147483187)
+        MAX-ACCESS  read-only
+        STATUS      current
+        DESCRIPTION
+                    "The number of services which 
+                    are used by the application."
+        ::= { applicationGroup 4 }
+
+    applicationServiceTable  OBJECT-TYPE
+        SYNTAX      SEQUENCE OF ApplicationServiceTableEntry
+        MAX-ACCESS  accessible-for-notify
+        STATUS      current
+        DESCRIPTION
+                    "This table shows the services 
+                    which are used by the applications."
+        ::= { applicationGroup 5 }
+
+
+    applicationServiceTableEntry  OBJECT-TYPE
+             SYNTAX      ApplicationServiceTableEntry
+             MAX-ACCESS  not-accessible
+             STATUS      current
+             DESCRIPTION
+                         "The associated services."
+             INDEX { applicationAssocApplicationGuid ,   
+                     applicationAssocServiceGuid }
+             ::= { applicationServiceTable 1 }
+
+
+    ApplicationServiceTableEntry ::= SEQUENCE {
+            applicationAssocApplicationGuid       DisplayString,
+            applicationAssocServiceGuid           DisplayString,
+            applicationAssocServiceDisplayName    DisplayString
+            }
+
+        
+    applicationAssocApplicationGuid OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "The unique identifier of the application."
+        ::= { applicationServiceTableEntry 1 }
+        
+    applicationAssocServiceGuid OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "The unique identifier of the associated service."
+        ::= { applicationServiceTableEntry 2 }
+            
+    applicationAssocServiceDisplayName OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "The display name of the associated service."
+        ::= { applicationServiceTableEntry 3 }
+
+        
+    --*******************************************--
+    --************** container Group ************--
+    --*******************************************--
+
+    numberOfContainerEntries  OBJECT-TYPE
+        SYNTAX      INTEGER (1..2147483187)
+        MAX-ACCESS  read-only
+        STATUS      current
+        DESCRIPTION
+                    "The number of entries in the container table."
+        ::= { containerGroup 1 }
+
+    numberOfContainerTraps  OBJECT-TYPE
+        SYNTAX      INTEGER (1..2147483187)
+        MAX-ACCESS  read-only
+        STATUS      current
+        DESCRIPTION
+                    "The number of traps which were sent to signal 
+                    status changes of the containers."
+        ::= { containerGroup 2 }
+
+
+    containerTable  OBJECT-TYPE
+        SYNTAX      SEQUENCE OF ContainerTableEntry
+        MAX-ACCESS  accessible-for-notify
+        STATUS      current
+        DESCRIPTION
+                    "This table shows the contents of container entries. 
+                    Containers are installed on the nodes. Services are 
+                    deployed to containers."
+        ::= { containerGroup 3 }
+
+
+    containerTableEntry  OBJECT-TYPE
+        SYNTAX      ContainerTableEntry
+        MAX-ACCESS  not-accessible
+        STATUS      current
+        DESCRIPTION
+                    "The container table entries."
+        INDEX { containerGuid }
+        ::= { containerTable 1 }
+
+
+    ContainerTableEntry ::= SEQUENCE {
+           containerGuid             DisplayString,
+           containerNodeGuid         DisplayString,
+           containerDisplayName      DisplayString,
+           containerStatus           DisplayString,
+           containerVersion          DisplayString,
+           containerMgmtURL          DisplayString,
+           containerDocURL           DisplayString,
+           containerIconURL          DisplayString                 
+        }
+
+
+    containerGuid OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "The unique identifier of the container."
+        ::= { containerTableEntry 1 }    
+    
+    containerNodeGuid OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+           "The unique identifier of the node 
+           where the container is installed."
+        ::= { containerTableEntry 2 }
+
+    containerDisplayName OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "The display name of the container."
+        ::= { containerTableEntry 3 }
+
+    containerStatus OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+           "The status of the container. 
+           Possible values are: normal, warning, critical."
+        ::= { containerTableEntry 4 }
+
+    containerVersion OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "The version of the container."
+        ::= { containerTableEntry 5 }
+
+    containerMgmtURL OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "Points to an page with gives access to the 
+            configuration manager of the container if available."
+        ::= { containerTableEntry 6 }
+    
+    containerDocURL OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "Points to the documentation"
+        ::= { containerTableEntry 7 }
+
+    containerIconURL OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "Points to a file, which describes the location of the 
+            shape and the pixmaps for the icons to be used to display 
+            the container on the desktop map."
+        ::= { containerTableEntry 8 }
+
+ 
+    --********* Associated services ***********--
+
+    numberOfContainerServiceEntries  OBJECT-TYPE
+        SYNTAX      INTEGER (1..2147483187)
+        MAX-ACCESS  read-only
+        STATUS      current
+        DESCRIPTION
+                    "The number of services which 
+                    are deployed to the containers."
+        ::= { containerGroup 4 }
+
+    containerServiceTable  OBJECT-TYPE
+        SYNTAX      SEQUENCE OF ContainerServiceTableEntry
+        MAX-ACCESS  accessible-for-notify
+        STATUS      current
+        DESCRIPTION
+                    "This table shows the services which 
+                    are deployed to the containers."
+        ::= { containerGroup 5 }
+
+
+     containerServiceTableEntry  OBJECT-TYPE
+             SYNTAX      ContainerServiceTableEntry
+             MAX-ACCESS  not-accessible
+             STATUS      current
+             DESCRIPTION
+                         "The associated services."
+             INDEX { containerAssocContainerGuid ,   
+                     containerAssocServiceGuid }
+             ::= { containerServiceTable 1 }
+
+
+    ContainerServiceTableEntry ::= SEQUENCE {
+          containerAssocContainerGuid        DisplayString,
+          containerAssocServiceGuid          DisplayString,
+          containerAssocServiceDisplayName   DisplayString
+          }
+
+
+    containerAssocContainerGuid OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "The unique identifier of the container."
+        ::= { containerServiceTableEntry 1 }
+        
+    containerAssocServiceGuid OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "The unique identifier of the associated service."
+        ::= { containerServiceTableEntry 2 }
+            
+    containerAssocServiceDisplayName OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "The display name of the associated service."
+        ::= { containerServiceTableEntry 3 }
+        
+                
+    --*******************************************--
+    --************** service Group **************--
+    --*******************************************--
+
+    numberOfServiceEntries  OBJECT-TYPE
+        SYNTAX      INTEGER (1..2147483187)
+        MAX-ACCESS  read-only
+        STATUS      current
+        DESCRIPTION
+                    "The number of entries in the service table."
+        ::= { serviceGroup 1 }
+
+    numberOfServiceTraps  OBJECT-TYPE
+        SYNTAX      INTEGER (1..2147483187)
+        MAX-ACCESS  read-only
+        STATUS      current
+        DESCRIPTION
+                    "The number of traps which were sent to signal 
+                    status changes of the services."
+        ::= { serviceGroup 2 }
+
+    serviceTable  OBJECT-TYPE
+        SYNTAX      SEQUENCE OF ServiceTableEntry
+        MAX-ACCESS  accessible-for-notify
+        STATUS      current
+        DESCRIPTION
+                    "This table shows the contents of a service entry. 
+                    Services are deployed to containers which are installed 
+                    on nodes. Services are used by applications.
+                    Service-faults can initiate alarm traps which could be 
+                    send to external faultmanagement systems. "
+        ::= { serviceGroup 3 }
+
+
+    serviceTableEntry  OBJECT-TYPE
+        SYNTAX      ServiceTableEntry
+        MAX-ACCESS  not-accessible
+        STATUS      current
+        DESCRIPTION
+                    "The service table entries."
+        INDEX { serviceGuid }
+        ::= { serviceTable 1 }
+
+
+    ServiceTableEntry ::= SEQUENCE {
+           serviceGuid               DisplayString,
+           serviceContainerGuid      DisplayString,
+           serviceNodeGuid           DisplayString,
+           serviceDisplayName        DisplayString,
+           serviceStatus             DisplayString,
+           serviceMgmtURL            DisplayString,
+           serviceDocURL             DisplayString,
+           serviceIconURL            DisplayString         
+        }
+
+
+    serviceGuid OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "The unique identifier of the service."
+        ::= { serviceTableEntry 1 }    
+
+    
+    serviceContainerGuid OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "The unique identifier of the associated container."
+        ::= { serviceTableEntry 2 }
+
+    serviceNodeGuid OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+           "The unique identifier of the associated node."
+        ::= { serviceTableEntry 3 }
+    
+    serviceDisplayName OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "The display name of the service."
+        ::= { serviceTableEntry 4 }
+
+    serviceStatus OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+           "The status of the service. 
+           Possible values are: normal, warning, critical."
+        ::= { serviceTableEntry 5 }     
+
+    serviceMgmtURL OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "Points to an page with gives access to the 
+            configuration manager of the component if available."
+        ::= { serviceTableEntry 6 }
+    
+    serviceDocURL OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "Points to the documentation."
+        ::= { serviceTableEntry 7 }
+
+    serviceIconURL OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "Points to a file, which describes the location of the 
+            shape and the pixmaps for the icons to be used to display 
+            the service on the desktop map."
+        ::= { serviceTableEntry 8 }
+
+
+    --********* Associated alarms ***********--
+
+    numberOfServiceAlarmEntries  OBJECT-TYPE
+        SYNTAX      INTEGER (1..2147483187)
+        MAX-ACCESS  read-only
+        STATUS      current
+        DESCRIPTION
+                    "The number of alarm traps which were 
+                    initiated by specified service-faults."
+        ::= { serviceGroup 4 }
+
+    serviceAlarmTable  OBJECT-TYPE
+        SYNTAX      SEQUENCE OF ServiceAlarmTableEntry
+        MAX-ACCESS  accessible-for-notify
+        STATUS      current
+        DESCRIPTION
+                    "This table shows the alarm traps which were generated 
+                    due to specified faults which appeared in the services."
+        ::= { serviceGroup 5 }
+
+
+     serviceAlarmTableEntry  OBJECT-TYPE
+        SYNTAX      ServiceAlarmTableEntry
+        MAX-ACCESS  not-accessible
+        STATUS      current
+        DESCRIPTION
+                    "The associated alarms."
+        INDEX { serviceAssocAlarmState,
+                serviceAssocServiceGuid,   
+                serviceAssocAlarmIndex }
+        ::= { serviceAlarmTable 1 }
+
+
+    ServiceAlarmTableEntry ::= SEQUENCE {
+          serviceAssocAlarmState           Boolean,
+          serviceAssocServiceGuid          DisplayString,
+          serviceAssocAlarmIndex           INTEGER,
+          serviceAssocAlarmDescription     DisplayString
+          }
+
+
+   serviceAssocAlarmState  OBJECT-TYPE
+       SYNTAX      Boolean
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "Status of the associated alarm: 
+                   alarm status on, alarm status off."
+       ::= { serviceAlarmTableEntry 1 }
+
+    serviceAssocServiceGuid OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "The unique identifier of the service 
+            which has initiated the alarm trap."
+        ::= { serviceAlarmTableEntry 2 }
+        
+    serviceAssocAlarmIndex OBJECT-TYPE
+        SYNTAX                  INTEGER (1..2147483187)
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "The alarm table index of the associated alarm, 
+            which is defined in the alarm group."
+        ::= { serviceAlarmTableEntry 3 }
+            
+    serviceAssocAlarmDescription OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "A description of the associated alarm."
+        ::= { serviceAlarmTableEntry 4 }
+
+     
+    --*******************************************--
+    --************** alarm Group ****************--
+    --*******************************************--
+
+   numberOfAlarmEntries  OBJECT-TYPE
+       SYNTAX      INTEGER (1..2147483187)
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "The number of entries in the alarm-trap table."
+       ::= { alarmGroup 1 }
+
+   numberOfAlarmTraps  OBJECT-TYPE
+       SYNTAX      INTEGER (1..2147483187)
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "The number of alarm-traps which were 
+                   initiated by specified faults."
+       ::= { alarmGroup 2 }
+
+   alarmTrapTable  OBJECT-TYPE
+       SYNTAX      SEQUENCE OF AlarmTrapTableEntry
+       MAX-ACCESS  accessible-for-notify
+       STATUS      current
+       DESCRIPTION
+                   "This table shows the contents of an alarm trap.
+                   Alarm traps are generated if specified faults 
+                   appear in the services. Objects definitions alarmTimestampOff 
+                   and alarmTimestampReceived have become obsolete."
+       ::= { alarmGroup 3 }
+
+
+   alarmTrapTableEntry  OBJECT-TYPE
+       SYNTAX      AlarmTrapTableEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+                   "The alarm trap table entries."
+       INDEX { alarmTableIndex }
+       ::= { alarmTrapTable 1 }
+
+
+   AlarmTrapTableEntry ::= SEQUENCE {
+          alarmTableIndex             INTEGER,
+          alarmId                     INTEGER,
+          alarmServiceGuid            DisplayString,
+          alarmContainerGuid          DisplayString,
+          alarmNodeGuid               DisplayString,
+          alarmTitle                  DisplayString,
+          alarmState                  Boolean,
+          alarmSourceGuid             DisplayString,
+          alarmSourceName             DisplayString,
+          alarmSourceClass            DisplayString,
+          alarmTimestampOn            DisplayString,
+          alarmTimestampOff           DisplayString,
+          alarmTimestampReceived      DisplayString,
+          alarmPriority               Severity,
+          alarmCategory               DisplayString,
+          alarmDescription            DisplayString
+       }
+
+
+   alarmTableIndex  OBJECT-TYPE
+       SYNTAX      INTEGER (1..2147483187)
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "A consecutive number of the alarm-traps."
+       ::= { alarmTrapTableEntry 1 }
+
+   alarmId  OBJECT-TYPE
+       SYNTAX      INTEGER (1..2147483187)
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "The unique identifier of the alarm."
+       ::= { alarmTrapTableEntry 2 }
+
+   alarmServiceGuid  OBJECT-TYPE
+       SYNTAX      DisplayString
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "The GUID of the service which
+                    raises the alarm."
+       ::= { alarmTrapTableEntry 3 }
+
+   alarmContainerGuid  OBJECT-TYPE
+       SYNTAX      DisplayString
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "The GUID of the container 
+                   the alarm source is running on."
+       ::= { alarmTrapTableEntry 4 }
+
+   alarmNodeGuid  OBJECT-TYPE
+       SYNTAX      DisplayString
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "The configured (fixed) node id of the 
+                    node the alarm source is running on."
+       ::= { alarmTrapTableEntry 5 }
+
+   alarmTitle  OBJECT-TYPE
+       SYNTAX      DisplayString
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "The title of the alarm. Possible are 
+                    any free configurable strings."
+       ::= { alarmTrapTableEntry 6 }
+
+   alarmState  OBJECT-TYPE
+       SYNTAX      Boolean
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "Status of the alarm: alarm status on, alarm status off. 
+                   The alarm is still visible if the status changes to 'off'."
+       ::= { alarmTrapTableEntry 7 }
+
+   alarmSourceGuid  OBJECT-TYPE
+       SYNTAX      DisplayString
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "The GUID of the alarm source. 
+                    Possible values are the configured (fixed) 
+                    GUIDs of the FaultHandler instance 
+                    or HP8k trapReceiver instance."
+       ::= { alarmTrapTableEntry 8 }
+
+   alarmSourceName  OBJECT-TYPE
+       SYNTAX      DisplayString
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "The name of the alarm source. 
+                    Possible values are the configured (changeable) 
+                    display names of the Fault Handler instance 
+                    or HP8k trapReceiver instance."
+       ::= { alarmTrapTableEntry 9 }
+ 
+   alarmSourceClass  OBJECT-TYPE
+       SYNTAX      DisplayString
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "The ClassName of the alarm source. 
+                    Possible values are the configured (fixed) 
+                    implementation class names of Fault Handler 
+                    instance or HP8k trapReceiver instance."
+       ::= { alarmTrapTableEntry 10 }
+
+   alarmTimestampOn  OBJECT-TYPE
+       SYNTAX      DisplayString
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "Date and time of the alarm event generation. 
+            See above for a description on the semantics."
+       ::= { alarmTrapTableEntry 11 } 
+
+   alarmTimestampOff  OBJECT-TYPE
+       SYNTAX      DisplayString
+       MAX-ACCESS  read-only
+       STATUS      obsolete
+       DESCRIPTION
+           "Date and time of the alarm event reset. 
+            See above for a description on the semantics."
+       ::= { alarmTrapTableEntry 12 } 
+
+   alarmTimestampReceived  OBJECT-TYPE
+       SYNTAX      DisplayString
+       MAX-ACCESS  read-only
+       STATUS      obsolete
+       DESCRIPTION
+           "Date and time when the alarm event was received 
+           by the FaultHandler.
+            See above for a description on the semantics."
+       ::= { alarmTrapTableEntry 13 } 
+
+   alarmPriority   OBJECT-TYPE
+       SYNTAX      Severity
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "The priority of the alarm. 
+                    Possible values are: 
+                       (0) normal, 
+                       (1) information, 
+                       (2) warning, 
+                       (3) minor, 
+                       (4) major, 
+                       (5) critical, 
+                       (6) unknown."
+       ::= { alarmTrapTableEntry 14 }
+
+   alarmCategory  OBJECT-TYPE
+       SYNTAX      DisplayString
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "The category of the alarm. Possible are 
+                    any free configurable strings."
+       ::= { alarmTrapTableEntry 15 }
+
+   alarmDescription  OBJECT-TYPE
+       SYNTAX      DisplayString
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "The description of the alarm. Possible 
+                    are any free configurable strings."
+       ::= { alarmTrapTableEntry 16 }
+
+
+--************************************************************************-- 
+--******                 Non Accessible Elements                    ******--
+--************************************************************************-- 
+
+    --*******************************************--
+    --************** trap Group *****************--
+    --*******************************************--
+   nodeStatusChange  NOTIFICATION-TYPE
+       OBJECTS {
+          nodeGuid,
+          nodeStatus
+          }
+       STATUS      current
+       DESCRIPTION
+                   "If the status of an node changes, 
+                    a trap will be send to the management station 
+                    containing the application identifier 
+                    and the node status."
+       ::= { trapGroup 1 }
+
+   applicationStatusChange  NOTIFICATION-TYPE
+       OBJECTS {
+          applicationGuid,
+          applicationStatus
+          }
+       STATUS      current
+       DESCRIPTION
+                   "If the status of an application changes, 
+                    a trap will be send to the management station 
+                    containing the application identifier 
+                    and the application status."
+       ::= { trapGroup 2 }
+
+   containerStatusChange  NOTIFICATION-TYPE
+       OBJECTS {
+          containerGuid,
+          containerStatus
+          }
+       STATUS      current
+       DESCRIPTION
+                   "If the status of a container changes, 
+                    a trap will be send to the management station 
+                    containing the container identifier 
+                    and the container status."
+       ::= { trapGroup 3 }
+
+   serviceStatusChange  NOTIFICATION-TYPE
+       OBJECTS {
+          serviceGuid,
+          serviceStatus,
+          serviceDisplayName
+          }
+       STATUS      current
+       DESCRIPTION
+                   "If the status of a service changes, 
+                    a trap will be send to the management station 
+                    containing the service identifier 
+                    and the service status. 
+                    Components are treated like services."
+       ::= { trapGroup 4 }
+
+   alarmTrap  NOTIFICATION-TYPE
+       OBJECTS {
+          alarmTableIndex,
+          alarmId,
+          alarmServiceGuid,
+          alarmContainerGuid,
+          alarmNodeGuid,
+          alarmTitle,
+          alarmState,
+          alarmSourceGuid,
+          alarmSourceName,
+          alarmSourceClass,
+          alarmTimestampOn,
+          alarmTimestampOff,
+          alarmTimestampReceived,
+          alarmPriority,
+          alarmCategory,
+          alarmDescription
+          }
+       STATUS      current
+       DESCRIPTION
+                   "If an error occurs, there will be checked 
+                    if the errorClass is configured to trigger 
+                    an immediate signalling. 
+                    If so, a trap will be send to the 
+                    management station containing 
+                    the information shown above."
+       ::= { trapGroup 5 }
+
+   resetAlarmTrap  NOTIFICATION-TYPE
+       OBJECTS {
+          alarmId,
+          alarmTableIndex,
+          alarmServiceGuid,
+          alarmContainerGuid,
+          alarmNodeGuid
+          }
+       STATUS      current
+       DESCRIPTION
+                   "The described alarm to be reset. 
+                   The alarm has to be deleted."
+       ::= { trapGroup 6 }
+       
+   heartBeatTrap NOTIFICATION-TYPE
+       STATUS      current
+       DESCRIPTION
+                   "Heartbeat trap, fired at periodic intervals."
+       ::= { trapGroup 7 }                       
+        
+--************************************************************************-- 
+--******                       compliance Group                     ******--
+--************************************************************************--    
+
+    compliance MODULE-COMPLIANCE
+        STATUS                  current
+        DESCRIPTION
+            "The compliance statement."
+        MODULE -- this module
+        MANDATORY-GROUPS { 
+          nodeGroupCompliance,  
+          applicationGroupCompliance,           
+          containerGroupCompliance,
+          serviceGroupCompliance,
+          alarmGroupCompliance,
+          trapGroupCompliance 
+          }
+        ::= { complianceModules 1 }
+
+
+    nodeGroupCompliance OBJECT-GROUP
+        OBJECTS { 
+          numberOfNodeEntries,
+          numberOfNodeTraps,
+          nodeTable,
+          nodeGuid,
+          nodeDisplayName,
+          nodeIpAddress,
+          nodeDescription,
+          nodeContact,
+          nodeLocation,
+          nodeStatus,
+          nodeArchitecture,
+          nodeOsName,
+          nodeOsVersion,
+          nodeSnmpAgentVersion,
+          nodeMibVersion,
+          nodeMgmtURL,
+          nodeDocURL,
+          nodeIconURL,
+          numberOfNodeContainerEntries,
+          nodeContainerTable,
+          nodeAssocNodeGuid,
+          nodeAssocContainerGuid,
+          nodeAssocContainerDisplayName
+          }
+        STATUS                  current
+        DESCRIPTION
+            "The node group compliance."
+        ::= { complianceGroup 1 }
+
+    applicationGroupCompliance OBJECT-GROUP
+        OBJECTS { 
+          numberOfApplicationEntries,
+          numberOfApplicationTraps,
+          applicationTable,
+          applicationGuid,
+          applicationDisplayName,
+          applicationDescription,
+          applicationVersion,
+          applicationContact,          
+          applicationStatus,
+          applicationMgmtURL,
+          applicationDocURL,
+          applicationIconURL,
+          numberOfApplicationServiceEntries,
+          applicationServiceTable,
+          applicationAssocApplicationGuid,
+          applicationAssocServiceGuid,
+          applicationAssocServiceDisplayName
+          }
+        STATUS                  current
+        DESCRIPTION
+            "The application group compliance."
+        ::= { complianceGroup 2 }
+
+    containerGroupCompliance OBJECT-GROUP
+        OBJECTS { 
+          numberOfContainerEntries,
+          numberOfContainerTraps,
+          containerServiceTable,
+          containerTable,
+          containerGuid,
+          containerNodeGuid,
+          containerDisplayName,
+          containerStatus,
+          containerVersion,
+          containerMgmtURL,
+          containerDocURL,
+          containerIconURL,
+          numberOfContainerServiceEntries,
+          containerAssocContainerGuid,
+          containerAssocServiceGuid,
+          containerAssocServiceDisplayName
+          }
+        STATUS                  current
+        DESCRIPTION
+            "The container group compliance."
+        ::= { complianceGroup 3 }
+                  
+    serviceGroupCompliance OBJECT-GROUP
+        OBJECTS { 
+          numberOfServiceEntries,
+          numberOfServiceTraps, 
+          serviceTable,
+          serviceGuid,
+          serviceContainerGuid,
+          serviceNodeGuid,
+          serviceDisplayName,
+          serviceStatus,
+          serviceMgmtURL,
+          serviceDocURL,
+          serviceIconURL,
+          numberOfServiceAlarmEntries,
+          serviceAlarmTable,
+          serviceAssocServiceGuid,
+          serviceAssocAlarmState,
+          serviceAssocAlarmIndex,
+          serviceAssocAlarmDescription
+          }
+        STATUS                  current
+        DESCRIPTION 
+            "The service group compliance."
+        ::= { complianceGroup 4 }
+
+    alarmGroupCompliance OBJECT-GROUP
+        OBJECTS { 
+          numberOfAlarmEntries,
+          numberOfAlarmTraps,
+          alarmTrapTable,
+          alarmTableIndex,
+          alarmId,
+          alarmServiceGuid,
+          alarmContainerGuid,
+          alarmNodeGuid,
+          alarmTitle,
+          alarmState,
+          alarmSourceGuid,
+          alarmSourceName,
+          alarmSourceClass,
+          alarmTimestampOn,
+          alarmTimestampOff,
+          alarmTimestampReceived,
+          alarmPriority,
+          alarmCategory,
+          alarmDescription
+          }
+        STATUS                  current
+        DESCRIPTION
+            "The alarm group compliance."
+        ::= { complianceGroup 5 }
+    
+    trapGroupCompliance NOTIFICATION-GROUP
+        NOTIFICATIONS {
+          nodeStatusChange, 
+          applicationStatusChange,
+          containerStatusChange, 
+          serviceStatusChange,
+          alarmTrap, 
+          resetAlarmTrap,
+          heartBeatTrap 
+          }
+        STATUS                  current
+        DESCRIPTION
+            "The trap group compliance."
+        ::= {complianceGroup 6 }
+        
+        
+    --*******************************************--
+    --******************* END *******************--
+    --*******************************************--
+
+
+END

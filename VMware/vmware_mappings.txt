@@ -1,0 +1,9 @@
+
+vmwVmHBDetected vm-info
+vmwVmHBLost vm-info
+vmwVmPoweredOff vm-info
+vmwVmPoweredOn vm-info
+vmwVmSuspended vm-info
+vpxdAlarm vc-event
+vpxdAlarmInfo vc-event
+vpxdDiagnostic vc-event

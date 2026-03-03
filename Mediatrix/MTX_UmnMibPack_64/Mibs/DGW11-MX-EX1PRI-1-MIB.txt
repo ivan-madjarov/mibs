@@ -1,0 +1,356 @@
+-- ****************************************************************************
+-- ****************************************************************************
+--             Copyright(c) 2004 Mediatrix Telecom, Inc.
+--  NOTICE:
+--   This document contains information that is confidential and proprietary
+--   to Mediatrix Telecom, Inc.
+--   Mediatrix Telecom, Inc. reserves all rights to this document as well as
+--   to the Intellectual Property of the document and the technology and
+--   know-how that it includes and represents.
+--   This publication cannot be reproduced, neither in whole nor in part in
+--   any form whatsoever without written prior approval by
+--   Mediatrix Telecom, Inc.
+--   Mediatrix Telecom, Inc. reserves the right to revise this publication
+--   and make changes at any time and without the obligation to notify any
+--   person and/or entity of such revisions and/or changes.
+-- ****************************************************************************
+-- ****************************************************************************
+
+
+DGW11-MX-EX1PRI-1-MIB
+DEFINITIONS ::= BEGIN
+
+IMPORTS
+        MODULE-IDENTITY,
+        OBJECT-TYPE,
+        Unsigned32,
+        Integer32
+    FROM SNMPv2-SMI
+        MODULE-COMPLIANCE,
+        OBJECT-GROUP
+    FROM SNMPv2-CONF
+        MxEnableState,
+        MxActivationState,
+        MxIpHostName,
+        MxIpPort,
+        MxAdvancedIpPort,
+        MxIpSubnetMask,
+        MxDigitMap
+    FROM MX-TC
+        MxUInt64,
+        MxFloat32,
+        MxIpHostNamePort,
+        MxIpAddr,
+        MxIpAddrPort,
+        MxIpAddrMask,
+        MxUri,
+        MxUrl
+    FROM MX-TC2
+        mediatrixHardware
+    FROM MX-SMI2;
+
+ex1Pri-1MIB MODULE-IDENTITY
+ LAST-UPDATED   "0605160000Z"
+ ORGANIZATION " Mediatrix Telecom, Inc. "
+ CONTACT-INFO " Mediatrix Telecom, Inc.
+                4229, Garlock Street
+                Sherbrooke (Quebec)
+                Canada
+                Phone: (819) 829-8749
+                "
+ DESCRIPTION  " 1 Port PRI digital card
+
+
+                "
+ -- ****************************************************************************
+ 
+ -- Revision history
+ -- ****************************************************************************
+ REVISION       "0605160000Z"
+ DESCRIPTION  " Initial Revision "
+ REVISION       "0606210000Z"
+ DESCRIPTION  " Status clock reference should use enums "
+ REVISION       "0707310000Z"
+ DESCRIPTION  " Added CardsStatus.LineType, Cards.LineType and
+                HiddenAllowedPriLineTypes "
+ REVISION       "0708220000Z"
+ DESCRIPTION  " Added CardsStatus.Signaling, Cards.Signaling. Change ISDN
+                occurence for digital "
+ REVISION       "0711070000Z"
+ DESCRIPTION  " Change CAS occurence for R2 occurence "
+ REVISION       "0801150000Z"
+ DESCRIPTION  " Change the Cards.LineType and Cards.Signaling documentation. "
+ ::= { mediatrixHardware 42001 }
+
+ex1Pri-1MIBObjects OBJECT IDENTIFIER ::= { ex1Pri-1MIB 1 }
+
+-- *****************************************************************************
+
+-- Table:Cards Status
+
+-- *****************************************************************************
+
+cardsStatusTable OBJECT-TYPE
+ SYNTAX         SEQUENCE OF CardsStatusEntry
+ MAX-ACCESS     not-accessible
+ STATUS         current
+ DESCRIPTION  " Cards Status
+
+                This table displays the status of each digital card.
+                "
+ ::= { ex1Pri-1MIBObjects 100 }
+ cardsStatusEntry OBJECT-TYPE
+  SYNTAX        CardsStatusEntry
+  MAX-ACCESS    not-accessible
+  STATUS        current
+  DESCRIPTION " A row in table Cards Status. "
+  INDEX         {
+                  cardsStatusLocation
+                }
+
+  ::= { cardsStatusTable 1 }
+
+ CardsStatusEntry ::= SEQUENCE
+ {
+   cardsStatusLocation       OCTET STRING,
+   cardsStatusClockReference INTEGER,
+   cardsStatusLineType       INTEGER,
+   cardsStatusSignaling      INTEGER
+ }
+
+ -- Index:Location
+
+ cardsStatusLocation OBJECT-TYPE
+  SYNTAX        OCTET STRING
+  MAX-ACCESS    read-only
+  STATUS        current
+  DESCRIPTION " Location
+
+                Indicates the location of the card.
+                "
+  ::= { cardsStatusEntry 100 }
+
+ -- Columnar:Current Synchonization Reference
+
+ cardsStatusClockReference OBJECT-TYPE
+  SYNTAX        INTEGER { none(100) , other(200) }
+  MAX-ACCESS    read-only
+  STATUS        current
+  DESCRIPTION " Current Synchonization Reference
+
+                Indicates the synchronisation source currrently in use for this
+                digital card.
+                "
+  ::= { cardsStatusEntry 200 }
+
+ -- Columnar:Line Type
+
+ cardsStatusLineType OBJECT-TYPE
+  SYNTAX        INTEGER { e1(100) , t1(200) }
+  MAX-ACCESS    read-only
+  STATUS        current
+  DESCRIPTION " Line Type
+
+                Defines the line type.
+                "
+  ::= { cardsStatusEntry 300 }
+
+ -- Columnar:Signaling
+
+ cardsStatusSignaling OBJECT-TYPE
+  SYNTAX        INTEGER { isdn(100) , r2(200) }
+  MAX-ACCESS    read-only
+  STATUS        current
+  DESCRIPTION " Signaling
+
+                Defines the signaling protocol used by this card.
+                "
+  ::= { cardsStatusEntry 400 }
+
+
+-- End of table:Cards Status
+
+-- *****************************************************************************
+
+-- Table:Cards Configuration
+
+-- *****************************************************************************
+
+cardsTable OBJECT-TYPE
+ SYNTAX        SEQUENCE OF CardsEntry
+ MAX-ACCESS    not-accessible
+ STATUS        current
+ DESCRIPTION " Cards Configuration
+
+               This table allows to configure the settings of each digital
+               card.
+               "
+ ::= { ex1Pri-1MIBObjects 200 }
+ cardsEntry OBJECT-TYPE
+  SYNTAX        CardsEntry
+  MAX-ACCESS    not-accessible
+  STATUS        current
+  DESCRIPTION " A row in table Cards Configuration. "
+  INDEX         {
+                  cardsLocation
+                }
+
+  ::= { cardsTable 1 }
+
+ CardsEntry ::= SEQUENCE
+ {
+   cardsLocation       OCTET STRING,
+   cardsClockReference INTEGER,
+   cardsLineType       INTEGER,
+   cardsSignaling      INTEGER
+ }
+
+ -- Index:Location
+
+ cardsLocation OBJECT-TYPE
+  SYNTAX        OCTET STRING
+  MAX-ACCESS    read-only
+  STATUS        current
+  DESCRIPTION " Location
+
+                Indicates the location of the card.
+                "
+  ::= { cardsEntry 100 }
+
+ -- Columnar:Clock Reference
+
+ cardsClockReference OBJECT-TYPE
+  SYNTAX        INTEGER { none(100) , other(200) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Clock Reference
+
+                Indicates the preferred synchronisation source to use for the
+                internal clock of this digital card.
+
+                  * None: The internal clock synchronizes with the first
+                    available source.
+                  * Other: The internal clock synchronizes with another card
+                    present on the mainboard.
+
+                If the selected source does not provide a signal, the internal
+                clock synchronizes with the first available source.
+                "
+  DEFVAL        { none }
+  ::= { cardsEntry 200 }
+
+ -- Columnar:Line Type
+
+ cardsLineType OBJECT-TYPE
+  SYNTAX        INTEGER { e1(100) , t1(200) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Line Type
+
+                Defines the line type.
+
+                  * T1: DS1 T-Carrier Signaling
+                  * E1: E1 E-Carrier Signaling
+
+                Note : The value T1 is not valid when the variable
+                Cards.Signaling is set to R2.
+
+
+                "
+  DEFVAL        { e1 }
+  ::= { cardsEntry 300 }
+
+ -- Columnar:Signaling
+
+ cardsSignaling OBJECT-TYPE
+  SYNTAX        INTEGER { isdn(100) , r2(200) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Signaling
+
+                Defines the signaling protocol used by this card.
+
+                  * Isdn: Integrated Services Digital Network
+                  * R2: E1-R2 Cas signaling protocol.
+
+                Note : The value R2 is not valid when the variable
+                Cards.LineType is set to T1.
+
+
+                "
+  DEFVAL        { isdn }
+  ::= { cardsEntry 400 }
+
+
+-- End of table:Cards Configuration
+
+-- ****************************************************************************
+
+-- Group:Notification Messages Configuration
+
+-- ****************************************************************************
+
+notificationsGroup OBJECT IDENTIFIER
+ ::= { ex1Pri-1MIBObjects 60010 }
+ -- Scalar:Minimal Severity of Notification
+
+ minSeverity OBJECT-TYPE
+  SYNTAX        INTEGER { disable(0) , debug(100) , info(200) , warning(300) ,
+                error(400) , critical (500) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Minimal Severity of Notification
+
+                Sets the minimal severity to issue a notification message
+                incoming from this service.
+
+                  * Disable: No notification is issued.
+                  * Debug: All notification messages are issued.
+                  * Info: Notification messages with severity 'Informational'
+                    and higher are issued.
+                  * Warning: Notification messages with severity 'Warning' and
+                    higher are issued.
+                  * Error: Notification messages with severity 'Error' and
+                    higher are issued.
+                  * Critical: Notification messages with severity 'Critical'
+                    are issued.
+
+
+                "
+  DEFVAL        { warning }
+  ::= { notificationsGroup 100 }
+
+-- End of group:Notification Messages Configuration
+
+-- ****************************************************************************
+
+-- Group:Configuration Settings
+
+-- ****************************************************************************
+
+configurationGroup OBJECT IDENTIFIER
+ ::= { ex1Pri-1MIBObjects 60020 }
+ -- Scalar:Need Restart
+
+ needRestartInfo OBJECT-TYPE
+  SYNTAX        INTEGER { no(0) , yes(100) }
+  MAX-ACCESS    read-only
+  STATUS        current
+  DESCRIPTION " Need Restart
+
+                Indicates if the service needs to be restarted for its
+                configuration to fully take effect.
+
+                  * Yes: Service needs to be restarted.
+                  * No: Service does not need to be restarted.
+
+                Services can be restarted by using the command
+                Scm.ServiceCommands.Restart.
+
+
+                "
+  ::= { configurationGroup 100 }
+
+-- End of group:Configuration Settings
+
+END

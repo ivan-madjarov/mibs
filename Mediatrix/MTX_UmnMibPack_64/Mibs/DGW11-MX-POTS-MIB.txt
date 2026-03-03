@@ -1,0 +1,325 @@
+-- ****************************************************************************
+-- ****************************************************************************
+--             Copyright(c) 2004 Mediatrix Telecom, Inc.
+--  NOTICE:
+--   This document contains information that is confidential and proprietary
+--   to Mediatrix Telecom, Inc.
+--   Mediatrix Telecom, Inc. reserves all rights to this document as well as
+--   to the Intellectual Property of the document and the technology and
+--   know-how that it includes and represents.
+--   This publication cannot be reproduced, neither in whole nor in part in
+--   any form whatsoever without written prior approval by
+--   Mediatrix Telecom, Inc.
+--   Mediatrix Telecom, Inc. reserves the right to revise this publication
+--   and make changes at any time and without the obligation to notify any
+--   person and/or entity of such revisions and/or changes.
+-- ****************************************************************************
+-- ****************************************************************************
+
+
+DGW11-MX-POTS-MIB
+DEFINITIONS ::= BEGIN
+
+IMPORTS
+        MODULE-IDENTITY,
+        OBJECT-TYPE,
+        Unsigned32,
+        Integer32
+    FROM SNMPv2-SMI
+        MODULE-COMPLIANCE,
+        OBJECT-GROUP
+    FROM SNMPv2-CONF
+        MxEnableState,
+        MxActivationState,
+        MxIpHostName,
+        MxIpPort,
+        MxAdvancedIpPort,
+        MxIpSubnetMask,
+        MxDigitMap
+    FROM MX-TC
+        MxUInt64,
+        MxFloat32,
+        MxIpHostNamePort,
+        MxIpAddr,
+        MxIpAddrPort,
+        MxIpAddrMask,
+        MxUri,
+        MxUrl
+    FROM MX-TC2
+        mediatrixServices
+    FROM MX-SMI2;
+
+potsMIB MODULE-IDENTITY
+ LAST-UPDATED   "0511290000Z"
+ ORGANIZATION " Mediatrix Telecom, Inc. "
+ CONTACT-INFO " Mediatrix Telecom, Inc.
+                4229, Garlock Street
+                Sherbrooke (Quebec)
+                Canada
+                Phone: (819) 829-8749
+                "
+ DESCRIPTION  " Plain Old Telephony System Line
+
+                The POTS (Plain Old Telephony System) line service allows to
+                configure the analog specification of each line.
+                "
+ -- ****************************************************************************
+ 
+ -- Revision history
+ -- ****************************************************************************
+ REVISION       "0511290000Z"
+ DESCRIPTION  " Initial Revision "
+ ::= { mediatrixServices 1800 }
+
+potsMIBObjects OBJECT IDENTIFIER ::= { potsMIB 1 }
+
+-- *****************************************************************************
+
+-- Table:Line Table
+
+-- *****************************************************************************
+
+lineTable OBJECT-TYPE
+ SYNTAX        SEQUENCE OF LineEntry
+ MAX-ACCESS    not-accessible
+ STATUS        current
+ DESCRIPTION " Line Table
+
+               This table shows the current available lines and allows their
+               basic configuration.
+               "
+ ::= { potsMIBObjects 200 }
+ lineEntry OBJECT-TYPE
+  SYNTAX        LineEntry
+  MAX-ACCESS    not-accessible
+  STATUS        current
+  DESCRIPTION " A row in table Line Table. "
+  INDEX         {
+                  lineId
+                }
+
+  ::= { lineTable 1 }
+
+ LineEntry ::= SEQUENCE
+ {
+   lineId          OCTET STRING,
+   lineTypeStatus  INTEGER
+ }
+
+ -- Index:Line Identifier
+
+ lineId OBJECT-TYPE
+  SYNTAX        OCTET STRING
+  MAX-ACCESS    read-only
+  STATUS        current
+  DESCRIPTION " Line Identifier
+
+                String that identifies a line in other tables.
+                "
+  ::= { lineEntry 100 }
+
+ -- Columnar:Line Type Status
+
+ lineTypeStatus OBJECT-TYPE
+  SYNTAX        INTEGER { fxs(100) , fxo(200) }
+  MAX-ACCESS    read-only
+  STATUS        current
+  DESCRIPTION " Line Type Status
+
+                The status POTS type of the line.
+                "
+  ::= { lineEntry 300 }
+
+
+-- End of table:Line Table
+
+-- ****************************************************************************
+
+-- Group:Country Customization
+
+-- ****************************************************************************
+
+countryCustomizationGroup OBJECT IDENTIFIER
+ ::= { potsMIBObjects 300 }
+ -- Scalar:Country Caller ID Customization
+
+ countryCustomizationCallerId OBJECT-TYPE
+  SYNTAX        INTEGER { country(100) , etsiDtmf(500) , etsiFsk(600) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Country Caller ID Customization
+
+                The caller ID customization allows to select the detection/
+                generation method of caller ID.
+
+                  * Country: Use the default caller ID of the country defined
+                    in the CountrySelection variable.
+                  * EtsiDtmf: ETSI 300 659-1 (DTMF string sent between first
+                    and second ring)
+                  * EtsiFsk: ETSI 300 659-1 (FSK (V.21) sent between first and
+                    second ring)
+
+
+                "
+  DEFVAL        { country }
+  ::= { countryCustomizationGroup 100 }
+
+ -- ***************************************************************************
+ 
+ -- Group:Country Override FXS
+
+ -- ***************************************************************************
+ 
+ countryCustomizationFxsGroup OBJECT IDENTIFIER
+  ::= { countryCustomizationGroup 200 }
+  -- Scalar:Override FXS Country Configuration
+
+  countryCustomizationFxsOverride OBJECT-TYPE
+   SYNTAX        MxEnableState
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Override FXS Country Configuration
+
+                 Allows to override FXS-related default country settings.
+
+                   * Disable: The line uses the default country FXS settings.
+                   * Enable: The line uses the FXS country configuration set in
+                     the variables CountryCustomizationFxsLoopCurrent,
+                     CountryCustomizationFxsFlashHookDetectionDelayMin and
+                     CountryCustomizationFxsFlashHookDetectionDelayMax.
+
+
+                 "
+   DEFVAL        { disable }
+   ::= { countryCustomizationFxsGroup 100 }
+
+  -- Scalar:Country Override FXS Loop Current
+
+  countryCustomizationFxsLoopCurrent OBJECT-TYPE
+   SYNTAX        Unsigned32 ( 20..32 )
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Country Override FXS Loop Current
+
+                 Loop current generated by the FXS port in ma.
+
+                 This configuration is used only if the variable
+                 CountryCustomizationFxsOverride is set to 'Enable'.
+
+
+                 "
+   DEFVAL        { 30 }
+   ::= { countryCustomizationFxsGroup 200 }
+
+  -- Scalar:Country Override FXS Flash Hook Detection Minimal Delay
+
+  countryCustomizationFxsFlashHookDetectionDelayMin OBJECT-TYPE
+   SYNTAX        Unsigned32 ( 10..1200 )
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Country Override FXS Flash Hook Detection Minimal Delay
+
+                 Minimum time, in ms, the hook switch must remain pressed to
+                 perform a flash hook.
+
+                 This configuration is used only if the variable
+                 CountryCustomizationFxsOverride is set to 'Enable'.
+
+
+                 "
+   DEFVAL        { 100 }
+   ::= { countryCustomizationFxsGroup 300 }
+
+  -- Scalar:Country Override FXS Flash Hook Detection Maximal Delay
+
+  countryCustomizationFxsFlashHookDetectionDelayMax OBJECT-TYPE
+   SYNTAX        Unsigned32 ( 10..1200 )
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Country Override FXS Flash Hook Detection Maximal Delay
+
+                 Maximum time, in ms, the hook switch can remain pressed to
+                 perform a flash hook.
+
+                 This configuration is used only if the variable
+                 CountryCustomizationFxsOverride is set to 'Enable'.
+
+
+                 "
+   DEFVAL        { 1200 }
+   ::= { countryCustomizationFxsGroup 400 }
+
+ -- End of group:Country Override FXS
+
+-- End of group:Country Customization
+
+-- ****************************************************************************
+
+-- Group:Notification Messages Configuration
+
+-- ****************************************************************************
+
+notificationsGroup OBJECT IDENTIFIER
+ ::= { potsMIBObjects 60010 }
+ -- Scalar:Minimal Severity of Notification
+
+ minSeverity OBJECT-TYPE
+  SYNTAX        INTEGER { disable(0) , debug(100) , info(200) , warning(300) ,
+                error(400) , critical (500) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Minimal Severity of Notification
+
+                Sets the minimal severity to issue a notification message
+                incoming from this service.
+
+                  * Disable: No notification is issued.
+                  * Debug: All notification messages are issued.
+                  * Info: Notification messages with severity 'Informational'
+                    and higher are issued.
+                  * Warning: Notification messages with severity 'Warning' and
+                    higher are issued.
+                  * Error: Notification messages with severity 'Error' and
+                    higher are issued.
+                  * Critical: Notification messages with severity 'Critical'
+                    are issued.
+
+
+                "
+  DEFVAL        { warning }
+  ::= { notificationsGroup 100 }
+
+-- End of group:Notification Messages Configuration
+
+-- ****************************************************************************
+
+-- Group:Configuration Settings
+
+-- ****************************************************************************
+
+configurationGroup OBJECT IDENTIFIER
+ ::= { potsMIBObjects 60020 }
+ -- Scalar:Need Restart
+
+ needRestartInfo OBJECT-TYPE
+  SYNTAX        INTEGER { no(0) , yes(100) }
+  MAX-ACCESS    read-only
+  STATUS        current
+  DESCRIPTION " Need Restart
+
+                Indicates if the service needs to be restarted for its
+                configuration to fully take effect.
+
+                  * Yes: Service needs to be restarted.
+                  * No: Service does not need to be restarted.
+
+                Services can be restarted by using the command
+                Scm.ServiceCommands.Restart.
+
+
+                "
+  ::= { configurationGroup 100 }
+
+-- End of group:Configuration Settings
+
+END

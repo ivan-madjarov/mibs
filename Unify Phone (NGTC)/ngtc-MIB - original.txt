@@ -1,0 +1,318 @@
+NGTC-ALARM-MIB DEFINITIONS ::= BEGIN
+
+-- ==================================================================
+-- Copyright @ 2022 Unify GmbH & Co. KG
+--
+-- All Rights Reserved.
+--
+-- Reproduction of this document is authorized on condition that
+-- this copyright notice is included.
+--
+-- This MIB document embodies proprietary intellectual property of Unify,
+-- which retains all title and ownership in this MIB, including any revisions.
+--
+-- This module will be extended, as required.
+--
+-- Unify reserves the right to make changes in specification and other
+-- information contained in this document without prior notice. The reader
+-- should consult Unify to determine whether any such changes have been made.
+--
+-- Copyright @ 2022 Unify GmbH & Co. KG
+
+-- ==================================================================
+
+
+IMPORTS
+    MODULE-IDENTITY, OBJECT-TYPE, Integer32, NOTIFICATION-TYPE, enterprises        FROM SNMPv2-SMI
+    DisplayString, RowStatus                                                                                     FROM SNMPv2-TC
+    senProducts                                                                                                        FROM SEN-ROOT-MIB;
+
+        ngtc                      OBJECT IDENTIFIER ::= { senProducts 67 }
+                                -- Ansible product-specific MIBs
+                                --                = senProducts         67
+                                --                = enterprises sen   1 67
+                                --                = enterprises 32804 1 67
+                                --                = 1 3 6 1 4 1 32804 1 67
+
+
+        alarms                MODULE-IDENTITY
+        LAST-UPDATED        "202201150000Z"
+        ORGANIZATION        "Unify"
+        CONTACT-INFO        "Theofanis Dokianakis
+                                        E-mail:        theofanis.dokianakis@atos.net"
+
+        DESCRIPTION        "This MIB module implements SNMP Alarms.
+                            An alarm is uniquely identified by the trap name
+                            (mainly the last two numbers of the trap OID)
+                            and the neName.
+                            An alarm trap is a trap with a non-cleared severity.
+                            It is cleared by the same trap
+                            with the same neName and a severity of clear.
+                            An existing alarm can be modified by a trap with the
+                            same OID and neName but with one or more modified values,
+                            e.g. for severity, nodes, or faultyObject"
+
+        ::= { ngtc 1 }
+
+        trapParameters              OBJECT IDENTIFIER ::= { ngtc 2 }
+        nodes                       OBJECT IDENTIFIER ::= { alarms 6 }
+        kubernetes                  OBJECT IDENTIFIER ::= { alarms 9 }
+        connector                   OBJECT IDENTIFIER ::= { alarms 10 }
+        access                      OBJECT IDENTIFIER ::= { alarms 11 }
+        admin                       OBJECT IDENTIFIER ::= { alarms 12 }
+        socketio                    OBJECT IDENTIFIER ::= { alarms 13 }
+        rtpproxy                    OBJECT IDENTIFIER ::= { alarms 14 }
+        nginx                       OBJECT IDENTIFIER ::= { alarms 15 }
+        turn                        OBJECT IDENTIFIER ::= { alarms 16 }
+
+        id                         OBJECT-TYPE
+        SYNTAX                     DisplayString
+        MAX-ACCESS                 not-accessible
+        STATUS                     current
+        DESCRIPTION                "name of the network element sending the alarm"
+        ::= { trapParameters 1 }
+
+        severity                   OBJECT-TYPE
+        SYNTAX                     DisplayString
+        MAX-ACCESS                 not-accessible
+        STATUS                     current
+        DESCRIPTION                "name of the network element sending the alarm"
+        ::= { trapParameters 2 }
+
+
+        description                OBJECT-TYPE
+        SYNTAX                     DisplayString
+        MAX-ACCESS                 not-accessible
+        STATUS                     current
+        DESCRIPTION                "name of the network element sending the alarm"
+        ::= { trapParameters 3 }
+
+        -- =======================
+        -- K8S alerts
+        -- =======================
+
+        PodCpuUsage NOTIFICATION-TYPE
+        OBJECTS        {        id,
+                                severity,
+                                description   }
+        STATUS               current
+        DESCRIPTION        "High CPU usage for pod (instance {{ $labels.instance }})"
+        ::= { kubernetes 1 }
+
+        PodMemoryUsage NOTIFICATION-TYPE
+        OBJECTS        {        id,
+                                severity,
+                                description   }
+        STATUS               current
+        DESCRIPTION        "High memory usage for pod (instance {{ $labels.instance }})"
+        ::= { kubernetes 2 }
+
+        -- =======================
+        -- NGINX alerts
+        -- =======================
+
+        nginxreplicasnotready NOTIFICATION-TYPE
+        OBJECTS        {        id,
+                                severity,
+                                description   }
+        STATUS               current
+        DESCRIPTION        "nginx pods are not ready (instance {{ $labels.instance }})"
+        ::= { nginx 1 }
+
+        nginxpodtoomanyrestarts NOTIFICATION-TYPE
+        OBJECTS        {        id,
+                                severity,
+                                description   }
+        STATUS               current
+        DESCRIPTION        "nginx pods restart too often (instance {{ $labels.instance }})"
+        ::= { nginx 2 }
+
+        -- =======================
+        -- Access alerts
+        -- =======================
+
+        AccessHTTPLatencyTooHigh NOTIFICATION-TYPE
+        OBJECTS        {        id,
+                                severity,
+                                description   }
+        STATUS               current
+        DESCRIPTION        "Access takes too much time to respond (instance {{ $labels.instance }})"
+        ::= { access 1 }
+
+        accessreplicasnotready NOTIFICATION-TYPE
+        OBJECTS        {        id,
+                                severity,
+                                description   }
+        STATUS               current
+        DESCRIPTION        "access pods are not ready (instance {{ $labels.instance }})"
+        ::= { access 2 }
+
+        accesspodtoomanyrestarts NOTIFICATION-TYPE
+        OBJECTS        {        id,
+                                severity,
+                                description   }
+        STATUS               current
+        DESCRIPTION        "access pods restart too often (instance {{ $labels.instance }})"
+        ::= { access 3 }
+
+        -- =======================
+        -- Admin alerts
+        -- =======================
+
+        adminhttplatencytoohigh NOTIFICATION-TYPE
+        OBJECTS        {        id,
+                                severity,
+                                description   }
+        STATUS               current
+        DESCRIPTION        "admin takes too much time to respond (instance {{ $labels.instance }})"
+        ::= { admin 1 }
+
+        adminreplicasnotready NOTIFICATION-TYPE
+        OBJECTS        {        id,
+                                severity,
+                                description   }
+        STATUS               current
+        DESCRIPTION        "admin pods are not ready (instance {{ $labels.instance }})"
+        ::= { admin 2 }
+
+        adminpodtoomanyrestarts NOTIFICATION-TYPE
+        OBJECTS        {        id,
+                                severity,
+                                description   }
+        STATUS               current
+        DESCRIPTION        "admin pods restart too often (instance {{ $labels.instance }})"
+        ::= { admin 3 }
+
+        -- =======================
+        -- Connector alerts
+        -- =======================
+
+        connectorfailedcallsratehigh NOTIFICATION-TYPE
+        OBJECTS        {        id,
+                                severity,
+                                description   }
+        STATUS               current
+        DESCRIPTION        "connector suddently failed too many calls (instance {{ $labels.instance }})"
+        ::= { connector 1 }
+
+        connectorlosttrunksratehigh NOTIFICATION-TYPE
+        OBJECTS        {        id,
+                                severity,
+                                description   }
+        STATUS               current
+        DESCRIPTION        "connector suddently lost many trunks (instance {{ $labels.instance }})"
+        ::= { connector 2 }
+
+        connectorreplicasnotready NOTIFICATION-TYPE
+        OBJECTS        {        id,
+                                severity,
+                                description   }
+        STATUS               current
+        DESCRIPTION        "connector pods are not ready (instance {{ $labels.instance }})"
+        ::= { connector 3 }
+
+        connectorpodtoomanyrestarts NOTIFICATION-TYPE
+        OBJECTS        {        id,
+                                severity,
+                                description   }
+        STATUS               current
+        DESCRIPTION        "connector pods restart too often (instance {{ $labels.instance }})"
+        ::= { connector 4 }
+
+        -- =======================
+        -- K8S Node alerts
+        -- =======================
+
+        HostHighCpuLoad NOTIFICATION-TYPE
+        OBJECTS        {        id,
+                                severity,
+                                description   }
+        STATUS               current
+        DESCRIPTION        "Host high CPU load (instance {{ $labels.instance }})"
+        ::= { node 1 }
+
+        HostOutOfDiskSpace NOTIFICATION-TYPE
+        OBJECTS        {        id,
+                                severity,
+                                description   }
+        STATUS               current
+        DESCRIPTION        "Host out of disk space (instance {{ $labels.instance }})"
+        ::= { node 2 }
+
+        HostOutOfInodes NOTIFICATION-TYPE
+        OBJECTS        {        id,
+                                severity,
+                                description   }
+        STATUS               current
+        DESCRIPTION        "Host out of inodes (instance {{ $labels.instance }})"
+        ::= { node 3 }
+
+        HostOutOfMemory NOTIFICATION-TYPE
+        OBJECTS        {        id,
+                                severity,
+                                description   }
+        STATUS               current
+        DESCRIPTION        "Host out of memory (instance {{ $labels.instance }})"
+        ::= { node 4 }
+
+        -- =======================
+        -- rtpproxy alerts
+        -- =======================
+
+        rtpproxyreplicasnotready NOTIFICATION-TYPE
+        OBJECTS        {        id,
+                                severity,
+                                description   }
+        STATUS               current
+        DESCRIPTION        "rtpproxy pods are not ready (instance {{ $labels.instance }})"
+        ::= { rtpproxy 1 }
+
+        rtpproxypodtoomanyrestarts NOTIFICATION-TYPE
+        OBJECTS        {        id,
+                                severity,
+                                description   }
+        STATUS               current
+        DESCRIPTION        "rtpproxy pods restart too often (instance {{ $labels.instance }})"
+        ::= { rtpproxy 2 }
+
+        -- =======================
+        -- Socketio alerts
+        -- =======================
+
+        socketioreplicasnotready NOTIFICATION-TYPE
+        OBJECTS        {        id,
+                                severity,
+                                description   }
+        STATUS               current
+        DESCRIPTION        "socketio-server pods are not ready (instance {{ $labels.instance }})"
+        ::= { socketio 1 }
+
+        socketiopodtoomanyrestarts NOTIFICATION-TYPE
+        OBJECTS        {        id,
+                                severity,
+                                description   }
+        STATUS               current
+        DESCRIPTION        "socketio-server pods restart too often (instance {{ $labels.instance }})"
+        ::= { socketio 2 }
+
+        -- =======================
+        -- Turn server alerts
+        -- =======================
+
+        coturnreplicasnotready NOTIFICATION-TYPE
+        OBJECTS        {        id,
+                                severity,
+                                description   }
+        STATUS               current
+        DESCRIPTION        "coturn pods are not ready (instance {{ $labels.instance }})"
+        ::= { turn 1 }
+
+        coturnpodtoomanyrestarts NOTIFICATION-TYPE
+        OBJECTS        {        id,
+                                severity,
+                                description   }
+        STATUS               current
+        DESCRIPTION        "coturn pods restart too often (instance {{ $labels.instance }})"
+        ::= { turn 2 }
+
+END

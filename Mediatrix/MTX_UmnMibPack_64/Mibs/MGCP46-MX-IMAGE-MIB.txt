@@ -1,0 +1,340 @@
+-- ****************************************************************************
+-- ****************************************************************************
+--
+--             Copyright(c) 2001 Mediatrix Telecom, Inc. 
+--
+--  NOTICE:
+--   This document contains information that is confidential and proprietary
+--   to Mediatrix Telecom, Inc. 
+--
+--   Mediatrix Telecom, Inc. reserves all rights to this document as well as
+--   to the Intellectual Property of the document and the technology and
+--   know how that it includes and represents. 
+--
+--   This publication cannot be reproduced, neither in whole nor in part in
+--   any form whatsoever without written prior approval by
+--   Mediatrix Telecom, Inc. 
+--
+--   Mediatrix Telecom, Inc. reserves the right to revise this publication
+--   and make changes at any time and without the obligation to notify any
+--   person and/or entity of such revisions and/or changes. 
+--
+-- ****************************************************************************
+-- ****************************************************************************
+
+MGCP46-MX-IMAGE-MIB
+DEFINITIONS ::= BEGIN
+
+IMPORTS
+        MODULE-IDENTITY,
+        NOTIFICATION-TYPE,
+        OBJECT-TYPE,
+        Unsigned32
+    FROM SNMPv2-SMI
+        OBJECT-GROUP,
+        MODULE-COMPLIANCE,
+        NOTIFICATION-GROUP
+    FROM SNMPv2-CONF
+        MxIpHostName,
+        MxIpConfigSource,
+        MxIpPort,
+        MxIpSelectConfigSource,
+        MxIpDhcpSiteSpecificCode
+    FROM MX-TC              
+        sysAdminLastDownloadSoftware
+    FROM MX-SYSTEM-ADMIN-MIB
+        ipAddressStatus,
+        ipAddressConfig, 
+        mediatrixConfig
+    FROM MX-SMI;
+
+imageMIB MODULE-IDENTITY
+    LAST-UPDATED "0109060000Z"
+    ORGANIZATION "Mediatrix Telecom, Inc."
+    CONTACT-INFO "Mediatrix Telecom, Inc.
+                  4229, Garlock Street
+                  Sherbrooke (Quebec)
+                  Canada
+                  Phone: (819) 829-8749
+                  "
+    DESCRIPTION "This MIB is responsible for the update of the binary image
+                 of the application running on the current device. The update
+                 is done through a software download using common file transfer 
+                 protocols such as tftp or ftp."
+    -- ************************************************************************
+    -- Revision history
+    -- ************************************************************************
+    REVISION    "0109060000Z"
+    DESCRIPTION "September 06, 2001
+                    Creation"
+    ::= { mediatrixConfig 6 }
+
+imageMIBObjects  OBJECT IDENTIFIER ::= { imageMIB 1 }
+imageConformance OBJECT IDENTIFIER ::= { imageMIB 2 }
+imageEvents      OBJECT IDENTIFIER ::= { imageMIB 3 }
+
+-- Add the image general configuration parameters
+
+    imageLocation OBJECT-TYPE
+        SYNTAX      OCTET STRING (SIZE(0..63))
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "The path of the <<Setup.inf>> file location, and of the 
+                     location of the binary image to be downloaded, on the 
+                     remote image server."
+        ::= { imageMIBObjects 1 }
+
+-- Add the image ip addresses specifics parameters
+
+    ipAddressStatusImage OBJECT IDENTIFIER ::= { ipAddressStatus 8 }
+    ipAddressConfigImage OBJECT IDENTIFIER ::= { ipAddressConfig 8 }
+
+-- Add the Status information
+    imageConfigSource OBJECT-TYPE
+        SYNTAX      MxIpConfigSource
+        MAX-ACCESS  read-only
+        STATUS      current
+        DESCRIPTION "Indicates the source used for the provisioning of 
+                     the image MIB objects."
+        DEFVAL      { dhcp }
+        ::=  {  ipAddressStatusImage  1  } 
+
+    imagePrimaryHost OBJECT-TYPE
+        SYNTAX      MxIpHostName
+        MAX-ACCESS  read-only
+        STATUS      current
+        DESCRIPTION "Image primary server IP address or domain name."
+        DEFVAL      { "192.168.0.10" }
+        ::=  {    ipAddressStatusImage  2  }
+
+    imagePrimaryPort OBJECT-TYPE
+        SYNTAX      MxIpPort
+        MAX-ACCESS  read-only
+        STATUS      current
+        DESCRIPTION "Image primary server IP port number."
+        DEFVAL      { 69 }
+        ::=  {    ipAddressStatusImage  3  }
+
+    imageSecondaryHost OBJECT-TYPE
+        SYNTAX      MxIpHostName
+        MAX-ACCESS  read-only
+        STATUS      current
+        DESCRIPTION "Image secondary server IP address or domain name."
+        DEFVAL      { "192.168.0.10" }
+        ::=  {    ipAddressStatusImage  4  }
+
+    imageSecondaryPort OBJECT-TYPE
+        SYNTAX      MxIpPort
+        MAX-ACCESS  read-only
+        STATUS      current
+        DESCRIPTION "Image secondary server IP port number."
+        DEFVAL      { 69 }
+        ::=  {    ipAddressStatusImage  5  }
+ 
+-- Add the Configuration information
+    imageSelectConfigSource OBJECT-TYPE
+        SYNTAX      MxIpSelectConfigSource
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "The source to use for the provisioning of 
+                     the image MIB objects."
+        DEFVAL      { dhcp }
+        ::=  {  ipAddressConfigImage  1  } 
+
+    ipAddressConfigImageStatic OBJECT IDENTIFIER ::= { ipAddressConfigImage 5 }
+    
+    -- Add the static parameters
+    imageStaticPrimaryHost OBJECT-TYPE
+        SYNTAX      MxIpHostName
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Static primary server IP address or domain name."
+        DEFVAL      { "192.168.0.10" }
+        ::=  {    ipAddressConfigImageStatic  1  }
+
+    imageStaticPrimaryPort OBJECT-TYPE
+        SYNTAX      MxIpPort
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Static primary server IP port number."
+        DEFVAL      { 69 }
+        ::=  {    ipAddressConfigImageStatic  2  }
+
+    imageStaticSecondaryHost OBJECT-TYPE
+        SYNTAX      MxIpHostName
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Static secondary server IP address or domain name."
+        DEFVAL      { "192.168.0.10" }
+        ::=  {    ipAddressConfigImageStatic  3  }
+
+    imageStaticSecondaryPort OBJECT-TYPE
+        SYNTAX      MxIpPort
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Static secondary server IP port number."
+        DEFVAL      { 69 }
+        ::=  {    ipAddressConfigImageStatic  4  }
+ 
+    ipAddressConfigImageDhcp OBJECT IDENTIFIER ::= { ipAddressConfigImage 6 }
+    
+    -- Add the DHCP parameters
+    imageDhcpPrimarySiteSpecificCode OBJECT-TYPE
+        SYNTAX      MxIpDhcpSiteSpecificCode
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "DHCP primary image server site specific code.
+                     If set to 0, use vendor-specific code #117."
+        DEFVAL      { 0 }
+        ::=  {    ipAddressConfigImageDhcp  1    }
+
+    imageDhcpSecondarySiteSpecificCode OBJECT-TYPE
+        SYNTAX      MxIpDhcpSiteSpecificCode
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "DHCP secondary image server site specific code.
+                     If set to 0, use vendor-specific code #118."
+        DEFVAL { 0 }
+        ::=  {    ipAddressConfigImageDhcp  2    }
+
+
+    -- ************************************************************************
+    -- Events 
+    -- ************************************************************************
+    imageNotificationsControl OBJECT IDENTIFIER ::= { imageEvents 1 }
+    imageNotifications        OBJECT IDENTIFIER ::= { imageEvents 2 }
+    
+    imageCompletionControl OBJECT-TYPE
+        SYNTAX      INTEGER {
+                             disable(0),
+                             enable(1)
+                            }
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "This value specifies whether or not a notification should be issued on
+                     completion of the software download. If such a notification is desired,
+                     it is the responsibility of the SNMP manager to properly configure the 
+                     notification parameters to ensure that the notification will be delivered."
+        DEFVAL      { enable }
+        ::= { imageNotificationsControl 1}
+
+  
+    -- Add the status parameters used for the trap 
+
+    imageNotificationsParams OBJECT IDENTIFIER ::= { imageEvents 4 }
+    
+    imageLocationUsed OBJECT-TYPE
+        SYNTAX      OCTET STRING (SIZE(0..63))
+        MAX-ACCESS  accessible-for-notify
+        STATUS      current
+        DESCRIPTION "The path of the <<Setup.inf>> file location, and of the 
+                     binary image location, on the remote image server used 
+                     in the last software download.
+                     Parameters used in image notifications."
+        ::= { imageNotificationsParams 1 }
+
+    imageServerAddress OBJECT-TYPE
+        SYNTAX      MxIpHostName
+        MAX-ACCESS  accessible-for-notify
+        STATUS      current
+        DESCRIPTION "Image server IP address or domain name.
+                     Parameters used in image notifications."
+        ::=  {    imageNotificationsParams  2  }
+
+
+    imageCompletion NOTIFICATION-TYPE
+        OBJECTS {   
+                    imageLocationUsed,
+                    imageServerAddress,
+                    sysAdminLastDownloadSoftware
+                }
+        STATUS       current
+        DESCRIPTION "A message notification is sent after the software download completed
+                     successfully or not."
+        ::= { imageNotifications 1 }
+
+    -- ************************************************************************
+    -- Conformance information
+    -- ************************************************************************
+    imageCompliances OBJECT IDENTIFIER ::= { imageConformance 1 }
+
+    imageBasicComplVer1 MODULE-COMPLIANCE
+        STATUS      current
+        DESCRIPTION     
+            "Basic image download requirements which include only tftp as file transfer
+             protocol for the software download."
+        MODULE -- This Module
+            MANDATORY-GROUPS { 
+                                imageBasicGroupVer1,
+                                imageBasicNotificationControlGroupVer1,
+                                imageBasicNotificationParamsGroupVer1,
+                                imageBasicNotificationGroupVer1
+                             }
+        ::= { imageCompliances 1 }
+
+
+    -- ************************************************************************
+    -- MIB variable grouping
+    -- ************************************************************************
+    imageGroups OBJECT IDENTIFIER ::= { imageConformance 2 }
+
+    imageBasicGroupVer1 OBJECT-GROUP
+        OBJECTS {
+                  imageLocation
+                }
+        STATUS current
+        DESCRIPTION
+            "This group holds the objects necessary to initiate a software download."
+        ::= { imageGroups 1 } 
+
+    imageTFTPGroupVer1 OBJECT-GROUP
+        OBJECTS { 
+                  imageConfigSource,
+                  imagePrimaryHost,
+                  imagePrimaryPort,
+                  imageSecondaryHost,
+                  imageSecondaryPort,
+                  imageSelectConfigSource,
+                  imageStaticPrimaryHost,
+                  imageStaticPrimaryPort,
+                  imageStaticSecondaryHost,
+                  imageStaticSecondaryPort,
+                  imageDhcpPrimarySiteSpecificCode,
+                  imageDhcpSecondarySiteSpecificCode
+                }
+        STATUS current
+        DESCRIPTION
+            "This group holds the objects necessary to initiate a software download
+             using the tftp file transfer protocol."
+        ::= { imageGroups 2 }
+
+    imageBasicNotificationControlGroupVer1 OBJECT-GROUP
+        OBJECTS {
+                  imageCompletionControl
+                }
+        STATUS current
+        DESCRIPTION
+            "This group holds the objects necessary to control notification generation."
+        ::= { imageGroups 3 }
+ 
+    imageBasicNotificationParamsGroupVer1 OBJECT-GROUP
+        OBJECTS {
+                  imageLocationUsed,
+                  imageServerAddress
+                }
+        STATUS current
+        DESCRIPTION
+            "This group holds parameters needed in notification"
+        ::= { imageGroups 4 } 
+
+
+    imageBasicNotificationGroupVer1 NOTIFICATION-GROUP
+        NOTIFICATIONS   {
+                            imageCompletion
+                        }
+        STATUS  current
+        DESCRIPTION
+            "This group contains the objects necessary to realize the basic
+             notification for the software image download."
+        ::= { imageGroups 5 }
+END

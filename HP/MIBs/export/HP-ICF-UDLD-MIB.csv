@@ -1,0 +1,30 @@
+HP-ICF-UDLD-MIB,1.3.6.1.4.1.11.2.14.11.5.1.33,hpicfUdldMIB,""200604100000Z"   --APRIL 10, 2006",READ-ONLY,"Hewlett-Packard Company 8000 Foothills Blvd. Roseville, CA 95747"
+HP-ICF-UDLD-MIB,1.3.6.1.4.1.11.2.14.11.5.1.33.0,hpicfUdldNotifications,"OBJECT IDENTIFIER",READ-ONLY,
+HP-ICF-UDLD-MIB,1.3.6.1.4.1.11.2.14.11.5.1.33.0.0,hpicfUdldNotificationPrefix,"OBJECT IDENTIFIER",READ-ONLY,
+HP-ICF-UDLD-MIB,1.3.6.1.4.1.11.2.14.11.5.1.33.0.0.1,hpicfUdldLinkfault,NOTIFICATION-TYPE,READ-ONLY,"This notification is generated when the link failure occurs."
+HP-ICF-UDLD-MIB,1.3.6.1.4.1.11.2.14.11.5.1.33.0.0.2,hpicfUdldLinkUp,NOTIFICATION-TYPE,READ-ONLY,"This notification is generated when UDLD link goes from down to up."
+HP-ICF-UDLD-MIB,1.3.6.1.4.1.11.2.14.11.5.1.33.1,hpicfUdldObjects,"OBJECT IDENTIFIER",READ-ONLY,
+HP-ICF-UDLD-MIB,1.3.6.1.4.1.11.2.14.11.5.1.33.1.1,hpicfUdldConfig,"OBJECT IDENTIFIER",READ-ONLY,
+HP-ICF-UDLD-MIB,1.3.6.1.4.1.11.2.14.11.5.1.33.1.1.1,hpicfUdldConfigTimeInterval,UNSIGNED32,READ-WRITE,"The interval in seconds at which the UDLD enabled ports exchange proprietary pulse packet. Here 10 is 1 sec, 11 is 1.1 sec, and so on. The default value for hpicfUdldConfigTimeInterval object is 5 seconds."
+HP-ICF-UDLD-MIB,1.3.6.1.4.1.11.2.14.11.5.1.33.1.1.2,hpicfUdldConfigMaxRetries,UNSIGNED32,READ-WRITE,"Maximum number of retries to wait for a response. The default value for hpicfUdldConfigMaxRetries object is 4."
+HP-ICF-UDLD-MIB,1.3.6.1.4.1.11.2.14.11.5.1.33.1.1.3,hpicfUdldPortConfigTable,"SEQUENCE OF HPICFUDLDPORTCONFIGENTRY",NOT-ACCESSIBLE,"The table that controls UDLD status on individual ports."
+HP-ICF-UDLD-MIB,1.3.6.1.4.1.11.2.14.11.5.1.33.1.1.3.1,hpicfUdldPortConfigEntry,SEQUENCE,NOT-ACCESSIBLE,"An entry in the hpicfUdldPortConfigTable."
+HP-ICF-UDLD-MIB,1.3.6.1.4.1.11.2.14.11.5.1.33.1.1.3.1.1,hpicfUdldPortAdminStatus,INTEGER,READ-WRITE,"The hpicfUdldPortAdminStatus can be enabled/disabled The value enable(1) means that UDLD is enabled. the value disable(2) means that UDLD is disabled."
+HP-ICF-UDLD-MIB,1.3.6.1.4.1.11.2.14.11.5.1.33.1.1.3.1.2,hpicfUdldPortVlanId,INTEGER32,READ-WRITE,"The vlan id associated with tagged UDLD control packets. The value of 0 indicates that UDLD control packets are untagged."
+HP-ICF-UDLD-MIB,1.3.6.1.4.1.11.2.14.11.5.1.33.1.2,hpicfUdldStats,"OBJECT IDENTIFIER",READ-WRITE,
+HP-ICF-UDLD-MIB,1.3.6.1.4.1.11.2.14.11.5.1.33.1.2.1,hpicfUdldPortStatsTable,"SEQUENCE OF HPICFUDLDPORTSTATSENTRY",NOT-ACCESSIBLE,"A table containing UDLD statistics for individual ports."
+HP-ICF-UDLD-MIB,1.3.6.1.4.1.11.2.14.11.5.1.33.1.2.1.1,hpicfUdldPortStatsEntry,SEQUENCE,NOT-ACCESSIBLE,"UDLD statistics for a particular physical port."
+HP-ICF-UDLD-MIB,1.3.6.1.4.1.11.2.14.11.5.1.33.1.2.1.1.1,hpicfUdldStatsPortCurrentState,INTEGER,READ-ONLY,"The desired status of UDLD on a port. If the associated hpicfUdldStatsPortCurrentState object has a value of 'offline(1)', then the port or udld is administratively disabled. If the associated hpicfUdldStatsPortCurrentState object has a value of 'failure(2)', then the port and udld are administratively enabled, but udld packets are not being received successfully. Link may or may not be present. If the associated hpicfUdldStatsPortCurrentState object has a value of 'up(3)', then udld is enabled and udld packets are being received successfully in both directions."
+HP-ICF-UDLD-MIB,1.3.6.1.4.1.11.2.14.11.5.1.33.1.2.1.1.2,hpicfUdldStatsPortNeighborMAC,OCTETSTRING,READ-ONLY,"The MAC address of the adjacent switch."
+HP-ICF-UDLD-MIB,1.3.6.1.4.1.11.2.14.11.5.1.33.1.2.1.1.3,hpicfUdldStatsPortNeighborPort,INTEGER32,READ-ONLY,"The port number of the adjacent switch."
+HP-ICF-UDLD-MIB,1.3.6.1.4.1.11.2.14.11.5.1.33.1.2.1.1.4,hpicfUdldStatsPortTotalTx,COUNTER32,READ-ONLY,"The number of UDLD control packets sent from this port."
+HP-ICF-UDLD-MIB,1.3.6.1.4.1.11.2.14.11.5.1.33.1.2.1.1.5,hpicfUdldStatsPortTotalRx,COUNTER32,READ-ONLY,"The number of UDLD control packets received on this port."
+HP-ICF-UDLD-MIB,1.3.6.1.4.1.11.2.14.11.5.1.33.1.2.1.1.6,hpicfUdldStatsPortNumStateChange,COUNTER32,READ-ONLY,"The number of state transitions."
+HP-ICF-UDLD-MIB,1.3.6.1.4.1.11.2.14.11.5.1.33.1.2.1.1.7,hpicfUdldStatsPortStatus,INTEGER32,READ-ONLY,"The value of this object indicates whether the port is blocked by UDLD or not."
+HP-ICF-UDLD-MIB,1.3.6.1.4.1.11.2.14.11.5.1.33.2,hpicfUdldConformance,"OBJECT IDENTIFIER",READ-ONLY,
+HP-ICF-UDLD-MIB,1.3.6.1.4.1.11.2.14.11.5.1.33.2.1,hpicfUdldCompliances,"OBJECT IDENTIFIER",READ-ONLY,
+HP-ICF-UDLD-MIB,1.3.6.1.4.1.11.2.14.11.5.1.33.2.1.1,hpicfUdldCompliance,HPICFUDLDPORTCONFIGGROUP,HPICFUDLDPORTSTATSGROUP,HPICFUDLDNOTIFICATIONGROUPGROUPHPICFUDLDNOTIFICATIONGROUPDESCRIPTION"THENOTIFICATIONSUSEDFORSIGNALLINGLINKFAILURE.",READ-ONLY,"The compliance statement for SNMP entities which implement the UDLD MIB."
+HP-ICF-UDLD-MIB,1.3.6.1.4.1.11.2.14.11.5.1.33.2.2,hpicfUdldGroups,"OBJECT IDENTIFIER",READ-ONLY,
+HP-ICF-UDLD-MIB,1.3.6.1.4.1.11.2.14.11.5.1.33.2.2.1,hpicfUdldPortConfigGroup,OBJECT-GROUP,READ-ONLY,"The collection of objects which are used to configure the UDLD implementation behavior. This group is mandatory for ports which implement the UDLD."
+HP-ICF-UDLD-MIB,1.3.6.1.4.1.11.2.14.11.5.1.33.2.2.2,hpicfUdldPortStatsGroup,OBJECT-GROUP,READ-ONLY,"The collection of objects which are used to represent UDLD statistics. This group is mandatory for ports which implement the UDLD."
+HP-ICF-UDLD-MIB,1.3.6.1.4.1.11.2.14.11.5.1.33.2.2.3,hpicfUdldNotificationGroup,NOTIFICATION-GROUP,READ-ONLY,"Notification used for signaling change in Link state."

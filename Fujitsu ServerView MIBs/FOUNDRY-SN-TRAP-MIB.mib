@@ -1,0 +1,4209 @@
+FOUNDRY-SN-TRAP-MIB DEFINITIONS ::= BEGIN
+-- Router Switch Trap MIB Release 1.0.0
+-- Revision 06/02/97
+-- Copyright 1996-1997 Foundry Networks, Inc.
+-- All rights reserved.
+-- This Foundry SNMP Management Information Base Specification
+-- (Specification) embodies Foundry's confidential and
+-- proprietary intellectual property. Foundry retains all
+-- title and ownership in the Specification, including any
+-- revisions.
+-- This Specification is supplied "AS IS," and Foundry makes
+-- no warranty, either express or implied, as to the use,
+-- operation, condition, or performance of the Specification.
+-- SECTION 1: Top Level Definitions
+-- Imports
+
+IMPORTS
+   TRAP-TYPE              FROM RFC-1215
+      Counter, Gauge, IpAddress, enterprises FROM RFC1155-SMI;
+
+--    foundry                FROM FOUNDRY-SN-ROOT-MIB
+--    snChasPwrSupplyStatus,
+--    snAgGblTrapMessage,
+--    snAgentBrdIndex,
+--    snChasPwrSupplyIndex,
+--    snChasPwrSupplyDescription,
+--    snChasFanIndex,
+--    snChasFanDescription   FROM FOUNDRY-SN-AGENT-MIB
+--    snSwViolatorPortNumber,
+--    snSwViolatorMacAddress FROM FOUNDRY-SN-SWITCH-GROUP-MIB
+--    snOspfRouterId,
+--    snOspfIfStatusIpAddress,
+--    snOspfIfStatusState,
+--    snOspfVirtIfStatusAreaID,
+--    snOspfVirtIfStatusNeighbor,
+--    snOspfVirtIfStatusState,
+--    snOspfNbrIpAddr,
+--    snOspfNbrRtrId,
+--    snOspfNbrState,
+--    snOspfVirtNbrArea,
+--    snOspfVirtNbrRtrId, 
+--    snOspfVirtNbrState, 
+--    snOspfPacketSrc,
+--    snOspfConfigErrorType,
+--    snOspfPacketType,
+--    snOspfLsdbAreaId,
+--    snOspfLsdbType,
+--    snOspfLsdbLsId,
+--    snOspfLsdbRouterId,
+--    snOspfExtLsdbLimit	  FROM FOUNDRY-SN-OSPF-GROUP-MIB
+--    snL4MaxSessionLimit,
+--    snL4TcpSynLimit,
+--    snL4TrapRealServerIP, 
+--    snL4TrapRealServerName,
+--    snL4TrapRealServerPort,
+--    snL4TrapRealServerCurConnections FROM FOUNDRY-SN-SW-L4-SWITCH-GROUP-MIB;
+-- Textual Conventions
+-- Groups
+-- SECTION 2: MIB Objects
+-- Trap Information
+-- These definitions use the TRAP-TYPE macro as defined in RFC 1215.
+-- Foundry Networks, Inc. Specific Traps
+
+
+-- enterprises       OBJECT IDENTIFIER   ::= { iso org(3) dod(6) internet(1) private(4) 1 }
+
+foundry		OBJECT IDENTIFIER ::= { enterprises 1991 }
+products	OBJECT IDENTIFIER ::= { foundry 1 }
+switch		OBJECT IDENTIFIER ::= { products 1 }
+router 		OBJECT IDENTIFIER ::= { products 2 }
+
+snChassis		OBJECT IDENTIFIER ::= { switch 1 }
+snAgentSys		OBJECT IDENTIFIER ::= { switch 2 }
+snSwitch		OBJECT IDENTIFIER ::= { switch 3 }
+snL4			OBJECT IDENTIFIER ::= { switch 4 }
+
+snOspf		OBJECT IDENTIFIER ::= { router 4 }
+snMpls		OBJECT IDENTIFIER ::= { router 15 }
+
+
+-- Groups
+snChasGen	OBJECT IDENTIFIER ::= { snChassis 1 }
+snChasPwr	OBJECT IDENTIFIER ::= { snChassis 2 }
+snChasFan	OBJECT IDENTIFIER ::= { snChassis 3 }
+snChasUnit	OBJECT IDENTIFIER ::= { snChassis 4 }
+
+snSwInfo 	OBJECT IDENTIFIER ::= { snSwitch 1 }
+snVLanInfo				OBJECT IDENTIFIER ::= { snSwitch 2 }
+snWireless	OBJECT IDENTIFIER 	::= { snSwitch 23  }	 
+-- 1.3.6.1.4.1.1991.1.1.3.23
+-- iso(1). org(3). dod(6). internet(1). private(4). enterprises(1). foundry(1991). products(1). switch(1). snSwitch(3). snWireless(23)
+
+snOspfGen 	        OBJECT IDENTIFIER ::= { snOspf 1 }
+snOspfNbr		    OBJECT IDENTIFIER ::= { snOspf 7 }
+snOspfVirtNbr		OBJECT IDENTIFIER ::= { snOspf 8 }
+snOspfLsdb		    OBJECT IDENTIFIER ::= { snOspf 9 }
+snOspfIfStatus		OBJECT IDENTIFIER ::= { snOspf 12 }
+snOspfVirtIfStatus	OBJECT IDENTIFIER ::= { snOspf 13 }
+snOspfTrapControl 	OBJECT IDENTIFIER ::= { snOspf 15 }
+
+
+snL4Gen						OBJECT IDENTIFIER	  ::= { snL4 1  }
+snL4Trap					OBJECT IDENTIFIER	  ::= { snL4 13 }
+
+snAgentGbl				OBJECT IDENTIFIER ::= { snAgentSys 1 }
+snAgentBrd				OBJECT IDENTIFIER ::= { snAgentSys 2 }
+
+mpls   OBJECT IDENTIFIER ::= { snMpls 1 }
+mplsLspInfo   OBJECT IDENTIFIER ::= { mpls 2 }
+
+
+  MacAddress ::=
+	      OCTET STRING (SIZE(6))
+
+   RouterID ::= IpAddress
+   AreaID ::= IpAddress
+   L4ServerName ::= OCTET STRING (SIZE(1..32))
+	TimeStamp  ::= INTEGER
+
+
+-- Power Supply Status
+snChasPwrSupplyStatus OBJECT-TYPE
+	SYNTAX	INTEGER
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+		"A bit array that contains the value of the
+		Chassis Power Supplies. This is a packed bit string;
+		the 2 power supplies status are encoded into 4 bits
+		(a nibble). 
+		There are multiple power supplies per chassis in this release.
+		The following shows the meaning of each bit:
+		(bit 0 is the least significant bit).
+		  bit position   meaning
+		  ------------   -------
+			  12-31  reserved
+		      11     Power  Supply 4 DC (0=bad, 1=good).
+		      10     Power  Supply 3 DC (0=bad, 1=good).
+		      9      Power  Supply 4 present status (0=present, 1=not-present).
+		      8      Power  Supply 3 present status (0=present, 1=not-present).
+			  4-7    reserved
+		      3      Power  Supply 2 DC (0=bad, 1=good).
+		      2      Power  Supply 1 DC (0=bad, 1=good).
+		      1      Power  Supply 2 present status (0=present, 1=not-present).
+		      0      Power  Supply 1 present status (0=present, 1=not-present)."
+	::= { snChasGen 3 }
+
+snSwViolatorPortNumber OBJECT-TYPE
+	SYNTAX	INTEGER
+	ACCESS  read-only
+	STATUS	mandatory
+	DESCRIPTION
+		"The port number of the switch or router that received
+		 a violator packet. It is included in the locked
+		 address violation trap.
+		 The bit 0 to bit 7: port number. 
+		 The bit 8 to bit 11: slot number (slot for chassis only)."
+	::= { snSwInfo 17 }
+
+snSwViolatorMacAddress OBJECT-TYPE
+    SYNTAX  MacAddress
+	ACCESS  read-only
+	STATUS	mandatory
+	DESCRIPTION
+		"The source address of the violator packet received
+		 by the switch or router. It is included in the locked
+		 address violation trap."
+	::= { snSwInfo 18 }
+
+
+--  Section 1:	OSPF General Variables
+--      These parameters apply globally to the Router's
+--      OSPF Process.
+     snOspfRouterId OBJECT-TYPE
+         SYNTAX   RouterID
+         ACCESS   read-write
+         STATUS   mandatory
+         DESCRIPTION
+            "A 32-bit integer uniquely identifying the router in
+            the Autonomous System.
+            By convention, to ensure uniqueness, this should
+            default to the value of one of the router's IP
+            interface addresses."
+         REFERENCE
+            "OSPF Version 2, C.1 Global parameters"
+         ::= { snOspfGen 1 }
+
+
+--  Section 7:		OSPF Neighbor Table
+--      The OSPF Neighbor Table describes all neighbors in
+--      the locality of the subject router.
+     snOspfNbrTable OBJECT-TYPE
+         SYNTAX   SEQUENCE OF SnOspfNbrEntry
+         ACCESS   not-accessible
+         STATUS   mandatory
+         DESCRIPTION
+            "A table of non-virtual neighbor information."
+         REFERENCE
+            "OSPF Version 2, Section 10 The Neighbor Data
+            Structure"
+         ::= { snOspfNbr 1 }
+
+     snOspfNbrEntry OBJECT-TYPE
+         SYNTAX   SnOspfNbrEntry
+         ACCESS   not-accessible
+         STATUS   mandatory
+         DESCRIPTION
+            "The information regarding a single neighbor."
+         REFERENCE
+            "OSPF Version 2, Section 10 The Neighbor Data
+            Structure"
+         INDEX { snOspfNbrEntryIndex }
+         ::= { snOspfNbrTable 1 }
+
+     SnOspfNbrEntry ::=
+         SEQUENCE {
+             snOspfNbrEntryIndex
+                 INTEGER,
+             snOspfNbrIpAddr
+                 IpAddress,
+             snOspfNbrRtrId
+                 RouterID,
+             snOspfNbrState
+            	 INTEGER
+         }
+
+     snOspfNbrEntryIndex  OBJECT-TYPE
+         SYNTAX   INTEGER
+         ACCESS   read-only
+         STATUS   mandatory
+         DESCRIPTION
+            "The table entry index of this neighbor."
+         ::= { snOspfNbrEntry 1 }
+
+     snOspfNbrIpAddr OBJECT-TYPE
+         SYNTAX   IpAddress
+         ACCESS   read-only
+         STATUS   mandatory
+         DESCRIPTION
+            "The IP address of this neighbor."
+         ::= { snOspfNbrEntry 3 }
+
+     snOspfNbrRtrId OBJECT-TYPE
+         SYNTAX   RouterID
+         ACCESS   read-only
+         STATUS   mandatory
+         DESCRIPTION
+            "A 32-bit integer (represented as a type IpAddress)
+            uniquely identifying the neighboring router in the
+            Autonomous System."
+         DEFVAL   { '00000000'h }    -- 0.0.0.0
+         ::= { snOspfNbrEntry 5 }
+
+    snOspfNbrState OBJECT-TYPE
+        SYNTAX   INTEGER    {
+                    down (1),
+                    attempt (2),
+                    init (3),
+                    twoWay (4),
+                    exchangeStart (5),
+                    exchange (6),
+                    loading (7),
+                    full (8)
+                  }
+        ACCESS   read-only
+        STATUS   mandatory
+        DESCRIPTION
+           "The State of the relationship with this Neigh-
+           bor."
+       REFERENCE
+          "OSPF Version 2, Section 10.1 Neighbor States"
+      DEFVAL   { down }
+      ::= { snOspfNbrEntry 8 }
+
+     --  Section 8: OSPF Virtual Neighbor Table
+     --      This table describes all virtual neighbors.
+     --      Since Virtual Links are configured in the
+     --      virtual interface table, this table is read-only.
+     snOspfVirtNbrTable OBJECT-TYPE
+         SYNTAX   SEQUENCE OF SnOspfVirtNbrEntry
+         ACCESS   not-accessible
+         STATUS   mandatory
+         DESCRIPTION
+            "A table of virtual neighbor information."
+         REFERENCE
+            "OSPF Version 2, Section 15  Virtual Links"
+         ::= { snOspfVirtNbr 1 }
+
+     snOspfVirtNbrEntry OBJECT-TYPE
+         SYNTAX   SnOspfVirtNbrEntry
+         ACCESS   not-accessible
+         STATUS   mandatory
+         DESCRIPTION
+            "Virtual neighbor information."
+         INDEX { snOspfVirtNbrEntryIndex }
+         ::= { snOspfVirtNbrTable 1 }
+
+     SnOspfVirtNbrEntry ::=
+         SEQUENCE {
+             snOspfVirtNbrEntryIndex
+                 INTEGER,
+             snOspfVirtNbrArea
+                 AreaID,
+             snOspfVirtNbrRtrId
+                 RouterID,
+             snOspfVirtNbrState
+                 INTEGER
+         }
+     snOspfVirtNbrEntryIndex  OBJECT-TYPE
+         SYNTAX   INTEGER
+         ACCESS   read-only
+         STATUS   mandatory
+         DESCRIPTION
+            "The table entry index of this virtual neighbor."
+         ::= { snOspfVirtNbrEntry 1 }
+
+     snOspfVirtNbrArea OBJECT-TYPE
+         SYNTAX   AreaID
+         ACCESS   read-only
+         STATUS   mandatory
+         DESCRIPTION
+            "The Transit Area Identifier."
+         ::= { snOspfVirtNbrEntry 2 }
+
+     snOspfVirtNbrRtrId OBJECT-TYPE
+         SYNTAX   RouterID
+         ACCESS   read-only
+         STATUS   mandatory
+         DESCRIPTION
+            "A 32-bit integer uniquely identifying the neighboring
+            router in the Autonomous System."
+         ::= { snOspfVirtNbrEntry 3 }
+
+     snOspfVirtNbrState OBJECT-TYPE
+         SYNTAX   INTEGER {
+                     down (1),
+                     attempt (2),
+                     init (3),
+                     twoWay (4),
+                     exchangeStart (5),
+                     exchange (6),
+                     loading (7),
+                     full (8)
+                  }
+         ACCESS   read-only
+         STATUS   mandatory
+         DESCRIPTION
+            "The state of the Virtual Neighbor Relationship."
+         ::= { snOspfVirtNbrEntry 6 }
+
+     --  Section 9: OSPF Link State Database
+     --      The Link State Database contains the Link State
+     --      Advertisements from throughout the areas that the
+     --      device is attached to.
+     snOspfLsdbTable OBJECT-TYPE
+         SYNTAX   SEQUENCE OF SnOspfLsdbEntry
+         ACCESS   not-accessible
+         STATUS   mandatory
+         DESCRIPTION
+            "The OSPF Process's Links State Database."
+         REFERENCE
+            "OSPF Version 2, Section 12 Link State Advertisements"
+         ::= { snOspfLsdb 1 }
+
+     snOspfLsdbEntry OBJECT-TYPE
+         SYNTAX   SnOspfLsdbEntry
+         ACCESS   not-accessible
+         STATUS   mandatory
+         DESCRIPTION
+            "A single Link State Advertisement."
+         INDEX { snOspfLsdbEntryIndex }
+         ::= { snOspfLsdbTable 1 }
+
+     SnOspfLsdbEntry ::=
+         SEQUENCE {
+             snOspfLsdbEntryIndex
+                 INTEGER,
+             snOspfLsdbAreaId
+                 AreaID,
+             snOspfLsdbType
+                 INTEGER,
+             snOspfLsdbLsId
+                 IpAddress,
+             snOspfLsdbRouterId
+                 RouterID
+         }
+
+     snOspfLsdbEntryIndex  OBJECT-TYPE
+         SYNTAX   INTEGER
+         ACCESS   read-only
+         STATUS   mandatory
+         DESCRIPTION
+            "The table entry index of this Link State Database."
+         ::= { snOspfLsdbEntry 1 }
+
+     snOspfLsdbAreaId OBJECT-TYPE
+         SYNTAX   AreaID
+         ACCESS   read-only
+         STATUS   mandatory
+         DESCRIPTION
+            "The 32 bit identifier of the Area from which the LSA
+            was received."
+         REFERENCE
+            "OSPF Version 2, Appendix C.2 Area parameters"
+         ::= { snOspfLsdbEntry 2 }
+
+     snOspfLsdbType OBJECT-TYPE
+         SYNTAX   INTEGER {
+                     routerLink (1),
+                     networkLink (2),
+                     summaryLink (3),
+                     asSummaryLink (4),
+                     asExternalLink (5),
+                     multicastLink (6),
+                     nssaExternalLink (7),
+                     opaqueLink (9),
+                     opaqueAreaLink (10),
+                     opaqueAsLink (11)
+                  }
+         ACCESS   read-only
+         STATUS   mandatory
+         DESCRIPTION
+            "The type of the link state advertisement.  Each link
+            state type has a separate advertisement format."
+         REFERENCE
+            "OSPF Version 2, Appendix A.4.1 The Link State
+            Advertisement header"
+         ::= { snOspfLsdbEntry 3 }
+
+     snOspfLsdbLsId OBJECT-TYPE
+         SYNTAX   IpAddress
+         ACCESS   read-only
+         STATUS   mandatory
+         DESCRIPTION
+            "The Link State ID is an LS Type Specific field
+            containing either a Router ID or an IP Address; it
+            identifies the piece of the routing domain that is
+            being described by the advertisement."
+         REFERENCE
+            "OSPF Version 2, Section 12.1.4 Link State ID"
+         ::= { snOspfLsdbEntry 4 }
+
+     snOspfLsdbRouterId OBJECT-TYPE
+         SYNTAX   RouterID
+         ACCESS   read-only
+         STATUS   mandatory
+         DESCRIPTION
+            "The 32 bit number that uniquely identifies the
+            originating router in the Autonomous System."
+         REFERENCE
+            "OSPF Version 2, Appendix C.1 Global parameters"
+         ::= { snOspfLsdbEntry 5 }
+
+
+--  Section 12:		OSPF Interface Status Table
+--      The OSPF Interface Status Table augments the ifStatusTable with OSPF
+--      specific information.
+     snOspfIfStatusTable OBJECT-TYPE
+         SYNTAX   SEQUENCE OF SnOspfIfStatusEntry
+         ACCESS   not-accessible
+         STATUS   mandatory
+         DESCRIPTION
+            "The OSPF Interface Status Table describes the interfaces from
+            the viewpoint of OSPF."
+         ::= { snOspfIfStatus 1 }
+
+     snOspfIfStatusEntry OBJECT-TYPE
+         SYNTAX   SnOspfIfStatusEntry
+         ACCESS   not-accessible
+         STATUS   mandatory
+         DESCRIPTION
+            "The OSPF Interface Entry describes one interface from
+            the viewpoint of OSPF."
+         INDEX { snOspfIfStatusEntryIndex }
+         ::= { snOspfIfStatusTable 1 }
+
+     SnOspfIfStatusEntry ::=
+         SEQUENCE {
+       		 snOspfIfStatusEntryIndex 
+            	 INTEGER,
+             snOspfIfStatusIpAddress
+                 IpAddress
+         }
+
+
+     snOspfIfStatusEntryIndex  OBJECT-TYPE
+         SYNTAX   INTEGER
+         ACCESS   read-only
+         STATUS   mandatory
+         DESCRIPTION
+            "The table entry index of this Area."
+         ::= { snOspfIfStatusEntry 1 }
+
+     snOspfIfStatusIpAddress OBJECT-TYPE
+         SYNTAX   IpAddress
+         ACCESS   read-only
+         STATUS   mandatory
+         DESCRIPTION
+            "The IP address of this OSPF interface."
+         ::= { snOspfIfStatusEntry 3 }
+
+
+--  Section 13:		OSPF Virtual Interface Status Table
+--      The Virtual Interface Status Table describes the virtual
+--      links status data. 
+     snOspfVirtIfStatusTable OBJECT-TYPE
+         SYNTAX   SEQUENCE OF SnOspfVirtIfStatusEntry
+         ACCESS   not-accessible
+         STATUS   mandatory
+         DESCRIPTION
+            "Information about this router's virtual interfaces."
+         REFERENCE
+            "OSPF Version 2, Appendix C.4  Virtual link parameters"
+         ::= { snOspfVirtIfStatus 1 }
+     snOspfVirtIfStatusEntry OBJECT-TYPE
+         SYNTAX   SnOspfVirtIfStatusEntry
+         ACCESS   not-accessible
+         STATUS   mandatory
+         DESCRIPTION
+            "Information about a single Virtual Interface."
+         INDEX { snOspfVirtIfStatusEntryIndex }
+         ::= { snOspfVirtIfStatusTable 1 }
+
+     SnOspfVirtIfStatusEntry ::=
+         SEQUENCE {
+       		 snOspfVirtIfStatusEntryIndex 
+            	 INTEGER,
+             snOspfVirtIfStatusAreaID
+                 AreaID,
+             snOspfVirtIfStatusNeighbor
+                 RouterID,
+             snOspfVirtIfStatusState
+                 INTEGER
+         }
+
+     snOspfVirtIfStatusEntryIndex  OBJECT-TYPE
+         SYNTAX   INTEGER
+         ACCESS   read-only
+         STATUS   mandatory
+         DESCRIPTION
+            "The table entry index of this Area."
+         ::= { snOspfVirtIfStatusEntry 1 }
+
+     snOspfVirtIfStatusAreaID 	OBJECT-TYPE
+         SYNTAX   AreaID
+         ACCESS   read-only
+         STATUS   mandatory
+         DESCRIPTION
+            "The Transit Area that the Virtual Link traverses.  By
+            definition, this is not 0.0.0.0 "
+         ::= { snOspfVirtIfStatusEntry 2 }
+
+     snOspfVirtIfStatusNeighbor OBJECT-TYPE
+         SYNTAX   RouterID
+         ACCESS   read-only
+         STATUS   mandatory
+         DESCRIPTION
+            "The Router ID of the Virtual Neighbor."
+         ::= { snOspfVirtIfStatusEntry 3 }
+
+     snOspfVirtIfStatusState OBJECT-TYPE
+         SYNTAX   INTEGER {
+                     down (1),
+                     pointToPoint (4)
+                  }
+         ACCESS   read-only
+         STATUS   mandatory
+         DESCRIPTION
+            "The OSPF virtual interfaces states."
+         DEFVAL { down }
+         ::= { snOspfVirtIfStatusEntry 8 }
+
+
+
+snOspfExtLsdbLimit OBJECT-TYPE
+    SYNTAX   INTEGER (1..2000)
+    ACCESS   read-write
+    STATUS   mandatory 
+    DESCRIPTION
+      "The  maximum   number   of   non-default   AS-
+      external-LSAs entries that can be stored in the
+      link-state database.  If the value is -1,  then
+      there is no limit.
+      When the number of non-default AS-external-LSAs
+      in   a  router's  link-state  database  reaches
+      ospfExtLsdbLimit, the router  enters  Overflow-
+      State.   The   router  never  holds  more  than
+      ospfExtLsdbLimit  non-default  AS-external-LSAs
+      in  its  database. OspfExtLsdbLimit MUST be set
+      identically in all routers attached to the OSPF
+      backbone  and/or  any regular OSPF area. (i.e.,
+      OSPF stub areas and NSSAs are excluded)."
+  ::= { snOspfGen 11 }
+
+-- L4 General MIBs
+snL4MaxSessionLimit 		OBJECT-TYPE
+	SYNTAX	INTEGER	(0..1000000)
+	ACCESS  read-write
+	STATUS  mandatory
+	DESCRIPTION
+		"numbers of maximum session (L4 cache) entries"
+	::= { snL4Gen 1 }
+
+snL4TcpSynLimit 		OBJECT-TYPE
+	SYNTAX	INTEGER	 (1..65535)
+	ACCESS  read-write
+	STATUS  mandatory
+	DESCRIPTION
+		"Numbers of connection per second"
+	::= { snL4Gen 2 }
+
+-- Agent Board Table
+snAgentBrdTable OBJECT-TYPE
+	SYNTAX	SEQUENCE OF SnAgentBrdEntry
+	ACCESS	not-accessible
+	STATUS	mandatory
+	DESCRIPTION
+		"A table of each physical board information."
+	::= { snAgentBrd 1 }
+
+snAgentBrdEntry OBJECT-TYPE
+	SYNTAX	SnAgentBrdEntry
+	ACCESS	not-accessible
+	STATUS	mandatory
+	DESCRIPTION
+		"A row in the Agent Board table."
+	INDEX	{ snAgentBrdIndex }
+	::= { snAgentBrdTable 1 }
+
+SnAgentBrdEntry ::= SEQUENCE {
+	snAgentBrdIndex
+		INTEGER,
+	snAgentBrdMainBrdDescription
+		DisplayString,
+	snAgentBrdMainBrdId
+		OCTET STRING,
+	snAgentBrdMainPortTotal
+		INTEGER,
+	snAgentBrdExpBrdDescription
+		DisplayString,
+	snAgentBrdExpBrdId
+		OCTET STRING,
+	snAgentBrdExpPortTotal
+		INTEGER,
+	snAgentBrdStatusLeds 
+		INTEGER,
+	snAgentBrdTrafficLeds 
+		INTEGER,
+	snAgentBrdMediaLeds 
+		INTEGER,
+	snAgentBrdSpeedLeds 
+		INTEGER,
+	snAgentBrdModuleStatus
+		INTEGER
+	}
+
+snAgentBrdIndex OBJECT-TYPE
+	SYNTAX	INTEGER (1..15)
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+		"The index to the Agent Interface Table."
+	::= { snAgentBrdEntry 1 }
+
+snAgentBrdMainBrdDescription OBJECT-TYPE
+    SYNTAX DisplayString (SIZE(0..128))
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "The main board description string."
+    ::= { snAgentBrdEntry 2 }
+
+snAgentBrdMainBrdId OBJECT-TYPE
+    SYNTAX OCTET STRING
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "The main board identifier, which can uniquely identify a board
+        type. It is an encoded octet string with the following meaning:
+          octet 0  - octet string format version, which identifies the
+                     format of this string.
+        If format version octet has the value 2, the octets after the
+        version octet have the following meaning:
+          octet 1  - product type: 
+						BI_WG					0x57
+						BI_BB					0x42
+						BI_NI					0x4E
+						NI_M4					0x4D
+						BI_SLB					0x53
+          octet 2  - module type:
+						MASTER_FIBER_8G			0x0
+						MASTER_FIBER_4G			0x1
+						MASTER_COPPER_16		0x2
+						SLAVE_FIBER_4G			0x3
+						FI_MASTER_FIBER_2G		0x4
+						FI_MASTER_FIBER_4G		0x5
+						MASTER_COPPER_8G		0x6
+						FI_MASTER_FIBER_8G		0x7
+						SLAVE_FIBER_8G			0x8
+						MASTER_COPPER_12_2		0x9
+						SLAVE_COPPER_24			0xA
+						FI_SLAVE_COPPER_24		0xB
+						SLAVE_100FX_8			0xD
+						SLAVE_100FX_16			0xC
+						SLAVE_COPPER_8G			0xE
+						SLAVE_COPPER_16_2		0xF
+						STACK_FIBER_8G			0x10
+						STACK_COPPER_8G			0x11
+						MASTER_FIBER_2G			0x12	
+						SLAVE_100FX_24			0x13
+						MASTER_FIBER_0G			0x14	
+						POS_622M				0x15
+						POS_155M				0x16
+						SLAVE_FIBER_2G			0x17
+						SLAVE_COPPER_2G			0x18
+						FI_SLAVE_FIBER_2G		0x19
+						FI_SLAVE_FIBER_4G		0x1A
+						FI_SLAVE_FIBER_8G		0x1B
+						FI_SLAVE_COPPER_8G		0x1C
+						FI_MASTER_COPPER_8G		0x1D
+						POS_155M2P				0x1E
+						FI_MASTER_COPPER_4G		0x1F
+						FI_MASTER_COPPER_2G		0x20
+						MASTER_COPPER_4G		0x21
+						MASTER_COPPER_2G		0x22
+						MASTER_M4_8G			0x23
+						MASTER_M4_4G			0x24
+						MASTER_M4_2G			0x25
+						MASTER_M4_0G			0x26	
+						MASTER_M5_0G			0x27	
+						POS_2488M				0x28	
+						SLAVE_M5_0G				0x29	
+						POS_N2488M				0x2A	
+						STACK_IPC_48_2			0x2B	
+						SLAVE_NPA_FIBER_4G		0x2C	
+						ATM_2PORT				0x2D	
+						ATM_4PORT				0x2E	
+						SLAVE_FIBER_10G			0x2F	
+						SLAVE_JC_48E			0xC3	
+						SLAVE_JC_48T			0xC4	
+						MASTER_JC_M4_8G			0xC5	
+						SLAVE_JC_8G				0xC6	
+						SLAVE_JC_B16GF			0xC8	
+						MASTER_JC_B2404			0xC9	
+						SLAVE_JC_B16GC			0xCA	
+          octet 3  - processor type, PVR_M603=3, PVR_M604=4, PVR_M603E=6,
+                     PVR_M603EV=7, PVR_M750=8, PVR_M604E=9
+          octet 4 to
+          octet 5  - processor speed in MHz
+          octet 6  - MAC type:
+          				MAC_NONE=0
+          				MAC_SEEQ_10_100=1, 
+          				MAC_DEC_10_100=2,
+          				MAC_3COM_10_100=3,
+						MAC_X10GMAC_10000=4,
+                     	MAC_SEEQ_1000=5, 
+						MAC_GMAC_1000=6,
+						MAC_VLSI_1000=7,
+          octet 7  - PHY type, PHY_NONE=0, PHY_QSI=1, PHY_BROADCOM=2,
+                     PHY_ICS=3, PHY_NATIONAL=4, PHY_LEVEL1=6,
+                     PHY_BROADCOM_10_100=7, PHY_LEVEL24=8,
+                     PHY_BROADCOM_10000=9
+          octet 8  - port type, COPPER=0, FIBER=1
+          octet 9  - fiber port type, NONFIBER=0, SX_FIBER=1,
+                     LX_FIBER=2, LHX_FIBER=3
+          octet 10 to
+          octet 13 - DRAM size in KBytes
+          octet 14 to
+          octet 17 - boot flash size in KBytes
+          octet 18 to
+          octet 21 - code flash size in KBytes
+          octet 22 to
+          octet 27 - serial number.
+          octet 28 - chassis backplane type. 
+		 	chassis4000	= 	0x00
+		 	chassis8000	=	0x04
+		 	chassis15000 =	0x05	
+		 	Turbo8		=	0x07 (stack2)
+		 	FastIron2	=	0x06 (stack1)"
+	::= { snAgentBrdEntry 3 }
+
+snAgentBrdMainPortTotal OBJECT-TYPE
+    SYNTAX INTEGER (1..32)
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "The total number of ports for the main board."
+    ::= { snAgentBrdEntry 4 }
+
+snAgentBrdExpBrdDescription OBJECT-TYPE
+    SYNTAX DisplayString (SIZE(0..128))
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "The expansion board description string. Expansion
+        board are those boards attaching on the main board."
+    ::= { snAgentBrdEntry 5 }
+
+snAgentBrdExpBrdId OBJECT-TYPE
+    SYNTAX OCTET STRING
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "The expansion board identifier. Expansion board are those
+        boards attaching on the main board. It is an encoded octet
+		string with the following meaning:
+          octet 0  - octet string format version, which identifies
+                     the format of this string.
+        If format version octet has the value 1, the octets after
+        the version octet have the following meaning:
+          octet 1  - expansion board type, HUNDRED_MEG_1PORT=1,
+                     HUNDRED_MEG_2PORT=2, HUNDRED_MEG_1PORT_COPPER=3,
+                     HUNDRED_MEG_2PORT_COPPER=4, HUNDRED_MEG_2PORT_LX=5,
+                     GIGA_1PORT=8, GIGA_2PORT=9
+          octet 2  - fiber port type, NONFIBER=0, SX_FIBER=1,
+                     LX_FIBER=2, LHX_FIBER=3, LX_SX_FIBER=4, LHB_FIBER=5"
+    ::= { snAgentBrdEntry 6 }
+
+snAgentBrdExpPortTotal OBJECT-TYPE
+	SYNTAX INTEGER (1..24)
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "The total number of ports for the expansion board."
+    ::= { snAgentBrdEntry 7 }
+
+snAgentBrdStatusLeds OBJECT-TYPE
+	SYNTAX	INTEGER
+	ACCESS	read-only
+	STATUS  deprecated
+	DESCRIPTION
+		"A bit array that contains the value of the
+		front panel status LEDs. This is a bit-map; 
+		each LED is encoded into 1 bit for each switch
+		port.  The maximum number of ports in one chassis 
+		is 32 that means 32 Ports Status LEDs. The expansion port 
+		number always begins from the last main port number.  
+		The following shows the meaning of each bit for each 
+		switch port:
+		  bit value  meaning
+		  --------   ---------  
+		     0         off (Link off)
+			 1         on  (Link on)
+		The bitmap of LEDs are as following: 
+                 (Port1)            (Port4)                    (Port8)
+        Bit      (Bit0)             (Bit3)                      (Bit7)
+		Byte 1:	 LED1	LED2   LED3  LED4   LED5   LED6   LED7   LED8    
+		Byte 2:	 LED9	LED10  LED11 LED12  LED13  LED14  LED15  LED16     
+		Byte 3:	 LED17	LED18  LED19 LED20  LED21  LED22  LED23  LED24
+		(It was obsoleted after release 07100, replaced by snAgentBrdStatusLedString)"
+	::= { snAgentBrdEntry 8 }
+
+snAgentBrdTrafficLeds OBJECT-TYPE
+	SYNTAX	INTEGER
+	ACCESS	read-only
+	STATUS  deprecated
+	DESCRIPTION
+		"A bit array that contains the value of the
+		front panel traffic LEDs. This is a packed bit string; 
+		each LED is encoded into 1 bit for each switch
+		port.  The maximum number of ports in one chassis 
+		is 24 that means 24 Ports Traffic LEDs. The expansion port 
+		number always begins from the last main port number.  
+		The following shows the meaning of each bit for each 
+		switch port:
+		  bit value  meaning
+		  --------   ---------  
+		     0         off (no traffic)
+			 1         on  (traffic)
+		The bitmap of LEDs are as following: 
+                 (Port1)            (Port4)                    (Port8)
+        Bit      (Bit0)             (Bit3)                      (Bit7)
+		Byte 1:	 LED1	LED2   LED3  LED4   LED5   LED6   LED7   LED8    
+		Byte 2:	 LED9	LED10  LED11 LED12  LED13  LED14  LED15  LED16     
+		Byte 3:	 LED17	LED18  LED19 LED20  LED21  LED22  LED23  LED24
+		(It was obsoleted after release 07100, replaced by snAgentBrdTrafficLedString)"
+	::= { snAgentBrdEntry 9 }
+
+snAgentBrdMediaLeds OBJECT-TYPE
+	SYNTAX	INTEGER
+	ACCESS	read-only
+	STATUS  deprecated
+	DESCRIPTION
+		"A bit array that contains the value of the
+		front panel media LEDs. This is a packed bit string; 
+		each LED is encoded into 1 bit for each switch port.  
+		The maximum number of ports in one chassis is 24 
+		that means 24 Ports Media LEDs.  The expansion port 
+		number always begins from the last main port number. 
+		The following shows the meaning of each bit for each 
+		switch port:
+		bit value  meaning   
+		---------  -------
+      	  0        half duplex
+      	  1        full duplex
+		The bitmap of LEDs are as following: 
+		         (Port1)            (Port4)                    (Port8)
+        Bit      (Bit0)             (Bit3)                      (Bit7)
+		Byte 1:	 LED1	LED2   LED3  LED4   LED5   LED6   LED7   LED8    
+		Byte 2:	 LED9	LED10  LED11 LED12  LED13  LED14  LED15  LED16     
+		Byte 3:	 LED17	LED18  LED19 LED20  LED21  LED22  LED23  LED24			  
+		(It was obsoleted after release 07100, replaced by snAgentBrdMediaLedString)"
+	::= { snAgentBrdEntry 10 }
+
+snAgentBrdSpeedLeds OBJECT-TYPE
+	SYNTAX	INTEGER
+	ACCESS	read-only
+	STATUS  deprecated
+	DESCRIPTION
+		"A bit array that contains the value of the
+		front panel media LEDs. This is a packed bit string; 
+		each LED is encoded into 1 bit for each switch port.  
+		The maximum number of ports in one chassis is 24 
+		that means 24 Ports Speed LEDs.  The expansion port 
+		number always begins from the last main port number. 
+		The following shows the meaning of each bit for each 
+		switch port:
+		bit value  meaning   
+		---------  -------
+      	  0        10 MBit
+      	  1        100 MBit
+		The bitmap of LEDs are as following: 
+		         (Port1)            (Port4)                    (Port8)
+        Bit      (Bit0)             (Bit3)                      (Bit7)
+		Byte 1:	 LED1	LED2   LED3  LED4   LED5   LED6   LED7   LED8    
+		Byte 2:	 LED9	LED10  LED11 LED12  LED13  LED14  LED15  LED16     
+		Byte 3:	 LED17	LED18  LED19 LED20  LED21  LED22  LED23  LED24			  
+		(It was obsoleted after release 07100, replaced by snAgentBrdSpeedLedString)"
+	::= { snAgentBrdEntry 11 }
+
+snAgentBrdModuleStatus OBJECT-TYPE
+	SYNTAX  INTEGER {
+		moduleEmpty(0),             
+		moduleGoingDown(2),
+		moduleRejected(3),
+		moduleBad(4),
+		moduleComingUp(9),
+		moduleRunning(10)
+		}
+	ACCESS  read-only
+	STATUS  mandatory
+	DESCRIPTION
+		"By default, this mode is set to notActivated(0).
+		moduleEmpty(0) ......... The slot of the chassis is empty.
+		moduleGoingDown(2) ..... The module is going down.
+		moduleRejected(3) ...... The module is being rejected due to wrong configuration.
+		moduleBad(4) ........... The module Hardware is bad.
+		moduleComingUp(9) ...... The module is in power-up cycle.
+		moduleRunning(10) ....... The module is running."
+	::= { snAgentBrdEntry 12 }
+
+-- Power Supply Table
+snChasPwrSupplyTable OBJECT-TYPE
+	SYNTAX	SEQUENCE OF SnChasPwrSupplyEntry
+	ACCESS	not-accessible
+	STATUS	mandatory
+	DESCRIPTION
+		"A table of each power supply information. Only installed
+		power supply appears in a table row."
+	::= { snChasPwr 1 }
+
+snChasPwrSupplyEntry OBJECT-TYPE
+	SYNTAX	SnChasPwrSupplyEntry
+	ACCESS	not-accessible
+	STATUS	mandatory
+	DESCRIPTION
+		"A row in the power supply table."
+	INDEX	{ snChasPwrSupplyIndex }
+	::= { snChasPwrSupplyTable 1 }
+
+SnChasPwrSupplyEntry ::= SEQUENCE {
+	snChasPwrSupplyIndex
+		INTEGER,
+	snChasPwrSupplyDescription
+		DisplayString
+	}
+
+snChasPwrSupplyIndex OBJECT-TYPE
+	SYNTAX	INTEGER
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+		"The index to power supply table."
+	::= { snChasPwrSupplyEntry 1 }
+
+snChasPwrSupplyDescription OBJECT-TYPE
+    SYNTAX DisplayString (SIZE(0..128))
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "The power supply description string."
+    ::= { snChasPwrSupplyEntry 2 }
+
+-- Fan Table
+snChasFanTable OBJECT-TYPE
+	SYNTAX	SEQUENCE OF SnChasFanEntry
+	ACCESS	not-accessible
+	STATUS	mandatory
+	DESCRIPTION
+		"A table of each fan information. Only installed
+		fan appears in a table row."
+	::= { snChasFan 1 }
+
+snChasFanEntry OBJECT-TYPE
+	SYNTAX	SnChasFanEntry
+	ACCESS	not-accessible
+	STATUS	mandatory
+	DESCRIPTION
+		"A row in the fan table."
+	INDEX	{ snChasFanIndex }
+	::= { snChasFanTable 1 }
+
+SnChasFanEntry ::= SEQUENCE {
+	snChasFanIndex
+		INTEGER,
+	snChasFanDescription
+		DisplayString
+	}
+
+snChasFanIndex OBJECT-TYPE
+	SYNTAX	INTEGER
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+		"The index to fan table."
+	::= { snChasFanEntry 1 }
+
+snChasFanDescription OBJECT-TYPE
+    SYNTAX DisplayString (SIZE(0..128))
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "The fan description string."
+    ::= { snChasFanEntry 2 }
+
+wgPnPTable OBJECT-TYPE	 
+-- 1.3.6.1.4.1.1991.1.1.3.23.4
+-- iso(1). org(3). dod(6). internet(1). private(4). enterprises(1). foundry(1991). products(1). switch(1). snSwitch(3). snWireless(23). wgPnPTable(4)
+ 	SYNTAX 	SEQUENCE OF WgPnPEntry	 
+ 	ACCESS 	not-accessible 	 
+	STATUS	mandatory
+ 	DESCRIPTION   	 	 
+ 	"AP Plug and Play Table."
+::= { snWireless 4  }	 
+
+wgPnPEntry OBJECT-TYPE	 
+-- 1.3.6.1.4.1.1991.1.1.3.23.4.1
+-- iso(1). org(3). dod(6). internet(1). private(4). enterprises(1). foundry(1991). products(1). switch(1). snSwitch(3). snWireless(23). wgPnPTable(4). wgPnPEntry(1)
+ 	SYNTAX 	WgPnPEntry 	 
+ 	ACCESS 	not-accessible 	 
+    STATUS       mandatory
+ 	DESCRIPTION   	 	 
+ 	"An entry of the AP Plug and Play Table."
+ 	INDEX { wgPnPIfIndex, wgPnPMacAddress }	 
+::= { wgPnPTable 1  }	 
+
+WgPnPEntry ::= SEQUENCE { 	 
+ 	
+	wgPnPIfIndex	
+		INTEGER ,	 
+	wgPnPMacAddress	
+		MacAddress,	 
+	wgPnPStatus	
+		INTEGER	 
+}
+
+wgPnPIfIndex OBJECT-TYPE	 
+-- 1.3.6.1.4.1.1991.1.1.3.23.4.1.1
+-- iso(1). org(3). dod(6). internet(1). private(4). enterprises(1). foundry(1991). products(1). switch(1). snSwitch(3). snWireless(23). wgPnPTable(4). wgPnPEntry(1). wgPnPIfIndex(1)
+ 	SYNTAX 	INTEGER 	 
+ 	ACCESS 	read-only 	 
+    STATUS       mandatory
+ 	DESCRIPTION   	 	 
+ 	"ifIndex value of the switch interface."
+::= { wgPnPEntry 1  }
+
+
+wgPnPMacAddress OBJECT-TYPE	 
+-- 1.3.6.1.4.1.1991.1.1.3.23.4.1.2
+-- iso(1). org(3). dod(6). internet(1). private(4). enterprises(1). foundry(1991). products(1). switch(1). snSwitch(3). snWireless(23). wgPnPTable(4). wgPnPEntry(1). wgPnPMacAddress(2)
+ 	SYNTAX 	MacAddress	 
+ 	ACCESS 	read-only 	 
+    STATUS       mandatory
+ 	DESCRIPTION   	 	 
+ 	"MAC address of the attached AP."
+::= { wgPnPEntry 2  }
+
+wgPnPStatus OBJECT-TYPE	 
+-- 1.3.6.1.4.1.1991.1.1.3.23.4.1.6
+-- iso(1). org(3). dod(6). internet(1). private(4). enterprises(1). foundry(1991). products(1). switch(1). snSwitch(3). snWireless(23). wgPnPTable(4). wgPnPEntry(1). wgPnPStatus(6)
+ 	SYNTAX 	INTEGER  { 	 
+ 	
+ 		other 	(1),	 
+ 		discovered 	(2),	 
+ 		configured 	(3),	 
+ 		operational 	(4)	 
+ 	}
+ 	ACCESS 	read-only 	 
+    STATUS       mandatory
+ 	DESCRIPTION   	 	 
+ 	"AP device status. If the switch diecovered a new AP which
+had not been configured, the 'discovered' state will return.
+If the AP's IP address, subnet mask and default gateway were
+configured to the switch port but the AP with the matching
+MAC address had not attached to the switch port, 'configured'
+state will return. If the AP's IP address, subnet mask and
+default gateway were configured to the switch port and the
+AP with the matching MAC address had attached to the switch
+port and was operating, 'operational' state will return."
+::= { wgPnPEntry 6  }
+
+snAgGblTrapMessage OBJECT-TYPE
+    SYNTAX  DisplayString
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+		"A generic trap message string."
+	::= { snAgentGbl 44 }
+
+snVLanByPortCfgTable OBJECT-TYPE
+	SYNTAX  SEQUENCE OF SnVLanByPortCfgEntry
+	ACCESS  not-accessible
+	STATUS  mandatory
+	DESCRIPTION
+		"Port VLAN (Layer 2 VLAN) configuration table."
+	::= { snVLanInfo 7 }
+
+snVLanByPortCfgEntry OBJECT-TYPE
+	SYNTAX  SnVLanByPortCfgEntry
+	ACCESS  not-accessible
+	STATUS  mandatory
+	DESCRIPTION
+		"An entry of the port VLAN configuration table."
+	INDEX   { snVLanByPortCfgVLanId }
+	::= { snVLanByPortCfgTable 1 }
+
+SnVLanByPortCfgEntry ::= SEQUENCE {
+	snVLanByPortCfgVLanId
+		INTEGER
+	}
+
+snVLanByPortCfgVLanId OBJECT-TYPE
+	SYNTAX  INTEGER (1..4095)
+	ACCESS  read-only
+	STATUS  mandatory
+	DESCRIPTION
+		"The VLAN identifier (VLAN ID)."
+	::= { snVLanByPortCfgEntry 1 }
+
+snChasUnitTable OBJECT-TYPE
+	SYNTAX	SEQUENCE OF SnChasUnitEntry
+	ACCESS	not-accessible
+	STATUS	current
+	DESCRIPTION
+		"A table of chassis  information for each unit. Only active
+		chassis appears in a table row."
+	::= { snChasUnit 1 }
+
+snChasUnitEntry OBJECT-TYPE
+	SYNTAX	SnChasUnitEntry
+	ACCESS	not-accessible
+	STATUS	current
+	DESCRIPTION
+		"A row in the chassis table."
+	INDEX	{ snChasUnitIndex }
+	::= { snChasUnitTable 1 }
+
+SnChasUnitEntry ::= SEQUENCE {
+	snChasUnitIndex
+		INTEGER
+	}
+
+snChasUnitIndex OBJECT-TYPE
+	SYNTAX	INTEGER
+	ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"The index to chassis table."
+	::= { snChasUnitEntry 1 }
+
+mplsLspTable OBJECT-TYPE
+    SYNTAX     SEQUENCE OF MplsLspEntry
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION "List of Configured Label Switched Paths."
+    ::= { mplsLspInfo 3 }
+
+mplsLspEntry OBJECT-TYPE
+    SYNTAX     MplsLspEntry
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+        "Entry containing information about a particular
+         Label Switched Path."
+    INDEX { mplsLspSignalingProto, mplsLspIndex }
+    ::= { mplsLspTable 1 }
+
+MplsLspEntry ::=
+    SEQUENCE {
+        mplsLspSignalingProto      INTEGER,
+        mplsLspIndex            INTEGER,
+        mplsLspName             DisplayString,
+        mplsLspState            INTEGER,
+        mplsLspPackets          Counter,
+        mplsLspAge              TimeStamp,
+        mplsLspTimeUp           TimeStamp,
+        mplsLspPrimaryTimeUp    TimeStamp,
+        mplsLspTransitions      Counter32,
+        mplsLspLastTransition   TimeStamp,
+        mplsLspFrom             IpAddress,
+        mplsLspTo               IpAddress,
+        mplsPathName            DisplayString
+}
+
+mplsLspSignalingProto OBJECT-TYPE
+    SYNTAX     INTEGER {
+        ldp(1),
+        rsvp(2)
+    }
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION "MPLS signaling protocol used by this LSP."
+    ::= { mplsLspEntry 1 }
+
+mplsLspIndex OBJECT-TYPE
+    SYNTAX     INTEGER
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION "The unique index of the LSP in the system for a given signaling protocol."
+    ::= { mplsLspEntry 2 }
+
+mplsLspName OBJECT-TYPE
+    SYNTAX     DisplayString (SIZE (0..32))
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION "Name of the Label Switched Path."
+    ::= { mplsLspEntry 3 }
+
+mplsLspState OBJECT-TYPE
+    SYNTAX     INTEGER {
+               unknown(1),
+               up(2),
+               down(3)
+    }
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION "The operational state of the LSP."
+    ::= { mplsLspEntry 4 }
+
+mplsLspPackets OBJECT-TYPE
+    SYNTAX     Counter
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+        "The number of packets that have been forwarded
+         over current LSP active path."
+    ::= { mplsLspEntry 5 }
+
+mplsLspAge OBJECT-TYPE
+    SYNTAX     TimeStamp
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+        "The age, since creation of this LSP in 10-millisecond periods."
+    ::= { mplsLspEntry 6 }
+
+mplsLspTimeUp OBJECT-TYPE
+    SYNTAX     TimeStamp
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+        "The total time in 10-millisecond units that this
+         LSP has been operational. The percentage up time
+         can be determined by computing
+         (mplsLspTimeUp/mplsLspAge * 100 %)."
+    ::= { mplsLspEntry 7 }
+
+mplsLspPrimaryTimeUp OBJECT-TYPE
+    SYNTAX     TimeStamp
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+        "The total time in 10-millisecond units that this
+         LSP's primary path has been operational. The 
+         percentage contribution of the primary
+         path to the operational time is given by
+         (mplsLspPrimaryTimeUp/mplsLspTimeUp * 100) %."
+    ::= { mplsLspEntry 8 }
+
+mplsLspTransitions OBJECT-TYPE
+    SYNTAX     Counter
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+        "The number of state transitions (up -> down and
+         down -> up) this LSP has undergone."
+    ::= { mplsLspEntry 9 }
+
+mplsLspLastTransition OBJECT-TYPE
+    SYNTAX     TimeStamp
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+        "The time in 10-millisecond units since the last
+         transition occurred on this LSP."
+    ::= { mplsLspEntry 10 }
+
+mplsLspFrom OBJECT-TYPE
+    SYNTAX     IpAddress
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+        "Source IP address of this LSP."
+    ::= { mplsLspEntry 11 }
+
+mplsLspTo OBJECT-TYPE
+    SYNTAX     IpAddress
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+        "Destination IP address of this LSP."
+    ::= { mplsLspEntry 12 }
+
+mplsPathName OBJECT-TYPE
+    SYNTAX     DisplayString (SIZE(0..16))
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+        "The name of the active path for this LSP, if
+         any.  If there is none, the name should be
+         empty; in that case, the rest of the fields
+         in mplsLspEntry are meaningless."
+    ::= { mplsLspEntry 13 }
+
+
+snOspfConfigErrorType OBJECT-TYPE
+     SYNTAX   INTEGER   {
+                 badVersion (1),
+                 areaMismatch (2),
+                 unknownNbmaNbr (3), -- Router is Dr eligible
+                 unknownVirtualNbr (4),
+                 authTypeMismatch(5),
+                 authFailure (6),
+                 netMaskMismatch (7),
+                 helloIntervalMismatch (8),
+                 deadIntervalMismatch (9),
+                 optionMismatch (10) }
+     ACCESS   read-only
+     STATUS   mandatory
+     DESCRIPTION
+        "Potential types  of  configuration  conflicts.
+        Used  by the ospfConfigError and ospfConfigVir-
+        tError traps."
+::= { snOspfTrapControl 2 }
+
+snOspfPacketType OBJECT-TYPE
+     SYNTAX   INTEGER   {
+                 hello (1),
+                 dbDescript (2),
+                 lsReq (3),
+                 lsUpdate (4),
+                 lsAck (5) }
+     ACCESS   read-only
+     STATUS   mandatory
+     DESCRIPTION
+        "OSPF packet types."
+::= { snOspfTrapControl 3 }
+
+snOspfPacketSrc OBJECT-TYPE
+    SYNTAX   IpAddress
+    ACCESS   read-only
+    STATUS   mandatory
+    DESCRIPTION
+       "The IP address of an inbound packet that  can-
+       not be identified by a neighbor instance."
+   ::= { snOspfTrapControl 4 }
+
+-- L4 trap variable binding objects
+snL4TrapRealServerIP             OBJECT-TYPE
+	SYNTAX IpAddress
+	ACCESS not-accessible
+	STATUS mandatory
+	DESCRIPTION
+		"Real server IP address."
+	::= { snL4Trap 1 }
+
+snL4TrapRealServerName           OBJECT-TYPE
+	SYNTAX L4ServerName
+	ACCESS not-accessible
+	STATUS mandatory
+	DESCRIPTION
+		"Real server name."
+	::= { snL4Trap 2 }
+
+snL4TrapRealServerPort           OBJECT-TYPE
+	SYNTAX INTEGER
+	ACCESS not-accessible
+	STATUS mandatory
+	DESCRIPTION
+		"Transport protocol port number of the real server."
+	::= { snL4Trap 3 }
+
+snL4TrapRealServerCurConnections OBJECT-TYPE
+	SYNTAX INTEGER
+	ACCESS not-accessible
+	STATUS mandatory
+	DESCRIPTION
+		"Real Server current connections."
+	::= { snL4Trap 4 }
+
+snL4TrapLinkName OBJECT-TYPE	 
+-- 1.3.6.1.4.1.1991.1.1.4.13.5.0
+-- iso(1). org(3). dod(6). internet(1). private(4). enterprises(1). foundry(1991). products(1). switch(1). snL4(4). snL4Trap(13). snL4TrapLinkName(5). 0
+ 	SYNTAX 	L4ServerName	 
+ 	ACCESS 	read-only 	 
+	STATUS mandatory
+ 	DESCRIPTION   	 	 
+ 	"Link name."
+::= { snL4Trap 5  }
+
+snL4LinkVirtualInterface OBJECT-TYPE	 
+-- 1.3.6.1.4.1.1991.1.1.4.13.6.0
+-- iso(1). org(3). dod(6). internet(1). private(4). enterprises(1). foundry(1991). products(1). switch(1). snL4(4). snL4Trap(13). snL4LinkVirtualInterface(6). 0
+ 	SYNTAX 	INTEGER 	 
+ 	ACCESS 	read-only 	 
+	STATUS mandatory
+ 	DESCRIPTION   	 	 
+ 	"Link virtual interface."
+::= { snL4Trap 6  }
+
+snTrapChasPwrSupply TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES { snChasPwrSupplyStatus }
+   DESCRIPTION
+       "The SNMP trap that is generated when a power supply fails
+        to operate normally. The value is a packed bit string;
+        the 2 power supplies status are encoded into 4 bits
+        (a nibble). 
+        The following shows the meaning of each bit:
+        (bit 0 is the least significant bit).
+        bit position   meaning
+        ------------   -------
+        4-31	 reserved
+        3		 Power  Supply 2 DC (0=bad, 1=good).
+        2		 Power  Supply 1 DC (0=bad, 1=good).
+        1		 Power  Supply 2 present status (0=present, 1=not-present).
+        0		 Power  Supply 1 present status (0=present, 1=not-present)."
+	--#TYPE "Foundry Trap: Power Supply Failure"
+	--#SUMMARY "Power supply fails, error status %d."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY MINOR
+	--#STATE OPERATIONAL
+   ::= 1
+
+snTrapLockedAddressViolation TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES { snSwViolatorPortNumber, snSwViolatorMacAddress }
+   DESCRIPTION
+       "The SNMP trap that is generated when more source MAC addresses
+        are received from a port than the maximum number of addresses
+        configured to that port."
+	--#TYPE "Foundry Trap: MAC Addresses Violation"
+	--#SUMMARY "Lock address violation on Port %d with MAC Address %s."
+	--#ARGUMENTS { 0, 1 }
+	--#SEVERITY MINOR
+	--#STATE OPERATIONAL
+   ::= 2
+
+snTrapOspfIfStateChange TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES {
+                snOspfRouterId, -- The originator of the trap
+                snOspfIfStatusIpAddress,
+                snOspfIfStatusState   -- The new state
+              }
+   DESCRIPTION
+      "An ospfIfStateChange trap signifies that there
+      has been a change in the state of a non-virtual
+      OSPF interface. This trap should  be  generated
+      when  the interface state regresses (e.g., goes
+      from Dr to Down) or progresses  to  a  terminal
+      state  (i.e.,  Point-to-Point, DR Other, Dr, or
+      Backup)."
+	--#TYPE "Foundry Trap: OSPF Interface State Change"
+	--#SUMMARY "OSPF router id %s, interface %s state changed to %d."
+	--#ARGUMENTS { 0, 1, 2 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL
+   ::= 3
+
+snTrapOspfVirtIfStateChange TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES {
+                snOspfRouterId, -- The originator of the trap
+                snOspfVirtIfStatusAreaID,
+                snOspfVirtIfStatusNeighbor,
+                snOspfVirtIfStatusState  -- The new state
+              }
+   DESCRIPTION
+      "An ospfIfStateChange trap signifies that there
+      has  been a change in the state of an OSPF vir-
+      tual interface.
+      This trap should be generated when  the  inter-
+      face  state  regresses  (e.g., goes from Point-
+      to-Point to Down) or progresses to  a  terminal
+      state (i.e., Point-to-Point)."
+	--#TYPE "Foundry Trap: OSPF Virtual Interface State Change"
+	--#SUMMARY "OSPF router id %s, virtual interface area id %s  neighbor %s state changed to %d."
+	--#ARGUMENTS { 0, 1, 2, 3 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL
+   ::= 4
+
+snOspfNbrStateChange TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES {
+                snOspfRouterId, -- The originator of the trap
+                snOspfNbrIpAddr,
+                snOspfNbrRtrId,
+                snOspfNbrState  -- The new state
+              }
+    DESCRIPTION
+       "An  ospfNbrStateChange  trap  signifies   that
+       there  has been a change in the state of a non-
+       virtual OSPF neighbor.   This  trap  should  be
+       generated  when  the  neighbor  state regresses
+       (e.g., goes from Attempt or Full  to  1-Way  or
+       Down)  or progresses to a terminal state (e.g.,
+       2-Way or Full).  When an  neighbor  transitions
+       from  or  to Full on non-broadcast multi-access
+       and broadcast networks, the trap should be gen-
+       erated  by the designated router.  A designated
+       router transitioning to Down will be  noted  by
+       ospfIfStateChange."
+	--#TYPE "Foundry Trap: OSPF Neighbour State Change"
+	--#SUMMARY "OSPF  router id %s neighbor area %s, neighbor router id  %s state changed to %d."
+	--#ARGUMENTS { 0, 1, 2, 3 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL
+   ::= 5
+
+snOspfVirtNbrStateChange TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES {
+                snOspfRouterId, -- The originator of the trap
+                snOspfVirtNbrArea,
+                snOspfVirtNbrRtrId,
+                snOspfVirtNbrState  -- The new state
+              }
+    DESCRIPTION
+       "An ospfIfStateChange trap signifies that there
+       has  been a change in the state of an OSPF vir-
+       tual neighbor.  This trap should  be  generated
+       when  the  neighbor state regresses (e.g., goes
+       from Attempt or  Full  to  1-Way  or  Down)  or
+       progresses to a terminal state (e.g., Full)."
+	--#TYPE "Foundry Trap: OSPF Virtual Neighbour State Change"
+	--#SUMMARY "OSPF router id %s virtual neighbor area %s, virtual neighbor router id  %s state changed to %d."
+	--#ARGUMENTS { 0, 1, 2, 3 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL
+   ::= 6
+
+snOspfIfConfigError TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES {
+                snOspfRouterId, -- The originator of the trap
+                snOspfIfStatusIpAddress,
+                snOspfPacketSrc,  -- The source IP address
+                snOspfConfigErrorType, -- Type of error
+                snOspfPacketType
+              }
+    DESCRIPTION
+       "An ospfIfConfigError  trap  signifies  that  a
+       packet  has  been received on a non-virtual in-
+       terface  from  a  router  whose   configuration
+       parameters  conflict  with this router's confi-
+       guration parameters.  Note that the  event  op-
+       tionMismatch  should  cause  a  trap only if it
+       prevents an adjacency from forming."
+	--#TYPE "Foundry Trap: OSPF Interface Configuration Error"
+	--#SUMMARY "configuration error type %d with  packet type %d has been received on interface %s, router id %s from  %s."
+	--#ARGUMENTS { 3, 4, 1, 0, 2 }
+	--#SEVERITY MAJOR
+	--#STATE OPERATIONAL
+   ::= 7
+
+snOspfVirtIfConfigError TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES {
+                snOspfRouterId, -- The originator of the trap
+                snOspfVirtIfStatusAreaID,
+                snOspfVirtIfStatusNeighbor,
+                snOspfConfigErrorType, -- Type of error
+                snOspfPacketType
+              }
+    DESCRIPTION
+       "An ospfConfigError trap signifies that a pack-
+       et  has  been  received  on a virtual interface
+       from a router  whose  configuration  parameters
+       conflict   with   this  router's  configuration
+       parameters.  Note that the event optionMismatch
+       should  cause a trap only if it prevents an ad-
+       jacency from forming."
+	--#TYPE "Foundry Trap: OSPF Virtual Interface Configuration Error"
+	--#SUMMARY "configuration error type %d with  packet type %d has been received on virtual interface area id %s, router id %s from neighbor %s."
+	--#ARGUMENTS { 3, 4, 1, 0, 2 }
+	--#SEVERITY MAJOR
+	--#STATE OPERATIONAL
+   ::= 8
+
+snOspfIfAuthFailure TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES {
+                snOspfRouterId, -- The originator of the trap
+                snOspfIfStatusIpAddress,
+                snOspfPacketSrc,  -- The source IP address
+                snOspfConfigErrorType, -- authTypeMismatch or
+                                     -- authFailure
+                snOspfPacketType
+              }
+    DESCRIPTION
+       "An ospfIfAuthFailure  trap  signifies  that  a
+       packet  has  been received on a non-virtual in-
+       terface from a router whose authentication  key
+       or  authentication  type  conflicts  with  this
+       router's authentication key  or  authentication
+       type."
+	--#TYPE "Foundry Trap: OSPF Interface Authentication Failure"
+	--#SUMMARY "OSPF authentication failed. Router ID %s,Interface %s, packet src %s, error type %d and packet type %d."
+	--#ARGUMENTS { 0, 1, 2, 3, 4 }
+	--#SEVERITY MINOR
+	--#STATE OPERATIONAL
+   ::= 9
+
+snOspfVirtIfAuthFailure TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES {
+                snOspfRouterId, -- The originator of the trap
+                snOspfVirtIfStatusAreaID,
+                snOspfVirtIfStatusNeighbor,
+                snOspfConfigErrorType, -- authTypeMismatch or
+                                     -- authFailure
+                snOspfPacketType
+              }
+    DESCRIPTION
+       "An ospfVirtIfAuthFailure trap signifies that a
+       packet has been received on a virtual interface
+       from a router whose authentication key  or  au-
+       thentication  type conflicts with this router's
+       authentication key or authentication type."
+	--#TYPE "Foundry Trap: OSPF Virtual Interface Authentication Failure"
+	--#SUMMARY "OSPF authentication failed. Router ID %s,virtual interface %s, Neigbor %s, Error type %d and packet type %d."
+	--#ARGUMENTS { 0, 1, 2, 3, 4 }
+	--#SEVERITY MINOR
+	--#STATE OPERATIONAL
+   ::= 10
+
+snOspfIfRxBadPacket TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES {
+                snOspfRouterId, -- The originator of the trap
+                snOspfIfStatusIpAddress,
+                snOspfPacketSrc,  -- The source IP address
+                snOspfPacketType
+              }
+    DESCRIPTION
+       "An ospfIfRxBadPacket trap  signifies  that  an
+       OSPF  packet has been received on a non-virtual
+       interface that cannot be parsed."
+	--#TYPE "Foundry Trap: OSPF Interface Receive Bad Packet"
+	--#SUMMARY "OSPF Router Id %s, interface %s  receive bad packet (type %d) from %s."
+	--#ARGUMENTS { 0, 1, 3, 2 }
+	--#SEVERITY WARNING
+	--#STATE OPERATIONAL
+   ::= 11
+
+snOspfVirtIfRxBadPacket TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES {
+                snOspfRouterId, -- The originator of the trap
+                snOspfVirtIfStatusAreaID,
+                snOspfVirtIfStatusNeighbor,
+                snOspfPacketType
+              }
+    DESCRIPTION
+       "An ospfRxBadPacket trap signifies that an OSPF
+       packet has been received on a virtual interface
+       that cannot be parsed."
+	--#TYPE "Foundry Trap: OSPF Virt Interface Receive Bad Packet"
+	--#SUMMARY "OSPF router id %s, virtual interface %s received bad packet (type %d) from neighbor %s."
+	--#ARGUMENTS { 0, 1, 3, 2 }
+	--#SEVERITY WARNING
+	--#STATE OPERATIONAL
+   ::= 12
+
+snOspfTxRetransmit TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES {
+                snOspfRouterId, -- The originator of the trap
+                snOspfIfStatusIpAddress,
+                snOspfNbrRtrId, -- Destination
+                snOspfPacketType,
+                snOspfLsdbType,
+                snOspfLsdbLsId,
+                snOspfLsdbRouterId
+              }
+    DESCRIPTION
+       "An ospfTxRetransmit  trap  signifies  than  an
+       OSPF  packet  has  been retransmitted on a non-
+       virtual interface.  All packets that may be re-
+       transmitted  are associated with an LSDB entry.
+       The LS type, LS ID, and Router ID are  used  to
+       identify the LSDB entry."
+	--#TYPE "Foundry Trap: OSPF Retransmit"
+	--#SUMMARY "OSPF router id %s, interface %s retransmited packet type %d,LSDB type %d, LSDB LS ID %s and LSDB router id %s to neightbor router id %s."
+	--#ARGUMENTS { 0, 1, 3, 4, 5, 6, 2 }
+	--#SEVERITY WARNING
+	--#STATE OPERATIONAL
+   ::= 13
+
+ospfVirtIfTxRetransmit TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES {
+                snOspfRouterId, -- The originator of the trap
+                snOspfVirtIfStatusAreaID,
+                snOspfVirtIfStatusNeighbor,
+                snOspfPacketType,
+                snOspfLsdbType,
+                snOspfLsdbLsId,
+                snOspfLsdbRouterId
+              }
+    DESCRIPTION
+       "An ospfTxRetransmit  trap  signifies  than  an
+       OSPF packet has been retransmitted on a virtual
+       interface.  All packets that may be retransmit-
+       ted  are  associated with an LSDB entry. The LS
+       type, LS ID, and Router ID are used to identify
+       the LSDB entry."
+	--#TYPE "Foundry Trap: OSPF Virt Interface Retransmit"
+	--#SUMMARY "OSPF router id %s, virtual interface area id %s retransmited packet type %d,LSDB type %d, LSDB LS ID %s and LSDB router id %s to neightbor %s."
+	--#ARGUMENTS { 0, 1, 3, 4, 5, 6, 2 }
+	--#SEVERITY WARNING
+	--#STATE OPERATIONAL
+   ::= 14
+
+snOspfOriginateLsa TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES {
+                snOspfRouterId, -- The originator of the trap
+                snOspfLsdbAreaId,  -- 0.0.0.0 for AS Externals
+                snOspfLsdbType,
+                snOspfLsdbLsId,
+                snOspfLsdbRouterId
+              }
+    DESCRIPTION
+       "An ospfOriginateLsa trap signifies that a  new
+       LSA  has  been originated by this router.  This
+       trap should not be invoked for simple refreshes
+       of  LSAs  (which happesn every 30 minutes), but
+       instead will only be invoked  when  an  LSA  is
+       (re)originated due to a topology change.  Addi-
+       tionally, this trap does not include LSAs  that
+       are  being  flushed  because  they have reached
+       MaxAge."
+	--#TYPE "Foundry Trap: OSPF Originate LSA"
+	--#SUMMARY "New LSA (area id %s, type %d, LS Id %s and router id %s) has been originated by router id %s."
+	--#ARGUMENTS { 1, 2, 3, 4, 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL
+   ::= 15
+
+snOspfMaxAgeLsa TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES {
+                snOspfRouterId, -- The originator of the trap
+                snOspfLsdbAreaId,  -- 0.0.0.0 for AS Externals
+                snOspfLsdbType,
+                snOspfLsdbLsId,
+                snOspfLsdbRouterId
+              }
+    DESCRIPTION
+       "An ospfMaxAgeLsa trap signifies  that  one  of
+       the LSA in the router's link-state database has
+       aged to MaxAge."
+	--#TYPE "Foundry Trap: OSPF MaxAge LSA"
+	--#SUMMARY "The LSA (area id %s, type %d, LS Id %s and router id %s) in router id %s link-state database has aged to maximum age."
+	--#ARGUMENTS { 1, 2, 3, 4, 0 }
+	--#SEVERITY WARNING
+	--#STATE OPERATIONAL
+   ::= 16
+
+snOspfLsdbOverflow TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES {
+                snOspfRouterId, -- The originator of the trap
+                snOspfExtLsdbLimit
+              }
+    DESCRIPTION
+       "An ospfLsdbOverflow trap  signifies  that  the
+       number of LSAs in the router's link-state data-
+       base has exceeded ospfExtLsdbLimit."
+	--#TYPE "Foundry Trap: OSPF LS DB Overflow"
+	--#SUMMARY "The number of LSAs in the OSPF router id %s link-state database has exceeded %d."
+	--#ARGUMENTS { 0, 1 }
+	--#SEVERITY WARNING
+	--#STATE OPERATIONAL
+   ::= 17
+
+snOspfLsdbApproachingOverflow TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES {
+                snOspfRouterId, -- The originator of the trap
+                snOspfExtLsdbLimit
+              }
+    DESCRIPTION
+       "An ospfLsdbApproachingOverflow trap  signifies
+       that  the  number of LSAs in the router's link-
+       state database has exceeded ninety  percent  of
+       ospfExtLsdbLimit."
+	--#TYPE "Foundry Trap: OSPF LS DB Near Full"
+	--#SUMMARY "The number of LSAs in the OSPF router id %s link-state database has exceeded ninety percent of  %d."
+	--#ARGUMENTS { 0, 1 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL
+   ::= 18
+
+snTrapL4MaxSessionLimitReached TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES { snL4MaxSessionLimit }
+   DESCRIPTION
+       "The SNMP trap that is generated when the maximum number
+       of connections reached."
+	--#TYPE "Foundry Trap: L4 Session Limit"
+	--#SUMMARY "SLB maximum number of connections  %d has been reached."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY WARNING
+	--#STATE OPERATIONAL
+   ::= 19
+
+snTrapL4TcpSynLimitReached TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES { snL4TcpSynLimit }
+   DESCRIPTION
+       "The SNMP trap that is generated when the number of TCP
+       SYN limits reached."
+	--#TYPE "Foundry Trap: L4 TCP Syn Limit"
+	--#SUMMARY "SLB TCP Syn limits %d has been reached."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY WARNING
+	--#STATE OPERATIONAL
+   ::= 20
+
+snTrapL4RealServerUp TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES { snL4TrapRealServerIP, snL4TrapRealServerName }
+   DESCRIPTION
+       "The SNMP trap that is generated when the load balancing
+       real server is up."
+	--#TYPE "Foundry Trap: L4 Real Server Up"
+	--#SUMMARY "SLB real server %s %s is up."
+	--#ARGUMENTS { 0, 1 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL
+   ::= 21
+
+snTrapL4RealServerDown TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES { snL4TrapRealServerIP, snL4TrapRealServerName }
+   DESCRIPTION
+       "The SNMP trap that is generated when the load balancing
+       real server is down."
+	--#TYPE "Foundry Trap: L4 Real Server Down"
+	--#SUMMARY "SLB real server %s %s is down."
+	--#ARGUMENTS { 0, 1 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL
+   ::= 22
+
+snTrapL4RealServerPortUp TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES { snL4TrapRealServerIP, snL4TrapRealServerName, snL4TrapRealServerPort }
+   DESCRIPTION
+       "The SNMP trap that is generated when the load balancing
+       real server TCP port is up."
+	--#TYPE "Foundry Trap: L4 Real Server Port Up"
+	--#SUMMARY "SLB real server port %s %s %d is up."
+	--#ARGUMENTS { 0, 1, 2 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL
+   ::= 23
+
+snTrapL4RealServerPortDown TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES { snL4TrapRealServerIP, snL4TrapRealServerName, snL4TrapRealServerPort }
+   DESCRIPTION
+       "The SNMP trap that is generated when the load balancing
+       real server TCP port is down."
+	--#TYPE "Foundry Trap: L4 Real Server Port Down"
+	--#SUMMARY "SLB real server port %s %s %d is down."
+	--#ARGUMENTS { 0, 1, 2 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL
+   ::= 24
+
+snTrapL4RealServerMaxConnectionLimitReached TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES { snL4TrapRealServerIP, snL4TrapRealServerName, snL4TrapRealServerCurConnections }
+   DESCRIPTION
+       "The SNMP trap that is generated when the real server reaches
+       maximum number of connections."
+	--#TYPE "Foundry Trap: L4 Real Server Max Connection Limit"
+	--#SUMMARY "SLB real server %s %s maximum connection %d has been reached."
+	--#ARGUMENTS { 0, 1, 2 }
+	--#SEVERITY WARNING
+	--#STATE OPERATIONAL
+   ::= 25
+
+snTrapL4BecomeStandby TRAP-TYPE
+   ENTERPRISE foundry
+   DESCRIPTION
+       "The SNMP trap that is generated when the server load
+       balancing switch changes state from active to standby."
+	--#TYPE "Foundry Trap: L4 Server On Standby"
+	--#SUMMARY "SLB changes state from active to standby."
+	--#ARGUMENTS { }
+	--#SEVERITY WARNING
+	--#STATE OPERATIONAL
+   ::= 26
+
+snTrapL4BecomeActive TRAP-TYPE
+   ENTERPRISE foundry
+   DESCRIPTION
+       "The SNMP trap that is generated when the server load
+       balancing switch changes state from standby to active."
+	--#TYPE "Foundry Trap: L4 Server Active"
+	--#SUMMARY "SLB changes state from standby to active."
+	--#ARGUMENTS { }
+	--#SEVERITY WARNING
+	--#STATE OPERATIONAL
+   ::= 27
+
+snTrapModuleInserted TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES { snAgentBrdIndex }
+   DESCRIPTION
+       "The SNMP trap that is generated when a module was inserted
+       to the chassis during system running."
+	--#TYPE "Foundry Trap: Module Inserted"
+	--#SUMMARY "Module %d was inserted to the chassis during system running."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL
+   ::= 28
+
+snTrapModuleRemoved TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES { snAgentBrdIndex }
+   DESCRIPTION
+       "The SNMP trap that is generated when a module was removed
+       from the chassis during system running."
+	--#TYPE "Foundry Trap: Module Removed"
+	--#SUMMARY "Module %d was removed from the chassis during system running."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL
+   ::= 29
+
+snTrapChasPwrSupplyFailed TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES { snChasPwrSupplyIndex, snChasPwrSupplyDescription }
+   DESCRIPTION
+       "The SNMP trap that is generated when a power supply fails
+        to operate normally."
+	--#TYPE "Foundry Trap: Power Supply Failure"
+	--#SUMMARY "Power supply %d (%s)  failed."
+	--#ARGUMENTS { 0, 1 }
+	--#SEVERITY MINOR
+	--#STATE OPERATIONAL
+   ::= 30
+
+snTrapChasFanFailed TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES { snChasFanIndex, snChasFanDescription }
+   DESCRIPTION
+       "The SNMP trap that is generated when a fan fails
+        to operate normally."
+	--#TYPE "Foundry Trap: Fan Failure"
+	--#SUMMARY "Fan  %d (%s)  failed."
+	--#ARGUMENTS { 0, 1 }
+	--#SEVERITY MINOR
+	--#STATE OPERATIONAL
+   ::= 31
+
+snTrapLockedAddressViolation2 TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+       "The SNMP trap that is generated when more source MAC addresses
+        are received from a port than the maximum number of addresses
+        configured to that port."
+	--#TYPE "Foundry Trap: Lock Address Violation"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY MINOR
+	--#STATE OPERATIONAL
+   ::= 32
+
+snTrapFsrpIfStateChange TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+       "The SNMP trap that is generated when a FSRP routing device
+       changed state from active to standby or vice-versa."
+	--#TYPE "Foundry Trap: FSRP Interface Change"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL
+   ::= 33
+
+snTrapVrrpIfStateChange TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+       "The SNMP trap that is generated when a VRRP routing device
+       changed state from master to backup or vice-versa."
+	--#TYPE "Foundry Trap: VRRP Interface Change"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY WARNING
+	--#STATE OPERATIONAL
+   ::= 34
+
+snTrapMgmtModuleRedunStateChange TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+       "The SNMP trap that is generated when the management module
+       changes redundancy state."
+	--#TYPE "Foundry Trap: Management Module Change State"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY WARNING
+	--#STATE OPERATIONAL
+   ::= 35
+
+snTrapTemperatureWarning TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+       "The SNMP trap that is generated when the actual temperature
+       reading is above the warning temperature threshold."
+	--#TYPE "Foundry Trap: Temperature Warning"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY CRITICAL
+	--#STATE OPERATIONAL
+   ::= 36
+
+snTrapAccessListDeny TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+       "The SNMP trap that is generated when a packet was denied
+       by an access list."
+	--#TYPE "Foundry Trap: Deny from ACL"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY WARNING
+	--#STATE OPERATIONAL
+   ::= 37
+
+snTrapMacFilterDeny TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+       "The SNMP trap that is generated when a packet was denied
+       by a MAC address filter."
+	--#TYPE "Foundry Trap: Deny from MAC Filter"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY WARNING
+	--#STATE OPERATIONAL
+   ::= 38
+
+snTrapL4GslbRemoteUp TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+       "The SNMP trap that is generated when the connection to the remote SI is established."
+	--#TYPE "Foundry Trap: Remote SI Up"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY WARNING
+	--#STATE OPERATIONAL
+   ::= 39
+
+snTrapL4GslbRemoteDown TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+       "The SNMP trap that is generated when the connection to the remote SI is down."
+	--#TYPE "Foundry Trap: Remote SI Down"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY WARNING
+	--#STATE OPERATIONAL
+   ::= 40
+
+snTrapL4GslbRemoteControllerUp TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+       "The SNMP trap that is generated when the connection to the GSLB SI is established."
+	--#TYPE "Foundry Trap: Remote GSLB SI Up"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY WARNING
+	--#STATE OPERATIONAL
+   ::= 41
+
+snTrapL4GslbRemoteControllerDown TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+       "The SNMP trap that is generated when the connection to the GSLB SI is down."
+	--#TYPE "Foundry Trap: Remote GSLB SI Down"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY WARNING
+	--#STATE OPERATIONAL
+   ::= 42
+
+snTrapL4GslbHealthCheckIpUp TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+       "The SNMP trap that is generated when GSLB health check for an address transitions
+	   from down to active state."
+	--#TYPE "Foundry Trap: GSLB HealtCheck Up"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY WARNING
+	--#STATE OPERATIONAL
+   ::= 43
+
+snTrapL4GslbHealthCheckIpDown TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+       "The SNMP trap that is generated when GSLB health check for an address transitions
+	   from active to down state."
+	--#TYPE "Foundry Trap: GSLB HealthCheck Down"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY WARNING
+	--#STATE OPERATIONAL
+   ::= 44
+
+snTrapL4GslbHealthCheckIpPortUp TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+       "The SNMP trap that is generated when a given port for a health check address is up."
+	--#TYPE "Foundry Trap: GSLB HealthCheck Port Up"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY WARNING
+	--#STATE OPERATIONAL
+   ::= 45
+
+snTrapL4GslbHealthCheckIpPortDown TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+       "The SNMP trap that is generated when a given port for a health check address is down."
+	--#TYPE "Foundry Trap: GSLB HealthCheck Port Down"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY WARNING
+	--#STATE OPERATIONAL
+   ::= 46
+
+snTrapL4FirewallBecomeStandby TRAP-TYPE
+   ENTERPRISE foundry
+   DESCRIPTION
+       "The SNMP trap that is generated when the server load
+       balancing switch Firewall changes state from active to standby."
+	--#TYPE "Foundry Trap: Firewall Standby"
+	--#SUMMARY "Firewall changes state from active to standby."
+	--#ARGUMENTS { }
+	--#SEVERITY MAJOR
+	--#STATE OPERATIONAL
+   ::= 47
+
+snTrapL4FirewallBecomeActive TRAP-TYPE
+   ENTERPRISE foundry
+   DESCRIPTION
+       "The SNMP trap that is generated when the server load
+       balancing switch Firewall changes state from standby to active."
+	--#TYPE "Foundry Trap: Firewall Active"
+	--#SUMMARY "Firewall changes state from standby to active."
+	--#ARGUMENTS { }
+	--#SEVERITY MAJOR
+	--#STATE OPERATIONAL
+   ::= 48
+
+snTrapL4FirewallPathUp TRAP-TYPE
+   ENTERPRISE foundry
+   DESCRIPTION
+       "The SNMP trap that is generated when the server load
+       balancing switch Firewall path is up."
+	--#TYPE "Foundry Trap: Firewall Path Up"
+	--#SUMMARY "Firewall path is up."
+	--#ARGUMENTS { }
+	--#SEVERITY MINOR
+	--#STATE OPERATIONAL
+   ::= 49
+
+snTrapL4FirewallPathDown TRAP-TYPE
+   ENTERPRISE foundry
+   DESCRIPTION
+       "The SNMP trap that is generated when the server load
+       balancing switch Firewall path is down."
+	--#TYPE "Foundry Trap: Firewall Path Down"
+	--#SUMMARY "Firewall path is down."
+	--#ARGUMENTS { }
+	--#SEVERITY MINOR
+	--#STATE OPERATIONAL
+   ::= 50
+
+snTrapIcmpLocalExceedBurst TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+       "The SNMP trap that is generated when incoming ICMP exceeds burst-MAX."
+	--#TYPE "Foundry Trap: ICMP Burst Exceeded"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY WARNING
+	--#STATE OPERATIONAL
+   ::= 51
+
+snTrapIcmpTransitExceedBurst TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+       "The SNMP trap that is generated when transit ICMP exceeds burst-MAX."
+	--#TYPE "Foundry Trap: Transit ICMP Burst Exceeded"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY WARNING
+	--#STATE OPERATIONAL
+   ::= 52
+
+snTrapTcpLocalExceedBurst TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+       "The SNMP trap that is generated when incoming TCP SYN exceeds burst-MAX."
+	--#TYPE "Foundry Trap: TCP SYN Burst Exceeded"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY WARNING
+	--#STATE OPERATIONAL
+   ::= 53
+
+snTrapTcpTransitExceedBurst TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+       "The SNMP trap that is generated when transit TCP exceeds burst-MAX."
+	--#TYPE "Foundry Trap: Transit TCP SYN Burst Exceeded"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY WARNING
+	--#STATE OPERATIONAL
+   ::= 54
+
+snTrapL4ContentVerification TRAP-TYPE
+   ENTERPRISE foundry
+   DESCRIPTION
+       "The SNMP trap that is generated when the HTTP match-list pattern
+       is found."
+	--#TYPE "Foundry Trap: HTTP Match"
+	--#SUMMARY "HTTP match-list pattern is found."
+	--#ARGUMENTS { }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL
+   ::= 55
+
+snTrapDuplicateIp TRAP-TYPE
+   ENTERPRISE foundry
+   DESCRIPTION
+       "Duplicate IP address detected."
+	--#TYPE "Foundry Trap: Duplicate IP"
+	--#SUMMARY "Duplicate IP address detect."
+	--#ARGUMENTS { }
+	--#SEVERITY MAJOR
+	--#STATE OPERATIONAL
+   ::= 56
+
+snTrapMplsProblem TRAP-TYPE
+   ENTERPRISE foundry
+   DESCRIPTION
+       "MPLS Problem Detected."
+	--#TYPE "Foundry Trap: MPLS Problem"
+	--#SUMMARY "MPLS Problem detect."
+	--#ARGUMENTS { }
+	--#SEVERITY MAJOR
+	--#STATE OPERATIONAL
+   ::= 57
+
+snTrapMplsException TRAP-TYPE
+   ENTERPRISE foundry
+   DESCRIPTION
+       "MPLS Exception Detected."
+	--#TYPE "Foundry Trap: MPLS Exception"
+	--#SUMMARY "MPLS Exception detect."
+	--#ARGUMENTS { }
+	--#SEVERITY MAJOR
+	--#STATE OPERATIONAL
+   ::= 58
+
+snTrapMplsAudit TRAP-TYPE
+   ENTERPRISE foundry
+   DESCRIPTION
+       "MPLS Audit Trap."
+	--#TYPE "Foundry Trap: MPLS Audit"
+	--#SUMMARY "MPLS Audit Trap."
+	--#ARGUMENTS { }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL
+   ::= 59
+
+snTrapMplsDeveloper TRAP-TYPE
+   ENTERPRISE foundry
+   DESCRIPTION
+       "MPLS Developer Trap."
+	--#TYPE "Foundry Trap: MPLS Developer"
+	--#SUMMARY "MPLS Developer Trap."
+	--#ARGUMENTS { }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL
+   ::= 60
+
+snTrapNoBmFreeQueue TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+       "The SNMP trap that is generated when no free queue is available in buffer manager."
+	--#TYPE "Foundry Trap: No BM Free Queue"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY WARNING
+	--#STATE OPERATIONAL
+   ::= 61
+
+snTrapSmcDmaDrop TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+       "The SNMP trap that is generated when SMC DMA packet is dropped."
+	--#TYPE "Foundry Trap: SMC DMA Packet Dropped"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL
+   ::= 62
+
+snTrapSmcBpDrop TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+       "The SNMP trap that is generated when SMC BackPlane packet is dropped."
+	--#TYPE "Foundry Trap: SMC BP Packet Dropped"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL
+   ::= 63
+
+snTrapBmWriteSeqDrop TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+       "The SNMP trap that is generated when BM write sequence packet is dropped."
+	--#TYPE "Foundry Trap: BM Write Sequence Packet Dropped"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL
+   ::= 64
+
+snTrapBgpPeerUp TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+       "The SNMP trap that is generated when the bgp peer is up."
+	--#TYPE "Foundry Trap: BGP Peer Up"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL
+   ::= 65
+
+snTrapBgpPeerDown TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+       "The SNMP trap that is generated when the bgp peer is down."
+	--#TYPE "Foundry Trap: BGP Peer Down"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL
+   ::= 66
+
+snTrapL4RealServerResponseTimeLowerLimit TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+       "The SNMP trap that is generated when the real server average response time exceeds lower threshold."
+	--#TYPE "Foundry Trap: L4 Real Server Response Exceeds Lower Threshold"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY WARNING
+	--#STATE OPERATIONAL
+   ::= 67
+
+snTrapL4RealServerResponseTimeUpperLimit TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+       "The SNMP trap that is generated when the real server average response time exceeds upper threshold."
+	--#TYPE "Foundry Trap: L4 Real Server Response Exceeds Upper Threshold"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY WARNING
+	--#STATE OPERATIONAL
+   ::= 68
+
+snTrapL4TcpAttackRateExceedMax TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+       "The SNMP trap that is generated when the TCP attack rate exceeds configured maximum."
+	--#TYPE "Foundry Trap: L4 TCP Attack Rate Exceed Max"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY CRITICAL
+	--#STATE OPERATIONAL
+   ::= 69
+
+snTrapL4TcpAttackRateExceedThreshold TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+       "The SNMP trap that is generated when the TCP attack rate exceeds 80% of configured maximum."
+	--#TYPE "Foundry Trap: L4 TCP Attack Rate Exceed Threshold"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY WARNING
+	--#STATE OPERATIONAL
+   ::= 70
+
+snTrapL4ConnectionRateExceedMax TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+       "The SNMP trap that is generated when the L4 connection rate exceeds configured maximum."
+	--#TYPE "Foundry Trap: L4 Connection Rate Exceed Max"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY CRITICAL
+	--#STATE OPERATIONAL
+   ::= 71
+
+snTrapL4ConnectionRateExceedThreshold TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+       "The SNMP trap that is generated when the L4 connection rate exceeds 80% of configured maximum"
+	--#TYPE "Foundry Trap: L4 Connection Rate Exceed Threshold"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY WARNING
+	--#STATE OPERATIONAL
+   ::= 72
+
+snTrapRunningConfigChanged TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+       "The SNMP trap that is generated when the running configuration
+        was changed."
+	--#TYPE "Foundry Trap: Running Configuration Changed"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL
+   ::= 73
+
+snTrapStartupConfigChanged TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+       "The SNMP trap that is generated when the startup configuration
+        was changed."
+	--#TYPE "Foundry Trap: Startup Configuration Changed"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL
+   ::= 74
+
+snTrapUserLogin TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+       "The SNMP trap that is generated when user login."
+	--#TYPE "Foundry Trap: User Login"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL
+   ::= 75
+
+snTrapUserLogout TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+       "The SNMP trap that is generated when user logout."
+	--#TYPE "Foundry Trap: User Logout"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL
+   ::= 76
+
+snTrapPortSecurityViolation TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+       "The SNMP trap that is generated when insecure MAC addresses
+        are received from a port with MAC security feature enabled."
+	--#TYPE "Foundry Trap: Port Security Violation"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY MINOR
+	--#STATE OPERATIONAL
+   ::= 77
+
+snTrapPortSecurityShutdown TRAP-TYPE
+   ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+       "The SNMP trap that is generated when insecure MAC addresses
+        are received from a port caused the port to shutdown."
+	--#TYPE "Foundry Trap: Port Security Violation Cause Shutdown"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY MINOR
+	--#STATE OPERATIONAL
+   ::= 78
+
+snTrapMrpStateChange TRAP-TYPE	 
+ 	ENTERPRISE foundry	 
+ 	VARIABLES { snAgGblTrapMessage }	 
+ 	DESCRIPTION   	 	
+       "The SNMP trap that is generated when a MRP switching and routing device
+        changed state to disabled, blocking, preforwarding, forwarding, uknown."
+	--#TYPE "Foundry Trap: MRP Interface Change"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY WARNING
+	--#STATE OPERATIONAL 
+   ::= 79
+
+snTrapMrpCamError TRAP-TYPE	 
+ 	ENTERPRISE foundry	 
+ 	VARIABLES { snAgGblTrapMessage }	 
+ 	DESCRIPTION   	 	
+       "The SNMP trap that is generated when a MRP Cam Error occurs."
+
+	--#TYPE "Foundry Trap: MRP Cam Error"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY WARNING
+	--#STATE OPERATIONAL 
+   ::= 80
+
+snTrapChasPwrSupplyOK TRAP-TYPE	 
+ 	ENTERPRISE foundry	 
+ 	VARIABLES { snChasPwrSupplyIndex, snChasPwrSupplyDescription }	 
+ 	DESCRIPTION   	 	
+       "The SNMP trap that is generated when a power supply operational
+        status changed from failure to normal."
+	--#TYPE "Foundry Trap: Power Supply OK"
+	--#SUMMARY "Power supply %d (%s) OK."
+	--#ARGUMENTS { 0, 1 }
+	--#SEVERITY MINOR
+	--#STATE OPERATIONAL 
+   ::= 81
+
+snTrapVrrpeIfStateChange TRAP-TYPE	 
+ 	ENTERPRISE foundry	 
+ 	VARIABLES { snAgGblTrapMessage }	 
+ 	DESCRIPTION   	 	
+       "The SNMP trap that is generated when a VRRPE routing device
+        switched between states master, backup, intialized or uknown."
+	--#TYPE "Foundry Trap: VRRPE Interface Change"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY WARNING
+	--#STATE OPERATIONAL 
+   ::= 82
+
+snTrapVsrpIfStateChange TRAP-TYPE	 
+ 	ENTERPRISE foundry	 
+ 	VARIABLES { snAgGblTrapMessage }	 
+ 	DESCRIPTION   	 	
+       "The SNMP trap that is generated when a VSRP switching and routing device
+        switched between states master, backup, intialized or uknown."
+	--#TYPE "Foundry Trap: VSRP Interface Change"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY WARNING
+	--#STATE OPERATIONAL 
+   ::= 83
+
+snTrapSrcIpAddressViolation TRAP-TYPE	 
+ 	ENTERPRISE foundry	 
+ 	VARIABLES { snAgGblTrapMessage }	 
+ 	DESCRIPTION   	 	
+       "The SNMP trap that is generated when a rogue device spoofs source
+        IP address for denial of service attack."
+	--#TYPE "Foundry Trap: Intruder Source IP Address"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY WARNING
+	--#STATE OPERATIONAL 
+   ::= 84
+
+snTrapMacAuthEnable TRAP-TYPE	 
+ 	ENTERPRISE foundry	 
+ 	VARIABLES { snAgGblTrapMessage }	 
+ 	DESCRIPTION   	 	
+       "The SNMP trap that is generated when MAC-Authentication is enabled
+        on an interface."
+	--#TYPE "Foundry Trap: MAC-Authentication enabled"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL 
+   ::= 85
+
+snTrapMacAuthDisable TRAP-TYPE	 
+ 	ENTERPRISE foundry	 
+ 	VARIABLES { snAgGblTrapMessage }	 
+ 	DESCRIPTION   	 	
+       "The SNMP trap that is generated when MAC-Authentication is disabled
+        on an interface."
+	--#TYPE "Foundry Trap: MAC-Authentication disabled"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL 
+   ::= 86
+
+snTrapMacAuthMACAccepted TRAP-TYPE	 
+ 	ENTERPRISE foundry	 
+ 	VARIABLES { snAgGblTrapMessage }	 
+ 	DESCRIPTION   	 	
+      "The SNMP trap that is generated when MAC-Authentication is successful
+       on an interface."
+	--#TYPE "Foundry Trap: MAC-Authentication success"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL 
+   ::= 87
+
+snTrapMacAuthMACRejected TRAP-TYPE	 
+ 	ENTERPRISE foundry	 
+ 	VARIABLES { snAgGblTrapMessage }	 
+ 	DESCRIPTION   	 	
+      "The SNMP trap that is generated when MAC-Authentication is failed
+		on an interface."
+	--#TYPE "Foundry Trap: MAC-Authentication failure"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY WARNING
+	--#STATE OPERATIONAL 
+   ::= 88
+
+snTrapMacAuthPortDisabled TRAP-TYPE	 
+ 	ENTERPRISE foundry	 
+ 	VARIABLES { snAgGblTrapMessage }	 
+ 	DESCRIPTION   	 	
+      "The SNMP trap that is generated when an interface is disabled due to
+       MAC-Authentication detecting a DOS attack on that interface."
+	--#TYPE "Foundry Trap: MAC-Authentication port disabled"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY CRITICAL
+	--#STATE OPERATIONAL 
+   ::= 89
+
+snTrapClientLoginReject TRAP-TYPE	 
+ 	ENTERPRISE foundry	 
+ 	VARIABLES { snAgGblTrapMessage }	 
+ 	DESCRIPTION   	 	
+      "The SNMP trap that is generated when a login attempt by a
+		telnet or SSH client fails."
+	--#TYPE "Foundry Trap: Client Login Reject"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL 
+   ::= 110
+
+snTrapLocalUserConfigChange TRAP-TYPE	 
+ 	ENTERPRISE foundry	 
+ 	VARIABLES { snAgGblTrapMessage }	 
+ 	DESCRIPTION   	 	
+      "The SNMP trap that is generated when a local user configuration is changed."
+	--#TYPE "Foundry Trap: Local User Config Change"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL 
+    ::= 111
+
+snTrapVlanConfigChange TRAP-TYPE	 
+ 	ENTERPRISE foundry	 
+ 	VARIABLES { snAgGblTrapMessage }	 
+ 	DESCRIPTION   	 	
+      "The SNMP trap that is generated when a vlan configuration is changed."
+	--#TYPE "Foundry Trap: Vlan Config Change"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL 
+    ::= 112
+
+snTrapAclConfigChange TRAP-TYPE	 
+ 	ENTERPRISE foundry	 
+ 	VARIABLES { snAgGblTrapMessage }	 
+ 	DESCRIPTION   	 	
+      "The SNMP trap that is generated when a ACL configuration is changed."
+	--#TYPE "Foundry Trap: ACL Config Change"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL 
+    ::= 113
+
+snTrapMacFilterConfigChange TRAP-TYPE	 
+ 	ENTERPRISE foundry	 
+ 	VARIABLES { snAgGblTrapMessage }	 
+ 	DESCRIPTION   	 	
+      "The SNMP trap that is generated when a MAC Filter configuration is changed."
+	--#TYPE "Foundry Trap: MAC Filter Config Change"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL 
+    ::= 114
+
+snTrapSNMPConfigChange TRAP-TYPE	 
+ 	ENTERPRISE foundry	 
+ 	VARIABLES { snAgGblTrapMessage }	 
+ 	DESCRIPTION   	 	
+      "The SNMP trap that is generated when a SNMP configuration is changed."
+	--#TYPE "Foundry Trap: SNMP Config Change"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL 
+    ::= 115
+
+snTrapSyslogConfigChange TRAP-TYPE	 
+ 	ENTERPRISE foundry	 
+ 	VARIABLES { snAgGblTrapMessage }	 
+ 	DESCRIPTION   	 	
+      "The SNMP trap that is generated when a Syslog configuration is changed."
+	--#TYPE "Foundry Trap: Syslog Config Change"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL 
+    ::= 116
+
+snTrapPasswordConfigChange TRAP-TYPE	 
+ 	ENTERPRISE foundry	 
+ 	VARIABLES { snAgGblTrapMessage }	 
+ 	DESCRIPTION   	 	
+      "The SNMP trap that is generated when enable or line password is changed."
+	--#TYPE "Foundry Trap: Password Config Change"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL 
+    ::= 117
+
+snTrapServerStatusChange TRAP-TYPE	 
+ 	ENTERPRISE foundry	 
+ 	VARIABLES { snAgGblTrapMessage }	 
+ 	DESCRIPTION   	 	
+      "The SNMP trap that is generated when a server is disabled or enabled."
+	--#TYPE "Foundry Trap: Server Status Change"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL 
+    ::= 118
+
+snTrapL4RealServerPortMaxConnectionLimitReached TRAP-TYPE	 
+ 	ENTERPRISE foundry	 
+ 	VARIABLES { snAgGblTrapMessage }	 
+ 	DESCRIPTION   	 	
+      "The SNMP trap that is generated when the real server's port reaches
+       maximum number of connections."
+	--#TYPE "Foundry Trap: L4 Real Server Port Max Connection Limit"
+	--#SUMMARY "%s"
+	--#ARGUMENTS { 0 }
+	--#SEVERITY WARNING
+	--#STATE OPERATIONAL 
+    ::= 119
+
+snTrapL4LinkDown TRAP-TYPE	 
+ 	ENTERPRISE foundry	 
+ 	VARIABLES { snL4TrapLinkName, snL4LinkVirtualInterface }	 
+ 	DESCRIPTION   	 	
+      "The SNMP trap that is generated when the ISP link goes down."
+	--#TYPE "Foundry Trap: L4 Link Down"
+	--#SUMMARY "ISP Link %s bound to ve %d is down."
+	--#ARGUMENTS { 0, 1 }
+	--#SEVERITY WARNING
+	--#STATE OPERATIONAL 
+    ::= 120
+
+snTrapL4LinkUp TRAP-TYPE	 
+ 	ENTERPRISE foundry	 
+ 	VARIABLES { snL4TrapLinkName, snL4LinkVirtualInterface }	 
+ 	DESCRIPTION   	 	
+      "The SNMP trap that is generated when the ISP link goes up."
+	--#TYPE "Foundry Trap: L4 Link Up"
+	--#SUMMARY "ISP Link %s bound to ve %d is up."
+	--#ARGUMENTS { 0, 1 }
+	--#SEVERITY WARNING
+	--#STATE OPERATIONAL 
+    ::= 121
+
+snTrapPortPriorityChange TRAP-TYPE	 
+ 	ENTERPRISE foundry	 
+ 	VARIABLES { snAgGblTrapMessage }	 
+ 	DESCRIPTION   	 	
+      "The SNMP trap that is generated when the priority of a port is changed."
+	--#TYPE "Foundry Trap: Port Priority Change"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL 
+    ::= 122
+
+snTrapAutoPortDisableTrigger TRAP-TYPE	 
+ 	ENTERPRISE foundry	 
+ 	VARIABLES { snAgGblTrapMessage }	 
+ 	DESCRIPTION   	 	
+      "The SNMP trap that is generated when automatic port disable was triggered."
+	--#TYPE "Foundry Trap: Automatic Port Disable Triggered "
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY MAJOR
+	--#STATE OPERATIONAL 
+    ::= 123
+
+snTrapAutoPortDisableRelease TRAP-TYPE	 
+ 	ENTERPRISE foundry	 
+ 	VARIABLES { snAgGblTrapMessage }	 
+ 	DESCRIPTION   	 	
+      "The SNMP trap that is generated when automatic port disable was released."
+	--#TYPE "Foundry Trap: Automatic Port Disable Released "
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY MAJOR
+	--#STATE OPERATIONAL 
+    ::= 124
+
+snTrapPnPStatusChange TRAP-TYPE	 
+ 	ENTERPRISE foundry	 
+ 	VARIABLES { wgPnPStatus, wgPnPStatus, snAgGblTrapMessage }	 
+ 	DESCRIPTION   	 	
+      "The SNMP trap that is generated when plug-and-play status change."
+	--#TYPE "Foundry Trap: Plug-and-play Status Change "
+	--#SUMMARY "Old Pnp status: %d, new Pnp status: %d, msg: %s."
+	--#ARGUMENTS { 0, 1, 2 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL 
+    ::= 125
+
+snTrapWirelessIsrpPeerStateChange TRAP-TYPE	 
+ 	ENTERPRISE foundry	 
+ 	VARIABLES { snAgGblTrapMessage }	 
+ 	DESCRIPTION   	 	
+      "The SNMP trap that is generated when ISRP Peer changes state."
+	--#TYPE "Foundry Trap: ISRP Peer's state has changed "
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL 
+    ::= 126
+
+snTrapWirelessStationStateChange TRAP-TYPE	 
+ 	ENTERPRISE foundry	 
+ 	VARIABLES { snAgGblTrapMessage }	 
+ 	DESCRIPTION   	 	
+      "The SNMP trap that is generated when a wireless station's state changes."
+	--#TYPE "Foundry Trap: Wireless Station's state has changed."
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL 
+    ::= 127
+
+snTrapWirelessStationRoamingEventTriggered TRAP-TYPE	 
+ 	ENTERPRISE foundry	 
+ 	VARIABLES { snAgGblTrapMessage }	 
+ 	DESCRIPTION   	 	
+      "The SNMP trap that is generated when we received a MOVE request from
+       the AP"
+	--#TYPE "Foundry Trap: Station has roamed "
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL 
+    ::= 128
+
+snTrapWirelessSappStateChange TRAP-TYPE	 
+ 	ENTERPRISE foundry	 
+ 	VARIABLES { snAgGblTrapMessage }	 
+ 	DESCRIPTION   	 	
+      "The SNMP trap that is generated when SAPP between an AP and a FIPS
+       changes state."
+	--#TYPE "Foundry Trap: SAPP between AP and FIPS changes state. "
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL 
+    ::= 129
+
+snTrapExternalPowerConnectionStatus TRAP-TYPE	 
+ 	ENTERPRISE foundry	 
+ 	VARIABLES { snAgGblTrapMessage }	 
+ 	DESCRIPTION   	 	
+      "The SNMP trap that is generated when the external power supply
+       connecting or disconnecting to a power over ethernet module."
+	--#TYPE "Foundry Trap: External Power Supply Change"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY MAJOR
+	--#STATE OPERATIONAL 
+    ::= 130
+
+snTrapDot1xSecurityViolation TRAP-TYPE	 
+ 	ENTERPRISE foundry	 
+ 	VARIABLES { snAgGblTrapMessage }	 
+ 	DESCRIPTION   	 	
+      "The SNMP trap that is generated when a malicious mac
+       address was detected."
+	--#TYPE "Foundry Trap: 802.1x Security Violation"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY MAJOR
+	--#STATE OPERATIONAL 
+    ::= 131
+
+snTrapDot1xPortLinkChange TRAP-TYPE	 
+ 	ENTERPRISE foundry	 
+ 	VARIABLES { snAgGblTrapMessage }	 
+ 	DESCRIPTION   	 	
+      "The SNMP trap that is generated when software port link status
+       has changed to up or down."
+	--#TYPE "Foundry Trap: 802.1x Port Link Change"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL 
+    ::= 132
+
+snTrapDot1xPortControlChange TRAP-TYPE	 
+ 	ENTERPRISE foundry	 
+ 	VARIABLES { snAgGblTrapMessage }	 
+ 	DESCRIPTION   	 	
+      "The SNMP trap that is generated when software port control status
+       has changed to authorize or unauthorize."
+	--#TYPE "Foundry Trap: 802.1x Port Control Change"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL 
+    ::= 133
+
+snTrapDot1xVlanIdChange TRAP-TYPE	 
+ 	ENTERPRISE foundry	 
+ 	VARIABLES { snAgGblTrapMessage }	 
+ 	DESCRIPTION   	 	
+      "The SNMP trap that is generated when VLAN ID of a port
+       has changed."
+	--#TYPE "Foundry Trap: 802.1x VLAN ID Change"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL 
+    ::= 134
+
+snTrapDot1xFilterSetupFailure TRAP-TYPE	 
+ 	ENTERPRISE foundry	 
+ 	VARIABLES { snAgGblTrapMessage }	 
+ 	DESCRIPTION   	 	
+      "The SNMP trap that is generated when software failed
+		to setup a filter to a mac address of a port."
+	--#TYPE "Foundry Trap: 802.1x Filter Setup Failure"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL 
+    ::= 135
+
+snTrapDot1xError TRAP-TYPE	 
+ 	ENTERPRISE foundry	 
+ 	VARIABLES { snAgGblTrapMessage }	 
+ 	DESCRIPTION   	 	
+      "The SNMP trap that is generated when software detected
+       system error."
+	--#TYPE "Foundry Trap: 802.1x Error"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY MINOR
+	--#STATE OPERATIONAL 
+    ::= 136
+
+snTrapPortConfigChange TRAP-TYPE	 
+ 	ENTERPRISE foundry	 
+ 	VARIABLES { snAgGblTrapMessage }	 
+ 	DESCRIPTION   	 	
+      "The SNMP trap that is generated when a port configuration is changed."
+	--#TYPE "Foundry Trap: Port Config Change"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL 
+    ::= 137
+
+snTrapMacAuthVlanIdChange TRAP-TYPE	 
+ 	ENTERPRISE foundry	 
+ 	VARIABLES { snAgGblTrapMessage }	 
+ 	DESCRIPTION   	 	
+      "The SNMP trap that is generated when VLAN ID of a port
+       has changed."
+	--#TYPE "Foundry Trap: MAC-Authentication VLAN ID Change"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL 
+    ::= 138
+
+snTrapWebAuthEnabled TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+	   "The SNMP trap that is generated when web authentication is enabled."
+	--#TYPE "Foundry Trap: Web Authentication Enabled"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL
+   ::= 139
+
+snTrapWebAuthDisabled TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+	   "The SNMP trap that is generated when web authentication is disabled."
+	--#TYPE "Foundry Trap: Web Authentication Disabled"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL
+   ::= 140
+
+snTrapIpConfigChange TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+	   "The SNMP trap that is generated when IP system address changes."
+	--#TYPE "Foundry Trap: IP Configuration Change"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL
+   ::= 141
+
+snTrapIpv6ConfigChange TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+	   "The SNMP trap that is generated when IPv6 system address changes."
+	--#TYPE "Foundry Trap: IPv6 Configuration Change"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL
+   ::= 142
+
+snTrapMacAuthRadiusTimeout TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+	   "The SNMP trap that is generated when a request from Mac-Auth
+	   to RADIUS has not been answered within the retry and time limit."
+	--#TYPE "Foundry Trap: MAC-Authentication RADIUS timeout"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL
+   ::= 143
+
+snTrapDot1xRadiusTimeout TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+	   "The SNMP trap that is generated when a request from 802.1x
+	   to RADIUS has not been answered within the retry and time limit."
+	--#TYPE "Foundry Trap: 802.1x RADIUS timeout"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL
+   ::= 144
+
+snTrapUDLDLinkDown TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { ifIndex, snAgGblTrapMessage }
+   DESCRIPTION
+	   "The SNMP trap that is generated when UDLD port link status
+	   has changed to down."
+	--#TYPE "Foundry Trap: UDLD Port Link Down"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 1 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL
+   ::= 145
+
+snTrapUDLDLinkUp TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { ifIndex, snAgGblTrapMessage }
+   DESCRIPTION
+	   "The SNMP trap that is generated when UDLD port link status
+	   has changed to up."
+	--#TYPE "Foundry Trap: UDLD Port Link Up"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 1 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL
+   ::= 146
+
+snTrapMacBasedVlanEnabled TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+	   "The SNMP trap that is generated when MAC based VLAN is enabled."
+	--#TYPE "Foundry Trap: MAC based VLAN enabled"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL
+   ::= 147
+
+snTrapMacBasedVlanDisabled TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+	   "The SNMP trap that is generated when MAC based VLAN is disabled."
+	--#TYPE "Foundry Trap: MAC based VLAN disabled"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL
+   ::= 148
+
+snTrapChasFanNormal TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snChasFanIndex, snChasFanDescription }
+   DESCRIPTION
+	   "The SNMP trap that is generated when a fan operational status
+		changed from failure to normal."
+	--#TYPE "Foundry Trap: Fan OK"
+	--#SUMMARY "Fan  %d (%s)  OK."
+	--#ARGUMENTS { 0, 1 }
+	--#SEVERITY MINOR
+	--#STATE OPERATIONAL
+   ::= 149
+
+snTrapStpRootGuardDetect TRAP-TYPE	 
+ 	ENTERPRISE foundry
+	VARIABLES {ifIndex, snVLanByPortCfgVLanId, snAgGblTrapMessage}
+	DESCRIPTION
+	   "The SNMP trap that is generated when VLAN's Root-Guarded port received superior BPDU."
+	--#TYPE "Foundry Trap:  Stp root guard detect"
+	--#SUMMARY "%s."
+	--#ARGUMENTS {  2  }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL
+   ::= 150 
+
+snTrapStpRootGuardExpire TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES {ifIndex, snVLanByPortCfgVLanId, snAgGblTrapMessage}
+   DESCRIPTION
+		   "The SNMP trap that is generated when VLAN's ports's Root-Guard expire."
+	 --#TYPE "Foundry Trap:  Stp root guard expire"
+	 --#SUMMARY "%s."
+	 --#ARGUMENTS { 2 }
+	 --#SEVERITY INFORMATIONAL
+	 --#STATE OPERATIONAL
+   ::= 151
+ 
+snTrapStpBPDUGuardDetect TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES {ifIndex, snVLanByPortCfgVLanId, snAgGblTrapMessage}
+   DESCRIPTION
+	   "The SNMP trap that is generated when VLAN's BPDU-guarded port received BPDU . "
+	 --#TYPE "Foundry Trap: STP BPDU guard "
+	 --#SUMMARY "%s."
+	 --#ARGUMENTS { 2 }
+	 --#SEVERITY INFORMATIONAL
+	 --#STATE OPERATIONAL
+   ::= 152
+
+snTrapMstpBPDUGuardDetect TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES {ifIndex, snAgGblTrapMessage}
+   DESCRIPTION
+	   "The SNMP trap that is generated when BPDU-guarded port received BPDU . "
+	 --#TYPE "Foundry Trap: MSTP BPDU guard "
+	 --#SUMMARY "%s."
+	 --#ARGUMENTS { 1 }
+	 --#SEVERITY INFORMATIONAL
+	 --#STATE OPERATIONAL
+   ::= 153
+
+snTrapErrorDisableAction TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES {ifIndex, snAgGblTrapMessage}
+   DESCRIPTION
+	   "The SNMP trap that is generated when  Interface error-disable is hit or recovery times out . "
+	 --#TYPE "Foundry Trap:  Error-disable hit or recovery times out"
+	 --#SUMMARY "%s."
+	 --#ARGUMENTS {  1  }
+	 --#SEVERITY INFORMATIONAL
+	 --#STATE OPERATIONAL
+   ::= 154
+
+snTrapLACPLinkStateChange TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES {ifIndex, snAgGblTrapMessage}
+   DESCRIPTION
+	   "The SNMP trap that is generated when LACP port changes its state. "
+	 --#TYPE "Foundry Trap:  LACP port state change"
+	 --#SUMMARY "%s."
+	 --#ARGUMENTS {  1  }
+	 --#SEVERITY INFORMATIONAL
+	 --#STATE OPERATIONAL
+   ::= 155
+
+snTrapOpticalMonitoringNotFoundryOptics TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES {snAgGblTrapMessage}
+   DESCRIPTION
+	   "The SNMP trap that is generated if optical monitoring is enabled but optics vendor is not Foundry Networks."
+	--#TYPE "Foundry Trap: Optical Monitoring Not Foundry Networks Optics"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY MAJOR
+	--#STATE OPERATIONAL
+   ::= 156
+
+snTrapOpticalMonitoringFoundryOpticsNotCapable TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES {snAgGblTrapMessage}
+   DESCRIPTION
+	   "The SNMP trap that is generated if optical monitoring is enabled but the Foundry optic is not capable."
+	--#TYPE "Foundry Trap: Optical Monitoring Optics Not Capable"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY MAJOR
+	--#STATE OPERATIONAL
+   ::= 157
+
+snTrapStaticMulticastMacConfigAdd TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES {snAgGblTrapMessage}
+   DESCRIPTION
+	   "The SNMP trap that is generated if a new entry is added to static multicast mac configuration table.
+		Format 1: Static Mac entry with Mac Address <xxxx:xxxx:xxxx> is added to portnumber <port> on VLAN <id>
+		Format 2: Static Mac entry with Mac Address <xxxx:xxxx:xxxx> is added to portmask <0xXXXXXXXX-XXXXXXXX> on VLAN <id>"
+	--#TYPE "Foundry Trap: New Entry is Added To Static Multicast Mac Configuration Table."
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL
+   ::= 158
+
+snTrapStaticMulticastMacConfigRemove TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES {snAgGblTrapMessage}
+   DESCRIPTION
+	   "The SNMP trap that is generated if an entry is removed from static multicast mac configuration table .
+		Format 1: Static Mac entry with Mac Address <xxxx:xxxx:xxxx> is deleted from portnumber <port> on VLAN <id>
+		Format 2: Static Mac entry with Mac Address <xxxx:xxxx:xxxx> is deleted from portmask <0xXXXXXXXX-XXXXXXXX> on VLAN <id>"
+	--#TYPE "Foundry Trap:  Entry is Removed From Static Multicast Mac Configuration Table."
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL
+   ::= 159
+
+snTrapSTPBPDUGuardExpire TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { ifIndex, snVLanByPortCfgVLanId, snAgGblTrapMessage }
+   DESCRIPTION
+	   "The SNMP notification that is generated when a port is re-enabled after being disabled due to BPDU Guard Violation.
+		Format: STP: BPDU Guard re-enabled on VLAN <id> port <slot>/<port>"
+		--#TYPE "Foundry Trap: STP BPDU Guard Expire"
+		--#SUMMARY "%s."
+		--#ARGUMENTS { 2 }
+		--#SEVERITY INFORMATIONAL
+		--#STATE OPERATIONAL
+::= 160
+
+snTrapPortLoopDetection TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { ifIndex, snVLanByPortCfgVLanId, snAgGblTrapMessage }
+   DESCRIPTION
+	   "The SNMP notification is generated when a port loop is detected.
+	   Format: LOOP DETECTION: VLAN <id>,  port <slot>/<port> detect, putting into err-disable state"
+			--#TYPE "Foundry Trap: Port Loop Detection"
+			--#SUMMARY "%s."
+			--#ARGUMENTS { 2 }
+			--#SEVERITY INFORMATIONAL
+			--#STATE OPERATIONAL
+   ::= 161
+
+snTrapNoFreeTcamEntry TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+	   "The SNMP trap that is generated when system is running out of TCAM spaces allocated for routing entries. "
+		--#TYPE "Foundry Trap: No TCAM free entry"
+		--#SUMMARY "%s."
+		--#ARGUMENTS { 0 }
+		--#SEVERITY MAJOR
+		--#STATE OPERATIONAL
+   ::= 162
+
+-- Stacking traps
+
+snTrapStackingMasterElected TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snChasUnitIndex,  snAgGblTrapMessage }
+   DESCRIPTION
+	   "The SNMP trap that is generated when a unit is elected as Master unit for the stacking system."
+  --#TYPE "Foundry Trap: Unit is elected as Master"
+  --#SUMMARY "%s."
+  --#ARGUMENTS { 1 }
+  --#SEVERITY MINOR
+  --#STATE OPERATIONAL
+   ::= 163
+
+ snTrapStackingUnitAdded TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snChasUnitIndex,  snAgGblTrapMessage }
+   DESCRIPTION
+	   "The SNMP trap that is generated when a unit has been added to the stacking system."
+  --#TYPE "Foundry Trap: Unit is added"
+  --#SUMMARY "%s."
+  --#ARGUMENTS { 1 }
+  --#SEVERITY MINOR
+  --#STATE OPERATIONAL
+   ::= 164
+
+ snTrapStackingUnitDeleted TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snChasUnitIndex,  snAgGblTrapMessage }
+   DESCRIPTION
+	   "The SNMP trap that is generated when a unit has been deleted from the stacking system."
+  --#TYPE "Foundry Trap: Unit is deleted"
+  --#SUMMARY "%s."
+  --#ARGUMENTS { 1 }
+  --#SEVERITY MINOR
+  --#STATE OPERATIONAL
+   ::= 165
+
+snTrapStackingChasPwrSupplyOK TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snChasUnitIndex, snChasPwrSupplyIndex, snAgGblTrapMessage }
+   DESCRIPTION
+	   "The SNMP trap that is generated when a power supply operational
+		status changed from failure to normal for a stacking system."
+  --#TYPE "Foundry Trap: Stacking Power Supply OK"
+  --#SUMMARY "%s."
+  --#ARGUMENTS { 2 }
+  --#SEVERITY MINOR
+  --#STATE OPERATIONAL
+   ::= 166
+   
+snTrapStackingChasPwrSupplyFailed TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snChasUnitIndex, snChasPwrSupplyIndex, snAgGblTrapMessage }
+   DESCRIPTION
+	   "The SNMP trap that is generated when a power supply operational
+		status changed from normal to failure for a stacking system."
+		--#TYPE "Foundry Trap: Stacking Power Supply Failure"
+		--#SUMMARY "%s."
+		--#ARGUMENTS { 2 }
+		--#SEVERITY MINOR
+		--#STATE OPERATIONAL
+   ::= 167
+
+snTrapStackingChasFanNormal TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snChasUnitIndex, snChasFanIndex, snChasFanDescription }
+   DESCRIPTION
+	   "The SNMP trap that is generated when a fan operational status
+		changed from failure to normal for a stacking system"
+		--#TYPE "Foundry Trap: Stacking Fan OK"
+		--#SUMMARY "Stack-unit %d Fan  %d (%s)  OK."
+		--#ARGUMENTS { 0, 1, 2}
+		--#SEVERITY MINOR
+		--#STATE OPERATIONAL
+   ::= 168
+   
+snTrapStackingChasFanFailed TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snChasUnitIndex, snChasFanIndex, snChasFanDescription }
+   DESCRIPTION
+	   "The SNMP trap that is generated when a fan fails
+		to operate normally for a stacking system."
+		--#TYPE "Foundry Trap: Stacking Fan Failure"
+		--#SUMMARY "Stack-unit %d Fan  %d (%s)  failed."
+		--#ARGUMENTS { 0, 1, 2 }
+		--#SEVERITY MINOR
+		--#STATE OPERATIONAL
+   ::= 169
+
+ snTrapStackingManagementMACChanged TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+	   "The SNMP trap that is generated when the managemnet MAC
+		address of a stacking system has been changed."
+	--#TYPE "Foundry Trap: The management MAC address changed "
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL
+   ::= 170  
+
+  snTrapStackingTemperatureWarning TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snChasUnitIndex, snAgGblTrapMessage }
+   DESCRIPTION
+	   "The SNMP trap that is generated when the actual temperature
+	   reading is above the warning temperature threshold for a stack
+	   sytem."
+	   --#TYPE "Foundry Trap: Stacking Temperature Warning"
+	   --#SUMMARY "%s."
+	   --#ARGUMENTS { 1 }
+	   --#SEVERITY CRITICAL
+	   --#STATE OPERATIONAL
+   ::= 171
+
+snTrapIfIndexAssignmentChanged TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+	   "The SNMP trap that is generated when the Interface Index (IfIndex)
+		assignment for the physical interfaces was changed."
+	--#TYPE "Foundry Trap: IfIndex Assignment Changed"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL
+   ::= 172
+
+snTrapPBRConfigChanged TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+	  "The SNMP trap that is generated when a Policy Based Routing (PBR) routemap 
+	   is bound or unbound either globally or to an interface."
+	  --#TYPE "Foundry Trap: Policy Based Routing (PBR) Config Changed "
+	  --#SUMMARY "%s."
+	  --#ARGUMENTS { 0 }
+	  --#SEVERITY MAJOR
+	  --#STATE OPERATIONAL
+   ::=  173
+
+snTrapChasPwrSupplyRPSAdd TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snChasPwrSupplyIndex, snChasPwrSupplyDescription }
+   DESCRIPTION
+	   "The SNMP trap that is generated when an External Redundant 
+	   Power Supply (RPS2-EIF) is added to the system."
+  --#TYPE "Foundry Trap: Power Supply RPS Added"
+  --#SUMMARY "External redundant power supply %d (%s) added."
+  --#ARGUMENTS { 0, 1 }
+  --#SEVERITY MINOR
+  --#STATE OPERATIONAL
+   ::= 174
+   
+snTrapChasPwrSupplyRPSRemove TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snChasPwrSupplyIndex, snChasPwrSupplyDescription }
+   DESCRIPTION
+	   "The SNMP trap that is generated when an External Redundant 
+	   Power Supply (RPS2-EIF) is removed from the system."
+  --#TYPE "Foundry Trap: Power Supply RPS Removed"
+  --#SUMMARY "External redundant power supply %d (%s) removed."
+  --#ARGUMENTS { 0, 1 }
+  --#SEVERITY MINOR
+  --#STATE OPERATIONAL
+   ::= 175
+
+snTrapModuleStatusChange TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snChasUnitIndex, snAgentBrdIndex, snAgentBrdModuleStatus, snAgGblTrapMessage }
+   DESCRIPTION
+	   "The SNMP notification that is generated when a module's operational state changes.
+	   The management entity receiving the notification can identify the
+	   module and the event by referencing snChasUnitIndex, snAgentBrdIndex, snAgentBrdModuleStatus.
+	   In case of a module-down event, the varbind snAgGblTrapMessage is a text string 
+	   that describes the cause. In case of module-up event, snAgGblTrapMessage is a null
+	   string. "
+	--#TYPE "Foundry Trap: Module status changed"
+	--#SUMMARY " Module %d (of unit %d) changed state to %d due to reason: %s."
+	--#ARGUMENTS { 1,0,2,3 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL
+   ::= 176
+
+snTrapChasHighSpeedFansNeeded TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+	   "The SNMP trap that is generated when chassis doesn't have high speed fans for specific modules"
+	--#TYPE "Foundry Trap: High Speed fans needed"
+	--#SUMMARY "%s"
+	--#ARGUMENTS { 0 }
+	--#SEVERITY MINOR
+	--#STATE OPERATIONAL
+   ::= 177
+
+snTrapSysmaxReverted TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+	   "The SNMP trap that is generated when the revertible
+		sysmax elements are reverted during the card bringup
+		if they can not be accomodated in the available memory."
+	--#TYPE "Foundry Trap: Sysmax Reverted"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY MINOR
+	--#STATE OPERATIONAL
+   ::= 178
+
+
+snTrapSysmaxLeftLowMem TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+	   "The SNMP trap that is generated when its found during bootup that
+		the configured sysmax set shall leave less than 10% available memory free."
+	--#TYPE "Foundry Trap: Sysmax Left Low Memory"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY MINOR
+	--#STATE OPERATIONAL
+   ::= 179
+
+
+snTrapSysMemoryLowThreshold TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+	   "The SNMP trap that is generated when the available dynamic memory
+		in a card is below 5% of the installed physical memory."
+	--#TYPE "Foundry Trap: Low Available Memory"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY MINOR
+	--#STATE OPERATIONAL
+   ::= 180
+
+
+snTrapSysMemoryOutThreshold TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+	   "The SNMP trap that is generated when the dynamic memory
+		fails to be allocated in a system."
+	--#TYPE "Foundry Trap: Failed Memory Allocation"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY MINOR
+	--#STATE OPERATIONAL
+   ::= 181
+
+snTrapLinkOAMLinkDown TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES {ifIndex, snAgGblTrapMessage }
+   DESCRIPTION
+	   "The SNMP trap that is generated when Link-OAM port link status
+	   has changed to down."
+	  --#TYPE "Foundry Trap: Link-OAM Port Link Change Down"
+	  --#SUMMARY "%s"
+	  --#ARGUMENTS { 1 }
+	  --#SEVERITY INFORMATIONAL
+	  --#STATE OPERATIONAL
+   ::= 182
+
+snTrapLinkOAMLinkUp TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES {ifIndex, snAgGblTrapMessage }
+   DESCRIPTION
+	   "The SNMP trap that is generated when Link-OAM port link status
+	   has changed to up."
+	  --#TYPE "Foundry Trap: Link-OAM Port Link Change Up"
+	  --#SUMMARY "%s"
+	  --#ARGUMENTS { 1 }
+	  --#SEVERITY INFORMATIONAL
+	  --#STATE OPERATIONAL
+   ::= 183
+
+snTrapI2CAccessLog TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+	   "The SNMP trap that is generated to provide information about state of the management module's  I2C accesses."
+	--#TYPE "Foundry Trap: MP I2C access data"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY MINOR
+	--#STATE OPERATIONAL
+   ::= 184
+   
+snTrapLinkOAMLoopbackEntered TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES {
+		ifIndex, 
+		-- dot3OamLoopbackStatus (no mib for dot3OamLoopbackStatus, because no argument value is not of interest
+		snAgentBrdModuleStatus,
+		snAgGblTrapMessage
+		}
+   DESCRIPTION
+	   "The SNMP trap that is generated when Link-OAM port has entered
+	   loopback mode. The link is not useful for data transfer any more."
+	  --#TYPE "Foundry Trap: Link-OAM Port Loopback Mode Entered"
+	  --#SUMMARY "%s"
+	  --#ARGUMENTS { 2 }
+	  --#SEVERITY INFORMATIONAL
+	  --#STATE OPERATIONAL
+   ::= 185
+   
+snTrapLinkOAMLoopbackCleared TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES {
+		ifIndex, 
+		-- dot3OamLoopbackStatus (no mib for dot3OamLoopbackStatus, because no argument value is not of interest
+		snAgentBrdModuleStatus,
+		snAgGblTrapMessage
+		}
+   DESCRIPTION
+	   "The SNMP trap that is generated when Link-OAM port has entered
+	   loopback mode. The link is not useful for data transfer any more."
+	  --#TYPE "Foundry Trap: Link-OAM Port Loopback Mode Cleared"
+	  --#SUMMARY "%s"
+	  --#ARGUMENTS { 2 }
+	  --#SEVERITY INFORMATIONAL
+	  --#STATE OPERATIONAL
+   ::= 186
+   
+snTrapLicenseAdded TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+	   "The SNMP trap that is generated when a new license is added to the system."
+				--#TYPE "Foundry Trap: New license added"
+				--#SUMMARY "%s."
+				--#ARGUMENTS { 0 }
+				--#SEVERITY INFORMATIONAL
+				--#STATE OPERATIONAL
+   ::= 187
+
+snTrapLicenseRemoved TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+	   "The SNMP trap that is generated when an existing license is removed from the system."
+				--#TYPE "Foundry Trap: License removed"
+				--#SUMMARY "%s."
+				--#ARGUMENTS { 0 }
+				--#SEVERITY INFORMATIONAL
+				--#STATE OPERATIONAL
+   ::= 188
+
+snTrapLicenseExpires TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+	   "The SNMP trap that is generated when a trial license is about to expire. This trap is generated
+		daily for last 3 days and every 2 hours on the last day of expire."
+				--#TYPE "Foundry Trap: License is about to expire"
+				--#SUMMARY "%s."
+				--#ARGUMENTS { 0 }
+				--#SEVERITY MINOR
+				--#STATE OPERATIONAL
+   ::= 189
+
+snTrapLicenseExpired TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+	   "The SNMP trap that is generated when a trial license has expired."
+				--#TYPE "Foundry Trap: License expired"
+				--#SUMMARY "%s."
+				--#ARGUMENTS { 0 }
+				--#SEVERITY MINOR
+				--#STATE OPERATIONAL
+   ::= 190
+
+snTrapUDLDCrcFailureDetected    TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES {ifIndex, snAgGblTrapMessage}
+   DESCRIPTION
+                  "The SNMP trap that is generated when UDLD detects CRC failures on  PDUs received on a port"
+                 --#TYPE "Foundry Trap:  UDLD detected CRC failures "
+                 --#SUMMARY "%s."
+                 --#ARGUMENTS { 1 }
+                 --#SEVERITY MINOR
+                 --#STATE OPERATIONAL
+   ::= 191
+
+
+-- Trapids from 1000 are reserved for XMR/IMR/MLX devices
+
+snTrapChasFanOK TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snChasFanIndex, snChasFanDescription }
+   DESCRIPTION
+	   "The SNMP trap that is generated when a fan operational status
+		changed from failure to normal or change in the fan speed due to
+		temperature variations downwards."
+	--#TYPE "Foundry Trap: Fan OK"
+	--#SUMMARY "Fan  %d (%s)  OK."
+	--#ARGUMENTS { 0, 1 }
+	--#SEVERITY MINOR
+	--#STATE OPERATIONAL
+   ::= 1000
+
+snTrapTemperatureOK TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+	   "The SNMP trap that is generated when the actual temperature
+	   reading is below the warning temperature threshold."
+	--#TYPE "Foundry Trap: Temperature Warning"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY CRITICAL
+	--#STATE OPERATIONAL
+   ::= 1001
+
+snTrapCAMOverflow TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+	   "The SNMP trap that is generated when any CAM partition
+	   becomes full."
+	--#TYPE "Foundry Trap: CAM partition full"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY MAJOR
+	--#STATE OPERATIONAL
+   ::= 1002
+
+snTrapOpticalMonitoringWarning TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+       "The SNMP trap that is generated if there is a warning during optical
+        monitoring.
+        The first varbind, snAgGblTrapMessage, will have a detailed message on
+        the cause of event. The second optional varbind, ifIndex, points to the affected interface
+        originating this event. If an event does not have associated port, or has multiple
+        associated ports, then ifIndex will have maximum value 0x7ffffff."
+        --#TYPE "Foundry Trap: Optical Monitoring Warning"
+        --#SUMMARY "%s."
+        --#ARGUMENTS { 0 }
+        --#SEVERITY MINOR
+        --#STATE OPERATIONAL
+   ::= 1003
+
+snTrapOpticalMonitoringAlarm TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+       "The SNMP trap that is generated if there is an alarm during optical
+        monitoring.
+        The first varbind, snAgGblTrapMessage, will have a detailed message on
+        the cause of event. The second optional varbind, ifIndex, points to the affected interface
+        originating this event. If an event does not have associated port, or has multiple
+        associated ports, then ifIndex will have maximum value 0x7ffffff."
+        --#TYPE "Foundry Trap: Optical Monitoring Alarm"
+        --#SUMMARY "%s."
+        --#ARGUMENTS { 0 }
+        --#SEVERITY MAJOR
+        --#STATE OPERATIONAL
+   ::= 1004
+
+snTrapOpticalMonitoringError TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+       "The SNMP trap that is generated if there is an error during optical
+        monitoring.
+        The first varbind, snAgGblTrapMessage, will have a detailed message on
+        the cause of event. The second optional varbind, ifIndex, points to the affected interface
+        originating this event. If an event does not have associated port, or has multiple
+        associated ports, then ifIndex will have maximum value 0x7ffffff."
+        --#TYPE "Foundry Trap: Optical Monitoring Error"
+        --#SUMMARY "%s."
+        --#ARGUMENTS { 0 }
+        --#SEVERITY INFORMATIONAL
+        --#STATE OPERATIONAL
+   ::= 1005
+
+snTrapPosMonitoringWarning TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+       "The SNMP trap that is generated if there is a warning during POS 
+       alarm monitoring.
+        The first varbind, snAgGblTrapMessage, will have a detailed message on
+        the cause of event. The second optional varbind, ifIndex, points to the affected interface
+        originating this event. If an event does not have associated port, or has multiple
+        associated ports, then ifIndex will have maximum value 0x7ffffff."
+        --#TYPE "Foundry Trap: POS Monitoring Warning"
+        --#SUMMARY "%s."
+        --#ARGUMENTS { 0 }
+        --#SEVERITY INFORMATIONAL
+        --#STATE OPERATIONAL
+   ::= 1006
+
+   snTrapPosMonitoringAlarm TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+       "The SNMP trap that is generated if there is an alarm up/down 
+       during POS alarm monitoring.
+        The first varbind, snAgGblTrapMessage, will have a detailed message on
+        the cause of event. The second optional varbind, ifIndex, points to the affected interface
+        originating this event. If an event does not have associated port, or has multiple
+        associated ports, then ifIndex will have maximum value 0x7ffffff."
+        --#TYPE "Foundry Trap: POS Monitoring Alarm"
+        --#SUMMARY "%s."
+        --#ARGUMENTS { 0 }
+        --#SEVERITY MAJOR
+        --#STATE OPERATIONAL
+   ::= 1007
+
+   snTrapPosMonitoringError TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+       "The SNMP trap that is generated if there is an error during POS
+        alarm monitoring.
+        The first varbind, snAgGblTrapMessage, will have a detailed message on
+        the cause of event. The second optional varbind, ifIndex, points to the affected interface
+        originating this event. If an event does not have associated port, or has multiple
+        associated ports, then ifIndex will have maximum value 0x7ffffff."
+        --#TYPE "Foundry Trap: POS Monitoring Error"
+        --#SUMMARY "%s."
+        --#ARGUMENTS { 0 }
+        --#SEVERITY INFORMATIONAL
+        --#STATE OPERATIONAL
+   ::= 1008
+
+snTrapXfpSfpIncompatibleOptics TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+	   "The SNMP trap that is generated if optics is incompatible with port configuration."
+	--#TYPE "Foundry Trap: Optical Incompatibility Error"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY MAJOR
+	--#STATE OPERATIONAL
+   ::= 1009
+
+-- definition of MPLS traps
+--
+snMplsLspUp TRAP-TYPE
+ 	ENTERPRISE foundry
+VARIABLES { mplsLspName,
+          mplsPathName } -- LspPath
+DESCRIPTION
+     "An mplsLspUp trap signifies that the 
+     specified LSP is up. The current active
+     path for the LSP is mplsPathName."
+--#TYPE "Foundry Trap: MPLS LSP Up"
+--#SUMMARY "LSP %s using path %s is up."
+--#ARGUMENTS { 0, 1 }
+--#SEVERITY INFORMATIONAL
+--#STATE OPERATIONAL
+::= 1010
+
+
+snMplsLspDown TRAP-TYPE
+ 	ENTERPRISE foundry
+VARIABLES { mplsLspName,
+          mplsPathName } -- LspPath
+DESCRIPTION
+     "An mplsLspDown trap signifies that the 
+     specified LSP is down, because the current
+     active path mplsPathName went down."
+--#TYPE "Foundry Trap: MPLS LSP Down"
+--#SUMMARY "LSP %s using path %s is down."
+--#ARGUMENTS { 0, 1 }
+--#SEVERITY INFORMATIONAL
+--#STATE OPERATIONAL
+::= 1011
+
+
+snMplsLspChange TRAP-TYPE
+ 	ENTERPRISE foundry
+VARIABLES { mplsLspName,
+          mplsPathName } -- LspPath
+DESCRIPTION
+     "An mplsLspChange trap signifies that the
+     the specified LSP has switched traffic to 
+     the new active path 'toLspPath'. The LSP maintains
+     up state before and after the switch over" 
+--#TYPE "Foundry Trap: MPLS LSP Change"
+--#SUMMARY "LSP %s switches to new active path %s."
+--#ARGUMENTS { 0, 1 }
+--#SEVERITY INFORMATIONAL
+--#STATE OPERATIONAL
+::= 1012
+
+
+-- TRAP snMplsLspUp (1010), snMplsLspDown (1011), snMplsLspChange (1012)
+-- are defined in snmpls.mib. DO NOT USE THESE IDS
+
+snTrapTMLoggingStart TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+	   "The SNMP trap that is generated if TM logging is started by an event trigger."
+	--#TYPE "Foundry Trap: TM Logging Start"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL
+   ::= 1015
+
+snTrapTMLoggingStop TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+	   "The SNMP trap that is generated if TM logging stopped due to storage full."
+	--#TYPE "Foundry Trap: TM Logging Stop"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL
+   ::= 1016
+
+snTrapTMLoggingRestart TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+	   "The SNMP trap that is generated if TM logging restarted after user clearing the log."
+	--#TYPE "Foundry Trap: TM Logging Restart"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL
+   ::= 1017
+
+snTrapXfpSfpNotFoundryOptics TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+	   "The SNMP trap that is generated if optics vendor is not Foundry Networks."
+	--#TYPE "Foundry Trap: Not Foundry Networks Optics"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY MINOR
+	--#STATE OPERATIONAL
+   ::= 1018
+
+snTrapTMRecoverySlotReset TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+	   "The SNMP trap that is generated when TM recovery slot reset is triggered."
+	--#TYPE "Foundry Trap: TM recovery level II"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL
+   ::= 1019
+
+--TM Egress Error TRAP
+snTrapTMEgressDataError TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+	   "The SNMP trap that is generated when system detects egress data errors on Traffic Manager.
+	   For e.g.  Fabric Monitoring : TM Egress data errors detected on LP <num>/TM <num>"
+	--#TYPE "Foundry Trap: TM Egress Data Error"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY MAJOR
+	--#STATE OPERATIONAL
+::= 1020 
+
+
+snTrapSFMLinkDown TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+	   "The SNMP trap that is generated when a link from LP Traffic Manager to 
+	   SFM Fabric Element is down.
+	   For eg.  Fabric Monitoring Link Down : SFM <num>/FE <num>/Link <num>, LP <num>/TM <num>"
+	--#TYPE "Foundry Trap: SFM Link Down"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY MINOR
+	--#STATE OPERATIONAL
+::= 1100
+
+snTrapSFMLinkUp TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+	   "The SNMP trap that is generated when a link from LP Traffic Manager to 
+	   SFM Fabric Element is up.
+	   For eg.  Fabric Monitoring Link Up : SFM <num>/FE <num>/Link <num>, LP <num>/TM <num>"
+	--#TYPE "Foundry Trap: SFM Link Up"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL
+::= 1101
+
+--FE Read/write TRAP
+snTrapSFMAccessError TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+	   "The SNMP trap that is generated when system fails to access a  SFM Fabric Element.
+	   For e.g.  Fabric Monitoring : Device access failure in SFM <num>/FE <num>"
+	--#TYPE "Foundry Trap: FE Access Error"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY MAJOR
+	--#STATE OPERATIONAL
+::= 1102  
+
+snTrapChassisFanSpeedLow TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+	   "The SNMP trap that is generated when all chassis fans change to low speed."
+	--#TYPE "Foundry Trap: Chassis Fans Speed Low"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL
+::= 1200
+
+snTrapChassisFanSpeedMedium TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+	   "The SNMP trap that is generated when all chassis fans change to medium speed."
+	--#TYPE "Foundry Trap: Chassis Fans Speed Medium"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL
+::= 1201
+
+snTrapChassisFanSpeedMedHigh TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+	   "The SNMP trap that is generated when all chassis fans change to medium high speed."
+	--#TYPE "Foundry Trap: Chassis Fans Speed Medium High"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL
+::= 1202
+
+snTrapChassisFanSpeedHigh TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+	   "The SNMP trap that is generated when all chassis fans change to high speed."
+	--#TYPE "Foundry Trap: Chassis Fans Speed High"
+	--#SUMMARY "%s."
+	--#ARGUMENTS { 0 }
+	--#SEVERITY INFORMATIONAL
+	--#STATE OPERATIONAL
+::= 1203
+
+snTrapFIPSModeEnable TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }   
+   DESCRIPTION
+                   "The SNMP trap that is generated when FIPS mode is enabled."
+   --#TYPE "Foundry Trap: FIPS mode enabled by <username> from console" 
+   --#SUMMARY "%s."
+   --#ARGUMENTS { 0 }
+   --#SEVERITY INFORMATIONAL
+   --#STATE OPERATIONAL
+   ::= 1207
+
+snTrapFIPSModeDisable TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+                   "The SNMP trap that is generated when FIPS mode is disabled.The zeroization of host keys and shared secret keys is done after this trap is sent."
+   --#TYPE "Foundry Trap: FIPS mode disabled by <username> from console"
+   --#SUMMARY "%s."
+   --#ARGUMENTS { 0 }
+   --#SEVERITY INFORMATIONAL
+   --#STATE OPERATIONAL
+   ::= 1208
+
+
+snTrapFIPSHostZeroized TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+                   "The SNMP trap that is generated when host keys are zeroized in FIPS mode"
+   --#TYPE "Foundry Trap: Host keys have been zeroized by <username> from console."
+   --#SUMMARY "%s."
+   --#ARGUMENTS { 0 }
+   --#SEVERITY INFORMATIONAL
+   --#STATE OPERATIONAL
+   ::= 1209
+
+snTrapFIPSSharedSecretZeroized TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+                   "The SNMP trap that is generated when shared secret are zeroized in FIPS mode"
+   --#TYPE "Foundry Trap: Shared Secrets have been zeroized by <username> from console."
+   --#SUMMARY "%s."
+   --#ARGUMENTS { 0 }
+   --#SEVERITY INFORMATIONAL
+   --#STATE OPERATIONAL
+   ::= 1210
+
+
+snTrapFIPSPOSTStatus TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+                   "The SNMP trap that is generated after POST."
+   --#TYPE "Foundry Trap: FIPS POST status =< SUCCESS | FAIL>"
+   --#SUMMARY "%s."
+   --#ARGUMENTS { 0 }
+   --#SEVERITY INFORMATIONAL
+   --#STATE OPERATIONAL
+   ::=  1211
+
+snTrapFIPSCryptoModuleFailure TRAP-TYPE	 
+ 	ENTERPRISE foundry
+   VARIABLES { snAgGblTrapMessage }
+   DESCRIPTION
+                   "The SNMP trap that is generated on cryptographic  module failure."
+   --#TYPE "Foundry Trap: FIPS Cryptographic Module Failure"
+   --#SUMMARY "%s."
+   --#ARGUMENTS { 0 }
+   --#SEVERITY CRITICAL 
+   --#STATE OPERATIONAL
+   ::= 1212
+
+END

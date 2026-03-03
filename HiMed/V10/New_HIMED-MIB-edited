@@ -1,0 +1,88 @@
+HIMED-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+    NOTIFICATION-TYPE, MODULE-IDENTITY, OBJECT-TYPE, Integer32, enterprises 
+    FROM SNMPv2-SMI
+
+    OBJECT-GROUP, NOTIFICATION-GROUP 
+    FROM SNMPv2-CONF;
+
+-- Define parent object identifiers (if not defined in own MIB file(s))
+siemens                 OBJECT IDENTIFIER ::= {enterprises 4329}
+communicationproducts   OBJECT IDENTIFIER ::= {siemens 11}
+
+himed MODULE-IDENTITY
+    LAST-UPDATED "201208091228Z"
+    ORGANIZATION "Siemens AG I IA CE"
+    CONTACT-INFO "Guido Conrad
+                  Siemens AG
+                  I IA CE 
+                  Wuerzburgerstr. 121
+                  90766 Fuerth
+                  GERMANY
+                  E-mail: guido.conrad@siemens.com"
+    DESCRIPTION "MIB module describing object identifiers for HiMed"
+    -- Define object identifier
+    REVISION    "201208091228Z"
+        DESCRIPTION "orginal with fixed syntax"
+    REVISION    "200908141228Z"
+        DESCRIPTION "orginal malformed syntax"
+    ::= {communicationproducts 1}
+
+-- Define child object identifiers
+cockpit                 OBJECT IDENTIFIER ::= {himed 1}
+iac                     OBJECT IDENTIFIER ::= {himed 2}
+cashbox                 OBJECT IDENTIFIER ::= {himed 3}
+server                  OBJECT IDENTIFIER ::= {himed 4}
+medisetip       	    OBJECT IDENTIFIER ::= {himed 5}
+
+-- Define trap structure
+himedTrap NOTIFICATION-TYPE
+        OBJECTS {himedTrapDeviceOID, himedTrapDeviceIP, himedTrapId, himedTrapDescription}
+        STATUS current
+        DESCRIPTION "SNMP trap used for HiMed system events"
+::= {himed 1000}
+
+-- Define himedObjectGroup
+himedObjectGroup OBJECT-GROUP
+    OBJECTS {himedTrapDeviceOID, himedTrapDeviceIP, himedTrapId, himedTrapDescription}
+    STATUS  current
+    DESCRIPTION    "Object Group"
+::= { himed 1001 }
+
+himedTrapDeviceOID OBJECT-TYPE
+        SYNTAX          OBJECT IDENTIFIER
+        MAX-ACCESS      read-only
+        STATUS          current
+DESCRIPTION     "Trap refers to this object"
+::= {himedObjectGroup 1}
+
+himedTrapDeviceIP OBJECT-TYPE
+        SYNTAX          OCTET STRING
+        MAX-ACCESS      read-only
+        STATUS          current
+DESCRIPTION     "IP of object"
+::= {himedObjectGroup 2}
+
+himedTrapId OBJECT-TYPE
+        SYNTAX          Integer32 
+        MAX-ACCESS      read-only
+        STATUS          current
+DESCRIPTION     "Number of Trap"
+::= {himedObjectGroup 3}
+
+himedTrapDescription OBJECT-TYPE
+        SYNTAX          OCTET STRING
+        MAX-ACCESS      read-only
+        STATUS          current
+DESCRIPTION     "Additional Info"
+::= {himedObjectGroup 4}       
+
+-- Define himedNotificationGroup
+himedNotificationGroup NOTIFICATION-GROUP
+    NOTIFICATIONS  { himedTrap }
+    STATUS         current
+    DESCRIPTION    "Notification Group"
+::= { himed 1002 }
+
+END

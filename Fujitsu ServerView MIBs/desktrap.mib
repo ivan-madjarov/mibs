@@ -1,0 +1,1043 @@
+-- Version: V1.08
+--
+-- CREATED: November 19, 1999
+--
+-- Language: "en|US|iso8859-1"
+--
+
+--
+-- $Id$
+--
+
+DESKTRAP-MIB DEFINITIONS ::= BEGIN
+
+--
+-- Title:       MIB for DeskView Trap-Agent
+--
+
+IMPORTS
+	OBJECT-TYPE                             FROM RFC-1212
+	mib-2, DisplayString            FROM RFC1213-MIB
+	TimeTicks,
+	Counter, Gauge, enterprises     FROM RFC1155-SMI;
+
+sni            OBJECT IDENTIFIER   ::= { enterprises 231 }
+
+
+sniProductMibs    OBJECT IDENTIFIER   ::= { sni 2 }
+sniExtensions       OBJECT IDENTIFIER   ::= { sniProductMibs 10 }
+sniDesktopMgmt OBJECT IDENTIFIER   ::= { sniExtensions 3 }
+sniDeskTrap         OBJECT IDENTIFIER   ::= { sniDesktopMgmt 2 }
+
+
+-- GROUP: "SNI Desktop-Version" 
+sniTrapAgentVersionInformation  OBJECT IDENTIFIER ::= { sniDeskTrap 1 }
+-- Description: ""
+-- Class: "SNI DESKTRAP|VERION-INFORMATION|1.0 US"
+
+sniTrapAgentPurpose     OBJECT-TYPE
+	SYNTAX  DisplayString 
+	ACCESS  read-only
+	STATUS  mandatory
+	DESCRIPTION     "Purpose of the SNI Desktop-Trap-Agent"
+	::= { sniTrapAgentVersionInformation 1 }
+
+sniTrapAgentVersion     OBJECT-TYPE
+	SYNTAX  DisplayString 
+	ACCESS  read-only
+	STATUS  mandatory
+	DESCRIPTION     "Version of the SNI Desktop-Trap-Agent"
+	::= { sniTrapAgentVersionInformation 2 }
+
+sniTrapAgentDeskInfoVersion     OBJECT-TYPE
+	SYNTAX  DisplayString 
+	ACCESS  read-only
+	STATUS  mandatory
+	DESCRIPTION     "Version of SNI Deskinfo"
+	::= { sniTrapAgentVersionInformation 3 }
+
+-- GROUP: "SNI Desktop-Trap-Parameter" 
+sniTrapAgentTrapParameter       OBJECT IDENTIFIER ::= { sniDeskTrap 2 }
+-- Description: ""
+-- Class: "SNI DESKTRAP|TRAP-PARAMETER|1.0 US"
+
+sniTrapDesktop     OBJECT-TYPE
+	SYNTAX          DisplayString
+	ACCESS          not-accessible
+	STATUS          mandatory
+	DESCRIPTION         "Desktopname"
+	::= {sniTrapAgentTrapParameter 1 }
+ 
+sniTrapTimeInt  OBJECT-TYPE
+	SYNTAX          INTEGER
+	ACCESS          not-accessible
+	STATUS          mandatory
+	DESCRIPTION         "Systemtime as integer"
+	::= {sniTrapAgentTrapParameter 2 }
+
+sniTrapTimeStr  OBJECT-TYPE
+	SYNTAX          DisplayString
+	ACCESS          not-accessible
+	STATUS          mandatory
+	DESCRIPTION         "Systemdate as string"
+	::= {sniTrapAgentTrapParameter 3 }
+
+sniTrapAgentStatus      OBJECT-TYPE
+	SYNTAX  INTEGER {
+		st-unknown ( 0 ), 
+		st-ok ( 1 ),
+		st-warning ( 2 ),
+		st-critical ( 3 )
+			}  
+	ACCESS  not-accessible
+	STATUS  mandatory
+	DESCRIPTION     ""
+	::= { sniTrapAgentTrapParameter 4 }
+
+sniTrapAgentType        OBJECT-TYPE
+	SYNTAX  INTEGER { 
+		t-alert ( 1 ),
+		t-event ( 2 ),
+		t-info ( 3 )
+			}  
+	ACCESS  not-accessible
+	STATUS  mandatory
+	DESCRIPTION     ""
+	::= { sniTrapAgentTrapParameter 5 }
+
+sniTrapAgentEventName   OBJECT-TYPE
+	SYNTAX  DisplayString 
+	ACCESS  not-accessible
+	STATUS  mandatory
+	DESCRIPTION     ""
+	::= { sniTrapAgentTrapParameter 6 }
+
+sniTrapAgentEventText   OBJECT-TYPE
+	SYNTAX  DisplayString 
+	ACCESS  not-accessible
+	STATUS  mandatory
+	DESCRIPTION     ""
+	::= { sniTrapAgentTrapParameter 7 }
+
+sniTrapAgentTimeBIAS  OBJECT-TYPE
+	SYNTAX          INTEGER
+	ACCESS          not-accessible
+	STATUS          mandatory
+	DESCRIPTION         ""
+	::= {sniTrapAgentTrapParameter 8 }
+
+sniTrapAgentSystemStatus  OBJECT-TYPE
+	SYNTAX  INTEGER { 
+		st-unknown ( 0 ),
+		st-ok ( 1 ),
+		st-warning ( 2 ),
+		st-critical ( 3 )
+			}
+	ACCESS          not-accessible
+	STATUS          mandatory
+	DESCRIPTION         ""
+	::= {sniTrapAgentTrapParameter 9 }
+
+sniTrapAgentClassStatus  OBJECT-TYPE
+	SYNTAX  INTEGER { 
+		st-unknown ( 0 ),
+		st-ok ( 1 ),
+		st-warning ( 2 ),
+		st-critical ( 3 )
+			}
+	ACCESS          not-accessible
+	STATUS          mandatory
+	DESCRIPTION         ""
+	::= {sniTrapAgentTrapParameter 10 }
+
+-- Begin Trap Definition
+
+--   1 = ErrorTrap
+sniTrapError            TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"No Text found in DeskMon.ini"
+	--#TYPE      "No Text found in DeskMon.ini"
+	--#SUMMARY   "No Text found in DeskMon.ini on %s"
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  WARNING
+	--#TIMEINDEX 1
+	::= 1 
+
+-- 1xxx   = SMART
+sniSmartOK              TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"SMART hard disk reports OK."
+	--#TYPE     "SMART hard disk reports OK"
+	--#SUMMARY   "SMART hard disk reports OK on %s"
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  NORMAL
+	--#TIMEINDEX 1
+	::= 1001 
+
+sniSmartWarning         TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"SMART hard disk reports Warning."
+	--#TYPE     "SMART hard disk reports Warning"
+	--#SUMMARY   "SMART hard disk reports Warning on %s"
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  WARNING
+	--#TIMEINDEX 1
+	::= 1002
+
+sniSmartError           TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"SMART hard disk reports Error."
+	--#TYPE     "SMART hard disk reports  Error."
+	--#SUMMARY   "SMART hard disk reports Error on %s"
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  CRITICAL
+	--#TIMEINDEX 1
+	::= 1003 
+
+-- 2xxx    = Cover open/closed
+sniCoverClosed                TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"The cover is closed"
+	--#TYPE    "The cover is closed"
+	--#SUMMARY   "The cover is closed on %s"
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  NORMAL
+	--#TIMEINDEX 1
+	::= 2001 
+
+sniCoverOpened                TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"The cover has been opened."
+	--#TYPE   "The cover has been opened."
+	--#SUMMARY   "The cover has been opened on %s"
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  CRITICAL
+	--#TIMEINDEX 1
+	::= 2003 
+
+-- 3xxx    = Cover sensor
+sniCoverSensorincorporated  TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"The sensor for securing the cover is incorporated."
+	--#TYPE  "The sensor for securing the cover is incorporated."
+	--#SUMMARY   "The sensor for securing the cover is incorporated on %s"
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  NORMAL
+	--#TIMEINDEX 1
+	::= 3001 
+
+sniCoverSensorMissing         TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"The sensor for securing the cover is missing or defective"
+	--#TYPE   "The sensor for securing the cover is missing or defective"
+	--#SUMMARY   "The sensor for securing the cover is missing or defective on %s"
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  CRITICAL
+	--#TIMEINDEX 1
+	::= 3003
+
+
+-- 4xxx    = Cover recognition
+sniCoverRecognition        TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"The cover type cannot be recognized."
+	--#TYPE   "The cover type cannot be recognized."
+	--#SUMMARY   "The cover type cannot be recognized on %s"
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  NORMAL
+	--#TIMEINDEX 1
+	::= 4001
+
+sniCoverRecognitionMissing         TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"The sensor for recognizing the cover type is missing or defective."
+	--#TYPE   "The sensor for recognizing the cover type is missing or defective."
+	--#SUMMARY   "The sensor for recognizing the cover type is missing or defective on %s"
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  CRITICAL
+	--#TIMEINDEX 1
+	::= 4003
+
+--  5xxx   = Short circuit
+sniNoShortCurcuit       TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"No short circuit in the mouse, keyboard or USB interface."
+	--#TYPE   "No short circuit in the mouse, keyboard or USB interface."
+	--#SUMMARY   "No short circuit in the mouse, keyboard or USB interface on %s"
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  NORMAL
+	--#TIMEINDEX 1
+	::= 5001
+
+sniShortCurcuit         TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"Short circuit in the mouse, keyboard or USB interface."
+	--#TYPE  "Short circuit in the mouse, keyboard or USB interface."
+	--#SUMMARY   "Short circuit in the mouse, keyboard or USB interface on %s"
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  CRITICAL
+	--#TIMEINDEX 1
+	::= 5003
+
+--  7xxx    = Temperature
+sniTemperatureOK        TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"The temperature sensor is functioning"
+	--#TYPE    "The temperature sensor is functioning"
+	--#SUMMARY   "The temperature sensor is functioning on %s"
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  NORMAL
+	--#TIMEINDEX 1
+	::= 7001
+
+sniTemperatureWarning        TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"The temperature is high"
+	--#TYPE    "The temperature is high"
+	--#SUMMARY   "The temperature is high on %s"
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  WARNING
+	--#TIMEINDEX 1
+	::= 7002
+
+sniTemperatureCritical   TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"The temperature sensor is defective or the temperature is too high"
+	--#TYPE   "The temperature sensor is defective or the temperature is too high"
+	--#SUMMARY   "The temperature sensor is defective or the temperature is too high on %s"
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  CRITICAL
+	--#TIMEINDEX 1
+	::= 7003
+
+--  8xxx    = Fan monitoring
+sniFanRunning   TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"The fan is running"
+	--#TYPE   "The fan is running"
+	--#SUMMARY   "The fan is running on %s"
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  NORMAL
+	--#TIMEINDEX 1
+	::= 8001
+
+sniFanNotRunning        TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"The fan is not running"
+	--#TYPE   "The fan is not running"
+	--#SUMMARY   "The fan is not running on %s"
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  CRITICAL
+	--#TIMEINDEX 1
+	::= 8003
+
+--  9xxx    = Fan is getting worn
+sniFanWornOK   TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"The rotational speed of the fan is OK."
+	--#TYPE   "The rotational speed of the fan is OK."
+	--#SUMMARY   "The rotational speed of the fan is OK on %s"
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  NORMAL
+	--#TIMEINDEX 1
+	::= 9001
+
+sniFanWornWarning  TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"The rotational speed of the fan is almost critical."
+	--#TYPE   "The rotational speed of the fan is almost critical."
+	--#SUMMARY   "The rotational speed of the fan is almost critical on %s"
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  WARNING
+	--#TIMEINDEX 1
+	::= 9002
+
+sniFanWornCritical  TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"The rotational speed of the fan is critical."
+	--#TYPE   "The rotational speed of the fan is critical."
+	--#SUMMARY   "The rotational speed of the fan is critical on %s"
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  CRITICAL
+	--#TIMEINDEX 1
+	::= 9003
+
+--  11xxx    = Voltage
+sniVoltageOk     TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"The voltage monitor is functioning."
+	--#TYPE   "The voltage monitor is functioning."
+	--#SUMMARY   "The voltage monitor is functioning on %s"
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  NORMAL
+	--#TIMEINDEX 1
+	::= 11001
+
+sniVoltageWarning     TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"The voltage is almost critical."
+	--#TYPE   "The voltage is almost critical."
+	--#SUMMARY   "The voltage is almost critical on %s"
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  WARNING
+	--#TIMEINDEX 1
+	::= 11002
+
+sniVoltageCritical   TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"The voltage monitor is not functioning or the voltage is critical."
+	--#TYPE   "The voltage monitor is not functioning or the voltage is critical."
+	--#SUMMARY   "The voltage monitor is not functioning or the voltage is critical on %s"
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  CRITICAL
+	--#TIMEINDEX 1
+	::= 11003
+
+--  12xxx    = Watchdog
+sniWatchdogOk     TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"The functionality of the operating system watchdog is guaranteed."
+	--#TYPE   "The functionality of the operating system watchdog is guaranteed."
+	--#SUMMARY   "The functionality of the operating system watchdog is guaranteed on %s"
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  NORMAL
+	--#TIMEINDEX 1
+	::= 12001
+
+sniWatchdogCritical     TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"The operating system watchdog caused too many consecutive system reboots and will be deactivated."
+	--#TYPE   "The operating system watchdog caused too many consecutive system reboots and will be deactivated."
+	--#SUMMARY   "The operating system watchdog caused too many consecutive system reboots and will be deactivated on %s"
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  CRITICAL
+	--#TIMEINDEX 1
+	::= 12003
+
+--  13xxx    = Internal error
+sniInternalError     TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"Messages for system monitoring got lost because they could not be buffered!. The buffer has overrun or the harddisk was full."
+	--#TYPE   "Messages for system monitoring got lost because they could not be buffered!. The buffer has overrun or the harddisk was full."
+	--#SUMMARY   "Messages for system monitoring got lost because they could not be buffered!. The buffer has overrun or the harddisk was full on %s."
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  WARNING
+	--#TIMEINDEX 1
+	::= 13001
+
+--  14xxx    = BIOSErrorLog
+sniBIOSErrorLogOK        TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"BIOS error log contains no current entries"
+	--#TYPE    "BIOS error log contains no current entries"
+	--#SUMMARY   "BIOS error log contains no current entries on %s"
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  NORMAL
+	--#TIMEINDEX 1
+	::= 14001
+
+sniBIOSErrorLogWarning   TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"BIOS reported a non-critical problem"
+	--#TYPE   "BIOS reported a non-critical problem"
+	--#SUMMARY   "BIOS reported a non-critical problem on %s"
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  WARNING
+	--#TIMEINDEX 1
+	::= 14002
+
+sniBIOSErrorLogCritical   TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"BIOS reported a critical error"
+	--#TYPE   "BIOS reported a critical error"
+	--#SUMMARY   "BIOS reported a critical error on %s"
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  CRITICAL
+	--#TIMEINDEX 1
+	::= 14003
+
+--  15xxx    = P.O.S.T. Error
+sniAOLPOSTCritical     TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"Power On Self Test (POST) error."
+	--#TYPE   "Power On Self Test (POST) error."
+	--#SUMMARY   "Power On Self Test (POST) error on %s"
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  CRITICAL
+	--#TIMEINDEX 1
+	::= 15003
+
+--  16xxx    = Watchdog
+sniAOLWatchdogCritical     TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"The operating system may be hung or the computer failed to boot."
+	--#TYPE   "The operating system may be hung or the computer failed to boot."
+	--#SUMMARY   "The operating system may be hung or the computer failed to boot on %s"
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  CRITICAL
+	--#TIMEINDEX 1
+	::= 16003
+
+--  17xxx    = Cover opening
+sniAOLCoverOpened     TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"The cover was opened."
+	--#TYPE   "The cover was opened."
+	--#SUMMARY   "The cover was opened on %s"
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  CRITICAL
+	--#TIMEINDEX 1
+	::= 17003
+
+--  18xxx    = CPU Missing
+sniAOLCPUMissingCritical     TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"The processor was removed from the computer."
+	--#TYPE   "The processor was removed from the computer."
+	--#SUMMARY   "The processor was removed from the computer %s"
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  CRITICAL
+	--#TIMEINDEX 1
+	::= 18003
+
+--  20xxx    = Heartbeat expired
+sniAOLHeartbeatCritical     TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"The computer is no longer available. (Presence Heartbeat Expired)."
+	--#TYPE   "The computer is no longer available. (Presence Heartbeat Expired)."
+	--#SUMMARY   "The computer %s is no longer available. (Presence Heartbeat Expired)"
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  CRITICAL
+	--#TIMEINDEX 1
+	::= 20003
+
+-- 21xxx   = Free hard disk space
+sniFreeDiskSpaceOK             TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"Free hard disk space is sufficient."
+	--#TYPE     "Free hard disk space is sufficient."
+	--#SUMMARY   "Free hard disk space is sufficient on %s."
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  NORMAL
+	--#TIMEINDEX 1
+	::= 21001 
+
+sniFreeDiskSpaceWarning         TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"Free hard disk space is low."
+	--#TYPE     "Free hard disk space is low."
+	--#SUMMARY   "Free hard disk space is low on %s."
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  WARNING
+	--#TIMEINDEX 1
+	::= 21002
+
+sniFreeDiskSpaceError           TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"Free hard disk space is extremely low."
+	--#TYPE     "Free hard disk space is extremely low."
+	--#SUMMARY   "Free hard disk space is extremely low on %s."
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  CRITICAL
+	--#TIMEINDEX 1
+	::= 21003 
+
+-- 22xxx   = Memory changes
+sniMemoryChangesOK             TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"The memory size has not changed."
+	--#TYPE     "The memory size has not changed."
+	--#SUMMARY   "The memory size has not changed on %s."
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  NORMAL
+	--#TIMEINDEX 1
+	::= 22001 
+
+sniMemoryChangesWarning         TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"The memory size increased."
+	--#TYPE     "The memory size increased."
+	--#SUMMARY   "The memory size increased on %s."
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  WARNING
+	--#TIMEINDEX 1
+	::= 22002
+
+sniMemoryChangesError           TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"The memory size decreased low."
+	--#TYPE     "The memory size decreased."
+	--#SUMMARY   "The memory size decreased on %s."
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  CRITICAL
+	--#TIMEINDEX 1
+	::= 22003 
+
+-- 23xxx   = Device changes
+sniDeviceChangesOK             TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"No changes in devices."
+	--#TYPE     "No changes in devices."
+	--#SUMMARY   "No changes in devices on %s."
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  NORMAL
+	--#TIMEINDEX 1
+	::= 23001 
+
+sniDeviceChangesWarning         TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"A device was added to the system."
+	--#TYPE     "A device was added to the system."
+	--#SUMMARY   "A device was added to system %s."
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  WARNING
+	--#TIMEINDEX 1
+	::= 23002
+
+sniDeviceChangesError           TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"A device was removed from the system."
+	--#TYPE     "A device was removed from the system."
+	--#SUMMARY   "A device was removed from system %s."
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  CRITICAL
+	--#TIMEINDEX 1
+	::= 23003 
+
+--  24xxx    = Windows Events Monitoring
+sniWindowsEventInfo           TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"An informal Windows event has been logged."
+	--#TYPE     "An informal Windows event has been logged."
+	--#SUMMARY   "An informal Windows event has been logged on %s."
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  NORMAL
+	--#TIMEINDEX 1
+	::= 24001 
+
+sniWindowsEventWarning         TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"A Windows event of type Warning has been logged."
+	--#TYPE     "A Windows event of type Warning has been logged."
+	--#SUMMARY   "A Windows event of type Warning has been logged on system %s."
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  WARNING
+	--#TIMEINDEX 1
+	::= 24002
+
+sniWindowsEventError           TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"A critical Windows event has been logged."
+	--#TYPE     "A critical Windows event has been logged."
+	--#SUMMARY   "A critical Windows event has been logged on system %s."
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  CRITICAL
+	--#TIMEINDEX 1
+	::= 24003 
+
+--  25xxx    = Processor Throttling
+sniProcessorThrottlingOk           TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"The processors and the processor cores respectively are running normally."
+	--#TYPE     "The processors and the processor cores respectively are running normally."
+	--#SUMMARY   "The processors and the processor cores respectively are running normally on system %s."
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  NORMAL
+	--#TIMEINDEX 1
+	::= 25001 
+
+sniProcessorThrottlingError           TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"At least one of the processors or processor cores of the system has throttled since last restart."
+	--#TYPE     "At least one of the processors or processor cores of the system has throttled since last restart."
+	--#SUMMARY   "At least one of the processors or processor cores of the system has throttled since last restart on system %s."
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  CRITICAL
+	--#TIMEINDEX 1
+	::= 25003 
+
+
+-- 26xxx   = Boot Order change
+sniBootOrderChangeOK             TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"The Boot Order matches the master configuration."
+	--#TYPE     "The Boot Order matches the master configuration."
+	--#SUMMARY   "The Boot Order matches the master configuration on system %s."
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  NORMAL
+	--#TIMEINDEX 1
+	::= 26001 
+
+sniBootOrderChangeError           TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"DeskView has determined that the Boot Order differs from the master configuration. "
+	--#TYPE     "DeskView has determined that the Boot Order differs from the master configuration. "
+	--#SUMMARY   "DeskView has determined that the Boot Order differs from the master configuration on system %s."
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  CRITICAL
+	--#TIMEINDEX 1
+	::= 26003 
+
+
+-- 56xxx   = Free system disk space
+sniFreeSystemDiskSpaceOK             TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"Free hard disk space on system disk is sufficient."
+	--#TYPE     "Free hard disk space on system disk is sufficient."
+	--#SUMMARY   "Free hard disk space on system disk is sufficient on %s."
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  NORMAL
+	--#TIMEINDEX 1
+	::= 56001 
+
+sniFreeSystemDiskSpaceWarning         TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"Free hard disk space on system disk is low."
+	--#TYPE     "Free hard disk space on system disk is low."
+	--#SUMMARY   "Free hard disk space on system disk is low on %s."
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  WARNING
+	--#TIMEINDEX 1
+	::= 56002
+
+sniFreeSystemDiskSpaceError           TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"Free hard disk space on system disk is extremely low."
+	--#TYPE     "Free hard disk space on system disk is extremely low."
+	--#SUMMARY   "Free hard disk space on system disk is extremely low on %s."
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  CRITICAL
+	--#TIMEINDEX 1
+	::= 56003 
+
+-- 57xxx   = Lease expiration
+sniLeaseExpirationOK             TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"The lease contract has not yet expired or no expiration date has been set."
+	--#TYPE     "The lease contract has not yet expired or no expiration date has been set."
+	--#SUMMARY   "The lease contract has not yet expired or no expiration date has been set on %s."
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  NORMAL
+	--#TIMEINDEX 1
+	::= 57001 
+
+sniLeaseExpirationWarning         TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"The lease contract will expire soon."
+	--#TYPE     "The lease contract will expire soon."
+	--#SUMMARY   "The lease contract will expire soon on %s."
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  WARNING
+	--#TIMEINDEX 1
+	::= 57002
+
+sniLeaseExpirationError           TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"The lease contract has expired."
+	--#TYPE     "The lease contract has expired."
+	--#SUMMARY   "The lease contract has expired on %s."
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  CRITICAL
+	--#TIMEINDEX 1
+	::= 57003 
+
+-- 58xxx   = Processor change
+sniProcessorChangeOK             TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"No processor change determined."
+	--#TYPE     "No processor change determined."
+	--#SUMMARY   "No processor change determined on %s."
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  NORMAL
+	--#TIMEINDEX 1
+	::= 58001 
+
+sniProcessorChangeWarning             TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"A processor has also been installed or replaced."
+	--#TYPE     "A processor has also been installed or replaced."
+	--#SUMMARY   "A processor has also been installed or replaced on %s."
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  WARNING
+	--#TIMEINDEX 1
+	::= 58002 
+
+sniProcessorChangeError             TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"A processor has been removed."
+	--#TYPE     "A processor has been removed."
+	--#SUMMARY   "A processor has been removed on %s."
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  CRITICAL
+	--#TIMEINDEX 1
+	::= 58003 
+
+--  59xxx    = Simulation
+sniNotificationSimulationOK    TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"A notification has been simulated."
+	--#TYPE   "A notification has been simulated."
+	--#SUMMARY   "A notification has been simulated on %s"
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  NORMAL
+	--#TIMEINDEX 1
+	::= 59001
+
+-- 60xxx   = Display changes
+sniDisplayChangesOK             TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"No changes in displays."
+	--#TYPE     "No changes in displays."
+	--#SUMMARY   "No changes in displays on %s."
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  NORMAL
+	--#TIMEINDEX 1
+	::= 60001 
+
+sniDisplayChangesWarning         TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"A display was added to the system."
+	--#TYPE     "A display was added to the system."
+	--#SUMMARY   "A display was added to system %s."
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  WARNING
+	--#TIMEINDEX 1
+	::= 60002
+
+sniDisplayChangesError           TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"A display was removed from the system."
+	--#TYPE     "A display was removed from the system."
+	--#SUMMARY   "A display was removed from system %s."
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  CRITICAL
+	--#TIMEINDEX 1
+	::= 60003 
+
+-- 61xxx   = Windows Services Monitoring
+sniWindowsServicesMonitoringOK             TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"No change in the windows services determined. "
+	--#TYPE     "No change in the windows services determined. "
+	--#SUMMARY   "No change in the windows services determined on %s."
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  NORMAL
+	--#TIMEINDEX 1
+	::= 61001 
+
+sniWindowsServicesMonitoringWarning         TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"A change in the installed Windows Services has occurred."
+	--#TYPE     "A change in the installed Windows Services has occurred."
+	--#SUMMARY   "A change in the installed Windows Services has occurred on system %s."
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  WARNING
+	--#TIMEINDEX 1
+	::= 61002
+
+sniWindowsServicesMonitoringError           TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"A critical change in the installed Windows Services has occurred."
+	--#TYPE     "A critical change in the installed Windows Services has occurred."
+	--#SUMMARY   "A critical change in the installed Windows Services has occurred on system %s."
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  CRITICAL
+	--#TIMEINDEX 1
+	::= 61003 
+
+-- 62xxx   = Autostart Monitoring
+sniAutostartMonitoringOK             TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"No change in the Autostart programs."
+	--#TYPE     "No change in the Autostart programs."
+	--#SUMMARY   "No change in the Autostart programs on %s."
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  NORMAL
+	--#TIMEINDEX 1
+	::= 62001 
+
+sniAutostartMonitoringWarning         TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"A change of AutoStart Programs has occurred."
+	--#TYPE     "A change of AutoStart Programs has occurred."
+	--#SUMMARY   "A change of AutoStart Programs has occurred on system %s."
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  WARNING
+	--#TIMEINDEX 1
+	::= 62002
+
+sniAutostartMonitoringError           TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"A critical change of AutoStart Programs has occurred."
+	--#TYPE     "A critical change of AutoStart Programs has occurred."
+	--#SUMMARY   "A critical change of AutoStart Programs has occurred on system %s."
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  CRITICAL
+	--#TIMEINDEX 1
+	::= 62003 
+
+-- 63xxx   = BIOS settings change
+sniBiosSettingsChangeOK             TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"The BIOS settings match the master configuration."
+	--#TYPE     "The BIOS settings match the master configuration."
+	--#SUMMARY   "The BIOS settings match the master configuration on system %s."
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  NORMAL
+	--#TIMEINDEX 1
+	::= 63001 
+
+sniBiosSettingsChangeError           TRAP-TYPE
+	ENTERPRISE      { sniDeskTrap }
+	VARIABLES       { sniTrapDesktop, sniTrapTimeInt, sniTrapTimeStr, sniTrapAgentStatus, sniTrapAgentType, sniTrapAgentEventName,sniTrapAgentEventText, sniTrapAgentTimeBIAS, sniTrapAgentSystemStatus, sniTrapAgentClassStatus }
+	DESCRIPTION
+		"DeskView has determined that one or more BIOS settings monitored by DeskView differ from the master configuration."
+	--#TYPE     "DeskView has determined that one or more BIOS settings monitored by DeskView differ from the master configuration."
+	--#SUMMARY   "DeskView has determined that one or more BIOS settings monitored by DeskView differ from the master configuration on system %s."
+	--#ARGUMENTS { 0 }
+    --#SEVERITY  CRITICAL
+	--#TIMEINDEX 1
+	::= 63003 
+
+
+END

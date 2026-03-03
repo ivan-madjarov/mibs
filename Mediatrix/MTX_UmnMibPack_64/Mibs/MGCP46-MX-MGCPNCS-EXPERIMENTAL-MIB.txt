@@ -1,0 +1,115 @@
+-- ****************************************************************************
+-- ****************************************************************************
+--
+--             Copyright(c) 2005 Mediatrix Telecom, Inc.
+--
+--  NOTICE:
+--   This document contains information that is confidential and proprietary
+--   to Mediatrix Telecom, Inc.
+--
+--   Mediatrix Telecom, Inc. reserves all rights to this document as well as
+--   to the Intellectual Property of the document and the technology and
+--   know-how that it includes and represents.
+--
+--   This publication cannot be reproduced, neither in whole nor in part in
+--   any form whatsoever without written prior approval by
+--   Mediatrix Telecom, Inc.
+--
+--   Mediatrix Telecom, Inc. reserves the right to revise this publication
+--   and make changes at any time and without the obligation to notify any
+--   person and/or entity of such revisions and/or changes.
+--
+-- ****************************************************************************
+-- ****************************************************************************
+
+MGCP46-MX-MGCPNCS-EXPERIMENTAL-MIB
+DEFINITIONS ::= BEGIN
+
+IMPORTS
+        MODULE-IDENTITY,
+        OBJECT-IDENTITY,
+        OBJECT-TYPE,
+        Unsigned32
+    FROM SNMPv2-SMI
+        OBJECT-GROUP,
+        MODULE-COMPLIANCE
+    FROM SNMPv2-CONF
+        ifIndex
+    FROM RFC1213-MIB
+        MxEnableState
+    FROM MX-TC
+        mediatrixExperimental
+    FROM MX-SMI;
+
+mgcpncsExperimentalMIB MODULE-IDENTITY
+    LAST-UPDATED "200506150000Z"
+    ORGANIZATION "Mediatrix Telecom, Inc."
+    CONTACT-INFO "Mediatrix Telecom, Inc.
+                  4229, Garlock Street
+                  Sherbrooke (Quebec)
+                  Canada
+                  Phone: (819) 829-8749
+                  "
+    DESCRIPTION "This MIB contains MGCP/NCS experimental and interoperability 
+                 configuration objects."
+
+    -- ************************************************************************
+    -- Revision history
+    -- ************************************************************************
+    REVISION    "200506150000Z"
+    DESCRIPTION "Creation"
+    ::= { mediatrixExperimental 100 }
+
+mgcpncsExperimentalMIBObjects   OBJECT IDENTIFIER ::= { mgcpncsExperimentalMIB 1 }
+mgcpncsExperimentalConformance  OBJECT IDENTIFIER ::= { mgcpncsExperimentalMIB 2 }
+
+    -- ************************************************************************
+    -- Interopability Group
+    -- ************************************************************************
+    mgcpncsInterop OBJECT IDENTIFIER ::= { mgcpncsExperimentalMIBObjects 5 }
+
+        rtpUdpChecksumEnable OBJECT-TYPE
+            SYNTAX      MxEnableState
+            MAX-ACCESS  read-write
+            STATUS      current
+            DESCRIPTION "Enable/disable the UDP checksum for RTP packets. UDP
+                         checksum is disabled by default to gain performance.
+                         
+                         Enable: UDP checksum will be calculated for each RTP 
+                                 packet. This may affect performance.
+                         
+                         Disable: UDP checksum will not be calculated. The value
+                                  0 will be writen in the checksum field of each
+                                  RTP packet header."
+            DEFVAL { disable }
+            ::=  { mgcpncsInterop 200 }
+
+    -- ************************************************************************
+    -- Conformance information
+    -- ************************************************************************
+    mgcpncsExperimentalCompliances OBJECT IDENTIFIER ::= { mgcpncsExperimentalConformance 1 }
+
+    mgcpncsExperimentalBasicComplVer1 MODULE-COMPLIANCE
+        STATUS      current
+        DESCRIPTION "Minimal definitions for the MGCP/NCS experimental group."
+        MODULE -- This Module
+            MANDATORY-GROUPS {
+                                mgcpncsExperimentalGroupVer1
+                             }
+        ::= { mgcpncsExperimentalCompliances 5 }
+
+    -- ************************************************************************
+    -- MIB variable grouping
+    -- ************************************************************************
+    mgcpncsExperimentalGroups OBJECT IDENTIFIER ::= { mgcpncsExperimentalConformance 2 }
+
+    mgcpncsExperimentalGroupVer1 OBJECT-GROUP
+        OBJECTS {
+                    rtpUdpChecksumEnable
+                }
+        STATUS      current
+        DESCRIPTION "This group holds the objects that define the MGCP/NCS
+                     experimental group."
+        ::= { mgcpncsExperimentalGroups 5 }
+
+END

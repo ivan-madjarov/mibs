@@ -1,0 +1,262 @@
+-- ****************************************************************************
+-- ****************************************************************************
+--
+--             Copyright(c) 2002 Mediatrix Telecom, Inc.
+--
+--  NOTICE:
+--   This document contains information that is confidential and proprietary
+--   to Mediatrix Telecom, Inc.
+--
+--   Mediatrix Telecom, Inc. reserves all rights to this document as well as
+--   to the Intellectual Property of the document and the technology and
+--   know-how that it includes and represents.
+--
+--   This publication cannot be reproduced, neither in whole nor in part in
+--   any form whatsoever without written prior approval by
+--   Mediatrix Telecom, Inc.
+--
+--   Mediatrix Telecom, Inc. reserves the right to revise this publication
+--   and make changes at any time and without the obligation to notify any
+--   person and/or entity of such revisions and/or changes.
+--
+-- ****************************************************************************
+-- ****************************************************************************
+
+SIP43-MX-SIP-INTEROP-MIB
+DEFINITIONS ::= BEGIN
+
+IMPORTS
+        MODULE-IDENTITY,
+        OBJECT-IDENTITY,
+        OBJECT-TYPE,
+        Unsigned32
+    FROM SNMPv2-SMI
+        OBJECT-GROUP,
+        MODULE-COMPLIANCE
+    FROM SNMPv2-CONF
+        ifIndex
+    FROM RFC1213-MIB
+        mediatrixExperimental
+    FROM MX-SMI;
+
+sipInteropMIB MODULE-IDENTITY
+    LAST-UPDATED "0310230000Z"
+    ORGANIZATION "Mediatrix Telecom, Inc."
+    CONTACT-INFO "Mediatrix Telecom, Inc.
+                  4229, Garlock Street
+                  Sherbrooke (Quebec)
+                  Canada
+                  Phone: (819) 829-8749
+                  "
+    DESCRIPTION "This MIB contains SIP interoperability configuration objects."
+
+    -- ************************************************************************
+    -- Revision history
+    -- ************************************************************************
+    REVISION    "0310230000Z"
+    DESCRIPTION "October 1st, 2002
+                 Created
+                 October 16, 2002
+                 Added variables sipInteropTransferVersion and sipInteropSessionTimerVersion
+                 October 28, 2002
+                 Added sipInteropTransmissionTimeout variable
+                 October 23, 2003
+                 Added sipInteropReplacesVersion variable"
+    ::= { mediatrixExperimental 20 }
+
+sipInteropMIBObjects  OBJECT IDENTIFIER ::= { sipInteropMIB 1 }
+sipInteropConformance OBJECT IDENTIFIER ::= { sipInteropMIB 2 }
+
+    -- ************************************************************************
+    -- Sip Interop Variables
+    -- ************************************************************************
+    sipInteropReplacesConfig OBJECT-TYPE
+        SYNTAX      INTEGER {
+                             doNotUseReplaces(0),
+                             useReplacesWithRequire(1),
+                             useReplacesNoRequire(2)
+                            }
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Configures usage of the Replaces header mechanism used in a
+                     transfer. When supported by the target of the transfer, Replaces
+                     ensures a more seamless transfer by permitting the initiating party
+                     to effectively replace a current call by another instead of
+                     disconnecting the call to be replaced and creating a second
+                     call.
+
+                     doNotUseReplaces :
+                        The Replaces header is not used.
+
+                     useReplacesWithRequire :
+                        The Replaces header is used. It can be seen in the Refer-To
+                        header found in the REFER request sent by the transferor.
+                        It can also be seen in the INVITE sent by the transferee.
+                        The target that supports Replaces will use its information
+                        to merge the new INVITE with an existing call specified in
+                        the Replaces header.
+
+                        The transferee will require the use of the replaces extension
+                        for proper completion of the transfer. If the replaces extension
+                        is not supported by the target of the transfer, the unit
+                        will go into a fallback algorithm to retry the transfer
+                        using replaces, by reversing the roles of the target and
+                        the transferee (by resending the REFER to the initial target
+                        instead of the initial transferee). As a last resort (if none
+                        of the participants supports replaces), the transfer will
+                        be carried out without using the replaces extension.
+
+
+                     useReplacesNoRequire :
+                        The Replaces header is used. It can be seen in the Refer-To
+                        header found in the REFER request sent by the transferor.
+                        It can also be seen in the INVITE sent by the transferee.
+                        The target that supports Replaces will use its information
+                        to merge the new INVITE with an existing call specified in
+                        the Replaces header.
+
+                        This will disable the transfer fallback. The replaces
+                        information will still be present, but no check will be
+                        made that it is effectively used to complete the transfer."
+        DEFVAL      { useReplacesWithRequire }
+        ::= { sipInteropMIBObjects  5 }
+
+
+    sipInteropTransferVersion OBJECT-TYPE
+        SYNTAX      INTEGER {
+                             transfer02(0),
+                             transfer05UsingRefer02(1)
+                            }
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Selects the version of the transfer draft that the unit will
+                     use. The provisioned version is used for initiating transfers
+                     and receiving them. Transfer versions other than those provisioned
+                     will not work.
+
+                     transfer02 :
+                        The unit will execute transfers using the methods described
+                        in the now expired draft-ietf-sip-cc-transfer-02.txt.
+                        This draft was obsoleted. Its use is deprecated and
+                        this setting should be used for backward compatibility
+                        issues only.
+
+                     transfer05UsingRefer02 :
+                        The unit will execute transfers using the methods described
+                        in the more recent draft-ietf-sip-cc-transfer-05.txt.
+                        This draft version contains several enhancements over the
+                        previous ones. Among others, it is possible to use the
+                        replaces header to provide a more seamless attended transfer
+                        to the user. This method also uses draft-ietf-sip-refer-02.txt.
+                        This setting should be used if you don't need to interop
+                        with transfer02-enabled parties."
+        DEFVAL      { transfer05UsingRefer02 }
+        ::= { sipInteropMIBObjects  10 }
+
+
+    sipInteropSessionTimerVersion OBJECT-TYPE
+        SYNTAX      INTEGER {
+                             sessionTimer04(0),
+                             sessionTimer08(1)
+                            }
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Selects the version of the session timer draft that the unit
+                     will use. Session timer versions other than those provisioned
+                     may not work because of backward compatibility issues between
+                     the versions.
+
+                     sessionTimer04 :
+                        The unit will use the session timer extension as described
+                        in the now expired draft-ietf-sip-session-timer-04.txt.
+                        This draft was obsoleted. Its use is deprecated and
+                        this setting should be used for backward compatibility
+                        issues only.
+
+                     sessionTimer08 :
+                        The unit will use the session timer extension as described
+                        in the more recent draft-ietf-sip-session-timer-08.txt.
+                        This draft version contains several enhancements over the
+                        previous ones, including the use of the Min-SE header.
+                        This setting should be used if you don't need
+                        to interoperate with session timer v4-enabled parties."
+        DEFVAL      { sessionTimer08 }
+        ::= { sipInteropMIBObjects  15 }
+
+
+    sipInteropTransmissionTimeout OBJECT-TYPE
+        SYNTAX      Unsigned32 ( 1..32 )
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Configures the maximum time to spend waiting for answers to
+                     messages, from a single source. Retransmissions still follow
+                     the algorithm proposed in RFC2543bis, but the total wait
+                     time can be overriden by using this variable.
+
+                     For example, if using DNS SRV and more than one entries are
+                     present, this timeout will be the time it takes before trying
+                     the second entry."
+        DEFVAL      { 32 }
+        ::= { sipInteropMIBObjects  20 }
+
+
+    sipInteropReplacesVersion OBJECT-TYPE
+        SYNTAX      INTEGER {
+                             replaces01(0),
+                             replaces03(1)
+                            }
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Selects the version of the ietf-sip-replaces draft to conform
+                     to. The provisioned version affects the way blind transfers
+                     are executed.
+
+                     replaces01 :
+                        When following the sip-replaces-01 draft, the Transferor is
+                        allowed to use a REFER with Replaces when proceeding to
+                        initiate a blind transfer.  This, in turn, results in the
+                        Transferee including a Replaces header in its INVITE to
+                        the Transfer Target.
+
+                     replaces03 :
+                        The sip-replaces-03 draft forbids the use of Replaces in
+                        the case of a blind transfer.  When initiating one, the
+                        Transferor first CANCELs its call with the Target and then
+                        issues a REFER without Replaces to the Transferee."
+        DEFVAL      { replaces01 }
+        ::= { sipInteropMIBObjects  25 }
+
+
+    -- ************************************************************************
+    -- Conformance information
+    -- ************************************************************************
+    sipInteropCompliances OBJECT IDENTIFIER ::= { sipInteropConformance 1 }
+
+    sipInteropBasicComplVer1 MODULE-COMPLIANCE
+        STATUS      current
+        DESCRIPTION "Minimal definitions for the SIP protocol group"
+        MODULE -- This Module
+            MANDATORY-GROUPS {
+                                sipInteropGroupVer1
+                             }
+        ::= { sipInteropCompliances 1 }
+
+
+    -- ************************************************************************
+    -- MIB variable grouping
+    -- ************************************************************************
+    sipInteropGroups OBJECT IDENTIFIER ::= { sipInteropConformance 2 }
+
+    sipInteropGroupVer1 OBJECT-GROUP
+        OBJECTS {
+                    sipInteropReplacesConfig,
+                    sipInteropTransferVersion,
+                    sipInteropSessionTimerVersion,
+                    sipInteropTransmissionTimeout
+                }
+        STATUS      current
+        DESCRIPTION "This group holds the objects that define the
+                     main unit group."
+        ::= { sipInteropGroups 5 }
+
+END

@@ -1,0 +1,1452 @@
+DTT DEFINITIONS ::= BEGIN
+
+IMPORTS
+    OBJECT-TYPE, NOTIFICATION-TYPE, MODULE-IDENTITY,
+    Integer32, Opaque, TimeTicks,enterprises
+        FROM SNMPv2-SMI
+
+    TEXTUAL-CONVENTION, DisplayString, TruthValue
+	FROM SNMPv2-TC;
+
+datatrack MODULE-IDENTITY
+    LAST-UPDATED "20100315"
+    ORGANIZATION "Data Track Technology PLC"
+    CONTACT-INFO "email: support@dtrack.com"
+    DESCRIPTION	 "This file defines the private DTT SNMP MIB extensions.
+		  This file is for import into managing entities only."
+    REVISION	 "20100315"
+    DESCRIPTION	 "The DTT MIB"
+    ::= { enterprises 11459 }
+
+
+dttHardware		OBJECT IDENTIFIER ::= { datatrack   	1  }
+
+dttT2700		OBJECT IDENTIFIER ::= { dttHardware	1  }
+
+dttT2700Traps		OBJECT IDENTIFIER ::= { dttT2700  	1  }
+
+dttSoftware		OBJECT IDENTIFIER ::= { datatrack	2  }
+
+dttT2700Sw		OBJECT IDENTIFIER ::= { dttSoftware	1  }
+
+dttT2700SwTraps		OBJECT IDENTIFIER ::= { dttT2700Sw	1  }
+
+dttTLegacySw		OBJECT IDENTIFIER ::= { dttSoftware	2  }
+
+dttTLegacySwTraps	OBJECT IDENTIFIER ::= { dttTLegacySw	1  }
+
+dttCMSSw		OBJECT IDENTIFIER ::= { dttSoftware	3  }
+
+dttCMSSwTraps		OBJECT IDENTIFIER ::= { dttCMSSw	1  }
+
+dttAMSSw		OBJECT IDENTIFIER ::= { dttSoftware 4 }
+
+dttAMSSwAlarms		OBJECT IDENTIFIER ::= { dttAMSSw 1}
+
+dttSAMSSw		OBJECT IDENTIFIER ::= { dttSoftware 5 }
+
+dttSAMSSwTraps	OBJECT IDENTIFIER ::= { dttSAMSSw 1 }
+
+
+
+--
+-- T2700 Hardware alert trap
+--
+    
+
+dttT2700SerialNo OBJECT-TYPE
+    SYNTAX	DisplayString ( SIZE (1..12) )
+    ACCESS	not-accessible
+    STATUS	mandatory
+    DESCRIPTION "The serial number of the sending tracker2700"
+    ::= { dttT2700Traps  1 }
+
+dttT2700StationId OBJECT-TYPE
+    SYNTAX	DisplayString ( SIZE (1..16) )
+    ACCESS	not-accessible
+    STATUS	mandatory
+    DESCRIPTION "The station ident string of the sending tracker2700"
+    ::= { dttT2700Traps  2 }
+
+dttT2700AlertType OBJECT-TYPE
+    SYNTAX	INTEGER
+    ACCESS	not-accessible
+    STATUS	mandatory
+    DESCRIPTION "The type of Alert"
+    ::= { dttT2700Traps  3 }
+
+dttT2700AlertSubType OBJECT-TYPE
+    SYNTAX	Integer32 
+    ACCESS	not-accessible
+    STATUS	mandatory
+    DESCRIPTION "The sub-type of Alert"
+    ::= { dttT2700Traps  4 }
+
+dttT2700AlertTime OBJECT-TYPE
+    SYNTAX	TimeTicks 
+    ACCESS	not-accessible
+    STATUS	mandatory
+    DESCRIPTION "The occurrence time  of the Alert in Unix seconds"
+    ::= { dttT2700Traps  5 }
+
+dttT2700AlertDesc OBJECT-TYPE
+    SYNTAX	DisplayString ( SIZE (0..32) )
+    ACCESS	not-accessible
+    STATUS	mandatory
+    DESCRIPTION "The description of the Alert"
+    ::= { dttT2700Traps  6 }
+
+dttT2700AlertData OBJECT-TYPE
+    SYNTAX	OCTET STRING ( SIZE (1..1024) )
+    ACCESS	not-accessible
+    STATUS	mandatory
+    DESCRIPTION "The data associated with the Alert (if any) "
+    ::= { dttT2700Traps  7 }
+
+dttT2700Alert TRAP-TYPE
+    ENTERPRISE  datatrack
+    VARIABLES
+    {
+	dttT2700SerialNo,
+	dttT2700StationId,
+	dttT2700AlertType,
+        dttT2700AlertSubType,
+	dttT2700AlertTime,
+	dttT2700AlertDesc,
+	dttT2700AlertData
+    }
+    DESCRIPTION "Tracker 2700 Alert"  
+    ::=  1
+    
+    
+--
+-- T2700 software alert trap
+--
+
+
+dttT2700SwSerialNo OBJECT-TYPE
+    SYNTAX	DisplayString ( SIZE (1..12) )
+    ACCESS	not-accessible
+    STATUS	mandatory
+    DESCRIPTION "The serial number of the sending tracker2700"
+    ::= { dttT2700SwTraps  1 }
+
+dttT2700SwStationId OBJECT-TYPE
+    SYNTAX	DisplayString ( SIZE (1..16) )
+    ACCESS	not-accessible
+    STATUS	mandatory
+    DESCRIPTION "The station ident string of the sending tracker2700"
+    ::= { dttT2700SwTraps  2 }
+
+dttT2700SwAlertType OBJECT-TYPE
+    SYNTAX	INTEGER
+    ACCESS	not-accessible
+    STATUS	mandatory
+    DESCRIPTION "The type of Alert"
+    ::= { dttT2700SwTraps  3 }
+
+dttT2700SwAlertSubType OBJECT-TYPE
+    SYNTAX	Integer32 
+    ACCESS	not-accessible
+    STATUS	mandatory
+    DESCRIPTION "The sub-type of Alert"
+    ::= { dttT2700SwTraps  4 }
+
+dttT2700SwAlertTime OBJECT-TYPE
+    SYNTAX	TimeTicks 
+    ACCESS	not-accessible
+    STATUS	mandatory
+    DESCRIPTION "The occurrence time  of the Alert in Unix seconds"
+    ::= { dttT2700SwTraps  5 }
+
+dttT2700SwAlertDesc OBJECT-TYPE
+    SYNTAX	DisplayString ( SIZE (0..32) )
+    ACCESS	not-accessible
+    STATUS	mandatory
+    DESCRIPTION "The description of the Alert"
+    ::= { dttT2700SwTraps  6 }
+
+dttT2700SwAlertData OBJECT-TYPE
+    SYNTAX	OCTET STRING ( SIZE (1..1024) )
+    ACCESS	not-accessible
+    STATUS	mandatory
+    DESCRIPTION "The data associated with the Alert (if any) "
+    ::= { dttT2700SwTraps  7 }
+
+    
+dttT2700SwAlert TRAP-TYPE
+    ENTERPRISE  datatrack
+    VARIABLES
+    {
+	dttT2700SwSerialNo,
+	dttT2700SwStationId,
+	dttT2700SwAlertType,
+        dttT2700SwAlertSubType,
+	dttT2700SwAlertTime,
+	dttT2700SwAlertDesc,
+	dttT2700SwAlertData
+    }
+    DESCRIPTION "Tracker 2700 Software Alert"  
+    ::=  2
+
+
+--
+-- TLegacy software alert trap
+--
+    
+
+dttTLegacySwStationId OBJECT-TYPE
+    SYNTAX	DisplayString ( SIZE (1..16) )
+    ACCESS	not-accessible
+    STATUS	mandatory
+    DESCRIPTION "The station ident string of the sending trackerLegacy"
+    ::= { dttTLegacySwTraps  1 }
+
+dttTLegacySwAlertType OBJECT-TYPE
+    SYNTAX	DisplayString ( SIZE (1..7) )
+    ACCESS	not-accessible
+    STATUS	mandatory
+    DESCRIPTION "The type of Alert"
+    ::= { dttTLegacySwTraps  2 }
+
+dttTLegacySwAlertTime OBJECT-TYPE
+    SYNTAX	TimeTicks 
+    ACCESS	not-accessible
+    STATUS	mandatory
+    DESCRIPTION "The occurrence time  of the Alert in Unix seconds"
+    ::= { dttTLegacySwTraps  3 }
+
+dttTLegacySwAlertDesc OBJECT-TYPE
+    SYNTAX	DisplayString ( SIZE (0..32) )
+    ACCESS	not-accessible
+    STATUS	mandatory
+    DESCRIPTION "The description of the Alert"
+    ::= { dttTLegacySwTraps  4 }
+
+dttTLegacySwAlertData OBJECT-TYPE
+    SYNTAX	OCTET STRING ( SIZE (1..1024) )
+    ACCESS	not-accessible
+    STATUS	mandatory
+    DESCRIPTION "The data associated with the Alert (if any) "
+    ::= { dttTLegacySwTraps  5 }
+
+dttTLegacySwAlert TRAP-TYPE
+    ENTERPRISE  datatrack
+    VARIABLES
+    {
+	dttTLegacySwStationId,
+	dttTLegacySwAlertType,
+	dttTLegacySwAlertTime,
+	dttTLegacySwAlertDesc,
+	dttTLegacySwAlertData
+    }
+    DESCRIPTION "Tracker Legacy Software Alert"  
+    ::=  3
+
+--
+-- CMS Exception trap
+--
+    
+
+dttCMSExceptionOrgCode OBJECT-TYPE
+    SYNTAX	DisplayString ( SIZE (1..6) )
+    ACCESS	not-accessible
+    STATUS	mandatory
+    DESCRIPTION "The Organisation code of the sending CMS system"
+    ::= { dttCMSSwTraps  1 }
+
+dttCMSExceptionOrgDesc OBJECT-TYPE
+    SYNTAX	DisplayString ( SIZE (1..48) )
+    ACCESS	not-accessible
+    STATUS	mandatory
+    DESCRIPTION "The Organisation description of the sending CMS system"
+    ::= { dttCMSSwTraps  2 }
+
+dttCMSExceptionName OBJECT-TYPE
+    SYNTAX	DisplayString ( SIZE (1..48) )
+    ACCESS	not-accessible
+    STATUS	mandatory
+    DESCRIPTION "The name of the Exception that has been triggered"
+    ::= { dttCMSSwTraps  3 }
+
+dttCMSExceptionDesc OBJECT-TYPE
+    SYNTAX	DisplayString ( SIZE (1..250) )
+    ACCESS	not-accessible
+    STATUS	mandatory
+    DESCRIPTION "The description of the Exception that has been triggered"
+    ::= { dttCMSSwTraps  4 }
+
+dttCMSExceptionTime OBJECT-TYPE
+    SYNTAX	TimeTicks 
+    ACCESS	not-accessible
+    STATUS	mandatory
+    DESCRIPTION "The occurrence time of the Exception in seconds since 1970"
+    ::= { dttCMSSwTraps  5 }
+
+dttCMSExceptionRuleName OBJECT-TYPE
+    SYNTAX	DisplayString ( SIZE (1..48) )
+    ACCESS	not-accessible
+    STATUS	mandatory
+    DESCRIPTION "The rule name that triggered the CMS Exception"
+    ::= { dttCMSSwTraps  6 }
+
+dttCMSExceptionRuleDescription OBJECT-TYPE
+    SYNTAX	DisplayString ( SIZE (1..250) )
+    ACCESS	not-accessible
+    STATUS	mandatory
+    DESCRIPTION "The rule description that triggered the CMS Exception"
+    ::= { dttCMSSwTraps  7 }
+
+dttCMSExceptionSiteCode OBJECT-TYPE
+    SYNTAX	DisplayString ( SIZE (1..6) )
+    ACCESS	not-accessible
+    STATUS	mandatory
+    DESCRIPTION "The Site code of the sending CMS system"
+    ::= { dttCMSSwTraps  8 }
+
+dttCMSExceptionSiteName OBJECT-TYPE
+    SYNTAX	DisplayString ( SIZE (1..48) )
+    ACCESS	not-accessible
+    STATUS	mandatory
+    DESCRIPTION "The Site name of the sending CMS system"
+    ::= { dttCMSSwTraps  9 }
+
+dttCMSExceptionRuleCriteria OBJECT-TYPE
+    SYNTAX	DisplayString ( SIZE (1..250) )
+    ACCESS	not-accessible
+    STATUS	mandatory
+    DESCRIPTION "The rule criteria that triggered the CMS Exception"
+    ::= { dttCMSSwTraps  10 }
+
+dttCMSExceptionCallData OBJECT-TYPE
+    SYNTAX	DisplayString ( SIZE (1..250) )
+    ACCESS	not-accessible
+    STATUS	mandatory
+    DESCRIPTION "The call data that triggered the CMS Exception"
+    ::= { dttCMSSwTraps  11 }
+
+
+dttCMSException TRAP-TYPE
+    ENTERPRISE  datatrack
+    VARIABLES
+    {
+	dttCMSExceptionOrgCode,
+	dttCMSExceptionOrgDesc,
+	dttCMSExceptionName,
+	dttCMSExceptionDesc,
+	dttCMSExceptionTime,
+	dttCMSExceptionRuleName,
+	dttCMSExceptionRuleDescription,
+	dttCMSExceptionSiteCode,
+	dttCMSExceptionSiteName,
+	dttCMSExceptionRuleCriteria,
+	dttCMSExceptionCallData
+    }
+    DESCRIPTION "CMS Exception Alarm"  
+    ::=  4
+    
+
+--
+-- Entries for the AMS System.
+--
+
+almNewEntries OBJECT-TYPE
+	SYNTAX INTEGER
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"The number of new alarms that are held in the AMS system"
+	::= { dttAMSSwAlarms 1 }
+
+almAckEntries OBJECT-TYPE
+	SYNTAX INTEGER
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"The number of acknowledged alarms that are held in the AMS system"
+	::= { dttAMSSwAlarms 2 }
+
+
+--
+-- Entries for New alarms held on AMS System.
+--
+
+almNewTable OBJECT-TYPE
+	SYNTAX SEQUENCE OF AlmNewEntry
+	ACCESS	not-accessible
+	STATUS	mandatory
+	DESCRIPTION
+			"Table contains alarm data for all alarms in the 'New' state."
+	::= { dttAMSSwAlarms 3 }
+
+almNewEntry OBJECT-TYPE
+	SYNTAX AlmNewEntry
+	ACCESS	not-accessible
+	STATUS	mandatory
+	DESCRIPTION
+			"An Alarm entry containing objects relating to each alarm which is in
+			the New state."
+	INDEX { almNewEntId }
+	::= { almNewTable 1 }
+
+AlmNewEntry ::=
+	SEQUENCE {
+		almNewEntId					INTEGER,
+		almNewEntCode				OCTET STRING,
+		almNewEntOccTime			TimeTicks,
+		almNewEntSiteCode			OCTET STRING,
+		almNewEntSiteDesc			OCTET STRING,
+		almNewEntCustName			OCTET STRING,
+		almNewEntContNo				OCTET STRING,
+		almNewEntEquipInfo			OCTET STRING,
+		almNewEntSeqNo				INTEGER,
+		almNewEntAlarmDesc			OCTET STRING,
+		almNewEntPabxString			OCTET STRING,
+		almNewEntTrackerString		OCTET STRING,
+		almNewEntArrivalTime		TimeTicks,
+		almNewEntAckTime			TimeTicks,
+		almNewEntAckMachineName		OCTET STRING,
+		almNewEntAckUsername		OCTET STRING,
+		almNewEntClrTime			TimeTicks,
+		almNewEntClrMachineName		OCTET STRING,
+		almNewEntClrUsername		OCTET STRING,
+		almNewEntClrNotes			OCTET STRING,
+		almNewEntSeverityCode		INTEGER,
+		almNewEntSeverityDesc		OCTET STRING,
+		almNewEntLastCalloutTie		TimeTicks,
+		almNewEntLastCalloutNuber	INTEGER,
+		almNewEntNoMoreCallouts		INTEGER
+	}
+
+almNewEntId OBJECT-TYPE
+	SYNTAX	INTEGER
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"The value which uniquely identifies the Alarm."
+		::= { almNewEntry 1 }
+
+almNewEntCode OBJECT-TYPE
+	SYNTAX	OCTET STRING ( SIZE (1..10) )
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"The Code that is given to this Alarm."
+		::= { almNewEntry 2 }
+
+almNewEntOccTime OBJECT-TYPE
+	SYNTAX	TimeTicks
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"The occurrence time of the Alarm in seconds since 1970."
+		::= { almNewEntry 3 }
+
+almNewEntSiteCode OBJECT-TYPE
+	SYNTAX	OCTET STRING ( SIZE (1..16) )
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"The name that is given to the configured site that the alarm has been received on."
+		::= { almNewEntry 4 }
+
+almNewEntSiteDesc OBJECT-TYPE
+	SYNTAX	OCTET STRING ( SIZE (1..48) )
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"The descritpion that is given to the configured site that the alarm has been received on."
+		::= { almNewEntry 5 }
+
+almNewEntCustName OBJECT-TYPE
+	SYNTAX	OCTET STRING ( SIZE (0..16) )
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"The customer name that is given to the configured site that the alarm has been received on."
+		::= { almNewEntry 6 }
+
+almNewEntContNo OBJECT-TYPE
+	SYNTAX	OCTET STRING ( SIZE (0..48) )
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"The contract number that is given to the configured site that the alarm has been received on."
+		::= { almNewEntry 7 }
+
+almNewEntEquipInfo OBJECT-TYPE
+	SYNTAX	OCTET STRING ( SIZE (0..48) )
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"Infomation relating to the equipment on the configured site that the alarm has been received on."
+		::= { almNewEntry 8 }
+
+almNewEntSeqNo OBJECT-TYPE
+	SYNTAX	INTEGER
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"The sequence number that may be present in the received alarm."
+		::= { almNewEntry 9 }
+
+almNewEntAlarmDesc OBJECT-TYPE
+	SYNTAX	OCTET STRING ( SIZE (1..48) )
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"A description explaing the meaning of the alarm code received."
+		::= { almNewEntry 10 }
+
+almNewEntPabxString OBJECT-TYPE
+	SYNTAX	OCTET STRING ( SIZE (0..512) )
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"Displays details of the message received from the device managed by the Tracker for this alarm"
+		::= { almNewEntry 11 }
+
+almNewEntTrackerString OBJECT-TYPE
+	SYNTAX	OCTET STRING ( SIZE (0..32) )
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"Displays details of the message received from the Tracker for this alarm."
+		::= { almNewEntry 12 }
+
+almNewEntArrivalTime OBJECT-TYPE
+	SYNTAX	TimeTicks
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"The time that the Alarm was received in seconds since 1970."
+		::= { almNewEntry 13 }
+
+almNewEntAckTime OBJECT-TYPE
+	SYNTAX	TimeTicks
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"The time that the Alarm was acknowledged in seconds since 1970.
+			If the alarm has not been acknowledged this will be zero."
+		::= { almNewEntry 14 }
+
+almNewEntAckMachineName OBJECT-TYPE
+	SYNTAX	OCTET STRING ( SIZE (0..48) )
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"The name of the machine that acknowledged the alarm.
+			If the alarm has not been acknowledged this will be blank."
+		::= { almNewEntry 15 }
+
+almNewEntAckUsername OBJECT-TYPE
+	SYNTAX	OCTET STRING ( SIZE (0..48) )
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"The user name who acknowledged the alarm.
+			If the alarm has not been acknowledged this will be blank."
+		::= { almNewEntry 16 }
+
+almNewEntClrTime OBJECT-TYPE
+	SYNTAX	TimeTicks
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"The time that the Alarm was cleared in seconds since 1970.
+			If the alarm has not been cleared this will be zero."
+		::= { almNewEntry 17 }
+
+almNewEntClrMachineName OBJECT-TYPE
+	SYNTAX	OCTET STRING ( SIZE (1..48) )
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"The name of the machine that cleared the alarm.
+			If the alarm has not been cleared this will be blank."
+		::= { almNewEntry 18 }
+
+almNewEntClrUsername OBJECT-TYPE
+	SYNTAX	OCTET STRING ( SIZE (1..48) )
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"The user name who cleared the alarm.
+			If the alarm has not been cleared this will be blank."
+		::= { almNewEntry 19 }
+
+almNewEntClrNotes OBJECT-TYPE
+	SYNTAX	OCTET STRING ( SIZE (0..50) )
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"The notes that were entered when the alarm was cleared.
+			If the alarm has not been cleared this will be blank."
+		::= { almNewEntry 20 }
+
+almNewEntSeverityCode OBJECT-TYPE
+	SYNTAX	INTEGER
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"The severity code that has been assigned to the alarm code of this alarm."
+		::= { almNewEntry 21 }
+
+almNewEntSeverityDesc OBJECT-TYPE
+	SYNTAX	OCTET STRING ( SIZE (1..48) )
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"The descritpion that is given to the severity code of the alarm received."
+		::= { almNewEntry 22 }
+
+almNewEntLastCalloutTime OBJECT-TYPE
+	SYNTAX	TimeTicks
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"The time that the last Callout occurred in seconds since 1970"
+		::= { almNewEntry 23 }
+
+almNewEntLastCalloutNumber OBJECT-TYPE
+	SYNTAX	INTEGER
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"The last Callout number"
+		::= { almNewEntry 24 }
+
+almNewEntNoMoreCallouts OBJECT-TYPE
+	SYNTAX	INTEGER
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"Indicates whether any more callouts should occur.
+			Value set 1 if no more callouts shoud occur otherwise set to zero."
+		::= { almNewEntry 25 }
+
+
+--
+-- Entries for Acknowledged alarms held on AMS System.
+--
+
+almAckTable OBJECT-TYPE
+	SYNTAX SEQUENCE OF AlmAckEntry
+	ACCESS	not-accessible
+	STATUS	mandatory
+	DESCRIPTION
+			"Table contains alarm data for all alarms in the 'Acknowledged' state."
+	::= { dttAMSSwAlarms 4 }
+
+almAckEntry OBJECT-TYPE
+	SYNTAX AlmAckEntry
+	ACCESS	not-accessible
+	STATUS	mandatory
+	DESCRIPTION
+			"An Alarm entry containing objects relating to each alarm which is in
+			the Acknowledged state."
+	INDEX { almAckEntId }
+	::= { almAckTable 1 }
+
+AlmAckEntry ::=
+	SEQUENCE {
+		almAckEntId					INTEGER,
+		almAckEntCode				OCTET STRING,
+		almAckEntOccTime			TimeTicks,
+		almAckEntSiteCode			OCTET STRING,
+		almAckEntSiteDesc			OCTET STRING,
+		almAckEntCustName			OCTET STRING,
+		almAckEntContNo				OCTET STRING,
+		almAckEntEquipInfo			OCTET STRING,
+		almAckEntSeqNo				INTEGER,
+		almAckEntAlarmDesc			OCTET STRING,
+		almAckEntPabxString			OCTET STRING,
+		almAckEntTrackerString		OCTET STRING,
+		almAckEntArrivalTime		TimeTicks,
+		almAckEntAckTime			TimeTicks,
+		almAckEntAckMachineName		OCTET STRING,
+		almAckEntAckUsername		OCTET STRING,
+		almAckEntClrTime			TimeTicks,
+		almAckEntClrMachineName		OCTET STRING,
+		almAckEntClrUsername		OCTET STRING,
+		almAckEntClrNotes			OCTET STRING,
+		almAckEntSeverityCode		INTEGER,
+		almAckEntSeverityDesc		OCTET STRING,
+		almAckEntLastCalloutTie		TimeTicks,
+		almAckEntLastCalloutNuber	INTEGER,
+		almAckEntNoMoreCallouts		INTEGER
+	}
+
+almAckEntId OBJECT-TYPE
+	SYNTAX	INTEGER
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"The value which uniquely identifies the Alarm."
+		::= { almAckEntry 1 }
+
+almAckEntCode OBJECT-TYPE
+	SYNTAX	OCTET STRING ( SIZE (1..10) )
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"The Code that is given to this Alarm."
+		::= { almAckEntry 2 }
+
+almAckEntOccTime OBJECT-TYPE
+	SYNTAX	TimeTicks
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"The occurrence time of the Alarm in seconds since 1970."
+		::= { almAckEntry 3 }
+
+almAckEntSiteCode OBJECT-TYPE
+	SYNTAX	OCTET STRING ( SIZE (1..16) )
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"The name that is given to the configured site that the alarm has been received on."
+		::= { almAckEntry 4 }
+
+almAckEntSiteDesc OBJECT-TYPE
+	SYNTAX	OCTET STRING ( SIZE (1..48) )
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"The descritpion that is given to the configured site that the alarm has been received on."
+		::= { almAckEntry 5 }
+
+almAckEntCustName OBJECT-TYPE
+	SYNTAX	OCTET STRING ( SIZE (0..16) )
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"The customer name that is given to the configured site that the alarm has been received on."
+		::= { almAckEntry 6 }
+
+almAckEntContNo OBJECT-TYPE
+	SYNTAX	OCTET STRING ( SIZE (0..48) )
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"The contract number that is given to the configured site that the alarm has been received on."
+		::= { almAckEntry 7 }
+
+almAckEntEquipInfo OBJECT-TYPE
+	SYNTAX	OCTET STRING ( SIZE (0..48) )
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"Infomation relating to the equipment on the configured site that the alarm has been received on."
+		::= { almAckEntry 8 }
+
+almAckEntSeqNo OBJECT-TYPE
+	SYNTAX	INTEGER
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"The sequence number that may be present in the received alarm."
+		::= { almAckEntry 9 }
+
+almAckEntAlarmDesc OBJECT-TYPE
+	SYNTAX	OCTET STRING ( SIZE (1..48) )
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"A description explaing the meaning of the alarm code received."
+		::= { almAckEntry 10 }
+
+almAckEntPabxString OBJECT-TYPE
+	SYNTAX	OCTET STRING ( SIZE (0..512) )
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"Displays details of the message received from the device managed by the Tracker for this alarm"
+		::= { almAckEntry 11 }
+
+almAckEntTrackerString OBJECT-TYPE
+	SYNTAX	OCTET STRING ( SIZE (0..32) )
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"Displays details of the message received from the Tracker for this alarm."
+		::= { almAckEntry 12 }
+
+almAckEntArrivalTime OBJECT-TYPE
+	SYNTAX	TimeTicks
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"The time that the Alarm was received in seconds since 1970."
+		::= { almAckEntry 13 }
+
+almAckEntAckTime OBJECT-TYPE
+	SYNTAX	TimeTicks
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"The time that the Alarm was acknowledged in seconds since 1970.
+			If the alarm has not been acknowledged this will be zero."
+		::= { almAckEntry 14 }
+
+almAckEntAckMachineName OBJECT-TYPE
+	SYNTAX	OCTET STRING ( SIZE (0..48) )
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"The name of the machine that acknowledged the alarm.
+			If the alarm has not been acknowledged this will be blank."
+		::= { almAckEntry 15 }
+
+almAckEntAckUsername OBJECT-TYPE
+	SYNTAX	OCTET STRING ( SIZE (0..48) )
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"The user name who acknowledged the alarm.
+			If the alarm has not been acknowledged this will be blank."
+		::= { almAckEntry 16 }
+
+almAckEntClrTime OBJECT-TYPE
+	SYNTAX	TimeTicks
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"The time that the Alarm was cleared in seconds since 1970.
+			If the alarm has not been cleared this will be zero."
+		::= { almAckEntry 17 }
+
+almAckEntClrMachineName OBJECT-TYPE
+	SYNTAX	OCTET STRING ( SIZE (1..48) )
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"The name of the machine that cleared the alarm.
+			If the alarm has not been cleared this will be blank."
+		::= { almAckEntry 18 }
+
+almAckEntClrUsername OBJECT-TYPE
+	SYNTAX	OCTET STRING ( SIZE (1..48) )
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"The user name who cleared the alarm.
+			If the alarm has not been cleared this will be blank."
+		::= { almAckEntry 19 }
+
+almAckEntClrNotes OBJECT-TYPE
+	SYNTAX	OCTET STRING ( SIZE (0..50) )
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"The notes that were entered when the alarm was cleared.
+			If the alarm has not been cleared this will be blank."
+		::= { almAckEntry 20 }
+
+almAckEntSeverityCode OBJECT-TYPE
+	SYNTAX	INTEGER
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"The severity code that has been assigned to the alarm code of this alarm."
+		::= { almAckEntry 21 }
+
+almAckEntSeverityDesc OBJECT-TYPE
+	SYNTAX	OCTET STRING ( SIZE (1..48) )
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"The descritpion that is given to the severity code of the alarm received."
+		::= { almAckEntry 22 }
+
+almAckEntLastCalloutTime OBJECT-TYPE
+	SYNTAX	TimeTicks
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"The time that the last Callout occurred in seconds since 1970"
+		::= { almAckEntry 23 }
+
+almAckEntLastCalloutNumber OBJECT-TYPE
+	SYNTAX	INTEGER
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"The last Callout number"
+		::= { almAckEntry 24 }
+
+almAckEntNoMoreCallouts OBJECT-TYPE
+	SYNTAX	INTEGER
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+			"Indicates whether any more callouts should occur.
+			Value set 1 if no more callouts shoud occur otherwise set to zero."
+		::= { almAckEntry 25 }
+
+
+
+--
+-- Entries for Cleared alarms held on AMS System.
+--
+
+almClrTable OBJECT-TYPE
+	SYNTAX SEQUENCE OF AlmClrEntry
+	ACCESS	not-accessible
+	STATUS	mandatory
+	DESCRIPTION
+			"Table contains alarm data for all alarms in the 'Cleared' state."
+	::= { dttAMSSwAlarms 5 }
+
+almClrEntry OBJECT-TYPE
+	SYNTAX AlmClrEntry
+	ACCESS	not-accessible
+	STATUS	mandatory
+	DESCRIPTION
+			"An Alarm entry containing objects relating to each alarm which is in
+			the Cleared state."
+	INDEX { almClrEntId }
+	::= { almClrTable 1 }
+
+AlmClrEntry ::=
+	SEQUENCE {
+		almClrEntId					INTEGER,
+		almClrEntCode				OCTET STRING,
+		almClrEntOccTime			TimeTicks,
+		almClrEntSiteCode			OCTET STRING,
+		almClrEntSiteDesc			OCTET STRING,
+		almClrEntCustName			OCTET STRING,
+		almClrEntContNo				OCTET STRING,
+		almClrEntEquipInfo			OCTET STRING,
+		almClrEntSeqNo				INTEGER,
+		almClrEntAlarmDesc			OCTET STRING,
+		almClrEntPabxString			OCTET STRING,
+		almClrEntTrackerString		OCTET STRING,
+		almClrEntArrivalTime		TimeTicks,
+		almClrEntAckTime			TimeTicks,
+		almClrEntAckMachineName		OCTET STRING,
+		almClrEntAckUsername		OCTET STRING,
+		almClrEntClrTime			TimeTicks,
+		almClrEntClrMachineName		OCTET STRING,
+		almClrEntClrUsername		OCTET STRING,
+		almClrEntClrNotes			OCTET STRING,
+		almClrEntSeverityCode		INTEGER,
+		almClrEntSeverityDesc		OCTET STRING,
+		almClrEntLastCalloutTie		TimeTicks,
+		almClrEntLastCalloutNuber	INTEGER,
+		almClrEntNoMoreCallouts		INTEGER
+	}
+
+
+almClrEntId OBJECT-TYPE
+	SYNTAX	INTEGER
+	ACCESS	not-accessible
+	STATUS	mandatory
+	DESCRIPTION
+			"The value which uniquely identifies the Alarm."
+		::= { almClrEntry 1 }
+
+almClrEntCode OBJECT-TYPE
+	SYNTAX	OCTET STRING ( SIZE (1..10) )
+	ACCESS	not-accessible
+	STATUS	mandatory
+	DESCRIPTION
+			"The Code that is given to this Alarm."
+		::= { almClrEntry 2 }
+
+almClrEntOccTime OBJECT-TYPE
+	SYNTAX	TimeTicks
+	ACCESS	not-accessible
+	STATUS	mandatory
+	DESCRIPTION
+			"The occurrence time of the Alarm in seconds since 1970."
+		::= { almClrEntry 3 }
+
+almClrEntSiteCode OBJECT-TYPE
+	SYNTAX	OCTET STRING ( SIZE (1..16) )
+	ACCESS	not-accessible
+	STATUS	mandatory
+	DESCRIPTION
+			"The name that is given to the configured site that the alarm has been received on."
+		::= { almClrEntry 4 }
+
+almClrEntSiteDesc OBJECT-TYPE
+	SYNTAX	OCTET STRING ( SIZE (1..48) )
+	ACCESS	not-accessible
+	STATUS	mandatory
+	DESCRIPTION
+			"The descritpion that is given to the configured site that the alarm has been received on."
+		::= { almClrEntry 5 }
+
+almClrEntCustName OBJECT-TYPE
+	SYNTAX	OCTET STRING ( SIZE (0..16) )
+	ACCESS	not-accessible
+	STATUS	mandatory
+	DESCRIPTION
+			"The customer name that is given to the configured site that the alarm has been received on."
+		::= { almClrEntry 6 }
+
+almClrEntContNo OBJECT-TYPE
+	SYNTAX	OCTET STRING ( SIZE (0..48) )
+	ACCESS	not-accessible
+	STATUS	mandatory
+	DESCRIPTION
+			"The contract number that is given to the configured site that the alarm has been received on."
+		::= { almClrEntry 7 }
+
+almClrEntEquipInfo OBJECT-TYPE
+	SYNTAX	OCTET STRING ( SIZE (0..48) )
+	ACCESS	not-accessible
+	STATUS	mandatory
+	DESCRIPTION
+			"Infomation relating to the equipment on the configured site that the alarm has been received on."
+		::= { almClrEntry 8 }
+
+almClrEntSeqNo OBJECT-TYPE
+	SYNTAX	INTEGER
+	ACCESS	not-accessible
+	STATUS	mandatory
+	DESCRIPTION
+			"The sequence number that may be present in the received alarm."
+		::= { almClrEntry 9 }
+
+almClrEntAlarmDesc OBJECT-TYPE
+	SYNTAX	OCTET STRING ( SIZE (1..48) )
+	ACCESS	not-accessible
+	STATUS	mandatory
+	DESCRIPTION
+			"A description explaing the meaning of the alarm code received."
+		::= { almClrEntry 10 }
+
+almClrEntPabxString OBJECT-TYPE
+	SYNTAX	OCTET STRING ( SIZE (0..512) )
+	ACCESS	not-accessible
+	STATUS	mandatory
+	DESCRIPTION
+			"Displays details of the message received from the device managed by the Tracker for this alarm"
+		::= { almClrEntry 11 }
+
+almClrEntTrackerString OBJECT-TYPE
+	SYNTAX	OCTET STRING ( SIZE (0..32) )
+	ACCESS	not-accessible
+	STATUS	mandatory
+	DESCRIPTION
+			"Displays details of the message received from the Tracker for this alarm."
+		::= { almClrEntry 12 }
+
+almClrEntArrivalTime OBJECT-TYPE
+	SYNTAX	TimeTicks
+	ACCESS	not-accessible
+	STATUS	mandatory
+	DESCRIPTION
+			"The time that the Alarm was received in seconds since 1970."
+		::= { almClrEntry 13 }
+
+almClrEntAckTime OBJECT-TYPE
+	SYNTAX	TimeTicks
+	ACCESS	not-accessible
+	STATUS	mandatory
+	DESCRIPTION
+			"The time that the Alarm was acknowledged in seconds since 1970.
+			If the alarm has not been acknowledged this will be zero."
+		::= { almClrEntry 14 }
+
+almClrEntAckMachineName OBJECT-TYPE
+	SYNTAX	OCTET STRING ( SIZE (0..48) )
+	ACCESS	not-accessible
+	STATUS	mandatory
+	DESCRIPTION
+			"The name of the machine that acknowledged the alarm.
+			If the alarm has not been acknowledged this will be blank."
+		::= { almClrEntry 15 }
+
+almClrEntAckUsername OBJECT-TYPE
+	SYNTAX	OCTET STRING ( SIZE (0..48) )
+	ACCESS	not-accessible
+	STATUS	mandatory
+	DESCRIPTION
+			"The user name who acknowledged the alarm.
+			If the alarm has not been acknowledged this will be blank."
+		::= { almClrEntry 16 }
+
+almClrEntClrTime OBJECT-TYPE
+	SYNTAX	TimeTicks
+	ACCESS	not-accessible
+	STATUS	mandatory
+	DESCRIPTION
+			"The time that the Alarm was cleared in seconds since 1970.
+			If the alarm has not been cleared this will be zero."
+		::= { almClrEntry 17 }
+
+almClrEntClrMachineName OBJECT-TYPE
+	SYNTAX	OCTET STRING ( SIZE (1..48) )
+	ACCESS	not-accessible
+	STATUS	mandatory
+	DESCRIPTION
+			"The name of the machine that cleared the alarm.
+			If the alarm has not been cleared this will be blank."
+		::= { almClrEntry 18 }
+
+almClrEntClrUsername OBJECT-TYPE
+	SYNTAX	OCTET STRING ( SIZE (1..48) )
+	ACCESS	not-accessible
+	STATUS	mandatory
+	DESCRIPTION
+			"The user name who cleared the alarm.
+			If the alarm has not been cleared this will be blank."
+		::= { almClrEntry 19 }
+
+almClrEntClrNotes OBJECT-TYPE
+	SYNTAX	OCTET STRING ( SIZE (0..50) )
+	ACCESS	not-accessible
+	STATUS	mandatory
+	DESCRIPTION
+			"The notes that were entered when the alarm was cleared.
+			If the alarm has not been cleared this will be blank."
+		::= { almClrEntry 20 }
+
+almClrEntSeverityCode OBJECT-TYPE
+	SYNTAX	INTEGER
+	ACCESS	not-accessible
+	STATUS	mandatory
+	DESCRIPTION
+			"The severity code that has been assigned to the alarm code of this alarm."
+		::= { almClrEntry 21 }
+
+almClrEntSeverityDesc OBJECT-TYPE
+	SYNTAX	OCTET STRING ( SIZE (1..48) )
+	ACCESS	not-accessible
+	STATUS	mandatory
+	DESCRIPTION
+			"The descritpion that is given to the severity code of the alarm received."
+		::= { almClrEntry 22 }
+
+almClrEntLastCalloutTime OBJECT-TYPE
+	SYNTAX	TimeTicks
+	ACCESS	not-accessible
+	STATUS	mandatory
+	DESCRIPTION
+			"The time that the last Callout occurred in seconds since 1970"
+		::= { almClrEntry 23 }
+
+almClrEntLastCalloutNumber OBJECT-TYPE
+	SYNTAX	INTEGER
+	ACCESS	not-accessible
+	STATUS	mandatory
+	DESCRIPTION
+			"The last Callout number"
+		::= { almClrEntry 24 }
+
+almClrEntNoMoreCallouts OBJECT-TYPE
+	SYNTAX	INTEGER
+	ACCESS	not-accessible
+	STATUS	mandatory
+	DESCRIPTION
+			"Indicates whether any more callouts should occur.
+			Value set 1 if no more callouts shoud occur otherwise set to zero."
+		::= { almClrEntry 25 }
+
+
+
+--
+-- AMS Alarm Traps
+--
+
+dttAMSNewAlarm TRAP-TYPE
+    ENTERPRISE  datatrack
+    VARIABLES
+    {
+		almNewEntId,
+		almNewEntCode,
+		almNewEntOccTime,
+		almNewEntSiteCode,
+		almNewEntSiteDesc,
+		almNewEntCustName,
+		almNewEntContNo,
+		almNewEntEquipInfo,
+		almNewEntSeqNo,
+		almNewEntAlarmDesc,
+		almNewEntPabxString,
+		almNewEntTrackerString,
+		almNewEntArrivalTime,
+		almNewEntAckTime,
+		almNewEntAckMachineName,
+		almNewEntAckUsername,
+		almNewEntClrTime,
+		almNewEntClrMachineName,
+		almNewEntClrUsername,
+		almNewEntClrNotes,
+		almNewEntSeverityCode,
+		almNewEntSeverityDesc,
+		almNewEntLastCalloutTime,
+		almNewEntLastCalloutNumber,
+		almNewEntNoMoreCallouts
+	}
+    DESCRIPTION "Alarm Management System New Alarm Alert"  
+    ::=  5
+    
+dttAMSAckAlarm TRAP-TYPE
+    ENTERPRISE  datatrack
+    VARIABLES
+    {
+		almAckEntId,
+		almAckEntCode,
+		almAckEntOccTime,
+		almAckEntSiteCode,
+		almAckEntSiteDesc,
+		almAckEntCustName,
+		almAckEntContNo,
+		almAckEntEquipInfo,
+		almAckEntSeqNo,
+		almAckEntAlarmDesc,
+		almAckEntPabxString,
+		almAckEntTrackerString,
+		almAckEntArrivalTime,
+		almAckEntAckTime,
+		almAckEntAckMachineName,
+		almAckEntAckUsername,
+		almAckEntClrTime,
+		almAckEntClrMachineName,
+		almAckEntClrUsername,
+		almAckEntClrNotes,
+		almAckEntSeverityCode,
+		almAckEntSeverityDesc,
+		almAckEntLastCalloutTime,
+		almAckEntLastCalloutNumber,
+		almAckEntNoMoreCallouts
+	}
+    DESCRIPTION "Alarm Management System Acknowledged Alarm Alert"  
+    ::=  6
+    
+
+dttAMSClrAlarm TRAP-TYPE
+    ENTERPRISE  datatrack
+    VARIABLES
+    {
+		almClrEntId,
+		almClrEntCode,
+		almClrEntOccTime,
+		almClrEntSiteCode,
+		almClrEntSiteDesc,
+		almClrEntCustName,
+		almClrEntContNo,
+		almClrEntEquipInfo,
+		almClrEntSeqNo,
+		almClrEntAlarmDesc,
+		almClrEntPabxString,
+		almClrEntTrackerString,
+		almClrEntArrivalTime,
+		almClrEntAckTime,
+		almClrEntAckMachineName,
+		almClrEntAckUsername,
+		almClrEntClrTime,
+		almClrEntClrMachineName,
+		almClrEntClrUsername,
+		almClrEntClrNotes,
+		almClrEntSeverityCode,
+		almClrEntSeverityDesc,
+		almClrEntLastCalloutTime,
+		almClrEntLastCalloutNumber,
+		almClrEntNoMoreCallouts
+	}
+    DESCRIPTION "Alarm Management System Cleared Alarm Alert"  
+    ::=  7
+    
+    
+    samsConnectTime	OBJECT-TYPE
+		SYNTAX 	OCTET STRING ( SIZE (1..20) )
+		ACCESS	read-only
+		STATUS	mandatory
+		DESCRIPTION	
+	"The time the connection was started"
+		::= { dttSAMSSwTraps 1 }
+		
+	samsConnectTimeSecsSince1970 OBJECT-TYPE
+		SYNTAX 	TimeTicks
+		ACCESS 	read-only
+		STATUS 	mandatory
+		DESCRIPTION
+	"The time the connection was started in seconds since 00:00:00 01/01/1970"
+		::= { dttSAMSSwTraps 2 }
+	
+	samsDisconnectTime	OBJECT-TYPE
+		SYNTAX 	OCTET STRING ( SIZE (1..20) )
+		ACCESS	read-only
+		STATUS	mandatory
+		DESCRIPTION	
+	"The time the connection was terminated"
+		::= { dttSAMSSwTraps 3 }
+
+	samsDisconnectTimeSecsSince1970 OBJECT-TYPE
+		SYNTAX 	TimeTicks
+		ACCESS 	read-only
+		STATUS 	mandatory
+		DESCRIPTION
+	"The time the connection was terminated in seconds since 00:00:00 01/01/1970"
+		::= { dttSAMSSwTraps 4 }	
+	
+	samsUsername		OBJECT-TYPE
+		SYNTAX 	OCTET STRING  ( SIZE (1..48) )
+		ACCESS	read-only
+		STATUS	mandatory
+		DESCRIPTION	
+	"The user who initiated the connection"
+		::= { dttSAMSSwTraps 5 }
+	
+	samsDeviceName	OBJECT-TYPE
+		SYNTAX 	OCTET STRING  ( SIZE (1..48) )
+		ACCESS	read-only
+		STATUS	mandatory
+		DESCRIPTION	
+	"The name of the device connected to"
+		::= { dttSAMSSwTraps 6 }
+	
+	samsServiceName	OBJECT-TYPE
+		SYNTAX 	OCTET STRING  ( SIZE (1..48) )
+		ACCESS	read-only
+		STATUS	mandatory
+		DESCRIPTION	
+	"The name of the service connected to"
+		::= { dttSAMSSwTraps 7 }
+	
+	samsAccountName	OBJECT-TYPE
+		SYNTAX 	OCTET STRING  ( SIZE (1..48) )
+		ACCESS	read-only
+		STATUS	mandatory
+		DESCRIPTION	
+	"The name of the user account on the service"
+		::= { dttSAMSSwTraps 8 }
+	
+	 
+	samsClientAddress	OBJECT-TYPE
+		SYNTAX 	OCTET STRING  ( SIZE (1..48) )
+		ACCESS	read-only
+		STATUS	mandatory
+		DESCRIPTION	
+	"The IP Address or machine name of the client PC that initiated the connection"
+		::= { dttSAMSSwTraps 9 }
+	
+	
+	samsConnectionResult OBJECT-TYPE
+		SYNTAX 	INTEGER
+		ACCESS	read-only
+		STATUS	mandatory
+		DESCRIPTION	
+	"Success or failure of the connection (1 - Success, 0 - Failure)"
+		::= { dttSAMSSwTraps 10 }
+	
+
+	samsAlertTime OBJECT-TYPE
+		SYNTAX 	OCTET STRING ( SIZE(1..20) )
+		ACCESS	read-only
+		STATUS	mandatory
+		DESCRIPTION	
+	"The time the alert was raised"
+		::= { dttSAMSSwTraps 11 }
+		
+	samsAlertTimeSecsSince1970 OBJECT-TYPE
+		SYNTAX 	TimeTicks
+		ACCESS 	read-only
+		STATUS 	mandatory
+		DESCRIPTION
+	"The time the alert was raised in seconds since 00:00:00 01/01/1970"
+		::= { dttSAMSSwTraps 12 }
+	
+	samsApplicationName 	OBJECT-TYPE
+		SYNTAX 	DisplayString ( SIZE (1..48) )
+		ACCESS	read-only
+		STATUS	mandatory
+		DESCRIPTION	
+			"The name of the application in which the login took place (i.e. ‘SAMS Administration Console’)"
+		::= { dttSAMSSwTraps 13 }
+
+	samsLoginResult 	OBJECT-TYPE
+		SYNTAX 	INTEGER
+		ACCESS	read-only
+		STATUS	mandatory
+		DESCRIPTION	
+			"Success or failure of the login (1 - Success, 0 - Failure)"
+		::= { dttSAMSSwTraps 14 }
+	
+	
+	samsMajorErrorCode 	OBJECT-TYPE
+		SYNTAX 	INTEGER
+		ACCESS	read-only
+		STATUS	mandatory
+		DESCRIPTION	
+			"SAMS numeric major error code"
+		::= { dttSAMSSwTraps 15 }
+	
+	samsMinorErrorCode 	OBJECT-TYPE
+		SYNTAX 	INTEGER
+		ACCESS	read-only
+		STATUS	mandatory
+		DESCRIPTION	
+	"SAMS numeric minor error code"
+		::= { dttSAMSSwTraps 16 }
+	
+	
+	samsErrorMessage	OBJECT-TYPE
+		SYNTAX 	OCTET STRING  ( SIZE (1..256) )
+		ACCESS	read-only
+		STATUS	mandatory
+		DESCRIPTION	
+	"SAMS error message"
+		::= { dttSAMSSwTraps 17 }
+	
+	
+	 
+	dttSAMSConnectionAlert TRAP-TYPE
+		ENTERPRISE datatrack
+		VARIABLES
+		{
+			samsConnectTime,
+			samsConnectTimeSecsSince1970,
+			samsDisconnectTime,
+			samsDisconnectTimeSecsSince1970,
+			samsUsername,
+			samsDeviceName,
+			samsServiceName,
+			samsAccountName,
+			samsClientAddress,
+			samsConnectionResult,
+			samsMajorErrorCode,
+			samsMinorErrorCode,
+			samsErrorMessage
+		}
+		DESCRIPTION "SAMS Connection Alert"
+		::= 8
+	
+	
+	dttSAMSLoginAlert TRAP-TYPE
+		ENTERPRISE datatrack
+		VARIABLES
+		{
+			samsAlertTime,
+			samsAlertTimeSecsSince1970,
+			samsApplicationName,
+			samsUsername,
+			samsLoginResult,
+			samsMajorErrorCode,
+			samsMinorErrorCode,
+			samsErrorMessage
+		}
+		DESCRIPTION "SAMS Login Alert"
+		::= 9
+	
+	
+	dttSAMSAccountLocked TRAP-TYPE
+		ENTERPRISE datatrack
+		VARIABLES
+		{
+			samsAlertTime,
+			samsAlertTimeSecsSince1970,			
+			samsUsername
+		}
+		DESCRIPTION "SAMS User Account Locked Alert"
+		::= 10
+
+    
+END

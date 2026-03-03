@@ -1,0 +1,774 @@
+-- MIB file created 26-May-2010 21:23:29, by
+--   SMICng version 2.2.11-beta(PRO)(Solaris), January 20, 2001. Enterprise key cisco.com
+
+CISCO-PROCESS-MIB DEFINITIONS ::= BEGIN
+
+-- From file: "CISCO-PROCESS-MIB.my"
+-- Compile options "4 7 F H N W 03 06 0B 0G 0N 0T"
+
+IMPORTS
+    TimeStamp, DisplayString, RowStatus, TruthValue, RowPointer
+            FROM SNMPv2-TC-v1
+    SnmpAdminString
+            FROM SNMP-FRAMEWORK-MIB
+    CounterBasedGauge64
+            FROM HCNUM-TC
+    EntPhysicalIndexOrZero, Unsigned64
+            FROM CISCO-TC
+    ciscoMgmt
+            FROM CISCO-SMI
+    Counter, Gauge
+            FROM RFC1155-SMI
+    OBJECT-TYPE
+            FROM RFC-1212
+    TRAP-TYPE
+            FROM RFC-1215;
+
+cisco MODULE-IDENTITY
+	LAST-UPDATED "200001110000Z"
+	ORGANIZATION "Cisco Systems, Inc."
+	CONTACT-INFO
+		"	Cisco Systems
+			Customer Service
+
+		Postal: 170 West Tasman Drive
+			San Jose, CA  95134
+			USA
+
+		   Tel: +1 800 553-NETS
+
+		E-mail: cs-snmp@cisco.com"
+	DESCRIPTION
+		"The Structure of Management Information for the
+		Cisco enterprise."
+	REVISION      "200001110000Z"
+	DESCRIPTION
+		"Added ciscoPolicy, ciscoPolicyAuto, ciscoPIB, and
+                ciscoPibToMib."
+	REVISION      "9704090000Z"
+	DESCRIPTION
+		"Added ciscoPartnerProducts to generate sysObjectID
+		for partner platforms"
+	REVISION      "9505160000Z"
+	DESCRIPTION
+		"New oid assignments for Cisco REPEATER MIB and others."
+	REVISION      "9404262000Z"
+	DESCRIPTION
+		"Initial version of this MIB module."
+	::= { enterprises 9 }	-- assigned by IANA
+
+ciscoMgmt OBJECT-IDENTITY
+	STATUS	current
+	DESCRIPTION
+		"ciscoMgmt is the main subtree for new mib development."
+	::= { cisco 9 }
+
+ciscoProcessMIB OBJECT IDENTIFIER ::= { ciscoMgmt 109 }
+-- MODULE-IDENTITY
+--  LastUpdated
+--    201005060000Z
+--  OrgName
+--    Cisco Systems, Inc.
+--  ContactInfo
+--    Cisco Systems
+--    Customer Service
+--    
+--    Postal: 170 W Tasman Drive
+--    San Jose, CA  95134
+--    USA
+--    
+--    Tel: +1 800 553-NETS
+--    
+--    E-mail: cs-snmp@cisco.com
+--  Descr
+--    The MIB module to describe active system processes.
+--    Virtual Machine refers to those OS which can run the 
+--    code or process of a different executional model OS.
+--    Virtual Process assume the executional model 
+--    of a OS which is different from Native OS. Virtual
+--    Processes are also referred as Tasks.
+--    Thread is a sequence of instructions to be executed
+--    within a program. Thread which adhere to POSIX standard
+--    is referred as a POSIX thread.
+--  RevDate
+--    201005060000Z
+--  RevDescr
+--    Added the following new objects to the cpmCPUTotalTable.
+--    cpmCPUMemoryCommitted, cpmCPUMemoryCommittedOvrFlow and
+--    cpmCPUMemoryHCCommitted.
+--    
+--    Added new compliance group cpmCPUTotalMemoryCommitGroup which
+--    includes Committed memory objects.
+--    
+--    Added new compliance cProcessMIBComplianceRev5 which 
+--    deprecates cProcessMIBComplianceRev4.
+--  RevDate
+--    200910120000Z
+--  RevDescr
+--    Added TEXTUAL-CONVENTION called CPULoadAverage.
+--    Added the following new objects to cpmCPUTotalTable.
+--    cpmCPULoadAvg1min, cpmCPULoadAvg5min, cpmCPULoadAvg15min.
+--    
+--    Added new compliance group cpmCPULoadAvgGroup which includes
+--    load average objects.
+--    
+--    Added new compliance cProcessMIBComplianceRev4 which 
+--    deprecates cProcessMIBComplianceRev3.
+--  RevDate
+--    200901230000Z
+--  RevDescr
+--    Added the following new objects to cpmCPUTotalTable.
+--    cpmCPUMemoryUsedOvrflw, cpmCPUMemoryHCUsed,
+--    cpmCPUMemoryFreeOvrflw, cpmCPUMemoryHCFree,
+--    cpmCPUMemoryKernelReservedOvrflw, cpmCPUMemoryHCKernelReserved,
+--    cpmCPUMemoryLowestOvrflw, cpmCPUMemoryHCLowest
+--    
+--    Added the following new objects to cpmProcessExtRevTable.
+--    cpmProcExtMemAllocatedRevOvrflw, cpmProcExtHCMemAllocatedRev,
+--    cpmProcExtMemFreedRevOvrflw, cpmProcExtHCMemFreedRev,
+--    cpmProcessTextSegmentSizeOvrflw, cpmProcessHCTextSegmentSize,
+--    cpmProcessDataSegmentSizeOvrflw, cpmProcessHCDataSegmentSize,
+--    cpmProcessStackSizeOvrflw, cpmProcessHCStackSize,
+--    cpmProcessDynamicMemorySizeOvrflw, cpmProcessHCDynamicMemorySize
+--    
+--    Added the following new objects to cpmThreadTable.
+--    cpmThreadStackSizeOvrflw, cpmThreadHCStackSize
+--    
+--    Added the following new objects to cpmVirtualProcessTable.
+--    cpmVirtualProcessMemAllocatedOvrflw,
+--    cpmVirtualProcessHCMemAllocated,
+--    cpmVirtualProcessMemFreedOvrflw, cpmVirtualProcessHCMemFreed
+--    
+--    Added following new compliance groups.
+--    cpmCPUTotalOverflowGroup, cpmCPUTotalOverflowGroup,
+--    cpmProcessExtRevOverflowGroup, cpmProcessExtRevHCGroup,
+--    cpmThreadOverflowGroup, cpmThreadHCGroup,
+--    cpmVirtualProcessOverflowGroup, cpmVirtualProcessHCGroup
+--    
+--    Added new compliance cProcessMIBComplianceRev3 which deprecates
+--    cProcessMIBComplianceRev2.
+--  RevDate
+--    200703230000Z
+--  RevDescr
+--    Added new objects to support POSIX compliant OS. Added
+--    cpmThread, cpmThreadTable, cpmVirtualProcess, 
+--    cpmVirtualProcessTable and updated cpmCPUTotalTable, 
+--    cpmProcessExtRevTable. Added cProcessMIBComplianceRev2
+--    by deprecating cProcessMIBComplianceRev1. Added 
+--    cpmCPUPosixMemoryGroup, cpmPosixProcessGroup, 
+--    cpmThreadGroup, cpmVirtualProcessGroup.
+--  RevDate
+--    200301220000Z
+--  RevDescr
+--    cpmCPUThresholdTable, cpmCPUHistoryTable,
+--    cpmCPUProcessHistoryTable are added for CPU thresholding 
+--    feature.
+--  RevDate
+--    200105180000Z
+--  RevDescr
+--    The objects cpmProcExtUtil5Sec, cpmProcExtUtil1Min,
+--    cpmProcExtUtil5Min,cpmCPUTotal5sec, cpmCPUTotal1min 
+--    and cpmCPUTotal5min are deprecated to increase the
+--    value range as 0..100. The table cpmProcessExtTable
+--    is deprecated. The new objects added are 
+--    cpmProcessExtRevTable, cpmProcExtMemAllocatedRev,
+--    cpmProcExtMemFreedRev, cpmProcExtInvokedRev, 
+--    cpmProcExtRuntimeRev, cpmProcExtUtil5SecRev,
+--    cpmProcExtUtil1MinRev, cpmCPUTotal5MinRev, 
+--    cpmCPUTotal5secRev, cpmCPUTotal1minRev and 
+--    cpmCPUTotal5minRev.
+--  RevDate
+--    9804150000Z
+--  RevDescr
+--    Initial version of this MIB.
+
+ciscoProcessMIBObjects OBJECT IDENTIFIER ::= { ciscoProcessMIB 1 }
+cpmCPU          OBJECT IDENTIFIER ::= { ciscoProcessMIBObjects 1 }
+cpmProcess      OBJECT IDENTIFIER ::= { ciscoProcessMIBObjects 2 }
+cpmThread       OBJECT IDENTIFIER ::= { ciscoProcessMIBObjects 3 }
+cpmVirtualProcess OBJECT IDENTIFIER ::= { ciscoProcessMIBObjects 4 }
+cpmCPUHistory   OBJECT IDENTIFIER ::= { cpmProcess 5 }
+ciscoProcessMIBNotifPrefix OBJECT IDENTIFIER ::= { ciscoProcessMIB 2 }
+ciscoProcessMIBNotifs OBJECT IDENTIFIER ::= { ciscoProcessMIBNotifPrefix 0 }
+ciscoProcessMIBConformance OBJECT IDENTIFIER ::= { ciscoProcessMIB 3 }
+cpmCompliances  OBJECT IDENTIFIER ::= { ciscoProcessMIBConformance 1 }
+cpmGroups       OBJECT IDENTIFIER ::= { ciscoProcessMIBConformance 2 }
+
+
+cpmCPURisingThreshold TRAP-TYPE
+-- Reverse mappable trap
+    ENTERPRISE ciscoProcessMIBNotifPrefix
+    VARIABLES {
+        cpmCPURisingThresholdValue, cpmCPUTotalMonIntervalValue, 
+        cpmCPUInterruptMonIntervalValue, cpmProcExtUtil5SecRev, 
+        cpmProcessTimeCreated }
+--  Status
+--    mandatory
+    DESCRIPTION
+        "A cpmCPURisingThreshold notification is sent
+        when configured rising CPU utilization threshold
+        (cpmCPURisingThresholdValue) is reached and
+        CPU utilization remained above the threshold 
+        for configured interval(cpmCPURisingThresholdPeriod)
+        and such a notification is requested. 
+        The cpmProcExtUtil5SecRev and cpmProcessTimeCreated 
+        objects can be repeated multiple times
+        in a notification indicating the top users of CPU."
+    ::= 1
+
+cpmCPUFallingThreshold TRAP-TYPE
+-- Reverse mappable trap
+    ENTERPRISE ciscoProcessMIBNotifPrefix
+    VARIABLES {
+        cpmCPUFallingThresholdValue, cpmCPUTotalMonIntervalValue, 
+        cpmCPUInterruptMonIntervalValue }
+--  Status
+--    mandatory
+    DESCRIPTION
+        "A cpmCPUFallingThresholdTrap is sent when the
+        configured falling threshold
+        (cpmCPURisingThresholdValue) 
+        is reached and CPU utilization remained under 
+        threshold for configured 
+        interval (cpmCPUFallingThresholdPeriod) 
+        and such a notification is requested."
+    ::= 2
+
+cpmCPUTotalGroup OBJECT IDENTIFIER ::= { cpmGroups 1 }
+-- OBJECT-GROUP
+--  Status
+--    deprecated
+--  Descr
+--    A collection of objects providing CPU load monitoring
+--    information. This group is mandatory for all cisco devices.
+--    This group is deprecated since the objects cpmCPUTotal5sec,
+--    cpmCPUTotal1min and cpmCPUTotal5min are
+--    deprecated. A new object cpmCPUTotalGroupRev is
+--    added in place of it.
+--  objects
+--    cpmCPUTotalPhysicalIndex, cpmCPUTotal5sec, cpmCPUTotal1min, 
+--    cpmCPUTotal5min
+
+cpmProcessGroup OBJECT IDENTIFIER ::= { cpmGroups 2 }
+-- OBJECT-GROUP
+--  Status
+--    deprecated
+--  Descr
+--    A collection of objects providing common process
+--    monitoring information. This group is mandatory for 
+--    all cisco devices. This object is deprecated
+--    by cpmProcessGroupRev.
+--  objects
+--    cpmProcessPID, cpmProcessName, cpmProcessuSecs, 
+--    cpmProcessTimeCreated
+
+cpmProcessExtGroup OBJECT IDENTIFIER ::= { cpmGroups 3 }
+-- OBJECT-GROUP
+--  Status
+--    deprecated
+--  Descr
+--    A collection of objects providing additional and
+--    more detailed process monitoring information. This 
+--    group is mandatory for all cisco devices that have 
+--    the internal capability to keep this information. 
+--    This group is deprecated and new group
+--    cpmProcessExtGroupRev is added.
+--  objects
+--    cpmProcExtMemAllocated, cpmProcExtMemFreed, cpmProcExtInvoked, 
+--    cpmProcExtRuntime, cpmProcExtUtil5Sec, cpmProcExtUtil1Min, 
+--    cpmProcExtUtil5Min, cpmProcExtPriority
+
+cpmCPUTotalGroupRev OBJECT IDENTIFIER ::= { cpmGroups 4 }
+-- OBJECT-GROUP
+--  Status
+--    deprecated
+--  Descr
+--    A collection of objects providing CPU load monitoring
+--    information. This group is mandatory for all cisco
+--    devices. This group deprecates cpmCPUTotalGroup.
+--    This group is deprecated since the object
+--    cpmCPUTotal5secRev is deprecated.
+--    A new object cpmCPUTotalGroupRev1 is
+--    added in place of it.
+--  objects
+--    cpmCPUTotalPhysicalIndex, cpmCPUTotal5secRev, 
+--    cpmCPUTotal1minRev, cpmCPUTotal5minRev
+
+cpmProcessExtGroupRev OBJECT IDENTIFIER ::= { cpmGroups 5 }
+-- OBJECT-GROUP
+--  Status
+--    mandatory
+--  Descr
+--    A collection of objects providing additional and
+--    more detailed process monitoring information. This 
+--    group is mandatory for all cisco devices that have 
+--    the internal capability to keep this information.
+--    This group is formed after deprecating cpmProcessExtGroup.
+--    cpmProcExtMemAllocatedRev, cpmProcExtMemFreedRev,
+--    cpmProcExtInvokedRev, cpmProcExtRuntimeRev,
+--    cpmProcExtUtil5SecRev, cpmProcExtUtil1MinRev and 
+--    cpmProcExtUtil5MinRev are the new objects added.
+--  objects
+--    cpmProcExtMemAllocatedRev, cpmProcExtMemFreedRev, 
+--    cpmProcExtInvokedRev, cpmProcExtRuntimeRev, 
+--    cpmProcExtUtil5SecRev, cpmProcExtUtil1MinRev, 
+--    cpmProcExtUtil5MinRev, cpmProcExtPriorityRev
+
+cpmProcessGroupRev OBJECT IDENTIFIER ::= { cpmGroups 6 }
+-- OBJECT-GROUP
+--  Status
+--    mandatory
+--  Descr
+--    A collection of objects providing common process
+--    monitoring information. This group is mandatory for 
+--    all cisco devices. This object deprecates
+--    cpmProcessGroup.
+--  objects
+--    cpmProcessPID, cpmProcessName, cpmProcessAverageUSecs, 
+--    cpmProcessTimeCreated
+
+cpmCPUTotalGroupRev1 OBJECT IDENTIFIER ::= { cpmGroups 7 }
+-- OBJECT-GROUP
+--  Status
+--    mandatory
+--  Descr
+--    A collection of objects providing CPU load monitoring
+--    information. This group is mandatory for all cisco
+--    devices. This group deprecates cpmCPUTotalGroupRev.
+--  objects
+--    cpmCPUTotalPhysicalIndex, cpmCPUTotal1minRev, 
+--    cpmCPUTotal5minRev, cpmCPUMonInterval, 
+--    cpmCPUTotalMonIntervalValue, cpmCPUInterruptMonIntervalValue
+
+cpmCPUThresholdGroup OBJECT IDENTIFIER ::= { cpmGroups 8 }
+-- OBJECT-GROUP
+--  Status
+--    mandatory
+--  Descr
+--    A collection of objects used for configuration
+--    of thresholding.
+--  objects
+--    cpmCPURisingThresholdValue, cpmCPURisingThresholdPeriod, 
+--    cpmCPUFallingThresholdValue, cpmCPUFallingThresholdPeriod, 
+--    cpmCPUThresholdEntryStatus
+
+cpmCPUHistoryGroup OBJECT IDENTIFIER ::= { cpmGroups 9 }
+-- OBJECT-GROUP
+--  Status
+--    mandatory
+--  Descr
+--    A collection of objects providing information
+--    about CPU utilization history.
+--  objects
+--    cpmCPUHistorySize, cpmCPUHistoryThreshold, 
+--    cpmCPUHistoryTotalUtil, cpmCPUHistoryInterruptUtil, 
+--    cpmCPUHistoryCreatedTime, cpmCPUHistoryReportSize, 
+--    cpmCPUHistoryProcId, cpmCPUHistoryProcName, 
+--    cpmCPUHistoryProcCreated, cpmCPUHistoryProcUtil
+
+cpmCPUPosixMemoryGroup OBJECT IDENTIFIER ::= { cpmGroups 11 }
+-- OBJECT-GROUP
+--  Status
+--    mandatory
+--  Descr
+--    A collection of common objects providing
+--    CPU wide System memory information running
+--    POSIX compliant OS.
+--  objects
+--    cpmCPUMemoryUsed, cpmCPUMemoryFree, 
+--    cpmCPUMemoryKernelReserved, cpmCPUMemoryLowest
+
+cpmPosixProcessGroup OBJECT IDENTIFIER ::= { cpmGroups 12 }
+-- OBJECT-GROUP
+--  Status
+--    mandatory
+--  Descr
+--    A collection of common objects providing Process
+--    information on devices running POSIX compliant OS.
+--  objects
+--    cpmProcessType, cpmProcessRespawn, cpmProcessRespawnCount, 
+--    cpmProcessRespawnAfterLastPatch, cpmProcessMemoryCore, 
+--    cpmProcessLastRestartUser, cpmProcessTextSegmentSize, 
+--    cpmProcessDataSegmentSize, cpmProcessStackSize, 
+--    cpmProcessDynamicMemorySize
+
+cpmThreadGroup OBJECT IDENTIFIER ::= { cpmGroups 13 }
+-- OBJECT-GROUP
+--  Status
+--    mandatory
+--  Descr
+--    A collection of objects providing thread information
+--    information on devices running POSIX compliant OS.
+--  objects
+--    cpmThreadName, cpmThreadPriority, cpmThreadState, 
+--    cpmThreadBlockingProcess, cpmThreadCpuUtilization, 
+--    cpmThreadStackSize
+
+cpmVirtualProcessGroup OBJECT IDENTIFIER ::= { cpmGroups 14 }
+-- OBJECT-GROUP
+--  Status
+--    mandatory
+--  Descr
+--    A collection of objects providing virtual process
+--    information on devices that can run virtual machines.
+--  objects
+--    cpmVirtualProcessName, cpmVirtualProcessUtil5Sec, 
+--    cpmVirtualProcessUtil1Min, cpmVirtualProcessUtil5Min, 
+--    cpmVirtualProcessMemAllocated, cpmVirtualProcessMemFreed, 
+--    cpmVirtualProcessInvokeCount, cpmVirtualProcessRuntime
+
+cpmCPUTotalOverflowGroup OBJECT IDENTIFIER ::= { cpmGroups 15 }
+-- OBJECT-GROUP
+--  Status
+--    mandatory
+--  Descr
+--    A collection of Overflow (Ovrflw) objects providing CPU load
+--    monitoring information.
+--  objects
+--    cpmCPUMemoryUsedOvrflw, cpmCPUMemoryFreeOvrflw, 
+--    cpmCPUMemoryKernelReservedOvrflw, cpmCPUMemoryLowestOvrflw
+
+cpmCPUTotalHCGroup OBJECT IDENTIFIER ::= { cpmGroups 16 }
+-- OBJECT-GROUP
+--  Status
+--    mandatory
+--  Descr
+--    A collection of High Capacity (HC) objects providing CPU
+--    load monitoring information.
+--  objects
+--    cpmCPUMemoryHCUsed, cpmCPUMemoryHCFree, 
+--    cpmCPUMemoryHCKernelReserved, cpmCPUMemoryHCLowest
+
+cpmProcessExtRevOverflowGroup OBJECT IDENTIFIER ::= { cpmGroups 17 }
+-- OBJECT-GROUP
+--  Status
+--    mandatory
+--  Descr
+--    A collection of Overflow objects providing additional
+--    and more detailed process monitoring information.
+--  objects
+--    cpmProcExtMemAllocatedRevOvrflw, cpmProcExtMemFreedRevOvrflw, 
+--    cpmProcessTextSegmentSizeOvrflw, 
+--    cpmProcessDataSegmentSizeOvrflw, cpmProcessStackSizeOvrflw, 
+--    cpmProcessDynamicMemorySizeOvrflw
+
+cpmProcessExtRevHCGroup OBJECT IDENTIFIER ::= { cpmGroups 18 }
+-- OBJECT-GROUP
+--  Status
+--    mandatory
+--  Descr
+--    A collection of High Capacity objects providing
+--    additional and more detailed process monitoring 
+--    information.
+--  objects
+--    cpmProcExtHCMemAllocatedRev, cpmProcExtHCMemFreedRev, 
+--    cpmProcessHCTextSegmentSize, cpmProcessHCDataSegmentSize, 
+--    cpmProcessHCStackSize, cpmProcessHCDynamicMemorySize
+
+cpmThreadOverflowGroup OBJECT IDENTIFIER ::= { cpmGroups 19 }
+-- OBJECT-GROUP
+--  Status
+--    mandatory
+--  Descr
+--    A collection of Overflow objects providing thread
+--    information on devices running POSIX compliant OS.
+--  objects
+--    cpmThreadStackSizeOvrflw
+
+cpmThreadHCGroup OBJECT IDENTIFIER ::= { cpmGroups 20 }
+-- OBJECT-GROUP
+--  Status
+--    mandatory
+--  Descr
+--    A collection of High Capacity objects providing thread
+--    information on devices running POSIX compliant OS.
+--  objects
+--    cpmThreadHCStackSize
+
+cpmVirtualProcessOverflowGroup OBJECT IDENTIFIER ::= { cpmGroups 21 }
+-- OBJECT-GROUP
+--  Status
+--    mandatory
+--  Descr
+--    A collection of Overflow objects providing virtual process
+--    information on devices that can run virtual machines.
+--  objects
+--    cpmVirtualProcessMemAllocatedOvrflw, 
+--    cpmVirtualProcessMemFreedOvrflw
+
+cpmVirtualProcessHCGroup OBJECT IDENTIFIER ::= { cpmGroups 22 }
+-- OBJECT-GROUP
+--  Status
+--    mandatory
+--  Descr
+--    A collection of High Capacity objects providing virtual process
+--    information on devices that can run virtual machines.
+--  objects
+--    cpmVirtualProcessHCMemAllocated, cpmVirtualProcessHCMemFreed
+
+cpmCPULoadAvgGroup OBJECT IDENTIFIER ::= { cpmGroups 23 }
+-- OBJECT-GROUP
+--  Status
+--    mandatory
+--  Descr
+--    A collection of objects providing CPU load average
+--    information
+--  objects
+--    cpmCPULoadAvg1min, cpmCPULoadAvg5min, cpmCPULoadAvg15min
+
+cpmCPUTotalMemoryCommitGroup OBJECT IDENTIFIER ::= { cpmGroups 24 }
+-- OBJECT-GROUP
+--  Status
+--    mandatory
+--  Descr
+--    A collection of objects providing CPU system Committed memory
+--    information.
+--  objects
+--    cpmCPUMemoryCommitted, cpmCPUMemoryCommittedOvrflw, 
+--    cpmCPUMemoryHCCommitted
+
+cpmCPUThresholdNotificationGroup OBJECT IDENTIFIER ::= { cpmGroups 10 }
+-- NOTIFICATION-GROUP
+--  Status
+--    mandatory
+--  Descr
+--    A group of notifications.
+--  notifications
+--    cpmCPURisingThreshold, cpmCPUFallingThreshold
+
+cProcessMIBCompliance OBJECT IDENTIFIER ::= { cpmCompliances 1 }
+-- MODULE-COMPLIANCE
+--  Status
+--    deprecated
+--  Descr
+--    The compliance statement for entities which implement
+--    the Cisco Process MIB. This is deprecated and new 
+--    compliance cProcessMIBComplianceRev is added.
+--  Module
+--    >>current<<
+--   MandGroup
+--    cpmCPUTotalGroup
+--   MandGroup
+--    cpmProcessGroup
+--   OptGroup
+--    cpmProcessExtGroup
+--   ObjVar
+--    cpmProcExtPriority
+
+cProcessMIBComplianceRev OBJECT IDENTIFIER ::= { cpmCompliances 2 }
+-- MODULE-COMPLIANCE
+--  Status
+--    deprecated
+--  Descr
+--    The compliance statement for entities which implement
+--    the Cisco Process MIB. This compliance module
+--    deprecates cProcessMIBCompliance.
+--  Module
+--    >>current<<
+--   MandGroup
+--    cpmCPUTotalGroupRev
+--   MandGroup
+--    cpmProcessGroupRev
+--   OptGroup
+--    cpmProcessExtGroupRev
+
+cProcessMIBComplianceRev1 OBJECT IDENTIFIER ::= { cpmCompliances 3 }
+-- MODULE-COMPLIANCE
+--  Status
+--    deprecated
+--  Descr
+--    The compliance statement for entities which implement
+--    the Cisco Process MIB. This compliance module
+--    deprecates cProcessMIBComplianceRev.
+--  Module
+--    >>current<<
+--   MandGroup
+--    cpmCPUThresholdGroup
+--   MandGroup
+--    cpmCPUTotalGroupRev1
+--   OptGroup
+--    cpmCPUHistoryGroup
+--   OptGroup
+--    cpmCPUThresholdNotificationGroup
+
+cProcessMIBComplianceRev2 OBJECT IDENTIFIER ::= { cpmCompliances 4 }
+-- MODULE-COMPLIANCE
+--  Status
+--    deprecated
+--  Descr
+--    The compliance statement for entities which implement
+--    the Cisco Process MIB. This compliance module
+--    deprecates cProcessMIBComplianceRev1.
+--  Module
+--    >>current<<
+--   MandGroup
+--    cpmCPUTotalGroupRev1
+--   OptGroup
+--    cpmCPUHistoryGroup
+--   OptGroup
+--    cpmCPUThresholdNotificationGroup
+--   OptGroup
+--    cpmProcessExtGroupRev
+--   OptGroup
+--    cpmCPUThresholdGroup
+--   OptGroup
+--    cpmProcessGroupRev
+--   OptGroup
+--    cpmCPUPosixMemoryGroup
+--   OptGroup
+--    cpmPosixProcessGroup
+--   OptGroup
+--    cpmThreadGroup
+--   OptGroup
+--    cpmVirtualProcessGroup
+
+cProcessMIBComplianceRev3 OBJECT IDENTIFIER ::= { cpmCompliances 5 }
+-- MODULE-COMPLIANCE
+--  Status
+--    deprecated
+--  Descr
+--    The compliance statement for entities which implement
+--    the Cisco Process MIB. This compliance module
+--    deprecates cProcessMIBComplianceRev2.
+--  Module
+--    >>current<<
+--   MandGroup
+--    cpmCPUTotalGroupRev1
+--   OptGroup
+--    cpmCPUHistoryGroup
+--   OptGroup
+--    cpmCPUThresholdNotificationGroup
+--   OptGroup
+--    cpmProcessExtGroupRev
+--   OptGroup
+--    cpmCPUThresholdGroup
+--   OptGroup
+--    cpmProcessGroupRev
+--   OptGroup
+--    cpmCPUPosixMemoryGroup
+--   OptGroup
+--    cpmPosixProcessGroup
+--   OptGroup
+--    cpmThreadGroup
+--   OptGroup
+--    cpmVirtualProcessGroup
+--   OptGroup
+--    cpmCPUTotalOverflowGroup
+--   OptGroup
+--    cpmCPUTotalHCGroup
+--   OptGroup
+--    cpmProcessExtRevOverflowGroup
+--   OptGroup
+--    cpmProcessExtRevHCGroup
+--   OptGroup
+--    cpmThreadOverflowGroup
+--   OptGroup
+--    cpmThreadHCGroup
+--   OptGroup
+--    cpmVirtualProcessOverflowGroup
+--   OptGroup
+--    cpmVirtualProcessHCGroup
+
+cProcessMIBComplianceRev4 OBJECT IDENTIFIER ::= { cpmCompliances 6 }
+-- MODULE-COMPLIANCE
+--  Status
+--    deprecated
+--  Descr
+--    The compliance statement for entities which implement
+--    the Cisco Process MIB. This compliance module
+--    deprecates cProcessMIBComplianceRev3.
+--  Module
+--    >>current<<
+--   MandGroup
+--    cpmCPUTotalGroupRev1
+--   OptGroup
+--    cpmCPUHistoryGroup
+--   OptGroup
+--    cpmCPUThresholdNotificationGroup
+--   OptGroup
+--    cpmProcessExtGroupRev
+--   OptGroup
+--    cpmCPUThresholdGroup
+--   OptGroup
+--    cpmProcessGroupRev
+--   OptGroup
+--    cpmCPUPosixMemoryGroup
+--   OptGroup
+--    cpmPosixProcessGroup
+--   OptGroup
+--    cpmThreadGroup
+--   OptGroup
+--    cpmVirtualProcessGroup
+--   OptGroup
+--    cpmCPUTotalOverflowGroup
+--   OptGroup
+--    cpmCPUTotalHCGroup
+--   OptGroup
+--    cpmProcessExtRevOverflowGroup
+--   OptGroup
+--    cpmProcessExtRevHCGroup
+--   OptGroup
+--    cpmThreadOverflowGroup
+--   OptGroup
+--    cpmThreadHCGroup
+--   OptGroup
+--    cpmVirtualProcessOverflowGroup
+--   OptGroup
+--    cpmVirtualProcessHCGroup
+--   OptGroup
+--    cpmCPULoadAvgGroup
+
+cProcessMIBComplianceRev5 OBJECT IDENTIFIER ::= { cpmCompliances 7 }
+-- MODULE-COMPLIANCE
+--  Status
+--    mandatory
+--  Descr
+--    The compliance statement for entities which implement
+--    the Cisco Process MIB. This compliance module
+--    deprecates cProcessMIBComplianceRev4
+--  Module
+--    >>current<<
+--   MandGroup
+--    cpmCPUTotalGroupRev1
+--   OptGroup
+--    cpmCPUHistoryGroup
+--   OptGroup
+--    cpmCPUThresholdNotificationGroup
+--   OptGroup
+--    cpmProcessExtGroupRev
+--   OptGroup
+--    cpmCPUThresholdGroup
+--   OptGroup
+--    cpmProcessGroupRev
+--   OptGroup
+--    cpmCPUPosixMemoryGroup
+--   OptGroup
+--    cpmPosixProcessGroup
+--   OptGroup
+--    cpmThreadGroup
+--   OptGroup
+--    cpmVirtualProcessGroup
+--   OptGroup
+--    cpmCPUTotalOverflowGroup
+--   OptGroup
+--    cpmCPUTotalHCGroup
+--   OptGroup
+--    cpmProcessExtRevOverflowGroup
+--   OptGroup
+--    cpmProcessExtRevHCGroup
+--   OptGroup
+--    cpmThreadOverflowGroup
+--   OptGroup
+--    cpmThreadHCGroup
+--   OptGroup
+--    cpmVirtualProcessOverflowGroup
+--   OptGroup
+--    cpmVirtualProcessHCGroup
+--   OptGroup
+--    cpmCPULoadAvgGroup
+--   OptGroup
+--    cpmCPUTotalMemoryCommitGroup
+
+
+END
+

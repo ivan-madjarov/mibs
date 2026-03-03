@@ -1,0 +1,658 @@
+-- ****************************************************************************
+-- ****************************************************************************
+--
+--             Copyright(c) 2001-2002 Mediatrix Telecom, Inc.
+--
+--  NOTICE:
+--   This document contains information that is confidential and proprietary
+--   to Mediatrix Telecom, Inc.
+--
+--   Mediatrix Telecom, Inc. reserves all rights to this document as well as
+--   to the Intellectual Property of the document and the technology and
+--   know-how that it includes and represents.
+--
+--   This publication cannot be reproduced, neither in whole nor in part in
+--   any form whatsoever without written prior approval by
+--   Mediatrix Telecom, Inc.
+--
+--   Mediatrix Telecom, Inc. reserves the right to revise this publication
+--   and make changes at any time and without the obligation to notify any
+--   person and/or entity of such revisions and/or changes.
+--
+-- ****************************************************************************
+-- ****************************************************************************
+
+MGCP41-MX-SIP-MIB
+DEFINITIONS ::= BEGIN
+
+IMPORTS
+        MODULE-IDENTITY,
+        OBJECT-IDENTITY,
+        OBJECT-TYPE,
+        Unsigned32
+    FROM SNMPv2-SMI
+        OBJECT-GROUP,
+        MODULE-COMPLIANCE
+    FROM SNMPv2-CONF
+        ifIndex
+    FROM RFC1213-MIB
+        MxIpHostName,
+        MxIpConfigSource,
+        MxIpPort,
+        MxAdvancedIpPort,
+        MxIpSelectConfigSource,
+        MxIpDhcpSiteSpecificCode
+    FROM MX-TC
+        ipAddressStatus,
+        ipAddressConfig,
+        mediatrixIpTelephonySignaling
+    FROM MX-SMI;
+
+sip OBJECT-IDENTITY
+    STATUS      current
+    DESCRIPTION "This MIB contains SIP configuration objects."
+    ::= { mediatrixIpTelephonySignaling 20 }
+
+sipMIB MODULE-IDENTITY
+    LAST-UPDATED "0111230000Z"
+    ORGANIZATION "Mediatrix Telecom, Inc."
+    CONTACT-INFO "Mediatrix Telecom, Inc.
+                  4229, Garlock Street
+                  Sherbrooke (Quebec)
+                  Canada
+                  Phone: (819) 829-8749
+                  "
+    DESCRIPTION "This MIB contains SIP configuration objects."
+
+    -- ************************************************************************
+    -- Revision history
+    -- ************************************************************************
+    REVISION    "0111230000Z"
+    DESCRIPTION "December 11, 2001
+                 Creation"
+    ::= { sip 1 }
+
+sipMIBObjects  OBJECT IDENTIFIER ::= { sipMIB 1 }
+sipConformance OBJECT IDENTIFIER ::= { sipMIB 2 }
+
+    -- ************************************************************************
+    -- Basic Sip Variables
+    -- ************************************************************************
+    sipPort OBJECT-TYPE
+        SYNTAX      MxIpPort
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "SIP User agent IP port number."
+        DEFVAL      { 5060 }
+        ::=  {  sipMIBObjects  5  }
+
+
+-- ************************************************************************
+-- User Agent information
+-- ************************************************************************
+    sipUAIfTable OBJECT-TYPE
+        SYNTAX      SEQUENCE OF SipUAIfEntry
+        MAX-ACCESS  not-accessible
+        STATUS      current
+        DESCRIPTION "This table holds the user agent configuration variables. A
+                     user agent is a logical entity that can act as both client
+                     and server for the duration of a dialog.  The informations
+                     contained in this table will be used to dynamically create
+                     the To, From and Contact headers used in the request sent
+                     by the UAC."
+        ::= { sipMIBObjects  10 }
+
+        sipUAIfEntry OBJECT-TYPE
+            SYNTAX      SipUAIfEntry
+            MAX-ACCESS  not-accessible
+            STATUS      current
+            DESCRIPTION "Sip user agent parameter entries."
+            INDEX       {
+                            ifIndex
+                        }
+            ::= { sipUAIfTable 1 }
+
+            SipUAIfEntry ::= SEQUENCE
+                {
+                    sipUAMainUsername OCTET STRING,
+                    sipUADisplayName OCTET STRING,
+                    sipUAOtherAcceptedUsernames OCTET STRING,
+                    sipUAMinimumSessionExpirationDelay Unsigned32,
+                    sipUAMaximumSessionExpirationDelay Unsigned32
+                }
+
+        sipUAMainUsername OBJECT-TYPE
+            SYNTAX  OCTET STRING (SIZE(0..255))
+            MAX-ACCESS  read-write
+            STATUS  current
+            DESCRIPTION "A string that uniquely identifies this endpoint in the domain.
+                         For example, a telephone number.
+
+                         This string is used in the creation of the contact headers.
+                         The SIP Contact header always carries the CURRENT
+                         location (IP address) where the endpoint can be reached.
+
+                         Contact headers are used in two ways:
+
+                         First, contacts are registered to the SIP registrar.
+                         This enables callers to be redirected to the endpoint's
+                         current location.
+
+                         Second, a contact header is sent along with any requests
+                         the UA sends (ex: INVITE), and will be used by the target
+                         UA as a return address for later requests sent by the
+                         target to this endpoint."
+            DEFVAL { "" }
+            ::=  {  sipUAIfEntry  10 }
+
+        sipUADisplayName OBJECT-TYPE
+            SYNTAX  OCTET STRING (SIZE(0..255))
+            MAX-ACCESS  read-write
+            STATUS  current
+            DESCRIPTION "Friendly name for SIP User Agent.  A friendly name or display
+                         name is meant to contain a descriptive version of the URI,
+                         and is intended to be displayed to a user interface."
+            DEFVAL { "" }
+            ::=  {    sipUAIfEntry  15 }
+
+        sipUAOtherAcceptedUsernames OBJECT-TYPE
+            SYNTAX  OCTET STRING (SIZE(0..255))
+            MAX-ACCESS  read-write
+            STATUS  current
+            DESCRIPTION "A comma-separated list of usernames that the endpoint will
+                         recognise as its own, but will NOT register in contacts
+                         sent to the registrar.
+
+                         Only the username in sipUAMainUsername is registered.
+
+                         This variable can be used to add variations on the main
+                         user name. For example, say that the main user name is
+                         a telephone number, 555-1111. Variations could be the
+                         prefixing of the local area or country code, such as
+                         819-555-1111.
+
+                         This value can contain multiple usernames. These must
+                         be separated by a ',' character, such as:
+                         user1, user2, 5552222, 18195552222"
+            DEFVAL { "" }
+            ::=  {  sipUAIfEntry  20 }
+
+        sipUAMaximumSessionExpirationDelay OBJECT-TYPE
+            SYNTAX  Unsigned32 (0 | 30..3600)
+            MAX-ACCESS  read-write
+            STATUS  current
+            DESCRIPTION "This option allows the detection of the end of a call caused by a
+                         communication problem on the network.
+
+                         If the maximum session expiration delay is set to a value
+                         other than 0, then an INVITE is sent every n SECONDS,
+                         where n is the maximum session expiration delay.
+
+                         If the INVITE does not get an answer, then the
+                         call is terminated.
+
+                         To disable the session timer service, set the maximum session
+                         timer expiration value to 0."
+            DEFVAL { 3600 }
+            ::=  {  sipUAIfEntry 30}
+
+        sipUAMinimumSessionExpirationDelay OBJECT-TYPE
+            SYNTAX  Unsigned32 (30..3600)
+            MAX-ACCESS  read-write
+            STATUS  current
+            DESCRIPTION "This value reflects the minimum time, in SECONDS, that
+                         the endpoint is willing to accept for session refreshes.
+                         Having a higher minimum will help to reduce network congestion
+                         and the possibility of denial-of-service attacks.
+
+                         Also see sipUAMaximumSessionExpirationDelay."
+            DEFVAL { 1800 }
+            ::=  {  sipUAIfEntry  35 }
+
+
+    -- ************************************************************************
+    -- Authentication per port table
+    -- ************************************************************************
+    sipUAIfAuthenticationTable OBJECT-TYPE
+        SYNTAX      SEQUENCE OF SipUAIfAuthenticationEntry
+        MAX-ACCESS  not-accessible
+        STATUS      current
+        DESCRIPTION "This table holds the user agent authentication configuration variables.
+                     Authentication information adds some level of security."
+        ::= { sipMIBObjects  15 }
+
+        sipUAIfAuthenticationEntry OBJECT-TYPE
+            SYNTAX      SipUAIfAuthenticationEntry
+            MAX-ACCESS  not-accessible
+            STATUS      current
+            DESCRIPTION "Sip user agent authentication parameter entries."
+            INDEX       {
+                            ifIndex,
+                            sipUAAuthIndex
+                        }
+            ::= { sipUAIfAuthenticationTable 1 }
+
+            SipUAIfAuthenticationEntry ::= SEQUENCE
+                {
+                    sipUAAuthIndex Unsigned32,
+                    sipUAAuthRealm OCTET STRING,
+                    sipUAAuthUsername OCTET STRING,
+                    sipUAAuthPassword OCTET STRING
+                }
+
+        sipUAAuthIndex OBJECT-TYPE
+            SYNTAX  Unsigned32 (1..10)
+            MAX-ACCESS  not-accessible
+            STATUS      current
+            DESCRIPTION "Authentication index for this row."
+            ::= { sipUAIfAuthenticationEntry 10 }
+
+        sipUAAuthRealm OBJECT-TYPE
+            SYNTAX  OCTET STRING (SIZE(0..128))
+            MAX-ACCESS  read-write
+            STATUS  current
+            DESCRIPTION "When authentication informations are required from users,
+                        the realm identifies who requested the information."
+            DEFVAL { "" }
+            ::=  { sipUAIfAuthenticationEntry 15 }
+
+        sipUAAuthUsername OBJECT-TYPE
+            SYNTAX  OCTET STRING (SIZE(0..128))
+            MAX-ACCESS  read-write
+            STATUS  current
+            DESCRIPTION "A string that will uniquely identify this endpoint in
+                         the realm, used for authentication purposes. The username
+                         always maps to a password."
+            DEFVAL { "" }
+            ::=  { sipUAIfAuthenticationEntry 20 }
+
+        sipUAAuthPassword OBJECT-TYPE
+            SYNTAX  OCTET STRING (SIZE(0..128))
+            MAX-ACCESS  read-write
+            STATUS  current
+            DESCRIPTION "User password."
+            DEFVAL { "" }
+            ::=  { sipUAIfAuthenticationEntry 25 }
+
+
+    -- ************************************************************************
+    -- SipServer IP address: Placed in the mediatrixMgmt.ipAddressStatus and
+    --                       in mediatrixConfig.ipAddressConfig.
+    -- ************************************************************************
+
+    ipAddressStatusSipServer OBJECT IDENTIFIER ::= { ipAddressStatus 70 }
+    ipAddressConfigSipServer OBJECT IDENTIFIER ::= { ipAddressConfig 70 }
+
+    -- ************************************************************************
+    -- SipServer Status variables
+    -- ************************************************************************
+
+    sipServerConfigSource OBJECT-TYPE
+        SYNTAX      MxIpConfigSource
+        MAX-ACCESS  read-only
+        STATUS      current
+        DESCRIPTION "Indicates the source used for the provisioning of
+                     the SIP Server MIB objects."
+        DEFVAL { dhcp }
+        ::=  {  ipAddressStatusSipServer  1  }
+
+    sipHomeDomainProxyHost OBJECT-TYPE
+        SYNTAX      MxIpHostName
+        MAX-ACCESS  read-only
+        STATUS      current
+        DESCRIPTION "SIP proxy server IP address or domain name.
+
+                     An intermediary entity that acts as both a server and
+                     a client for the purpose of making requests on behalf
+                     of other clients. A proxy server primarily plays the role
+                     of routing, which means its job is to ensure that a request
+                     is passed on to another entity that can further process
+                     the request. Proxies are also useful for enforcing policy
+                     and for firewall traversal. A proxy interprets, and, if necessary,
+                     rewrites parts of a request message before forwarding it."
+        DEFVAL      { "192.168.0.10" }
+        ::=  {  ipAddressStatusSipServer 5 }
+
+    sipHomeDomainProxyPort OBJECT-TYPE
+        SYNTAX      MxAdvancedIpPort
+        MAX-ACCESS  read-only
+        STATUS      current
+        DESCRIPTION "SIP proxy server IP port number."
+        DEFVAL      { 0 }
+        ::=  {  ipAddressStatusSipServer 10  }
+
+    sipOutboundProxyHost OBJECT-TYPE
+        SYNTAX      MxIpHostName
+        MAX-ACCESS  read-only
+        STATUS      current
+        DESCRIPTION "SIP outbound proxy server IP address or domain name.
+
+                     An intermediary entity that acts as both a server and
+                     a client for the purpose of making requests on behalf
+                     of other clients. The outbound proxy receives all outbound
+                     traffic and forwards it. Incoming traffic may or may not go
+                     through the outbound proxy.
+
+                     The outbound proxy's address is never used in the SIP packets,
+                     it is only used as a physical network destination for the
+                     packets.
+
+                     To disable the outbound proxy, set it to '0.0.0.0'."
+        DEFVAL      { "0.0.0.0" }
+        ::=  {  ipAddressStatusSipServer 15 }
+
+    sipOutboundProxyPort OBJECT-TYPE
+        SYNTAX      MxAdvancedIpPort
+        MAX-ACCESS  read-only
+        STATUS      current
+        DESCRIPTION "SIP outbound proxy server IP port number."
+        DEFVAL      { 0 }
+        ::=  {  ipAddressStatusSipServer 20  }
+
+    sipRegistrarHost OBJECT-TYPE
+        SYNTAX      MxIpHostName
+        MAX-ACCESS  read-only
+        STATUS      current
+        DESCRIPTION "SIP registrar server IP address or domain name.
+
+                     A registrar is a server that accepts REGISTER requests,
+                     and places the information it receives in those requests
+                     into the location service for the domain it handles."
+        DEFVAL      { "192.168.0.10" }
+        ::=  {  ipAddressStatusSipServer  30  }
+
+    sipRegistrarPort OBJECT-TYPE
+        SYNTAX      MxAdvancedIpPort
+        MAX-ACCESS  read-only
+        STATUS      current
+        DESCRIPTION "SIP registrar server IP port number."
+        DEFVAL      { 0 }
+        ::=  {  ipAddressStatusSipServer  35 }
+
+
+    -- ************************************************************************
+    -- SipServer Configuration variables
+    -- ************************************************************************
+
+    sipServerSelectConfigSource OBJECT-TYPE
+        SYNTAX      MxIpSelectConfigSource
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Indicates the source to be used for the provisioning of
+                     the SIP Server registrar MIB objects."
+        DEFVAL      { dhcp }
+        ::=  {  ipAddressConfigSipServer 5 }
+
+    -- ************************************************************************
+    -- Static server values
+    -- ************************************************************************
+ipAddressConfigSipServerStatic OBJECT IDENTIFIER  ::=  {  ipAddressConfigSipServer  10  }
+
+    sipHomeDomainProxyStaticHost OBJECT-TYPE
+        SYNTAX      MxIpHostName
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "SIP proxy server IP address or domain name.
+
+                     An intermediary entity that acts as both a server and
+                     a client for the purpose of making requests on behalf
+                     of other clients. A proxy server primarily plays the role
+                     of routing, which means its job is to ensure that a request
+                     is passed on to another entity that can further process
+                     the request. Proxies are also useful for enforcing policy
+                     and for firewall traversal. A proxy interprets, and, if necessary,
+                     rewrites parts of a request message before forwarding it."
+        DEFVAL      { "192.168.0.10" }
+        ::=  {  ipAddressConfigSipServerStatic  5 }
+
+    sipHomeDomainProxyStaticPort OBJECT-TYPE
+        SYNTAX      MxAdvancedIpPort
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "SIP proxy server IP port number."
+        DEFVAL      { 0 }
+        ::=  {  ipAddressConfigSipServerStatic 10 }
+
+
+    sipOutboundProxyStaticHost OBJECT-TYPE
+        SYNTAX      MxIpHostName
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "SIP outbound proxy server IP address or domain name.
+
+                     An intermediary entity that acts as both a server and
+                     a client for the purpose of making requests on behalf
+                     of other clients. The outbound proxy receives all outbound
+                     traffic and forwards it. Incoming traffic may or may not go
+                     through the outbound proxy.
+
+                     The outbound proxy's address is never used in the SIP packets,
+                     it is only used as a physical network destination for the
+                     packets.
+
+                     To disable the outbound proxy, set it to '0.0.0.0'."
+        DEFVAL      { "0.0.0.0" }
+        ::=  {  ipAddressConfigSipServerStatic  15 }
+
+    sipOutboundProxyStaticPort OBJECT-TYPE
+        SYNTAX      MxAdvancedIpPort
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "SIP proxy server IP port number."
+        DEFVAL      { 0 }
+        ::=  {  ipAddressConfigSipServerStatic 20 }
+
+
+    sipRegistrarStaticHost OBJECT-TYPE
+        SYNTAX      MxIpHostName
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "SIP registrar server IP address or domain name.
+
+                     A registrar is a server that accepts REGISTER requests,
+                     and places the information it receives in those requests
+                     into the location service for the domain it handles."
+        DEFVAL      { "192.168.0.10" }
+        ::=  {  ipAddressConfigSipServerStatic  25 }
+
+    sipRegistrarStaticPort OBJECT-TYPE
+        SYNTAX      MxAdvancedIpPort
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "SIP registrar server IP port number."
+        DEFVAL      { 0 }
+        ::=  {  ipAddressConfigSipServerStatic  35 }
+
+
+    -- ************************************************************************
+    -- Dhcp Site Specific codes
+    -- ************************************************************************
+ipAddressConfigSipServerDhcp OBJECT IDENTIFIER  ::=  {  ipAddressConfigSipServer  15  }
+
+    sipRegistrarDhcpSiteSpecificCode OBJECT-TYPE
+        SYNTAX      MxIpDhcpSiteSpecificCode
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "DHCP SIP server registrar site specific code.
+                     If set to 0, use vendor-specific code #203."
+        DEFVAL      { 0 }
+        ::=  {  ipAddressConfigSipServerDhcp  5  }
+
+    sipHomeDomainProxyDhcpSiteSpecificCode OBJECT-TYPE
+        SYNTAX      MxIpDhcpSiteSpecificCode
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "DHCP SIP server proxy site specific code.
+                     If set to 0, use vendor-specific code #204."
+        DEFVAL      { 0 }
+        ::=  {  ipAddressConfigSipServerDhcp  10  }
+
+    sipOutboundProxyDhcpSiteSpecificCode OBJECT-TYPE
+        SYNTAX      MxIpDhcpSiteSpecificCode
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "DHCP SIP outbound proxy server site specific code.
+                     If set to 0, use vendor-specific code #205."
+        DEFVAL      { 0 }
+        ::=  {  ipAddressConfigSipServerDhcp  15  }
+
+
+    -- ************************************************************************
+    -- Authentication Unit table
+    -- ************************************************************************
+    sipUnitAuthenticationTable OBJECT-TYPE
+        SYNTAX      SEQUENCE OF SipUnitAuthenticationEntry
+        MAX-ACCESS  not-accessible
+        STATUS      current
+        DESCRIPTION "This table holds the user agent authentication configuration variables.
+                     Authentication information adds some level of security."
+        ::= { sipMIBObjects  20 }
+
+        sipUnitAuthenticationEntry OBJECT-TYPE
+            SYNTAX      SipUnitAuthenticationEntry
+            MAX-ACCESS  not-accessible
+            STATUS      current
+            DESCRIPTION "Sip user agent authentication parameter entries."
+            INDEX       {
+                            sipUnitAuthIndex
+                        }
+            ::= { sipUnitAuthenticationTable 1 }
+
+            SipUnitAuthenticationEntry ::= SEQUENCE
+                {
+                    sipUnitAuthIndex Unsigned32,
+                    sipUnitAuthRealm OCTET STRING,
+                    sipUnitAuthUsername OCTET STRING,
+                    sipUnitAuthPassword OCTET STRING
+                }
+
+        sipUnitAuthIndex OBJECT-TYPE
+            SYNTAX  Unsigned32 (1..10)
+            MAX-ACCESS  not-accessible
+            STATUS      current
+            DESCRIPTION "Authentication index for this row."
+            ::= { sipUnitAuthenticationEntry 10 }
+
+        sipUnitAuthRealm OBJECT-TYPE
+            SYNTAX  OCTET STRING (SIZE(0..128))
+            MAX-ACCESS  read-write
+            STATUS  current
+            DESCRIPTION "When authentication informations are required from users,
+                         the realm identifies who requested the information."
+            DEFVAL { "" }
+            ::=  { sipUnitAuthenticationEntry 15 }
+
+        sipUnitAuthUsername OBJECT-TYPE
+            SYNTAX  OCTET STRING (SIZE(0..128))
+            MAX-ACCESS  read-write
+            STATUS  current
+            DESCRIPTION "A string that will uniquely identify this endpoint in
+                         the realm, used for authentication purposes. The username
+                         always maps to a password."
+            DEFVAL { "" }
+            ::=  { sipUnitAuthenticationEntry 20 }
+
+        sipUnitAuthPassword OBJECT-TYPE
+            SYNTAX  OCTET STRING (SIZE(0..128))
+            MAX-ACCESS  read-write
+            STATUS  current
+            DESCRIPTION "User password."
+            DEFVAL { "" }
+            ::=  { sipUnitAuthenticationEntry 25 }
+
+
+    -- ************************************************************************
+    -- Conformance information
+    -- ************************************************************************
+    sipCompliances OBJECT IDENTIFIER ::= { sipConformance 1 }
+
+    sipServerBasicComplVer1 MODULE-COMPLIANCE
+        STATUS      current
+        DESCRIPTION "Minimal definitions for the SIP protocol group"
+        MODULE -- This Module
+            MANDATORY-GROUPS {
+                                sipUnitGroupVer1,
+                                sipRegistrarGroupVer1,
+                                sipProxyGroupVer1,
+                                sipUAGroupVer1,
+                                sipUAAuthenticationGroupVer1
+                             }
+        ::= { sipCompliances 1 }
+
+    -- ************************************************************************
+    -- MIB variable grouping
+    -- ************************************************************************
+    sipGroups OBJECT IDENTIFIER ::= { sipConformance 2 }
+
+    sipUnitGroupVer1 OBJECT-GROUP
+        OBJECTS {
+                    sipPort,
+                    sipUnitAuthRealm,
+                    sipUnitAuthUsername,
+                    sipUnitAuthPassword
+                }
+        STATUS      current
+        DESCRIPTION "This group holds the objects that define the
+                     main unit group."
+        ::= { sipGroups 5 }
+
+    sipRegistrarGroupVer1 OBJECT-GROUP
+        OBJECTS {
+                    sipServerConfigSource,
+                    sipRegistrarHost,
+                    sipRegistrarPort,
+                    sipServerSelectConfigSource,
+                    sipRegistrarStaticHost,
+                    sipRegistrarStaticPort,
+                    sipRegistrarDhcpSiteSpecificCode
+                }
+        STATUS      current
+        DESCRIPTION "This group holds the objects that define the
+                     Registrar server group."
+        ::= { sipGroups 10 }
+
+    sipProxyGroupVer1 OBJECT-GROUP
+        OBJECTS {
+                    sipServerConfigSource,
+                    sipHomeDomainProxyHost,
+                    sipHomeDomainProxyPort,
+                    sipOutboundProxyHost,
+                    sipOutboundProxyPort,
+                    sipServerSelectConfigSource,
+                    sipHomeDomainProxyStaticHost,
+                    sipHomeDomainProxyStaticPort,
+                    sipOutboundProxyStaticHost,
+                    sipOutboundProxyStaticPort,
+                    sipHomeDomainProxyDhcpSiteSpecificCode,
+                    sipOutboundProxyDhcpSiteSpecificCode
+                }
+        STATUS      current
+        DESCRIPTION "This group holds the objects that define the
+                     Proxy server group."
+        ::= { sipGroups 15 }
+
+    sipUAGroupVer1 OBJECT-GROUP
+        OBJECTS {
+                    sipUAMainUsername,
+                    sipUADisplayName,
+                    sipUAOtherAcceptedUsernames,
+                    sipUAMaximumSessionExpirationDelay,
+                    sipUAMinimumSessionExpirationDelay
+                }
+        STATUS      current
+        DESCRIPTION "This group holds the objects that define the
+                     User Agent group."
+        ::= { sipGroups 20 }
+
+    sipUAAuthenticationGroupVer1 OBJECT-GROUP
+        OBJECTS {
+                    sipUAAuthRealm,
+                    sipUAAuthUsername,
+                    sipUAAuthPassword
+                }
+        STATUS      current
+        DESCRIPTION "This group holds the objects that define the
+                     User Agent password group."
+        ::= { sipGroups 25 }
+
+END

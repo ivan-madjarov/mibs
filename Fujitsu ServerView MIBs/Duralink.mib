@@ -1,0 +1,1188 @@
+ADAPTECDURALINK-MIB DEFINITIONS ::= BEGIN
+ 
+IMPORTS
+Counter,  enterprises, TimeTicks
+FROM RFC1155-SMI
+OBJECT-TYPE
+FROM RFC-1212
+DisplayString, PhysAddress
+FROM RFC1213-MIB;
+
+              OwnerString ::= DisplayString
+ 
+              EntryStatus ::= INTEGER
+                         { valid(1),
+                           createRequest(2),
+                           underCreation(3),
+                           invalid(4)
+                         }
+ 
+ 
+adaptec                         OBJECT IDENTIFIER ::= {enterprises 795}
+products                        OBJECT IDENTIFIER ::= {adaptec 3 }
+nic                             OBJECT IDENTIFIER ::= {products 1 }
+npg                             OBJECT IDENTIFIER ::= {nic 2 }
+duralink                        OBJECT IDENTIFIER ::= {npg 3 }
+
+ 
+ 
+
+-- The Information group
+
+			information                             OBJECT IDENTIFIER ::= {duralink 1}
+
+			numInterfaces   OBJECT-TYPE
+				SYNTAX  INTEGER
+				ACCESS  read-only
+				STATUS  mandatory
+				DESCRIPTION
+		      "The number of Adaptec network interfaces 
+		       present on this system."
+				::= {information 1}
+
+			numPorts                OBJECT-TYPE
+				SYNTAX  INTEGER
+				ACCESS  read-only
+				STATUS  mandatory
+				DESCRIPTION
+		      "The number of Adaptec network ports
+		       present on this system."
+				::= {information 2}
+
+			numCards                OBJECT-TYPE
+				SYNTAX  INTEGER
+				ACCESS  read-only
+				STATUS  mandatory
+				DESCRIPTION
+		      "The number of Adaptec network adapters
+		       present on this system."
+				::= {information 3}
+
+			operatingSystem			OBJECT-TYPE
+				SYNTAX            INTEGER {
+					nt			(1),
+					netware		(2)
+						}
+				ACCESS  read-only
+				STATUS  mandatory
+				DESCRIPTION
+					"This is the operating system of the managed computer."
+				::= {information 4}
+
+			operatingSystemVersion OBJECT-TYPE
+				SYNTAX  DisplayString (SIZE (0..20))
+				ACCESS  read-only
+				STATUS  mandatory
+				DESCRIPTION
+		      	"The operating system version."
+				::= {information 5}
+
+			agentVersion OBJECT-TYPE
+				SYNTAX  DisplayString (SIZE (0..20))
+				ACCESS  read-only
+				STATUS  mandatory
+				DESCRIPTION
+		      	"The Duralink agent version."
+				::= {information 6}
+
+          agentUpTime OBJECT-TYPE
+              SYNTAX  TimeTicks
+              ACCESS  read-only
+              STATUS  mandatory
+              DESCRIPTION
+                      "The time (in hundredths of a second) since the
+                      network management portion of the system was last
+                      re-initialized."
+              ::= { information 7 }
+
+
+-- Interface Statistics Table
+
+
+
+	  interfaceStatsTable OBJECT-TYPE
+	      SYNTAX  SEQUENCE OF InterfaceStatsEntry
+	      ACCESS  not-accessible
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "The table listing Adaptec network interface statistics."
+	      ::= {duralink 2}
+
+	  interfaceStatsEntry OBJECT-TYPE
+	      SYNTAX  InterfaceStatsEntry
+	      ACCESS  not-accessible
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "Each entry lists statistics for a single network interface."
+	      INDEX   { iInterfaceIndex }
+	      ::= { interfaceStatsTable 1 }
+
+	  InterfaceStatsEntry ::=
+	      SEQUENCE {
+		  iInterfaceIndex
+		      INTEGER,
+		  iInterfaceName
+		      DisplayString,
+		  iInterfacePorts
+		      INTEGER,
+		  iPermNetAddress
+		      PhysAddress,
+		  iCurrentNetAddress
+		      PhysAddress,
+		  iDataRate
+		      INTEGER,
+		  iTotalPacketsTransmitted
+		      Counter,
+		  iTotalBytesTransmitted
+		      Counter,
+		  iTotalPacketsReceived
+		      Counter,
+		  iTotalBytesReceived
+		      Counter,
+		  iTotalTransmitErrors
+		      Counter,
+		  iTotalReceiveErrors
+		      Counter,
+          iInterfaceType
+              INTEGER
+	      }
+
+	  iInterfaceIndex OBJECT-TYPE
+	      SYNTAX  INTEGER
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "A unique value assigned to each interface
+					  This is an increasing numeric value ranging between
+					  1 and the value of NumInterfaces."
+	      ::= { interfaceStatsEntry 1 }
+
+	  iInterfaceName OBJECT-TYPE
+	      SYNTAX  DisplayString (SIZE (0..80))
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "The descriptive name assigned to the interface
+		      at the time the interface was configured."
+	      ::= { interfaceStatsEntry 2 }
+ 
+	  iInterfacePorts OBJECT-TYPE
+	      SYNTAX  INTEGER
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "The number of ports in the interface.
+		      An interface may consist of one or more ports."
+	      ::= { interfaceStatsEntry 3 }
+ 
+	  iPermNetAddress OBJECT-TYPE
+	      SYNTAX  PhysAddress
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "The permanent network address assigned to this interface.
+		      This is the node address stored permanently in the adapter."
+	      ::= { interfaceStatsEntry 4 }
+
+	  iCurrentNetAddress OBJECT-TYPE
+	      SYNTAX  PhysAddress
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "The network address currently assigned this interface.
+		      This address may be administered by software."
+	      ::= { interfaceStatsEntry 5 }
+
+	  iDataRate OBJECT-TYPE
+	      SYNTAX  INTEGER
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "This is the rate at which data is transferred over this interface, measured in MPBS."
+	      ::= { interfaceStatsEntry 6 }
+
+	  iTotalPacketsTransmitted OBJECT-TYPE
+	      SYNTAX  Counter
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "This is the total number of packets transmitted over this interface."
+	      ::= { interfaceStatsEntry 7 }
+
+	  iTotalBytesTransmitted OBJECT-TYPE
+	      SYNTAX  Counter
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "This is the total number of bytes transmitted over this interface."
+	      ::= { interfaceStatsEntry 8 }
+
+	  iTotalPacketsReceived OBJECT-TYPE
+	      SYNTAX  Counter
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "This is the total number of packets received over this interface."
+	      ::= { interfaceStatsEntry 9 }
+
+	  iTotalBytesReceived OBJECT-TYPE
+	      SYNTAX  Counter
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "This is the total number of bytes received over this interface."
+	      ::= { interfaceStatsEntry 10 }
+
+	  iTotalTransmitErrors OBJECT-TYPE
+	      SYNTAX  Counter
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+					"This is the total number of Transmit errors seen on this interface."
+	      ::= { interfaceStatsEntry 11 }
+
+	  iTotalReceiveErrors OBJECT-TYPE
+	      SYNTAX  Counter
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+					"This is the total number of Receive errors seen on this interface."
+	      ::= { interfaceStatsEntry 12 }
+
+	  iInterfaceType OBJECT-TYPE
+	      SYNTAX            INTEGER {
+				standalone          (1),
+				failover            (2),
+				loadBalanced	   (3),
+				fastEtherChannel	(4)
+						}
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "This is the interface type.
+		      standalone indicates a single port configuration.
+		      failover indicates a two port group supporting failover resiliency.
+			  loadBalanced indicates a multiple port group providing load balancing."
+	      ::= { interfaceStatsEntry 13 }
+
+  
+ 
+
+
+-- Port Statistics Table
+
+
+
+	  portStatsTable OBJECT-TYPE
+	      SYNTAX  SEQUENCE OF PortStatsEntry
+	      ACCESS  not-accessible
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "The table listing Adaptec network port statistics."
+	      ::= {duralink 3}
+
+	  portStatsEntry OBJECT-TYPE
+	      SYNTAX  PortStatsEntry
+	      ACCESS  not-accessible
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "Each entry lists statistics for a single network port."
+	      INDEX   { pInterfaceIndex,
+			pPortIndex }
+	      ::= { portStatsTable 1 }
+
+	  PortStatsEntry ::=
+	      SEQUENCE {
+		  pInterfaceIndex
+		      INTEGER,
+		  pPortIndex
+		      INTEGER,
+		  pPortName
+		      DisplayString,
+		  pCardNumber
+		      INTEGER,
+		  pCardPortNumber
+		      INTEGER,
+		  pPermNetAddress
+		      PhysAddress,
+		  pCurrentNetAddress
+		      PhysAddress,
+		  pDataRate
+		      INTEGER,
+		  pTotalPacketsTransmitted
+		      Counter,
+		  pTotalBytesTransmitted
+		      Counter,
+		  pTotalPacketsReceived
+		      Counter,
+		  pTotalBytesReceived
+		      Counter,
+		  pTotalTransmitErrors
+		      Counter,
+		  pTotalReceiveErrors
+		      Counter,
+		  pStatus
+		      INTEGER,
+		  pTransitions
+		      Counter,		
+		  pDuplexity
+		      INTEGER,		
+		  pPciBusWidth
+		      INTEGER,		
+		  pPciBusUtilization
+		      INTEGER		
+	      }
+
+	  pInterfaceIndex OBJECT-TYPE
+	      SYNTAX  INTEGER
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "A unique value assigned to each interface
+					  This is an increasing numeric value ranging between
+					  1 and the value of NumInterfaces."
+	      ::= { portStatsEntry 1 }
+
+	  pPortIndex OBJECT-TYPE
+	      SYNTAX  INTEGER
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "A unique value assigned to each port on a particular interface.
+					  This is an increasing numeric value ranging between
+					  1 and the value of iInterfacePorts for the interface indexed by iInterfaceIndex."
+	      ::= { portStatsEntry 2 }
+
+	  pPortName OBJECT-TYPE
+	      SYNTAX  DisplayString (SIZE (0..80))
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "The descriptive name assigned to the port.
+		      This may not be supported by all operating systems."
+	      ::= { portStatsEntry 3 }
+
+
+	  pCardNumber OBJECT-TYPE
+	      SYNTAX  INTEGER
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "The  value of cpCardIndex that corresponds to this port."
+	      ::= { portStatsEntry 4 }
+
+	  pCardPortNumber OBJECT-TYPE
+	      SYNTAX  INTEGER
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "The  value of cpPortIndex that corresponds to this port."
+	      ::= { portStatsEntry 5 }
+
+	  pPermNetAddress OBJECT-TYPE
+	      SYNTAX  PhysAddress
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "The permanent network address assigned to this port.
+		      This is the node address stored permanently in the adapter."
+	      ::= { portStatsEntry 6 }
+
+	  pCurrentNetAddress OBJECT-TYPE
+	      SYNTAX  PhysAddress
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "The network address currently assigned to this port.
+		      This address may be administered by software."
+	      ::= { portStatsEntry 7 }
+
+	  pDataRate OBJECT-TYPE
+	      SYNTAX  INTEGER
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "This is the rate at which data is transferred over this port, measured in MPBS."
+	      ::= { portStatsEntry 8 }
+
+	  pTotalPacketsTransmitted OBJECT-TYPE
+	      SYNTAX  Counter
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "This is the total number of packets transmitted over this port."
+	      ::= { portStatsEntry 9 }
+
+	  pTotalBytesTransmitted OBJECT-TYPE
+	      SYNTAX  Counter
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "This is the total number of bytes transmitted over this port."
+	      ::= { portStatsEntry 10 }
+
+	  pTotalPacketsReceived OBJECT-TYPE
+	      SYNTAX  Counter
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "This is the total number of packets received over this port."
+	      ::= { portStatsEntry 11 }
+
+	  pTotalBytesReceived OBJECT-TYPE
+	      SYNTAX  Counter
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "This is the total number of bytes received over this port."
+	      ::= { portStatsEntry 12 }
+
+	  pTotalTransmitErrors OBJECT-TYPE
+	      SYNTAX  Counter
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+					"This is the total number of transmit errors seen on this port."
+	      ::= { portStatsEntry 13 }
+
+	  pTotalReceiveErrors OBJECT-TYPE
+	      SYNTAX  Counter
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+					"This is the total number of receive errors seen on this port."
+	      ::= { portStatsEntry 14 }
+
+
+	  pStatus OBJECT-TYPE
+	      SYNTAX            INTEGER {
+				portActive          (1),
+				portDown            (2),
+				portInStandby   (3)
+						}
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "The current status of the port. portActive indicates a functioning port.
+		      portDown indicates a port that is not functioning.
+              portInStandby indicates a port which is designated as a backup
+		      in a failover interface."
+	      ::= { portStatsEntry 15 }
+
+
+	  pTransitions OBJECT-TYPE
+	      SYNTAX  Counter
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+					"This is the total number of times the port has transitioned between
+					 the portActive and portDown state since the driver was loaded.."
+	      ::= { portStatsEntry 16 }
+
+	  pDuplexity OBJECT-TYPE
+	      SYNTAX            INTEGER {
+				halfDuplex	(1),
+				fullDuplex	(2),
+				unKnown		(3)
+						}
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "The current duplexity of the port."
+   	      ::= { portStatsEntry 17 }
+
+	  pPciBusWidth OBJECT-TYPE
+	      SYNTAX  INTEGER
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+					"The PCI bus width in use by this port. Currently defined values are 32 or 64 bits."
+	      ::= { portStatsEntry 18 }
+
+	  pPciBusUtilization OBJECT-TYPE
+	      SYNTAX  INTEGER
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+					"A percentage measure of PCI bus utilization. If not supported this field will be set to 0."
+	      ::= { portStatsEntry 19 }
+
+
+-- card information Table
+
+
+
+	  cardInformationTable OBJECT-TYPE
+	      SYNTAX  SEQUENCE OF CardInformationEntry
+	      ACCESS  not-accessible
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "A table listing Adaptec network card information."
+	      ::= {duralink 4}
+
+	  cardInformationEntry OBJECT-TYPE
+	      SYNTAX  CardInformationEntry
+	      ACCESS  not-accessible
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "Each entry lists information about a single network card."
+	      INDEX   { cCardIndex }
+	      ::= { cardInformationTable 1 }
+
+	  CardInformationEntry ::=
+	      SEQUENCE {
+		  cCardIndex
+		      INTEGER,
+		  cCardDescription
+		      DisplayString,
+		  cPortsOnCard
+		      INTEGER
+	      }
+
+	  cCardIndex OBJECT-TYPE
+	      SYNTAX  INTEGER
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "A unique value assigned to each network card.
+					  This is an increasing numeric value ranging between
+					  1 and the value of NumCards."
+	      ::= { cardInformationEntry 1 }
+
+	  cCardDescription OBJECT-TYPE
+	      SYNTAX  DisplayString (SIZE (0..80))
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "The descriptive name assigned to the network card."
+	      ::= { cardInformationEntry 2 }
+ 
+	  cPortsOnCard OBJECT-TYPE
+	      SYNTAX  INTEGER
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "The number of ports on the network card."
+	      ::= { cardInformationEntry 3 }
+ 
+-- card port information Table
+
+
+
+	  cardPortInfoTable OBJECT-TYPE
+	      SYNTAX  SEQUENCE OF CardPortInfoEntry
+	      ACCESS  not-accessible
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "This table indicates the interface and port number associated
+		      with each port on all installed network cards."
+	      ::= {duralink 5}
+
+	  cardPortInfoEntry OBJECT-TYPE
+	      SYNTAX  CardPortInfoEntry
+	      ACCESS  not-accessible
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "Each entry lists information for a single port on a network card."
+	      INDEX   { cpCardIndex,
+			cpPortIndex }
+	      ::= { cardPortInfoTable 1 }
+
+	  CardPortInfoEntry ::=
+	      SEQUENCE {
+		  cpCardIndex
+		      INTEGER,
+		  cpPortIndex
+		      INTEGER,
+		  cpInterfaceNumber
+		      INTEGER,
+		  cpPortNumber
+		      INTEGER,
+          cpTableNumber1
+              INTEGER,
+		  cpPciBus
+		      INTEGER,
+		  cpPciSlot
+		      INTEGER		                     
+	      }
+
+	  cpCardIndex OBJECT-TYPE
+	      SYNTAX  INTEGER
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "A unique value assigned to each network card.
+					  This is an increasing numeric value ranging between
+					  1 and the value of NumCards."
+	      ::= { cardPortInfoEntry 1 }
+
+	  cpPortIndex OBJECT-TYPE
+	      SYNTAX  INTEGER
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "A unique value assigned to each port on a particular network card.
+					  This is an increasing numeric value ranging between
+					  1 and the value of cPortsOnCard for the card indexed by cCardIndex."
+	      ::= { cardPortInfoEntry 2 }
+
+	  cpInterfaceNumber OBJECT-TYPE
+	      SYNTAX  INTEGER
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "The  value of pInterfaceIndex that corresponds to this port.
+		      If this port is not part of an interface it will be set to 0"
+	      ::= { cardPortInfoEntry 3 }
+
+	  cpPortNumber OBJECT-TYPE
+	      SYNTAX  INTEGER
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "The  value of pPortIndex that corresponds to this port.
+		      If this port is not part of an interface it will be set to 0"
+	      ::= { cardPortInfoEntry 4 }
+
+
+	  cpTableNumber1 OBJECT-TYPE
+	      SYNTAX  INTEGER
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "This value was intended to provide a pointer to additional port
+                       based table entries. This is currently not used."
+	      ::= { cardPortInfoEntry 5 }
+
+	  cpPciBus OBJECT-TYPE
+	      SYNTAX  INTEGER
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "The PCI bus number associated with this port."
+	      ::= { cardPortInfoEntry 6 }
+
+	  cpPciSlot OBJECT-TYPE
+	      SYNTAX  INTEGER
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "The PCI slot number associated with this port."
+	      ::= { cardPortInfoEntry 7 }
+
+-- driver information Table
+
+
+
+	  driverInformationTable OBJECT-TYPE
+	      SYNTAX  SEQUENCE OF DriverInformationEntry
+	      ACCESS  not-accessible
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "A table listing information about Adaptec ethernet drivers."
+	      ::= {duralink 6}
+
+	  driverInformationEntry OBJECT-TYPE
+	      SYNTAX  DriverInformationEntry
+	      ACCESS  not-accessible
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "Each entry lists information about a single ethernet driver."
+	      INDEX   { dDriverIndex }
+	      ::= { driverInformationTable 1 }
+
+	  DriverInformationEntry ::=
+	      SEQUENCE {
+		  dDriverIndex
+		      INTEGER,
+		  dDriverName
+		      DisplayString,
+		  dDriverVersion
+		      DisplayString,
+		  dDriverDescription
+		      DisplayString,
+		  dInterfaceType
+		      INTEGER,
+		  dInterfaceVersion
+		      DisplayString
+	      }
+
+	  dDriverIndex OBJECT-TYPE
+	      SYNTAX  INTEGER
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "A unique value assigned to each loaded driver.
+					  This is an increasing numeric value beginning with 1."
+	      ::= { driverInformationEntry 1 }
+
+	  dDriverName OBJECT-TYPE
+	      SYNTAX  DisplayString (SIZE (0..20))
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "The driver name."
+	      ::= { driverInformationEntry 2 }
+
+	  dDriverVersion OBJECT-TYPE
+	      SYNTAX  DisplayString (SIZE (0..20))
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "The driver version."
+	      ::= { driverInformationEntry 3 }
+
+
+	  dDriverDescription OBJECT-TYPE
+	      SYNTAX  DisplayString (SIZE (0..80))
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "A short description of the driver."
+	      ::= { driverInformationEntry 4 }
+
+	  dInterfaceType OBJECT-TYPE
+	      SYNTAX            INTEGER {
+				ndis		(1),
+				odi			(2)
+						}
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "This is the driver interface type."
+	      ::= { driverInformationEntry 5}
+
+	  dInterfaceVersion OBJECT-TYPE
+	      SYNTAX  DisplayString (SIZE (0..20))
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "The driver interface version."
+	      ::= { driverInformationEntry 6 }
+
+
+
+          -- The Record Control Group
+          --
+          -- The record control group controls the periodic statistical
+          -- sampling of data from Duralink ports.  The
+          -- recordControlTable stores configuration entries that each
+          -- define a Duralink port, polling period, and other parameters.
+          -- Once samples are taken, their data is stored in an entry
+          -- in a table.  Each such entry defines one
+          -- sample, and is associated with the recordControlEntry that
+          -- caused the sample to be taken.  Each counter in the
+          -- etherRecordEntry counts the same event as its
+          -- similarly-named counterpart in the portStatsEntry,
+          -- except that each value here is a cumulative sum during a
+          -- sampling period.
+          --
+          --
+          -- The probe is encouraged to add two record control entries
+          -- per monitored interface upon initialization that describe
+          -- a short term and a long term polling period.  Suggested
+          -- parameters are 30 seconds for the short term polling period
+          -- and 30 minutes for the long term period.
+
+          recordControlTable OBJECT-TYPE
+              SYNTAX SEQUENCE OF RecordControlEntry
+              ACCESS not-accessible
+              STATUS mandatory
+              DESCRIPTION
+                  "A list of record control entries."
+              ::= { duralink 7 }
+
+          recordControlEntry OBJECT-TYPE
+              SYNTAX RecordControlEntry
+              ACCESS not-accessible
+              STATUS mandatory
+              DESCRIPTION
+                  "A list of parameters that set up a periodic sampling
+                  of statistics.  As an example, an instance of the
+                  recordControlInterval object might be named
+                  recordControlInterval.2"
+              INDEX { recordControlIndex }
+              ::= { recordControlTable 1 }
+
+          RecordControlEntry ::= SEQUENCE {
+              recordControlIndex             INTEGER (1..65535),
+              recordControlDataSource        OBJECT IDENTIFIER,
+              recordControlBucketsRequested  INTEGER (1..65535),
+              recordControlBucketsGranted    INTEGER (1..65535),
+              recordControlInterval          INTEGER (1..3600),
+              recordControlOwner             OwnerString,
+              recordControlStatus            EntryStatus
+          }
+
+          recordControlIndex OBJECT-TYPE
+              SYNTAX INTEGER (1..65535)
+              ACCESS read-only
+              STATUS mandatory
+              DESCRIPTION
+                  "An index that uniquely identifies an entry in the
+                  recordControl table.  Each such entry defines a
+                  set of samples at a particular interval for a
+                  port on the machine."
+              ::= { recordControlEntry 1 }
+
+          recordControlDataSource OBJECT-TYPE
+              SYNTAX OBJECT IDENTIFIER
+              ACCESS read-write
+              STATUS mandatory
+              DESCRIPTION
+                  "This object identifies the source of the data for
+                  which historical data was collected and
+                  placed in a media-specific table on behalf of this
+                  recordControlEntry.  This source can be any
+                  Duralink port.  
+
+                  The statistics in this group reflect all packets
+                  associated with the identified port.
+
+                  An agent may or may not be able to tell if fundamental
+                  changes to the media of the interface have occurred
+                  and necessitate an invalidation of this entry.  For
+                  example, a hot-pluggable ethernet card could be
+                  pulled out and replaced by a token-ring card.  In
+                  such a case, if the agent has such knowledge of the
+                  change, it is recommended that it invalidate this
+                  entry.
+
+                  This object may not be modified if the associated
+                  recordControlStatus object is equal to valid(1)."
+              ::= { recordControlEntry 2 }
+
+          recordControlBucketsRequested OBJECT-TYPE
+              SYNTAX INTEGER (1..65535)
+              ACCESS read-write
+              STATUS mandatory
+              DESCRIPTION
+                  "The requested number of discrete time intervals
+                  over which data is to be saved in the part of the
+                  media-specific table associated with this
+                  recordControlEntry.
+
+                  When this object is created or modified, the probe
+                  should set recordControlBucketsGranted as closely to
+                  this object as is possible for the particular probe
+                  implementation and available resources."
+              DEFVAL { 50 }
+              ::= { recordControlEntry 3 }
+
+          recordControlBucketsGranted OBJECT-TYPE
+              SYNTAX INTEGER (1..65535)
+              ACCESS read-only
+              STATUS mandatory
+              DESCRIPTION
+                  "The number of discrete sampling intervals
+                  over which data shall be saved in the part of
+                  the media-specific table associated with this
+                  recordControlEntry.
+
+                  When the associated recordControlBucketsRequested
+                  object is created or modified, the probe
+                  should set this object as closely to the requested
+                  value as is possible for the particular
+                  probe implementation and available resources.  The
+                  probe must not lower this value except as a result
+                  of a modification to the associated
+                  recordControlBucketsRequested object.
+
+                  There will be times when the actual number of
+                  buckets associated with this entry is less than
+                  the value of this object.  In this case, at the
+                  end of each sampling interval, a new bucket will
+                  be added to the media-specific table.
+
+                  When the number of buckets reaches the value of
+                  this object and a new bucket is to be added to the
+                  media-specific table, the oldest bucket associated
+                  with this recordControlEntry shall be deleted by
+                  the agent so that the new bucket can be added.
+
+                  When the value of this object changes to a value less
+                  than the current value, entries are deleted
+                  from the media-specific table associated with this
+                  recordControlEntry.  Enough of the oldest of these
+                  entries shall be deleted by the agent so that their
+                  number remains less than or equal to the new value of
+                  this object.
+
+                  When the value of this object changes to a value
+                  greater than the current value, the number of
+                  associated media- specific entries may be allowed to
+                  grow."
+              ::= { recordControlEntry 4 }
+
+          recordControlInterval OBJECT-TYPE
+              SYNTAX INTEGER (1..3600)
+              ACCESS read-write
+              STATUS mandatory
+              DESCRIPTION
+                  "The interval in seconds over which the data is
+                  sampled for each bucket in the part of the
+                  media-specific table associated with this
+                  recordControlEntry.  This interval can
+                  be set to any number of seconds between 1 and
+                  3600 (1 hour).
+
+                  Because the counters in a bucket may overflow at their
+                  maximum value with no indication, a prudent manager
+                  will take into account the possibility of overflow
+                  in any of the associated counters.  It is important
+                  to consider the minimum time in which any counter
+                  could overflow on a particular media type and set
+                  the recordControlInterval object to a value less
+                  than this interval.  This is typically most
+                  important for the 'octets' counter in any
+                  media-specific table.  For example, on an Ethernet
+                  network, the etherRecordOctets counter could
+                  overflow in about one hour at the Ethernet's maximum
+                  utilization.
+
+                  This object may not be modified if the associated
+                  recordControlStatus object is equal to valid(1)."
+              DEFVAL { 1800 }
+              ::= { recordControlEntry 5 }
+
+          recordControlOwner OBJECT-TYPE
+              SYNTAX OwnerString
+              ACCESS read-write
+              STATUS mandatory
+              DESCRIPTION
+                  "The entity that configured this entry and is
+                  therefore using the resources assigned to it."
+              ::= { recordControlEntry 6 }
+
+          recordControlStatus OBJECT-TYPE
+              SYNTAX EntryStatus
+              ACCESS read-write
+              STATUS mandatory
+              DESCRIPTION
+                  "The status of this recordControl entry.
+
+                  Each instance of the media-specific table associated
+                  with this recordControlEntry will be deleted by the
+                  agent if this recordControlEntry is not equal to
+                  valid(1)."
+              ::= { recordControlEntry 7 }
+
+
+
+
+          -- The Duralink Record Group
+
+          -- Implementation of the Duralink Record group is optional.
+          --
+          -- The Duralink Record group records periodic
+          -- statistical samples from a network and stores them
+          -- for later retrieval.  Once samples are taken, their
+          -- data is stored in an entry in a media-specific
+          -- table.  Each such entry defines one sample, and is
+          -- associated with the recordControlEntry that caused
+          -- the sample to be taken.  This group defines the
+          -- duraRecordTable, for Duralink networks.
+          --
+
+
+          duraRecordTable OBJECT-TYPE
+              SYNTAX SEQUENCE OF DuraRecordEntry
+              ACCESS not-accessible
+              STATUS mandatory
+              DESCRIPTION
+                  "A list of Duralink record entries."
+              ::= { duralink 8 }
+
+          duraRecordEntry OBJECT-TYPE
+              SYNTAX DuraRecordEntry
+              ACCESS not-accessible
+              STATUS mandatory
+              DESCRIPTION
+                  "An historical sample of Duralink statistics on a
+                  particular Duralink port.  This sample is
+                  associated with the recordControlEntry which set up
+                  the parameters for a regular collection of these
+                  samples.  As an example, an instance of the
+                  duraRecordPkts object might be named
+                  duraRecordPkts.2.89"
+              INDEX { drIndex , drSampleIndex }
+              ::= { duraRecordTable 1 }
+
+          DuraRecordEntry ::= SEQUENCE {
+              drIndex                 INTEGER (1..65535),
+              drSampleIndex           INTEGER (1..2147483647),
+              drIntervalStart         TimeTicks,
+              drPacketsTransmitted		Counter,
+              drBytesTransmittedHigh	Counter,
+              drBytesTransmitted		Counter,
+              drPacketsReceived		Counter,
+              drBytesReceivedHigh	Counter,
+              drBytesReceived		Counter,
+              drTransmitErrors		Counter,
+              drReceiveErrors		Counter
+          }
+
+          drIndex OBJECT-TYPE
+              SYNTAX INTEGER (1..65535)
+              ACCESS read-only
+              STATUS mandatory
+              DESCRIPTION
+                  "The record of which this entry is a part.  The
+                  record identified by a particular value of this
+                  index is the same record as identified
+                  by the same value of recordControlIndex."
+              ::= { duraRecordEntry 1 }
+
+          drSampleIndex OBJECT-TYPE
+              SYNTAX INTEGER (1..2147483647)
+              ACCESS read-only
+              STATUS mandatory
+              DESCRIPTION
+                  "An index that uniquely identifies the particular
+                  sample this entry represents among all samples
+                  associated with the same recordControlEntry.
+                  This index starts at 1 and increases by one
+                  as each new sample is taken."
+              ::= { duraRecordEntry 2 }
+
+          drIntervalStart OBJECT-TYPE
+              SYNTAX TimeTicks
+              ACCESS read-only
+              STATUS mandatory
+              DESCRIPTION
+                  "The value of sysUpTime at the start of the interval
+                  over which this sample was measured.  If the probe
+                  keeps track of the time of day, it should start
+                  the first sample of the record at a time such that
+                  when the next hour of the day begins, a sample is
+                  started at that instant.  Note that following this
+                  rule may require the probe to delay collecting the
+                  first sample of the record, as each sample must be
+                  of the same interval.  Also note that the sample which
+                  is currently being collected is not accessible in this
+                  table until the end of its interval."
+              ::= { duraRecordEntry 3 }
+
+
+	  drPacketsTransmitted OBJECT-TYPE
+	      SYNTAX  Counter
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "This is the number of packets transmitted over this port."
+	      ::= { duraRecordEntry 4 }
+
+	  drBytesTransmittedHigh OBJECT-TYPE
+	      SYNTAX  Counter
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "This is the upper 32 bits of a 64 bit number specifying the number of bytes 
+		      transmitted over this port."
+	      ::= { duraRecordEntry 5 }
+
+	  drBytesTransmitted OBJECT-TYPE
+	      SYNTAX  Counter
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "This is the lower 32 bits of a 64 bit number specifying the number of bytes 
+		      transmitted over this port."
+	      ::= { duraRecordEntry 6 }
+
+	  drPacketsReceived OBJECT-TYPE
+	      SYNTAX  Counter
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "This is the number of packets received over this port."
+	      ::= { duraRecordEntry 7 }
+
+	  drBytesReceivedHigh OBJECT-TYPE
+	      SYNTAX  Counter
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "This is the upper 32 bits of a 64 bit number specifying the number of bytes 
+		      received over this port."
+	      ::= { duraRecordEntry 8 }
+
+	  drBytesReceived OBJECT-TYPE
+	      SYNTAX  Counter
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+		      "This is the lower 32 bits of a 64 bit number specifying the number of bytes 
+		      received over this port."
+	      ::= { duraRecordEntry 9 }
+
+	  drTransmitErrors OBJECT-TYPE
+	      SYNTAX  Counter
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+					"This is the number of transmit errors seen on this port."
+	      ::= { duraRecordEntry 10 }
+
+	  drReceiveErrors OBJECT-TYPE
+	      SYNTAX  Counter
+	      ACCESS  read-only
+	      STATUS  mandatory
+	      DESCRIPTION
+					"This is the number of receive errors seen on this port."
+	      ::= { duraRecordEntry 11 }
+
+ 
+-- duralinkStatusTrap is obsolete
+
+duralinkStatusTrap TRAP-TYPE
+	ENTERPRISE duralink
+	VARIABLES { pInterfaceIndex, pPortIndex, pStatus}
+	DESCRIPTION
+		"The port status has changed."
+--#TYPE "Port Status Changed"
+--#SUMMARY "Group %d Port %d port status is %d."
+--#ARGUMENTS {0,1,2}
+--#SEVERITY INFORMATIONAL
+--#STATE OPERATIONAL
+	::= 1 
+
+duralinkPortUp TRAP-TYPE
+	ENTERPRISE duralink
+	VARIABLES {iInterfaceName, pPortName, pTransitions}
+	DESCRIPTION
+		"The port is now available."
+--#TYPE "Port Available"
+--#SUMMARY "Group %s Port %s is up."
+--#ARGUMENTS {0,1}
+--#SEVERITY INFORMATIONAL
+--#STATE OPERATIONAL
+	::= 2
+
+duralinkPortDown TRAP-TYPE
+	ENTERPRISE duralink
+	VARIABLES {iInterfaceName, pPortName, pTransitions}
+	DESCRIPTION
+		"The port is now unavailable."
+--#TYPE "Port Unavailable"
+--#SUMMARY "Group %s Port %s is down."
+--#ARGUMENTS {0,1}
+--#SEVERITY MAJOR
+--#STATE NONOPERATIONAL
+	::= 3 
+
+duralinkPortStandby TRAP-TYPE
+	ENTERPRISE duralink
+	VARIABLES {iInterfaceName, pPortName, pTransitions}
+	DESCRIPTION
+		"The port is acting as a failover backup."
+--#TYPE "Port acting as failover backup"
+--#SUMMARY "Group %s Port %s is acting as a failover backup."
+--#ARGUMENTS {0,1}
+--#SEVERITY INFORMATIONAL
+--#STATE OPERATIONAL
+	::= 4 
+
+
+ 
+	  END

@@ -1,0 +1,36 @@
+SEN-ROOT-MIB DEFINITIONS ::= BEGIN
+
+   IMPORTS
+       MODULE-IDENTITY,
+       enterprises
+           FROM SNMPv2-SMI
+       TEXTUAL-CONVENTION
+           FROM SNMPv2-TC;
+
+sen MODULE-IDENTITY
+    LAST-UPDATED "1105310000Z"
+    ORGANIZATION "Siemens Information & Communication Networks"
+    CONTACT-INFO
+        "Anton Sudi
+         Email:  anton.sudi@siemens-enterprise.com"
+    DESCRIPTION
+        "Top level module for all SEN MIBs"
+    ::= { enterprises 32804}
+
+
+--  SEN specific branches
+--  =====================
+
+   senProducts OBJECT IDENTIFIER ::= { sen 1 }
+-- SEN Product specific MIBs
+	
+
+    senCommon OBJECT IDENTIFIER ::= { sen 2 }
+--  Common SEN MIBs used by several SEN products"
+	
+ 
+    senExperimental OBJECT IDENTIFIER ::= { sen 3 }
+--  Experimental MIBs used for prototypes or testing purposes"
+
+
+END

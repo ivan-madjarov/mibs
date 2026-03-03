@@ -1,0 +1,213 @@
+-- **SDOC***********************************************************************
+-- *****************************************************************************
+--
+--             Copyright(c) 2003 Mediatrix Telecom, Inc.
+--
+--  NOTICE:
+--   This document contains information that is confidential and proprietary
+--   to Mediatrix Telecom, Inc.
+--
+--   Mediatrix Telecom, Inc. reserves all rights to this document as well as
+--   to the Intellectual Property of the document and the technology and
+--   know-how that it includes and represents.
+--
+--   This publication cannot be reproduced, neither in whole nor in part, in
+--   any form whatsoever without written prior approval by
+--   Mediatrix Telecom, Inc.
+--
+--   Mediatrix Telecom, Inc. reserves the right to revise this publication
+--   and make changes at any time and without the obligation to notify any
+--   person and/or entity of such revisions and/or changes.
+--
+-- *****************************************************************************
+-- **EDOC***********************************************************************
+
+
+MGCP46-MX-IP-ROUTING-MIB
+DEFINITIONS ::= BEGIN
+
+IMPORTS
+        MODULE-IDENTITY,
+        OBJECT-IDENTITY,
+        OBJECT-TYPE,
+        Unsigned32
+    FROM SNMPv2-SMI
+        OBJECT-GROUP,
+        MODULE-COMPLIANCE
+    FROM SNMPv2-CONF
+        MxEnableState
+    FROM MX-TC
+        mediatrixConfig
+    FROM MX-SMI;
+
+
+ipRoutingMIB MODULE-IDENTITY
+    LAST-UPDATED "0309150000Z"
+    ORGANIZATION "Mediatrix Telecom, Inc."
+    CONTACT-INFO "Mediatrix Telecom, Inc.
+                  4229, Garlock Street
+                  Sherbrooke (Quebec)
+                  Canada
+                  Phone: (819) 829-8749"
+    DESCRIPTION  "This MIB is used to customize IP routing properties."
+
+
+    -- *************************************************************************
+    -- Revision history
+    -- *************************************************************************
+    REVISION    "0309150000Z"
+    DESCRIPTION "September 15, 2003
+                    Creation."
+    ::= { mediatrixConfig 110 }
+
+ipRoutingMIBObjects  OBJECT IDENTIFIER ::= { ipRoutingMIB 1 }
+ipRoutingConformance OBJECT IDENTIFIER ::= { ipRoutingMIB 2 }
+
+
+    -- *************************************************************************
+    -- IP routing MIB objects
+    -- *************************************************************************
+    ipRoutingEnable OBJECT-TYPE
+        SYNTAX      MxEnableState
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Indicates if the routing service is active.
+
+                     The routing service consists of the unit sharing a public IP address with a
+                     networked PC or IP equipment. The unit creates a LAN between itself and the
+                     PC/IP equipment. The unit routes the IP packets between the LAN (where the
+                     PC/IP equipment is located) and the network providing the public address
+                     (generally a WAN).
+
+                     enable  : The routing service is activated.
+
+                     disable : The routing service is deactivated.
+
+                     This variable's semantics are different depending on protocol and/or
+                     hardware platforms.
+                     Please refer to the documentation shipped with your device for more details."
+        DEFVAL      { disable }
+        ::= { ipRoutingMIBObjects 5 }
+
+
+    -- *************************************************************************
+    -- IP routing DHCP
+    -- *************************************************************************
+    ipRoutingDhcp OBJECT IDENTIFIER ::= { ipRoutingMIBObjects 10 }
+
+        ipRoutingDhcpServerLeaseTime OBJECT-TYPE
+            SYNTAX      Unsigned32 (10..172800)
+            MAX-ACCESS  read-write
+            STATUS      current
+            DESCRIPTION "The duration, in seconds, of the lease offered by the DHCP server.
+
+                         Enabling the routing service also enables a DHCP server that allocates IP
+                         addresses to the PC or IP equipment located on the LAN.
+
+                         This variable's semantics are different depending on protocol and/or
+                         hardware platforms.
+                         Please refer to the documentation shipped with your device for more details."
+            DEFVAL { 20 }
+            ::=  { ipRoutingDhcp 5 }
+
+
+    -- *************************************************************************
+    -- IP routing QoS
+    -- *************************************************************************
+    ipRoutingQos OBJECT IDENTIFIER ::= { ipRoutingMIBObjects 15 }
+
+        ipRoutingQosDiffServSubstitutionEnable OBJECT-TYPE
+            SYNTAX      MxEnableState
+            MAX-ACCESS  read-write
+            STATUS      current
+            DESCRIPTION "Indicates if the QoS Differentiated Services fields of the packets, sent from
+                         the LAN to the WAN, are substituted by a configured value. From the LAN, the
+                         packets are sent by the PC or IP equipment being routed by the unit. When
+                         enabled, the signaling, voice, T.38 and voice-band data QoS Differentiated
+                         Services fields are overwritten.
+
+                         enable  : The QoS Differentiated Services fields of the
+                                   packets, sent from the PC or IP equipment to
+                                   the WAN, are substituted by a configured
+                                   value.
+
+                         disable : The QoS Differentiated Services fields of the
+                                   packets, sent from the PC or IP equipment to
+                                   the WAN, are not modified.
+
+                         This variable's semantics are different depending on protocol and/or
+                         hardware platforms.
+                         Please refer to the documentation shipped with your device for more details."
+            DEFVAL { disable }
+            ::=  { ipRoutingQos 5 }
+
+        ipRoutingQosDiffServSubstitution OBJECT-TYPE
+            SYNTAX      Unsigned32 (0..255)
+            MAX-ACCESS  read-write
+            STATUS      current
+            DESCRIPTION "Substitution value for the QoS Differentiated Services fields of the packets
+                         sent from the LAN to the WAN. From the LAN, the packets are sent by the PC or
+                         IP equipment being routed by the unit. This substitution value is used for the
+                         signaling, voice, T.38 and voice-band data QoS Differentiated Services fields.
+
+                         This variable's semantics are different depending on protocol and/or
+                         hardware platforms.
+                         Please refer to the documentation shipped with your device for more details."
+            DEFVAL { 184 }
+            ::=  { ipRoutingQos 10 }
+
+
+
+
+    -- *************************************************************************
+    -- Conformance information
+    -- *************************************************************************
+    ipRoutingCompliances OBJECT IDENTIFIER ::= { ipRoutingConformance 1 }
+
+        ipRoutingComplVer1 MODULE-COMPLIANCE
+            STATUS      current
+            DESCRIPTION "List of groups required to configure the IP routing service."
+            MODULE      -- This Module
+            MANDATORY-GROUPS {
+                                ipRoutingGroupVer1,
+                                ipRoutingDhcpGroupVer1,
+                                ipRoutingQosGroupVer1
+                             }
+            ::= { ipRoutingCompliances 1 }
+
+
+
+
+    -- *************************************************************************
+    -- MIB variable grouping
+    -- *************************************************************************
+    ipRoutingGroups OBJECT IDENTIFIER ::= { ipRoutingConformance 5 }
+
+        ipRoutingGroupVer1 OBJECT-GROUP
+            OBJECTS {
+                        ipRoutingEnable
+                    }
+            STATUS      current
+            DESCRIPTION "A list of objects used to configure the IP routing service."
+            ::= { ipRoutingGroups 5 }
+
+        ipRoutingDhcpGroupVer1 OBJECT-GROUP
+            OBJECTS {
+                        ipRoutingDhcpServerLeaseTime
+                    }
+            STATUS      current
+            DESCRIPTION "A list of objects used to configure the DHCP server for the IP routing
+                         service."
+            ::= { ipRoutingGroups 10 }
+
+        ipRoutingQosGroupVer1 OBJECT-GROUP
+            OBJECTS {
+                        ipRoutingQosDiffServSubstitutionEnable,
+                        ipRoutingQosDiffServSubstitution
+                    }
+            STATUS      current
+            DESCRIPTION "A list of objects used to configure QoS attributes for the IP routing
+                         service."
+            ::= { ipRoutingGroups 15 }
+
+END

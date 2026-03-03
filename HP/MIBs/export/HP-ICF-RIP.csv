@@ -1,0 +1,28 @@
+HP-ICF-RIP,1.3.6.1.4.1.11.2.14.11.5.1.13,hpicfRip,""200305130217Z" -- MAY 13, 2003",NOT-ACCESSIBLE,"Hewlett-Packard Company 8000 Foothills Blvd. Roseville, CA 95747"
+HP-ICF-RIP,1.3.6.1.4.1.11.2.14.11.5.1.13.1,hpicfRipObjects,"OBJECT IDENTIFIER",NOT-ACCESSIBLE,
+HP-ICF-RIP,1.3.6.1.4.1.11.2.14.11.5.1.13.1.1,hpicfRipGeneral,"OBJECT IDENTIFIER",NOT-ACCESSIBLE,
+HP-ICF-RIP,1.3.6.1.4.1.11.2.14.11.5.1.13.1.1.1,hpicfRipAdminStatus,INTEGER,READ-WRITE,"The operational status of the RIP routing protocol."
+HP-ICF-RIP,1.3.6.1.4.1.11.2.14.11.5.1.13.1.1.2,hpicfRipDefaultMetric,INTEGER,READ-WRITE,"Default metric value for routes redistributed to RIP."
+HP-ICF-RIP,1.3.6.1.4.1.11.2.14.11.5.1.13.1.1.3,hpicfRipAutoSummary,INTEGER,READ-WRITE,"A flag indicating whether RIP should perform border filtering on subnet routes when crossing a network boundary. Interfaces that are configured for RIPv1 or RIPv1-compatible mode must always filter subnets at network boundaries. Interfaces configured for RIPv2 mode will only filter subnets if this flag is set to 'true'. Setting this to 'true' will result in all subnets within a class-based network to be summarized using a single route for the subnet number, which can decrease the size of the routing tables. However, if any networks are discontiguous, this flag should be set to 'false' for proper routing."
+HP-ICF-RIP,1.3.6.1.4.1.11.2.14.11.5.1.13.1.1.4,hpicfRipDistance,INTEGER32,READ-WRITE,"The administrative distance to associate with routes learned by RIP. Routes with lower distances are preferred. By default, RIP routes have an administrative distance of 120."
+HP-ICF-RIP,1.3.6.1.4.1.11.2.14.11.5.1.13.1.2,hpicfRipIfConfTable,"SEQUENCE OF HPICFIFCONFENTRY",NOT-ACCESSIBLE,"HP extensions to the rip2IfConfTable."
+HP-ICF-RIP,1.3.6.1.4.1.11.2.14.11.5.1.13.1.2.1,hpicfRipIfConfEntry,SEQUENCE,NOT-ACCESSIBLE,"HP extensions for a single RIP interface."
+HP-ICF-RIP,1.3.6.1.4.1.11.2.14.11.5.1.13.1.2.1.1,hpicfRipIfConfDoPoison,INTEGER,READ-CREATE,"Flag indicating if router should perform poison reverse on this interface."
+HP-ICF-RIP,1.3.6.1.4.1.11.2.14.11.5.1.13.1.2.1.2,hpicfRipIfConfCost,INTEGER32,READ-CREATE,"RIP metric for this interface."
+HP-ICF-RIP,1.3.6.1.4.1.11.2.14.11.5.1.13.1.3,hpicfRipRedistTable,"SEQUENCE OF HPICFRIPREDISTENTRY",NOT-ACCESSIBLE,"Table for configuring route redistribution into RIP."
+HP-ICF-RIP,1.3.6.1.4.1.11.2.14.11.5.1.13.1.3.1,hpicfRipRedistEntry,SEQUENCE,NOT-ACCESSIBLE,"An entry in the table for configuring route redistribution into RIP from a single source protocol. Entries in this table are not created dynamically. There will be a single entry for each supported source protocol."
+HP-ICF-RIP,1.3.6.1.4.1.11.2.14.11.5.1.13.1.3.1.1,hpicfRipRedistSrcProto,INTEGER,NOT-ACCESSIBLE,"Source protocol to redistribute routes from."
+HP-ICF-RIP,1.3.6.1.4.1.11.2.14.11.5.1.13.1.3.1.2,hpicfRipRedistEnabled,INTEGER,READ-WRITE,"A flag indicating whether RIP should redistribute routes from this source protocol."
+HP-ICF-RIP,1.3.6.1.4.1.11.2.14.11.5.1.13.1.4,hpicfRipRedistRestrictTable,"SEQUENCE OF HPICFRIPREDISTRESTRICTENTRY",NOT-ACCESSIBLE,"A table of route prefixes for filtering out routes that RIP should not redistribute. Any route that is contained by a range in this table (in other words, has a longer mask than that specified by hpicfRipRedistRestrictMask and where the route destination ANDed with the hpicfRipRedistRestrictMask is equal to hpicfRipRedistRestrictAddr) will not be redistributed as an external route by RIP."
+HP-ICF-RIP,1.3.6.1.4.1.11.2.14.11.5.1.13.1.4.1,hpicfRipRedistRestrictEntry,SEQUENCE,NOT-ACCESSIBLE,"A single entry in the table. Any route, regardless of source protocol which is contained within the specified range will not be redistributed into RIP. Entries in this table are created dynamically using the hpicfRipRedistRestrictStatus object."
+HP-ICF-RIP,1.3.6.1.4.1.11.2.14.11.5.1.13.1.4.1.1,hpicfRipRedistRestrictAddr,IPADDRESS,NOT-ACCESSIBLE,"The IP address of the range of route entries to exclude from redistribution into RIP."
+HP-ICF-RIP,1.3.6.1.4.1.11.2.14.11.5.1.13.1.4.1.2,hpicfRipRedistRestrictMask,IPADDRESS,NOT-ACCESSIBLE,"The mask for the range of route entries to exclude from redistribution into RIP."
+HP-ICF-RIP,1.3.6.1.4.1.11.2.14.11.5.1.13.1.4.1.3,hpicfRipRedistRestrictStatus,INTEGER,READ-CREATE,"The status of this entry."
+HP-ICF-RIP,1.3.6.1.4.1.11.2.14.11.5.1.13.2,hpicfRipConformance,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-RIP,1.3.6.1.4.1.11.2.14.11.5.1.13.2.1,hpicfRipGroups,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-RIP,1.3.6.1.4.1.11.2.14.11.5.1.13.2.1.1,hpicfRipBaseGroup,OBJECT-GROUP,READ-CREATE,"Basic RIP configuration information that is not present in the standard RIP MIB."
+HP-ICF-RIP,1.3.6.1.4.1.11.2.14.11.5.1.13.2.1.2,hpicfRipIfGroup,OBJECT-GROUP,READ-CREATE,"RIP interface configuration information that is not present in the standard RIP MIB."
+HP-ICF-RIP,1.3.6.1.4.1.11.2.14.11.5.1.13.2.1.3,hpicfRipRedistGroup,OBJECT-GROUP,READ-CREATE,"A collection of objects for controlling the redistribution of external routes by RIP."
+HP-ICF-RIP,1.3.6.1.4.1.11.2.14.11.5.1.13.2.1.4,hpicfRipDistanceGroup,OBJECT-GROUP,READ-CREATE,"A collection of objects for configuring the administrative distance of routes learned by RIP."
+HP-ICF-RIP,1.3.6.1.4.1.11.2.14.11.5.1.13.2.2,hpicfRipCompliances,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-RIP,1.3.6.1.4.1.11.2.14.11.5.1.13.2.2.1,hpicfRipCompliance,MODULE-COMPLIANCE,READ-CREATE,"The compliance statement for HP Routing switches that support RIP."

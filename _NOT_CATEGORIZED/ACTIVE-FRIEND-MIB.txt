@@ -1,0 +1,384 @@
+--  BEGIN FILEHEADER *******************************************************
+--  BEGIN FILEDESCRIPTION **************************************************
+--
+--  FILE NAME:  ActiveFriendEvents.asn1
+--
+--  LONG NAME:  MIB for ActiveFriend Events
+--
+--  VERSION:    <will be updated by CM!>
+--
+--  AUTHOR(S):     Joachim Katzer
+--		   Andrej Viselka
+--
+--  REMARKS:
+--
+--  END FILEDESCRIPTION ****************************************************
+-- 
+-- 
+--  BEGIN COPYRIGHT ********************************************************
+--
+--  Copyright (C) Siemens AG 2006
+--
+--  The reproduction, transmission  or use of this document  or its contents
+--  is not  permitted without  express written authority.  Offenders will be
+--  liable for damages. All rights, including rights created by patent grant
+--  or registration of a utility model or design, are reserved.
+--
+--  Technical modifications possible.
+--
+--  Technical specifications  and features are binding  only insofar as they
+--  are specifically and expressly agreed upon in a written contract.
+--
+--  END COPYRIGHT **********************************************************
+  
+--  BEGIN HISTORY OF CHANGES ***********************************************
+--
+--  VER| DATE | CHANGES                                     | CONR | AUTHOR
+--  ***+******+*********************************************+******+********
+--  03 |190506|removed unused objects from trap definition  |      |Viselka
+--     |      |udpated comments to objects description      |      |
+--  ===+======+=============================================+======+========
+--     |      |                                             |      |
+--     |      |                                             |      |
+--
+--  END HISTORY OF CHANGES *************************************************
+  
+--  END FILEHEADER *********************************************************
+
+-- Title:		MIB for ActiveFriend Events
+-- Created:		Feb 3 2006
+-- Last Modification:	Feb 3 2006
+-- written by:		PSE DE AVNS INMS
+-- Version:		@(#)ActiveFriendEvents.asn1 0.1 (Draft)
+--			Phone: (+49 89 722) 28507
+--			Email: Joachim.Katzer@pn.siemens.de
+
+
+ACTIVE-FRIEND-MIB DEFINITIONS ::= BEGIN
+
+         IMPORTS
+             MODULE-IDENTITY, OBJECT-TYPE, 
+             Integer32, Counter32, Gauge32
+                   FROM SNMPv2-SMI
+             TEXTUAL-CONVENTION, DisplayString
+                   FROM SNMPv2-TC
+             enterprises
+                    FROM RFC1155-SMI
+             ifEntry, ifIndex
+                   FROM RFC1213-MIB;
+              
+         
+         sni OBJECT IDENTIFIER ::= { enterprises 231 }
+         
+         svsProductMibs OBJECT IDENTIFIER ::= { sni 6 }
+         
+         siemensAFriend OBJECT IDENTIFIER ::= { svsProductMibs 21 }
+         
+         activeFriendEvents MODULE-IDENTITY
+             LAST-UPDATED "2006/05/19"
+             ORGANIZATION "SIEMENS PSE DE"
+             CONTACT-INFO
+                "    SIEMENS PSE DE AVNS INMS
+                     Joachim Katzer
+                     Tel:   +49 (0)89 722 28507
+                     Email  Joachim.Katzer@siemens.com 
+                     
+                     SIEMENS PSE SK SMC BI ZA
+		     Andrej Viselka
+                     Tel:   +421 41 5038 603
+                     Email: Andrej.Viselka@siemens.com
+                "
+         
+              DESCRIPTION
+                 " The Active Friend Events in SNMP Format"
+             ::= { siemensAFriend 1 } 
+         
+         afEventGroup OBJECT IDENTIFIER ::= { activeFriendEvents 1 }
+
+         afTrapVariables OBJECT IDENTIFIER ::= { afEventGroup 1 }
+
+         afEventHeader OBJECT IDENTIFIER ::= { afTrapVariables 1 }
+
+         afEventData OBJECT IDENTIFIER ::= { afTrapVariables 2 }
+
+         afTraps OBJECT IDENTIFIER ::= { afEventGroup 2 }
+
+
+         -- Level definitions
+         AFLevelType ::= TEXTUAL-CONVENTION
+            STATUS        current
+            DESCRIPTION
+                 " The alarm status values. 
+                   The value none(0) is used when it is not applicable for any of following values"
+            SYNTAX        INTEGER {
+                             none(0),
+                             info(1),
+                             warning(2),
+                             error(3),
+                             critical(4),
+                             reset(5), 		-- it defines a clear alarm for all alarms sent by afHost
+                             normal(6),
+                             ticket(7), 	-- not used for siNMs, ActiveFriend internal
+                             suspended(8), 	-- not functional error (restricted access)
+                             suspended-reset(9) -- clear alarm for suspended(8)
+                          }
+
+
+            afTransactionNo   OBJECT-TYPE 
+            SYNTAX Integer32    
+            MAX-ACCESS    read-only
+            STATUS        current
+            DESCRIPTION
+                "Transaction number of the corresponding event. 
+                 This number is the unique identifier of the event."
+            ::= {afEventHeader 1}
+
+            afDatablock       OBJECT-TYPE 
+            SYNTAX DisplayString (SIZE(0..15))     
+            MAX-ACCESS    read-only
+            STATUS        current
+            DESCRIPTION
+                "The data block name"
+            ::= {afEventHeader 2}
+
+            afState   OBJECT-TYPE 
+            SYNTAX Integer32  
+            MAX-ACCESS    read-only
+            STATUS        current
+            DESCRIPTION
+                "The state or error code"
+            ::= {afEventHeader 3}
+
+            afErrortext OBJECT-TYPE 
+            SYNTAX DisplayString (SIZE(0..200))    
+            MAX-ACCESS    read-only
+            STATUS        current
+            DESCRIPTION
+                "The description of error"
+            ::= {afEventHeader 4}
+
+            afTelegramtype    OBJECT-TYPE 
+            SYNTAX Integer32   
+            MAX-ACCESS    read-only
+            STATUS        current
+            DESCRIPTION
+                "The data block type"
+            ::= {afEventHeader 5}
+
+            afCreated OBJECT-TYPE 
+            SYNTAX Gauge32    
+            MAX-ACCESS    read-only
+            STATUS        current
+            DESCRIPTION
+                "Timestamp of the event creation (hundredths of seconds since an epoch - ClockTicks)."
+            ::= {afEventHeader 6}
+
+            afWorkflow OBJECT-TYPE 
+            SYNTAX DisplayString (SIZE(0..99))     
+            MAX-ACCESS    read-only
+            STATUS        current
+            DESCRIPTION
+                "Service Workflow Information"
+            ::= {afEventHeader 7}
+
+            afSourceIP OBJECT-TYPE 
+            SYNTAX IpAddress 
+            MAX-ACCESS    read-only
+            STATUS        current
+            DESCRIPTION
+                "Sender-IP Address"
+            ::= {afEventHeader 8}
+
+            afSourceHost      OBJECT-TYPE 
+            SYNTAX DisplayString (SIZE(0..20))     
+            MAX-ACCESS    read-only
+            STATUS        current
+            DESCRIPTION
+                "Sender-Hostname"
+            ::= {afEventHeader 9}
+
+
+            afDomain  OBJECT-TYPE
+            SYNTAX DisplayString (SIZE(0..20))
+            MAX-ACCESS    read-only
+            STATUS        current
+            DESCRIPTION
+                "freely definable. The Domain is the first classification 
+                 criteria for a workflow profile."
+            ::= {afEventData 3}
+
+            afEventclass      OBJECT-TYPE
+            SYNTAX DisplayString (SIZE(0..20))
+            MAX-ACCESS    read-only
+            STATUS        current
+            DESCRIPTION
+                "freely definable.
+                 The EventClass is the second classification criteria for a 
+                 workflow profile." 
+            ::= {afEventData 4}
+
+            afEventtype       OBJECT-TYPE
+            SYNTAX DisplayString (SIZE(0..20))
+            MAX-ACCESS    read-only
+            STATUS        current
+            DESCRIPTION
+                "freely definable.
+                 The third classification criteria for a workflow profile.
+                 Defines criterion for Eventclass"
+            ::= {afEventData 5}
+
+            afLevel   OBJECT-TYPE
+            SYNTAX AFLevelType
+            MAX-ACCESS    read-only
+            STATUS        current
+            DESCRIPTION
+                "fourth classification criteria for a 
+                 workflow profile. It describes the urgency/current status of the 
+                 corresponding event."
+            ::= {afEventData 6}
+
+            afLifetime OBJECT-TYPE
+            SYNTAX        Integer32    
+            MAX-ACCESS    read-only
+            STATUS        current
+            DESCRIPTION
+                "duration of the active time of the event in seconds. 
+                 After the Lifetime has exceeded the state of the associated 
+                 EventAgents (EA) is reset to NORMAL. A value of -1 
+                 means permanently."
+            ::= {afEventData 7}
+
+            afAgent   OBJECT-TYPE
+            SYNTAX DisplayString (SIZE(0..25))
+            MAX-ACCESS    read-only
+            STATUS        current
+            DESCRIPTION
+                "source of the event. It normally describes the event 
+                 activator more precisely than the field host." 
+            ::= {afEventData 8}
+
+            afHost    OBJECT-TYPE
+            SYNTAX DisplayString (SIZE(0..25))
+            MAX-ACCESS    read-only
+            STATUS        current
+            DESCRIPTION
+                "Name of the source host. This field is set by the creating 
+                 instance of the event. This field will not be overwritten 
+                 after its initialization by another Agent (also see: afSourceHost, afAgent).
+		 It defines where the problem comes from."
+            ::= {afEventData 9}
+
+            afFilelink        OBJECT-TYPE
+            SYNTAX DisplayString (SIZE(0..100))
+            MAX-ACCESS    read-only
+            STATUS        current
+            DESCRIPTION
+                "includes a link to a file with additional information for 
+                 this event. This link is set during the creation of the event.
+                 In order to be able to reach the document represented by the 
+                 link, be sure that the document is accessible from the 
+                 browser context."
+            ::= {afEventData 10}
+
+            afMessage OBJECT-TYPE
+            SYNTAX DisplayString (SIZE(0..200))
+            MAX-ACCESS    read-only
+            STATUS        current
+            DESCRIPTION
+                "Message text or general data describes problem information"
+            ::= {afEventData 11}
+
+            afUnit    OBJECT-TYPE
+            SYNTAX DisplayString (SIZE(0..25))
+            MAX-ACCESS    read-only
+            STATUS        current
+            DESCRIPTION
+                "freely definable
+                 obligatory field of an event. In the indicator pages 
+                 (LED overview and details) this field can be used 
+                 to filter the events."
+            ::= {afEventData 12}
+
+            afApplication     OBJECT-TYPE
+            SYNTAX DisplayString (SIZE(0..25))
+            MAX-ACCESS    read-only
+            STATUS        current
+            DESCRIPTION
+                "Application defines the process that has caused 
+                 or which is affected by the problem.
+		 It describes where the problem is."
+            ::= {afEventData 13}
+
+            afPrevLevel       OBJECT-TYPE
+            SYNTAX AFLevelType
+            MAX-ACCESS    read-only
+            STATUS        current
+            DESCRIPTION
+                "shows the content of the event field 'PrevLevel'. 
+                 It describes the Level of the previous event with the same 
+                 classification. none(0) means no previous level"
+            ::= {afEventData 14}
+
+            afCallID  OBJECT-TYPE
+            SYNTAX DisplayString (SIZE(0..10))
+            MAX-ACCESS    read-only
+            STATUS        current
+            DESCRIPTION
+                "The CallID is set by appending a ticket to an event. 
+                 Unique Trouble Ticket No"
+            ::= {afEventData 15}
+
+            afETS     OBJECT-TYPE
+            SYNTAX DisplayString (SIZE(0..200))      
+            MAX-ACCESS    read-only
+            STATUS        current
+            DESCRIPTION
+                "The ETS (Estimated Time of Solution) is being set by 
+                 appending a ticket to an event. If applicable it describes 
+                 the time until the problem will be solved. 
+                 Format: mm/dd/yy HH:MM"
+            ::= {afEventData 16}
+
+            afNote    OBJECT-TYPE
+            SYNTAX DisplayString (SIZE(0..200))     
+            MAX-ACCESS    read-only
+            STATUS        current
+            DESCRIPTION
+                "Appending a ticket to an event sets the Note. 
+                 It describes e.g. that someone is already working 
+                 on the problem."
+            ::= {afEventData 17}
+
+            afNumeric       OBJECT-TYPE
+            SYNTAX OCTET STRING
+            MAX-ACCESS    read-only
+            STATUS        current
+            DESCRIPTION
+                "A numeric floating number value describing the event in 
+                 further detail.
+                 Note: there's no standard float type in ASN1.
+                 Therefore it is encoded as DisplayString like 3.3333"
+            ::= {afEventData 18}
+
+         --
+         -- Traps
+         --
+
+         afEvent NOTIFICATION-TYPE
+            OBJECTS { 
+            afDomain,  
+            afEventclass,      
+            afEventtype,       
+            afLevel,   
+            afAgent,   
+            afHost,    
+            afMessage, 
+            afUnit,    
+            afApplication     
+	           }
+            STATUS        current
+            DESCRIPTION
+                 " General ActiveFried event to integrate all events into siNMs system "
+            ::= { afTraps 1 }
+
+END

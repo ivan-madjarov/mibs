@@ -1,0 +1,501 @@
+DLS-TRAP-MIB    DEFINITIONS ::= BEGIN
+
+IMPORTS
+   MODULE-IDENTITY, OBJECT-TYPE, Integer32
+      FROM SNMPv2-SMI
+   DisplayString, RowStatus
+        FROM SNMPv2-TC
+   senProducts
+	    FROM SEN-ROOT-MIB;
+	
+-- =================================================================
+--      severity:  level 1-7,        1 critical, 
+--                                   2 major
+--                                   3 minor
+--                                   4 warning
+--                                   5 informational
+--                                   6 cleared
+--                                   7 unknown
+--
+--      alarmClass: types 000-099, 000 DLS: Test Alarm 
+--                                 001 DLS: Problem with Key Distribution
+--                                 002 DLS: Problem with SIP
+--                                 003 DLS: DLS Communication Problem
+--                                 004 DLS: Certificate(s) soon running out
+--                                 005 DLS: Service Action 
+--                                 006 DLS: License Alarm 
+--                                 007 DLS: Signaling and Payload Encryption 
+--                                 008 DLS: Cluster Action
+--								   009 DLS: Element Manager Synchronization
+--								   010 DLS: Password and Login Policy
+--								   011 DLS: Resource Alarm
+--								   012 DLS: IP Device Communication
+--								   013 DLS: IP Device File Upload
+--								   014 DLS: IP Device Fault Report
+-- ==================================================================
+
+
+dls   MODULE-IDENTITY
+           LAST-UPDATED "201205071100Z" -- May 7, 2012
+	       ORGANIZATION "Siemens Enterprise Communications"
+           CONTACT-INFO "nikolaos.foteinos@siemens-enterprise.com" 
+           DESCRIPTION "This MIB describes the OpenScape Deployement Service trap information."
+        ::= { senProducts 4 }
+
+dlsTraps OBJECT IDENTIFIER  ::= { dls 1 }
+  
+dlsData OBJECT IDENTIFIER ::= { dls 2 }
+		
+		
+alarmClass OBJECT-TYPE
+		   SYNTAX      DisplayString
+		   MAX-ACCESS  read-only
+		   STATUS      current
+		   DESCRIPTION "The Class of the Alarm."
+        ::= { dlsData 1 }
+
+severity   OBJECT-TYPE
+		   SYNTAX  INTEGER { 
+		   critical(1), 
+		   major(2), 
+		   minor(3), 
+		   warning(4), 
+		   information(5), 
+		   clear(6), 
+		   unknown(7) }
+		   MAX-ACCESS  read-only
+	       STATUS  current
+	       DESCRIPTION "the alarm's severity level"
+        ::= { dlsData 2 }
+
+time	   OBJECT-TYPE
+			SYNTAX  DisplayString
+			MAX-ACCESS  read-only
+			STATUS  current
+			DESCRIPTION "The date and time when the alarm event occurred."
+        ::= { dlsData 3 }		
+
+alarmReason	OBJECT-TYPE
+	        SYNTAX  DisplayString 
+	        MAX-ACCESS  read-only
+	        STATUS  current
+	        DESCRIPTION "Short text including variable parameters. Provides the detailed description of the alarm."
+        ::= { dlsData 4 }
+
+hostName	OBJECT-TYPE
+			SYNTAX  DisplayString
+			MAX-ACCESS  read-only
+			STATUS  current
+			DESCRIPTION "The host name is an identifier of the host publishing the alarm."
+	    ::= { dlsData 5 }		
+
+		
+dlsService OBJECT-IDENTITY
+                STATUS current
+                DESCRIPTION
+                "Events from the DLS service"
+                ::= { dlsTraps 100 }		
+
+dlsCluster OBJECT-IDENTITY
+                STATUS current
+                DESCRIPTION
+                "Events from the DLS cluster interconnection"
+                ::= { dlsTraps 101 }
+
+dlsCom OBJECT-IDENTITY
+                STATUS current
+                DESCRIPTION
+                "Events from the DLS connectivity"
+                ::= { dlsTraps 102 }
+
+dlsLicense OBJECT-IDENTITY
+                STATUS current
+                DESCRIPTION
+                "Events from DLS licensing"
+                ::= { dlsTraps 103 }
+
+dlsMobility OBJECT-IDENTITY
+                STATUS current
+                DESCRIPTION
+                "Events from DLS Mobility"
+                ::= { dlsTraps 104 }
+
+dlsEmSynch OBJECT-IDENTITY
+                STATUS current
+                DESCRIPTION
+                "Events from DLS Element Manager Synchronization"
+                ::= { dlsTraps 105 }				
+
+dlsKeyDist OBJECT-IDENTITY
+                STATUS current
+                DESCRIPTION
+                "Events from DLS Key Distribution"
+                ::= { dlsTraps 106 }				
+
+dlsCertExpiration OBJECT-IDENTITY
+                STATUS current
+                DESCRIPTION
+                "Events from DLS Certificate Expiration"
+                ::= { dlsTraps 107 }				
+
+dlsPolicyAlarm OBJECT-IDENTITY
+                STATUS current
+                DESCRIPTION
+                "Events from Password Policy"
+                ::= { dlsTraps 108 }				
+
+dlsResourceAlarm OBJECT-IDENTITY
+                STATUS current
+                DESCRIPTION
+                "Events for Resource Problem"
+                ::= { dlsTraps 109 }				
+
+dlsWpCom OBJECT-IDENTITY
+                STATUS current
+                DESCRIPTION
+                "Events for DLS to Workpoint communication"
+                ::= { dlsTraps 110 }				
+
+dlsWpFileUpload OBJECT-IDENTITY
+                STATUS current
+                DESCRIPTION
+                "Events for Workpoint File upload"
+                ::= { dlsTraps 111 }				
+				
+dlsWpFaultReport OBJECT-IDENTITY
+                STATUS current
+                DESCRIPTION
+                "Events for DLS Fault Reports"
+                ::= { dlsTraps 112 }				
+
+dlsPKI OBJECT-IDENTITY
+                STATUS current
+                DESCRIPTION
+                "Events for PKI Connection"
+                ::= { dlsTraps 113 }				
+-- *******************************                
+-- DLS Evt Traps
+-- *******************************
+-- For the Alarm Reasons #001, #002, #003, #004, #005, #008, #009, #010 				
+dlsKeyDistTrap	NOTIFICATION-TYPE
+				OBJECTS { alarmClass,
+						severity,
+						time,                    
+						alarmReason,
+						hostName
+					}
+				STATUS current
+				DESCRIPTION "Problem with Key Distribution schedule"
+				::= { dlsKeyDist 1 }
+
+dlsKeyDistClearTrap	NOTIFICATION-TYPE
+					OBJECTS { alarmClass,
+							severity,
+							time,                    
+							alarmReason,
+							hostName
+						}
+					STATUS current
+					DESCRIPTION "Clear of Key Distribution schedule problem"
+					::= { dlsKeyDist 2 }			
+
+-- For the Alarm Reasons #006, #007, #011, 			
+dlsPKITrap	NOTIFICATION-TYPE
+            OBJECTS { alarmClass,
+                      severity,
+                      time,                    
+                      alarmReason,
+                      hostName
+				}
+            STATUS current
+            DESCRIPTION "Problem with PKI connection"
+            ::= { dlsPKI 1 }
+
+dlsPKIClearTrap	NOTIFICATION-TYPE
+				OBJECTS { alarmClass,
+						severity,
+						time,                    
+						alarmReason,
+						hostName
+					}
+				STATUS current
+				DESCRIPTION "Clear of PKI connection problem"
+				::= { dlsPKI 2}
+			
+-- For the Alarm Reasons #015, #016, 
+dlsEmSynchTrap	NOTIFICATION-TYPE
+				OBJECTS { alarmClass,
+						severity,
+						time,                    
+						alarmReason,
+						hostName
+					}
+				STATUS current
+				DESCRIPTION "Problem with Element Manager Synchronization"
+				::= { dlsEmSynch 1 }
+
+dlsEmSynchClearTrap	NOTIFICATION-TYPE
+					OBJECTS { alarmClass,
+							severity,
+							time,                    
+							alarmReason,
+							hostName
+						}
+					STATUS current
+					DESCRIPTION "Clear of Element Manager Synchronization problem"
+					::= { dlsEmSynch 2 }		
+
+-- For the Alarm Reasons #020, #021, #022, #023, #024 
+dlsMobilityTrap	NOTIFICATION-TYPE
+				OBJECTS { alarmClass,
+						severity,
+						time,                    
+						alarmReason,
+						hostName
+					}
+				STATUS current
+				DESCRIPTION "Problem with DLS Mobility"
+				::= { dlsMobility 1 }
+
+dlsMobilityClearTrap NOTIFICATION-TYPE
+					 OBJECTS { alarmClass,
+							severity,
+							time,                    
+							alarmReason,
+							hostName
+						}
+					STATUS current
+					DESCRIPTION "Clear of DLS Mobility problem"
+					::= { dlsMobility 2 }	
+
+-- For the Alarm Reasons #030 
+dlsComTrap NOTIFICATION-TYPE
+            OBJECTS { alarmClass,
+                    severity,
+                    time,                    
+                    alarmReason,
+                    hostName
+				}
+            STATUS current
+            DESCRIPTION "DLS Communication Problem"
+            ::= { dlsCom 1 }
+
+dlsComClearTrap NOTIFICATION-TYPE
+				 OBJECTS { alarmClass,
+						severity,
+						time,                    
+						alarmReason,
+						hostName
+					}
+				STATUS current
+				DESCRIPTION "Clear of DLS Communication Problem"
+				::= { dlsCom 2}	
+
+-- For the Alarm Reasons #040, #041, #042 
+dlsCertExpirationTrap NOTIFICATION-TYPE
+					 OBJECTS { alarmClass,
+							severity,
+							time,                    
+							alarmReason,
+							hostName
+						}
+					STATUS current
+					DESCRIPTION "Problem with DLS Certificate Expiration"
+					::= { dlsCertExpiration 1 }
+
+dlsCertExpirationClearTrap NOTIFICATION-TYPE
+						  OBJECTS { alarmClass,
+								severity,
+								time,                    
+								alarmReason,
+								hostName
+							}
+						STATUS current
+						DESCRIPTION "Clear of DLS Certificate Expiration problem"
+						::= { dlsCertExpiration 2}		
+
+-- For the Alarm Reasons #050, #051, #052, #053, #054, #055, #056
+dlsServiceTrap NOTIFICATION-TYPE
+				OBJECTS { alarmClass,
+                      severity,
+                      time,                    
+                      alarmReason,
+                      hostName
+				}
+				STATUS current
+				DESCRIPTION "Problem with DLS Service"
+				::= { dlsService 1 }
+
+dlsServiceClearTrap NOTIFICATION-TYPE
+					OBJECTS { alarmClass,
+							severity,
+							time,                    
+							alarmReason,
+							hostName
+						}
+					STATUS current
+					DESCRIPTION "Clear of DLS Service problem"
+					::= { dlsService 2}	
+			
+-- For the Alarm Reasons #057, #058, #059, #060, #061, #062, #063, #064, #065 
+dlsLicenseTrap NOTIFICATION-TYPE
+				OBJECTS { alarmClass,
+						severity,
+						time,                    
+						alarmReason,
+						hostName
+					}
+				STATUS current
+				DESCRIPTION "Problem with DLS Licensing"
+				::= { dlsLicense 1 }
+
+dlsLicenseClearTrap NOTIFICATION-TYPE
+					OBJECTS { alarmClass,
+							severity,
+							time,                    
+							alarmReason,
+							hostName
+						}
+					STATUS current
+					DESCRIPTION "Clear of DLS Licensing problem"
+					::= { dlsLicense 2 }			
+
+-- For the Alarm Reasons #070, #071, #072, #073, #074, #075, #076  
+dlsClusterTrap NOTIFICATION-TYPE
+				OBJECTS { alarmClass,
+						severity,
+						time,                    
+						alarmReason,
+						hostName
+					}
+				STATUS current
+				DESCRIPTION "Problem with DLS Cluster Interconnection" 
+				::= { dlsCluster 1 }
+
+dlsClusterClearTrap NOTIFICATION-TYPE
+					OBJECTS { alarmClass,
+							severity,
+							time,                    
+							alarmReason,
+							hostName
+						}
+					STATUS current
+					DESCRIPTION "Clear of DLS Cluster Interconnection problem"
+					::= { dlsCluster 2 }			
+			
+-- For the Alarm Reasons #077, #078, #079  
+dlsPolicyAlarmTrap NOTIFICATION-TYPE
+					OBJECTS { alarmClass,
+							severity,
+							time,                    
+							alarmReason,
+							hostName
+						}
+					STATUS current
+					DESCRIPTION "Problem with a DLS Account" 
+					::= { dlsPolicyAlarm 1 }
+
+dlsPolicyAlarmClearTrap NOTIFICATION-TYPE
+						OBJECTS { alarmClass,
+								severity,
+								time,                    
+								alarmReason,
+								hostName
+							}
+						STATUS current
+						DESCRIPTION "Clear of DLS Account problem"
+						::= { dlsPolicyAlarm 2 }	
+			
+-- For the Alarm Reasons #080  
+dlsResourceAlarmTrap NOTIFICATION-TYPE
+					 OBJECTS { alarmClass,
+							severity,
+							time,                    
+							alarmReason,
+							hostName
+						}
+					STATUS current
+					DESCRIPTION "Problem with Resources"
+					::= { dlsResourceAlarm 1 }
+
+dlsResourceAlarmClearTrap NOTIFICATION-TYPE
+						 OBJECTS { alarmClass,
+								severity,
+								time,                    
+								alarmReason,
+								hostName
+							}
+						 STATUS current
+						 DESCRIPTION "Clear of Resources problem"
+						 ::= { dlsResourceAlarm 2 }	
+
+-- For the Alarm Reasons #095, #096, #097  
+dlsWpFileUploadTrap NOTIFICATION-TYPE
+					OBJECTS { alarmClass,
+							severity,
+							time,                    
+							alarmReason,
+							hostName
+						}
+					STATUS current
+					DESCRIPTION "Problem with Workpoint File Upload"
+					::= { dlsWpFileUpload 1 }
+
+dlsWpFileUploadClearTrap NOTIFICATION-TYPE
+						OBJECTS { alarmClass,
+								severity,
+								time,                    
+								alarmReason,
+								hostName
+							}
+						STATUS current
+						DESCRIPTION "Clear of Workpoint File Upload problem"
+						::= { dlsWpFileUpload 2 }	
+	
+-- For the Alarm Reasons #092, #093, #094, #098, #099, #100
+dlsWpFaultReportTrap NOTIFICATION-TYPE
+					OBJECTS { alarmClass,
+							severity,
+							time,                    
+							alarmReason,
+							hostName
+						}
+					STATUS current
+					DESCRIPTION "Problem with DLS Fault Reports"
+					::= { dlsWpFaultReport 1 }
+
+dlsWpFaultReportClearTrap NOTIFICATION-TYPE
+						 OBJECTS { alarmClass,
+								severity,
+								time,                    
+								alarmReason,
+								hostName
+							}
+						 STATUS current
+						 DESCRIPTION "Clear of DLS Fault Reports problem"
+						 ::= { dlsWpFaultReport 2 }		
+
+-- For the Alarm Reasons #090, #091, 
+dlsWpComTrap NOTIFICATION-TYPE
+            OBJECTS { alarmClass,
+                    severity,
+                    time,                    
+                    alarmReason,
+                    hostName
+				}
+            STATUS current
+            DESCRIPTION "Problem with Workpoint Communication"
+            ::= { dlsWpCom 1 }
+
+dlsWpComClearTrap NOTIFICATION-TYPE
+				 OBJECTS { alarmClass,
+						severity,
+						time,                    
+						alarmReason,
+						hostName
+					}
+				STATUS current
+				DESCRIPTION "Clear of Workpoint Communication problem"
+				::= { dlsWpCom 2 }		
+			
+END

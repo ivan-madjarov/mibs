@@ -1,0 +1,627 @@
+-- ****************************************************************************
+-- ****************************************************************************
+--             Copyright(c) 2004 Mediatrix Telecom, Inc.
+--  NOTICE:
+--   This document contains information that is confidential and proprietary
+--   to Mediatrix Telecom, Inc.
+--   Mediatrix Telecom, Inc. reserves all rights to this document as well as
+--   to the Intellectual Property of the document and the technology and
+--   know-how that it includes and represents.
+--   This publication cannot be reproduced, neither in whole nor in part in
+--   any form whatsoever without written prior approval by
+--   Mediatrix Telecom, Inc.
+--   Mediatrix Telecom, Inc. reserves the right to revise this publication
+--   and make changes at any time and without the obligation to notify any
+--   person and/or entity of such revisions and/or changes.
+-- ****************************************************************************
+-- ****************************************************************************
+  
+SEC10-MX-HOC-MIB
+DEFINITIONS ::= BEGIN
+
+IMPORTS
+        MODULE-IDENTITY,
+        OBJECT-TYPE,
+        Unsigned32
+    FROM SNMPv2-SMI
+        MODULE-COMPLIANCE,
+        OBJECT-GROUP
+    FROM SNMPv2-CONF
+        MxEnableState,
+        MxActivationState,
+        MxIpHostName,
+        MxIpPort,
+        MxAdvancedIpPort,
+        MxIpSubnetMask,
+        MxDigitMap
+    FROM MX-TC
+        MxUInt64,
+        MxFloat32,
+        MxIpHostNamePort,
+        MxIpAddr,
+        MxIpAddrPort,
+        MxIpAddrMask,
+        MxUri,
+        MxUrl
+    FROM MX-TC2
+        mediatrixServices       
+    FROM MX-SMI2;
+
+hocMIB MODULE-IDENTITY                                                         
+    LAST-UPDATED   "0510310000Z"                                               
+    ORGANIZATION " Mediatrix Telecom, Inc. "                                   
+    CONTACT-INFO " Mediatrix Telecom, Inc.                                     
+                   4229, Garlock Street                                        
+                   Sherbrooke (Quebec)                                         
+                   Canada                                                      
+                   Phone: (819) 829-8749                                       
+                   "                                                           
+    DESCRIPTION  " Host Configuration                                          
+                                                                               
+                   The Host Configuration service allows to configure network  
+                   parameters that apply to the whole system (not to a specific
+                   interface).                                                 
+                   "                                                           
+    -- *************************************************************************
+                                                                               
+    -- Revision history                                                        
+                                                                               
+    -- *************************************************************************
+    REVISION       "0510310000Z"                                               
+    DESCRIPTION  " Initial Revision "                                          
+    ::= { mediatrixServices 700 }                                              
+
+hocMIBObjects OBJECT IDENTIFIER ::= { hocMIB 1 }
+
+-- Scalar:  Management Interface                                               
+                                                                               
+managementInterface OBJECT-TYPE                                                
+    SYNTAX        OCTET STRING ( SIZE(1..20) )                                 
+    MAX-ACCESS    read-write                                                   
+    STATUS        current                                                      
+    DESCRIPTION " Management Interface                                         
+                                                                               
+                  Specifies to which network interface system management       
+                  services are bound. The name specified here must match an    
+                  existing InterfaceName in service Basic Network Interfaces'  
+                  NetworkInterfacesStatus table. Special value 'All' means bind
+                  to all network interfaces.                                   
+                  "                                                            
+    DEFVAL        { "Lan1" }                                                   
+    ::= { hocMIBObjects 100 }                                                  
+
+-- Scalar:  Host Name                              
+                                                   
+hostName OBJECT-TYPE                               
+    SYNTAX         MxIpHostName                    
+    MAX-ACCESS     read-write                      
+    STATUS         current                         
+    DESCRIPTION  " Host Name                       
+                                                   
+                   Contains the system's host name.
+                   "                               
+    DEFVAL         { "" }                          
+    ::= { hocMIBObjects 200 }                      
+
+-- ****************************************************************************
+                                                                              
+-- Group:  Domain Name                                                        
+                                                                              
+-- ****************************************************************************
+                                                                              
+domainNameGroup OBJECT IDENTIFIER                                             
+    ::= { hocMIBObjects 300 }                                                 
+                                                                              
+                                                                              
+    -- Scalar:  Configuration Source                                          
+                                                                              
+    domainNameConfigSource OBJECT-TYPE                                        
+        SYNTAX        INTEGER { automatic(100) , static(200) }                
+        MAX-ACCESS    read-write                                              
+        STATUS        current                                                 
+        DESCRIPTION " Configuration Source                                    
+                                                                              
+                      Configuration source for the domain name.               
+                                                                              
+                        * Automatic: The domain name is automatically obtained
+                          from the network. The value obtained depends on the 
+                          connection type of the automatic network interface  
+                          (defined in service Basic Network Interface (Bni),  
+                          table NetworkInterfaces), if any. Please note that  
+                          some connection types (for example ipStatic and     
+                          pppIpcp) cannot obtain domain name information from 
+                          the network, and therefore lead to no domain name   
+                          being applied to the system.                        
+                        * Static: The domain name is specified in the         
+                          StaticDomainName variable.                          
+                                                                              
+                      When switching from Static to Automatic configuration   
+                      source, the last value correctly obtained from the      
+                      network (if any) is applied to the system.              
+                      "                                                       
+        DEFVAL        { automatic }                                           
+        ::= { domainNameGroup 100 }                                           
+                                                                              
+    -- Scalar:  Domain Name                                                   
+                                                                              
+    domainNameInfo OBJECT-TYPE                                                
+        SYNTAX         MxIpHostName                                           
+        MAX-ACCESS     read-only                                              
+        STATUS         current                                                
+        DESCRIPTION  " Domain Name                                            
+                                                                              
+                       Current domain name.                                   
+                       "                                                      
+        ::= { domainNameGroup 200 }                                           
+                                                                              
+    -- Scalar:  Static Domain Name                                            
+                                                                              
+    staticDomainName OBJECT-TYPE                                              
+        SYNTAX        MxIpHostName                                            
+        MAX-ACCESS    read-write                                              
+        STATUS        current                                                 
+        DESCRIPTION " Static Domain Name                                      
+                                                                              
+                      Static domain name. This domain name is used as the     
+                      current domain name when the DomainNameConfigSource     
+                      variable is set to 'Static'.                            
+                      "                                                       
+        DEFVAL        { "" }                                                  
+        ::= { domainNameGroup 300 }                                           
+                                                                              
+-- End of group:  Domain Name                                                 
+
+-- *****************************************************************************
+                                                                               
+-- Group:  SNTP                                                                
+                                                                               
+-- *****************************************************************************
+                                                                               
+sntpGroup OBJECT IDENTIFIER                                                    
+    ::= { hocMIBObjects 400 }                                                  
+                                                                               
+                                                                               
+    -- Scalar:  Configuration Source                                           
+                                                                               
+    sntpConfigSource OBJECT-TYPE                                               
+        SYNTAX        INTEGER { automatic(100) , static(200) }                 
+        MAX-ACCESS    read-write                                               
+        STATUS        current                                                  
+        DESCRIPTION " Configuration Source                                     
+                                                                               
+                      Configuration source for the SNTP parameters.            
+                                                                               
+                        * Automatic: The SNTP parameters are automatically     
+                          obtained from the network. The values obtained depend
+                          on the connection type of the automatic network      
+                          interface (defined in service Basic Network Interface
+                          (Bni), table NetworkInterfaces), if any. Please note 
+                          that some connection types (for example ipStatic and 
+                          pppIpcp) cannot obtain SNTP information from the     
+                          network, and therefore lead to no SNTP parameters    
+                          being applied to the system.                         
+                        * Static: The SNTP parameters are specified in the     
+                          StaticSntpServerHost variable.                       
+                                                                               
+                      When switching from Static to Automatic configuration    
+                      source, the last values correctly obtained from the      
+                      network (if any) are applied to the system.              
+                      "                                                        
+        DEFVAL        { automatic }                                            
+        ::= { sntpGroup 100 }                                                  
+                                                                               
+    -- Scalar:  Synchronization Period                                         
+                                                                               
+    sntpSynchronizationPeriod OBJECT-TYPE                                      
+        SYNTAX        Unsigned32 ( 1..1440 )                                   
+        MAX-ACCESS    read-write                                               
+        STATUS        current                                                  
+        DESCRIPTION " Synchronization Period                                   
+                                                                               
+                      Time interval between system time synchronization cycles.
+                      Each time this interval expires, a SNTP request is sent  
+                      to the SNTP server and the result is used to set the     
+                      system time. This value is expressed in minutes. The     
+                      maximum value is set to 1 440 minutes, which corresponds 
+                      to 24 hours.                                             
+                      "                                                        
+        DEFVAL        { 1440 }                                                 
+        ::= { sntpGroup 200 }                                                  
+                                                                               
+    -- Scalar:  Synchronization Period On Error                                
+                                                                               
+    sntpSynchronizationPeriodOnError OBJECT-TYPE                               
+        SYNTAX        Unsigned32 ( 1..1440 )                                   
+        MAX-ACCESS    read-write                                               
+        STATUS        current                                                  
+        DESCRIPTION " Synchronization Period On Error                          
+                                                                               
+                      Time interval between retries after an unsuccessful      
+                      request to the SNTP server. This value is expressed in   
+                      minutes. The maximum value is set to 1 440 minutes, which
+                      corresponds to 24 hours.                                 
+                      "                                                        
+        DEFVAL        { 60 }                                                   
+        ::= { sntpGroup 300 }                                                  
+                                                                               
+    -- Scalar:  Time Zone                                                      
+                                                                               
+    sntpTimeZone OBJECT-TYPE                                                   
+        SYNTAX        OCTET STRING ( SIZE(0..255) )                            
+        MAX-ACCESS    read-write                                               
+        STATUS        current                                                  
+        DESCRIPTION " Time Zone                                                
+                                                                               
+                      Specifies the time zone in which the system is located.  
+                      This string MUST use the IEEE 1003.1 POSIX format as     
+                      defined in bootp-dhcp-option-88.txt. The following are   
+                      some example strings.                                    
+                                                                               
+                        * Pacific Time (Canada and US) : PST8DST7,M4.1.0/      
+                          02:00:00,M10.5.0/02:00:00                            
+                        * Mountain Time (Canada and US) : MST7DST6,M4.1.0/     
+                          02:00:00,M10.5.0/02:00:00                            
+                        * Central Time (Canada and US) : CST6DST5,M4.1.0/      
+                          02:00:00,M10.5.0/02:00:00                            
+                        * Eastern Time (Canada and US) : EST5DST4,M4.1.0/      
+                          02:00:00,M10.5.0/02:00:00                            
+                        * Atlantic Time (Canada) : AST4DST3,M4.1.0/            
+                          02:00:00,M10.5.0/02:00:00                            
+                        * GMT Standard Time : GMT0DMT-1,M3.5.0/01:00:00,M10.5.0
+                          /02:00:00                                            
+                        * W. Europe Standard Time : WEST-1DWEST-2,M3.5.0/      
+                          02:00:00,M10.5.0/03:00:00                            
+                        * China Standard Time : CST-8                          
+                        * Tokyo Standard Time : TST-9                          
+                        * Central Australia Standard Time :                    
+                          CAUST-9:30DCAUST-10:30,M10.5.0/02:00:00,M3.5.0/      
+                          02:00:00                                             
+                        * Australia Eastern Standard Time :                    
+                          AUSEST-10AUSDST-11,M10.5.0/02:00:00,M3.5.0/02:00:00  
+                        * UTC (Coordinated Universal Time) : UTC0              
+                                                                               
+                                                                               
+                      "                                                        
+        DEFVAL        { "EST5DST4,M4.1.0/02:00:00,M10.5.0/02:00:00" }          
+        ::= { sntpGroup 400 }                                                  
+                                                                               
+    -- Scalar:  Server Host                                                    
+                                                                               
+    sntpServerHostInfo OBJECT-TYPE                                             
+        SYNTAX         MxIpHostNamePort                                        
+        MAX-ACCESS     read-only                                               
+        STATUS         current                                                 
+        DESCRIPTION  " Server Host                                             
+                                                                               
+                       Current SNTP server host name and port.                 
+                       "                                                       
+        ::= { sntpGroup 500 }                                                  
+                                                                               
+    -- Scalar:  Static Server Host                                             
+                                                                               
+    staticSntpServerHost OBJECT-TYPE                                           
+        SYNTAX        MxIpHostNamePort                                         
+        MAX-ACCESS    read-write                                               
+        STATUS        current                                                  
+        DESCRIPTION " Static Server Host                                       
+                                                                               
+                      Static SNTP server host name and port. This host name is 
+                      used as the current SNTP server host name when the       
+                      SntpConfigSource variable is set to 'Static'.            
+                      "                                                        
+        DEFVAL        { 192.168.10.10:123 }                                    
+        ::= { sntpGroup 700 }                                                  
+                                                                               
+-- End of group:  SNTP                                                         
+
+-- ****************************************************************************
+                                                                              
+-- Group:  Default Router                                                     
+                                                                              
+-- ****************************************************************************
+                                                                              
+defaultRouterGroup OBJECT IDENTIFIER                                          
+    ::= { hocMIBObjects 500 }                                                 
+                                                                              
+                                                                              
+    -- Scalar:  Configuration Source                                          
+                                                                              
+    defaultRouterConfigSource OBJECT-TYPE                                     
+        SYNTAX        INTEGER { automatic(100) , static(200) }                
+        MAX-ACCESS    read-write                                              
+        STATUS        current                                                 
+        DESCRIPTION " Configuration Source                                    
+                                                                              
+                      Configuration source for the default router.            
+                                                                              
+                        * Automatic: The default router is automatically      
+                          obtained from the network. The value obtained       
+                          depends on the connection type of the automatic     
+                          network interface (defined in service Basic Network 
+                          Interface (Bni), table NetworkInterfaces), if any.  
+                          Please note that some connection types (for example 
+                          ipStatic) cannot obtain default router information  
+                          from the network, and therefore lead to no default  
+                          router being applied to the system.                 
+                        * Static: The default router is specified in the      
+                          StaticDefaultRouter variable.                       
+                                                                              
+                      When switching from Static to Automatic configuration   
+                      source, the last value correctly obtained from the      
+                      network (if any) is applied to the system.              
+                      "                                                       
+        DEFVAL        { automatic }                                           
+        ::= { defaultRouterGroup 100 }                                        
+                                                                              
+    -- Scalar:  Default Router                                                
+                                                                              
+    defaultRouterInfo OBJECT-TYPE                                             
+        SYNTAX         MxIpAddr                                               
+        MAX-ACCESS     read-only                                              
+        STATUS         current                                                
+        DESCRIPTION  " Default Router                                         
+                                                                              
+                       Current default router address.                        
+                       "                                                      
+        ::= { defaultRouterGroup 200 }                                        
+                                                                              
+    -- Scalar:  Static Default Router                                         
+                                                                              
+    staticDefaultRouter OBJECT-TYPE                                           
+        SYNTAX        MxIpAddr                                                
+        MAX-ACCESS    read-write                                              
+        STATUS        current                                                 
+        DESCRIPTION " Static Default Router                                   
+                                                                              
+                      Static default router address. This address is used as  
+                      the current default router address when the             
+                      DefaultRouterConfigSource variable is set to 'Static'.  
+                      "                                                       
+        DEFVAL        { "192.168.10.10" }                                     
+        ::= { defaultRouterGroup 300 }                                        
+                                                                              
+-- End of group:  Default Router                                              
+
+-- *****************************************************************************
+                                                                               
+-- Group:  DNS Servers                                                         
+                                                                               
+-- *****************************************************************************
+                                                                               
+dnsServersGroup OBJECT IDENTIFIER                                              
+    ::= { hocMIBObjects 600 }                                                  
+                                                                               
+                                                                               
+    -- Scalar:  Configuration Source                                           
+                                                                               
+    dnsServersConfigSource OBJECT-TYPE                                         
+        SYNTAX        INTEGER { automatic(100) , static(200) }                 
+        MAX-ACCESS    read-write                                               
+        STATUS        current                                                  
+        DESCRIPTION " Configuration Source                                     
+                                                                               
+                      Configuration source for the DNS servers.                
+                                                                               
+                        * Automatic: The DNS servers are automatically obtained
+                          from the network. The values obtained depend on the  
+                          connection type of the automatic network interface   
+                          (defined in service Basic Network Interface (Bni),   
+                          table NetworkInterfaces), if any. Please note that   
+                          some connection types (for example ipStatic) cannot  
+                          obtain DNS information from the network, and         
+                          therefore lead to no DNS servers being applied to the
+                          system.                                              
+                        * Static: The DNS servers are specified in the         
+                          StaticDnsServers table.                              
+                                                                               
+                      When switching from Static to Automatic configuration    
+                      source, the last values correctly obtained from the      
+                      network (if any) are applied to the system.              
+                      "                                                        
+        DEFVAL        { automatic }                                            
+        ::= { dnsServersGroup 100 }                                            
+                                                                               
+    -- *************************************************************************
+                                                                               
+    -- Table:  DNS Servers                                                     
+                                                                               
+    -- *************************************************************************
+                                                                               
+    dnsServersInfoTable OBJECT-TYPE                                            
+        SYNTAX        SEQUENCE OF DnsServersInfoEntry                          
+        MAX-ACCESS    not-accessible                                           
+        STATUS        current                                                  
+        DESCRIPTION " DNS Servers                                              
+                                                                               
+                      This table contains the list of current DNS servers. The 
+                      DNS servers are sorted by priority.                      
+                      "                                                        
+        ::= { dnsServersGroup 200 }                                            
+                                                                               
+                                                                               
+        dnsServersInfoEntry OBJECT-TYPE                                        
+            SYNTAX         DnsServersInfoEntry                                 
+            MAX-ACCESS     not-accessible                                      
+            STATUS         current                                             
+            DESCRIPTION  " A row in the DNS Servers. "                         
+            INDEX          {                                                   
+                               priority                                        
+                           }                                                   
+                                                                               
+            ::= { dnsServersInfoTable 1 }                                      
+                                                                               
+        DnsServersInfoEntry ::= SEQUENCE                                       
+        {                                                                      
+             priority     Unsigned32,                                          
+             ipAddress    MxIpAddr                                             
+        }                                                                      
+                                                                               
+        -- Index:  Priority                                                    
+                                                                               
+        dnsServersInfoPriority OBJECT-TYPE                                     
+            SYNTAX        Unsigned32 ( 1..4 )                                  
+            MAX-ACCESS    read-only                                            
+            STATUS        current                                              
+            DESCRIPTION " Priority                                             
+                                                                               
+                          Priority number for this DNS server. The lower the   
+                          number is, the higher the priority is.               
+                          "                                                    
+            ::= { dnsServersInfoEntry 100 }                                    
+                                                                               
+        -- Columnar:  Server Address                                           
+                                                                               
+        dnsServersInfoIpAddress OBJECT-TYPE                                    
+            SYNTAX         MxIpAddr                                            
+            MAX-ACCESS     read-only                                           
+            STATUS         current                                             
+            DESCRIPTION  " Server Address                                      
+                                                                               
+                           DNS server IP address.                              
+                           "                                                   
+            ::= { dnsServersInfoEntry 200 }                                    
+                                                                               
+                                                                               
+    -- End of table:  DNS Servers                                              
+                                                                               
+    -- *************************************************************************
+                                                                               
+    -- Table:  Static DNS Servers                                              
+                                                                               
+    -- *************************************************************************
+                                                                               
+    staticDnsServersTable OBJECT-TYPE                                          
+        SYNTAX        SEQUENCE OF StaticDnsServersEntry                        
+        MAX-ACCESS    not-accessible                                           
+        STATUS        current                                                  
+        DESCRIPTION " Static DNS Servers                                       
+                                                                               
+                      This table contains the list of static DNS servers. The  
+                      DNS servers are sorted by priority. These DNS servers are
+                      used as the current DNS servers when the                 
+                      DnsServersConfigSource variable is set to 'Static'.      
+                      "                                                        
+        ::= { dnsServersGroup 300 }                                            
+                                                                               
+                                                                               
+        staticDnsServersEntry OBJECT-TYPE                                      
+            SYNTAX         StaticDnsServersEntry                               
+            MAX-ACCESS     not-accessible                                      
+            STATUS         current                                             
+            DESCRIPTION  " A row in the Static DNS Servers. "                  
+            INDEX          {                                                   
+                               priority                                        
+                           }                                                   
+                                                                               
+            ::= { staticDnsServersTable 1 }                                    
+                                                                               
+        StaticDnsServersEntry ::= SEQUENCE                                     
+        {                                                                      
+             priority     Unsigned32,                                          
+             ipAddress    MxIpAddr                                             
+        }                                                                      
+                                                                               
+        -- Index:  Priority                                                    
+                                                                               
+        staticDnsServersPriority OBJECT-TYPE                                   
+            SYNTAX        Unsigned32 ( 1..4 )                                  
+            MAX-ACCESS    read-only                                            
+            STATUS        current                                              
+            DESCRIPTION " Priority                                             
+                                                                               
+                          Priority number of this static DNS server. The lower 
+                          the number is, the higher the priority is.           
+                          "                                                    
+            ::= { staticDnsServersEntry 100 }                                  
+                                                                               
+        -- Columnar:  IP Address                                               
+                                                                               
+        staticDnsServersIpAddress OBJECT-TYPE                                  
+            SYNTAX         MxIpAddr                                            
+            MAX-ACCESS     read-write                                          
+            STATUS         current                                             
+            DESCRIPTION  " IP Address                                          
+                                                                               
+                           Static DNS server IP address.                       
+                           "                                                   
+            ::= { staticDnsServersEntry 200 }                                  
+                                                                               
+                                                                               
+    -- End of table:  Static DNS Servers                                       
+                                                                               
+-- End of group:  DNS Servers                                                  
+
+-- *****************************************************************************
+                                                                               
+-- Group:  Notification Messages Configuration                                 
+                                                                               
+-- *****************************************************************************
+                                                                               
+notificationsGroup OBJECT IDENTIFIER                                           
+    ::= { hocMIBObjects 60010 }                                                
+                                                                               
+                                                                               
+    -- Scalar:  Minimal Severity of Notification                               
+                                                                               
+    minSeverity OBJECT-TYPE                                                    
+        SYNTAX        INTEGER { disable(0) , debug(100) , info(200) , warning  
+                      (300) , error(400) , critical (500) }                    
+        MAX-ACCESS    read-write                                               
+        STATUS        current                                                  
+        DESCRIPTION " Minimal Severity of Notification                         
+                                                                               
+                      Sets the minimal severity to issue a notification message
+                      incoming from this service.                              
+                                                                               
+                        * Disable: No notification is issued.                  
+                        * Debug: All notification messages are issued.         
+                        * Info: Notification messages with severity            
+                          'Informational' and higher are issued.               
+                        * Warning: Notification messages with severity         
+                          'Warning' and higher are issued.                     
+                        * Error: Notification messages with severity 'Error'   
+                          and higher are issued.                               
+                        * Critical: Notification messages with severity        
+                          'Critical' are issued.                               
+                                                                               
+                                                                               
+                      "                                                        
+        DEFVAL        { warning }                                              
+        ::= { notificationsGroup 100 }                                         
+                                                                               
+-- End of group:  Notification Messages Configuration                          
+
+-- ****************************************************************************
+                                                                              
+-- Group:  Configuration Settings                                             
+                                                                              
+-- ****************************************************************************
+                                                                              
+configurationGroup OBJECT IDENTIFIER                                          
+    ::= { hocMIBObjects 60020 }                                               
+                                                                              
+                                                                              
+    -- Scalar:  Need Restart                                                  
+                                                                              
+    needRestartInfo OBJECT-TYPE                                               
+        SYNTAX        INTEGER { no(0) , yes(100) }                            
+        MAX-ACCESS    read-only                                               
+        STATUS        current                                                 
+        DESCRIPTION " Need Restart                                            
+                                                                              
+                      Indicates if the service needs to be restarted for its  
+                      configuration to fully take effect.                     
+                                                                              
+                        * Yes: Service needs to be restarted.                 
+                        * No: Service does not need to be restarted.          
+                                                                              
+                      Services can be restarted by using the command          
+                      Scm.ServiceCommands.Restart.                            
+                                                                              
+                                                                              
+                      "                                                       
+        ::= { configurationGroup 100 }                                        
+                                                                              
+-- End of group:  Configuration Settings                                      
+
+END

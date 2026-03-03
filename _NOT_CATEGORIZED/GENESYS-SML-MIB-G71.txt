@@ -1,0 +1,2620 @@
+GENESYS-SML-MIB-G71 DEFINITIONS ::= BEGIN
+
+--- Genesys Solutions Management Layer MIB v7.1
+
+IMPORTS
+  DisplayString,
+  RowStatus,
+  TEXTUAL-CONVENTION  FROM SNMPv2-TC
+  MODULE-IDENTITY,
+  OBJECT-TYPE,
+  NOTIFICATION-TYPE,
+  enterprises,
+  Unsigned32,
+  Integer32,
+  TimeTicks           FROM SNMPv2-SMI
+  MODULE-COMPLIANCE,
+  NOTIFICATION-GROUP,
+  OBJECT-GROUP        FROM SNMPv2-CONF;
+
+---
+--- MIB High Level description
+---
+
+genesys MODULE-IDENTITY
+  LAST-UPDATED "200905181300Z"
+  ORGANIZATION "Genesys Telecommunications Labs, Inc."
+  CONTACT-INFO
+     "Postal: 2001 Junipero Serra Blvd
+              Daly City, CA 94014
+              US
+
+              Tel:    +1 888 GENESYS 
+              Fax:    +1 415 437 1260
+
+      email:  support@genesyslab.com"
+
+  DESCRIPTION
+    "Collection of managed objects that provides for remote
+     management of Genesys Call Center server applications."
+
+  REVISION "200303281500Z"
+  DESCRIPTION
+    "Initial version."
+
+  REVISION "200304141830Z"
+  DESCRIPTION
+    "Syntax of some of the managed objects changed from DisplayString to an enumerated
+     INTEGER."
+
+  REVISION "200304160630Z"
+  DESCRIPTION
+    "Included Integer32 into imports.
+
+    Reverted tsDtaType from INTEGER to DisplayString.
+
+    Changed names of enumerated values to begin with lowercase letter.
+
+    Added 'Unknown' values to some enumerators.
+
+    Added 'debug' as possible value for logVerbose object.
+
+    Revised some description clauses to improve managed
+    objects specification."
+
+  REVISION "200304230630Z"
+  DESCRIPTION
+    "Changed definition of gsCtrlRefreshStatus object - the value
+     dataRefreshCanceled is removed, dataNotReady is used instead;
+     description of the object is changed accordingly.
+
+     Changed definition of gServerStatus object. Syntax changed to 
+     enumerated INTEGER and description is refined accordingly.
+
+     Removed objects gServerStartup, gServerShutdown, and gServerGracefulShutdown.
+     Added object gServerCommand instead that provides functionality
+     formerly performed by removed objects.
+
+     Moved object gsCmndDeleteClient from gsInfoEntry to gServersEntry
+     and renamed it to gServerDeleteClient."
+
+  REVISION "200305120630Z"
+  DESCRIPTION
+    "Changed dataRefreshCanceled to dataNotReady in description of gsCtrlRowStatus object."
+
+  REVISION "200305150630Z"
+  DESCRIPTION
+    "Changed MAX-ACCESS of gsCtrlRefreshStatus and gsCtrlLastRefreshed to read-only."
+
+  REVISION "200309100000Z"
+  DESCRIPTION
+    "Added gsCtrlAutomaticRefresh object to the gServerControlTable table."
+
+  REVISION "200311140700Z"
+  DESCRIPTION
+    "Descriptions of gsAlarmLogText and gsAlarmCategory objects were changed."
+
+  REVISION "200409291800Z"
+  DESCRIPTION
+    "Added new tables tsCallFilterTable and tsCallInfoTable.
+     Consequently extended TableID with new values.
+
+     Added two new variables to the gsMLAlarm's variables-bind
+     gsAlarmAppHostName and gsAlarmGUID."
+
+  REVISION "200802271200Z"
+  DESCRIPTION
+    "Added new extension point apps"
+    
+  REVISION "200803141900Z"
+  DESCRIPTION
+    "Added statuses statusSuspending and statusSuspended"
+     
+  REVISION "200905181300Z"
+  DESCRIPTION
+    "Added new table tsLinkStatsTable"
+  
+  ::= { enterprises 1729 }
+
+
+--- Textual Conventions
+
+TableID ::= TEXTUAL-CONVENTION
+  STATUS current
+  DESCRIPTION
+    "An integer value representing a conceptual data table defined in this MIB module. 
+     Along with ServerDBID used as an index into the gsControlTable."
+  SYNTAX INTEGER
+  {
+    gsLogTable(1),
+    gsInfoTable(2),
+    gsClientTable(3),
+    gsPollingTable(4),
+    tsInfoTable(5),
+    tsCallTable(6),
+    tsDtaTable(7),
+    tsLinkTable(8),
+    tsCallFilterTable(9),
+    tsCallInfoTable(10),
+    tsLinkStatsTable(11)
+   }
+
+ServerDBID ::= TEXTUAL-CONVENTION
+  STATUS current
+  DESCRIPTION
+    "An unique identifier for a Genesys managed server as assigned
+    by the Configuration Server."
+  SYNTAX Unsigned32
+
+HostDBID ::= TEXTUAL-CONVENTION
+  STATUS current
+  DESCRIPTION
+    "An unique identifier for a host as assigned
+     by the Configuration Server."
+  SYNTAX Unsigned32
+
+SolutionDBID ::= TEXTUAL-CONVENTION
+  STATUS current
+  DESCRIPTION
+    "An unique identifier for a solution as assigned
+    by the Configuration Server."
+  SYNTAX Unsigned32
+
+
+
+-- #############################################################################
+-- Object Identifiers 
+-- #############################################################################
+
+servers OBJECT IDENTIFIER
+  ::= { genesys 100 }
+
+hosts OBJECT IDENTIFIER
+  ::= { genesys 101 }
+
+solutions OBJECT IDENTIFIER
+  ::= { genesys 102 }
+
+notifications OBJECT IDENTIFIER
+  ::= { genesys 104 }
+
+apps OBJECT IDENTIFIER
+  ::= { genesys 200 }
+  
+genericServer OBJECT IDENTIFIER
+  ::= { servers 1 }
+
+specificServer OBJECT IDENTIFIER
+  ::= { servers 2 }
+
+tServer OBJECT IDENTIFIER
+  ::= { specificServer 1 }
+
+--ursServer OBJECT IDENTIFIER
+--  ::= { specificServer x }
+
+--sipServer OBJECT IDENTIFIER
+--  ::= { specificServer x }
+
+
+
+-- ############################################################################
+-- Genesys alarms
+-- ############################################################################
+
+gsAlarm NOTIFICATION-TYPE
+  OBJECTS { gsServersLastAlarm }
+  STATUS  current
+  DESCRIPTION
+    "Notification message reporting that a Genesys server
+     has encountered an alarm situation."
+  ::= {notifications 1}
+
+gsMLAlarm NOTIFICATION-TYPE
+  OBJECTS
+  {
+    gsAlarmId,
+    gsAlarmLogText,
+    gsAlarmMessagesIds,
+    gsAlarmApplicationName,
+    gsAlarmApplicationType,
+    gsAlarmAppHostName,
+    gsAlarmCategory,
+    gsAlarmGUID 
+  }
+
+  STATUS current
+  DESCRIPTION
+    "An alarm message from Management Layer to NMS that a pre-configured alarm condition
+     has been detected.
+     The details of this alarm are described by the variable list attached to this
+     notification message."
+  ::= {notifications 2}
+
+gsServerUpTrap NOTIFICATION-TYPE
+  OBJECTS { gsServersLastTrap }
+  STATUS  current
+  DESCRIPTION
+    "Notification message reports that a Genesys server has been started up."
+  ::=  {notifications 3}
+
+gsServerDownTrap NOTIFICATION-TYPE
+  OBJECTS { gsServersLastTrap }
+  STATUS  current
+  DESCRIPTION
+    "Notification message reports that a Genesys server
+    has ceased operation or has failed to restart."
+  ::= {notifications 4}
+
+gsPollingSignal NOTIFICATION-TYPE
+  OBJECTS { gsPollingLastTrap }
+  STATUS  current
+  DESCRIPTION
+    "Notification message reporting that a polling signal has been
+    received from a server.
+    The notification message has the following format:
+    <server name>:<polling ID>."
+  ::=  {notifications 5}
+
+tsLinkStatusTrap NOTIFICATION-TYPE
+  OBJECTS { tsLastChangedLinkStatus }
+  STATUS current
+  DESCRIPTION
+    "Notification message reporting that TServer CTI link status has been changed."
+  ::= { notifications 6 }
+
+
+gsCleanupTimeout  OBJECT-TYPE
+  SYNTAX       Unsigned32
+  MAX-ACCESS   read-write
+  STATUS       current
+  DESCRIPTION
+    "The time in minutes the agent should keep rows in the
+    gsControlTable and consequently in related data tables if there were no
+    requests to objects of this row or corresponding rows from data
+    table(s) and no automatic refresh is activated for this particular row.
+    After that time the agent should automatically delete unattended rows.
+
+    Value 0 of this object specifies that MIB clean up should not be performed.
+    NOTE: this automatic clean up mechanism applies to the following 
+    server data tables:
+
+      gsLogTable
+      gsInfoTable
+      gsClientTable
+      tsInfoTable
+      tsCallTable
+      tsDtaTable
+      tsLinkTable
+      tsCallFilterTable
+      tsCallInfoTable
+      tsLinkStatsTable
+
+    NOTE: this automatic clean up mechanism does not apply to the gsPollingTable.
+    The gsPollingTable is used to activate (and deactivate) servers heart-bit notification 
+    messages (propagated as TRAP messages) and one cannot assume this was the intent of
+    the management station to stop receiving such notifications. Note also that one of the 
+    columnar objects of this table, gsPollingLastTrap, is used as a variable in the variable binding 
+    list of the mentioned notification."
+  DEFVAL { 60 }
+  ::= { genericServer 1 }
+
+
+-- ############################################################################
+-- Genesys servers Table (list of servers)
+-- ############################################################################
+
+gServersTable OBJECT-TYPE
+  SYNTAX SEQUENCE OF GServersEntry
+  MAX-ACCESS  not-accessible
+  STATUS      current
+  DESCRIPTION
+    "This table populates the servers that are currently registered with the 
+     Genesys configuration layer.
+
+     This table has several purposes:
+
+     (a) Provides general information about servers working environment
+     (b) Allows to start or stop an individual server 
+     (c) Provides information about DBID numbers assigned to servers.
+     These DBID numbers are needed when creating entries in control table.
+     Each entry in control table is set to monitor a particular
+     server. A DBID number is used to identify that server.
+
+     Note that since server configuration objects can be added or deleted 
+     to or from configuration database throughout a lifetime of
+     the agent, a management station might want to walk this table
+     frequently in order to keep the servers list updated."
+
+  ::= { genericServer 2 }
+
+gServersEntry OBJECT-TYPE
+  SYNTAX      GServersEntry
+  MAX-ACCESS  not-accessible
+  STATUS      current
+  DESCRIPTION
+    "A conceptual row in the gServersTable. 
+     Each daemon application object in configuration database has an entry in 
+     this table."
+  INDEX { gServerId }
+  ::= { gServersTable 1 }
+
+GServersEntry ::= SEQUENCE
+{
+  gServerId                ServerDBID,
+  gServerName              DisplayString,
+  gServerStatus            INTEGER,
+  gServerType              DisplayString,
+  gServerVersion           DisplayString,
+  gServerWorkDir           DisplayString,
+  gServerCommandLine       DisplayString,
+  gServerPID               Integer32,
+  gServerCommand           INTEGER,
+  gServerDeleteClient      Unsigned32
+}
+
+gServerId OBJECT-TYPE
+  SYNTAX      ServerDBID
+  MAX-ACCESS  not-accessible
+  STATUS      current
+  DESCRIPTION
+    "An index that uniquely identifies a server in the gServersTable.
+    Server DBIDs are generated by the Configuration Server when new
+    server configuration objects are created and added to the configuration database
+    and are unique within a given configuration environment.
+    DBID numbers of deleted servers are not reused again but only across power
+    cycles of the Configuration Server."
+  ::= { gServersEntry 1 }
+
+gServerName OBJECT-TYPE
+  SYNTAX      DisplayString
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "A human-readable description of the server as assigned by a user
+    that created this server in configuration database.
+    This object is used to provide a mapping of a server name to a
+    DBID number. The index portion of object identifier represents the
+    DBID assigned to this server: gServerName.<index> = <value>
+    where index == DBID and value == server name.
+    By walking all instances of this object a manager
+    can retrieve an updated list of all currently configured servers,
+    their names and DBIDs."
+  ::= { gServersEntry 2 }
+
+gServerStatus OBJECT-TYPE
+  SYNTAX INTEGER
+  {
+    statusUnknown(1),
+    statusStopped(2),
+    statusPending(3),
+    statusRunning(4),
+    statusInitializing(5),
+    statusServiceUnavailable(6),
+    statusSuspending(7),
+    statusSuspended(8)
+  }
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Indicates server status:
+
+      - statusUnknown: Indicates that the Management Layer is unable to provide reliable 
+      information about the current server status. It does not necessarily mean that 
+      the server is unable to perform its function.
+
+      - statusStopped: Indicates that a server is installed and configured in the system, 
+      but has not started. This status indicates that the server either has not been 
+      activated or has failed.
+
+      - statusPending: Indicates one of the following:
+
+        (a) The server is in the process of being activated. This status only exists 
+        for the interval between the instruction to start the server and the actual 
+        readiness of the server to perform its function. Typically, the Pending stage 
+        involves starting the server, reading configuration data from the Configuration 
+        Layer, checking this data for integrity and completeness, and establishing 
+        connections with all the resources according to the given configuration data.
+
+        (b) The server is in the process of being shut down. This status only exists 
+        for the interval between the instruction to stop the server and its actual 
+        termination. Typically, the Pending stage involves some server-specific 
+        wrap-up functions, closure of all open connections, termination, and detection 
+        of the termination by Local Control Agent.
+
+      - statusRunning: Assigned from the moment a server is completely initialized; that is,
+      when the server has read and checked its configuration and established connections 
+      with all the required resources. This status does not necessarily mean that 
+      the server is actually performing its function.
+
+      - statusInitializing: Server is starting and performing initialization. Server is 
+      connected to LCA. On initialization phase server is not able to provide service. 
+
+      - statusServiceUnavailable: Server is running but unable to provide service due 
+      to unavailability of some resource.
+
+      - statusSuspending: Server is running and handling current requests, but no new
+      requests are accepted.
+
+      - statusSuspended: Server is running, all requests are completely handled,
+      no new requests are accepted. This status means that server can be stopped
+      without any information/request loss."
+
+  ::= { gServersEntry 3 }
+
+gServerType OBJECT-TYPE
+  SYNTAX      DisplayString (SIZE(1..256))
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Indicates server type.
+     Displayed text is based on mapping of server type index
+     to human readable representation as provided by Configuration Server.
+     For example: T-Server"
+  ::= { gServersEntry 4 }
+
+gServerVersion OBJECT-TYPE
+  SYNTAX      DisplayString
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Indicates server version as specified in Configuration Server."
+  ::= { gServersEntry 5 }
+
+gServerWorkDir OBJECT-TYPE
+  SYNTAX      DisplayString
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Indicates server working directory as specified in Configuration Server."
+  ::= { gServersEntry 6 }
+
+gServerCommandLine OBJECT-TYPE
+  SYNTAX      DisplayString
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Indicates full command-line used to start this server as specified 
+    in Configuration Server.
+    For example: scs -host enigma -port 4135 -app TServer_Meridian."
+  ::= { gServersEntry 7 }
+
+gServerPID OBJECT-TYPE
+  SYNTAX      Integer32
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Indicates process ID assigned to this server by operating system.
+     It is positive integer for running server, -1 for stopped server
+     or 0 if PID is unknown. The latter may happen, for instance, when
+     LCA is not running on the server's host."
+  ::= { gServersEntry 8 }
+
+gServerCommand OBJECT-TYPE
+  SYNTAX INTEGER
+  {
+    start(1),
+    shutDown(2),
+    shutDownGracefully(3)
+  }
+  MAX-ACCESS  read-write
+  STATUS      current
+  DESCRIPTION
+    "This object is used to start, shutdown or gracefully shutdown server with dbid equal
+     to this object instance id.
+
+     When this object is set value the agent either attempts to perform corresponding
+     operation, or rejects it if the operation is impossible or does not make sense,
+     e.g. if value start(1) is set for server that the agent knows to be running.
+     In any case the agent returns to NMS corresponding result (success or failure)
+     immediatly.
+
+     Result 'success' does not necessarily means success of the operation. The NMS
+     should check the value of object gServerStatus to determine whether
+     the operation succeeded or failed."
+
+  ::= { gServersEntry 9 }
+
+gServerDeleteClient OBJECT-TYPE
+  SYNTAX      Unsigned32
+  MAX-ACCESS  read-write
+  STATUS      current
+  DESCRIPTION
+    "Sends 'delete client' command to this server.
+    To delete a client enter its socket number."
+  ::= { gServersEntry 10 }
+
+
+
+-- ####################################################################################
+-- Servers Control Table
+-- ####################################################################################
+
+gServerControlTable OBJECT-TYPE
+  SYNTAX SEQUENCE OF GServerControlEntry
+  MAX-ACCESS not-accessible
+  STATUS current
+  DESCRIPTION
+    "Control table containing a set of parameters to set up and
+     control data collection from Genesys server(s).
+     This table facilitates the monitoring of multiple Genesys servers.
+
+     The following data tables defined in this MIB module are controlled by the
+     gsControlTable:
+
+     - gsLogTable
+     - gsInfoTable
+     - gsClientTable
+     - gsPollingTable
+     - tsInfoTable
+     - tsCallTable
+     - tsDtaTable
+     - tsLinkTable
+     - tsCallFilterTable
+     - tsCallInfoTable
+     - tsLinkStatsTable
+
+     Entries in the above tables are created on behalf of an entry in
+     the gServerControlTable.
+     If a control row is destroyed, then corresponding row in the respective data table 
+     is destroyed too.
+
+     Some tables defined in this MIB module may just be used to perform 
+     some management function on a server (e.g.,gsPollingTable).  
+     When a management station creates a row in the control table for such a table, the
+     agent will create a row in the corresponding table thus making it ready to be used to 
+     perform a management function for a selected server. 
+     This way, we are allowed to create multiple instances of a management object that can 
+     be used to perform a management function for multiple servers. 
+     For example, in case of gsPollingTable a manager will be able to perform reconfig command
+     for multiple Stat Servers."
+
+  ::= { genericServer 3 }
+
+gServerControlEntry OBJECT-TYPE
+  SYNTAX GServerControlEntry
+  MAX-ACCESS not-accessible
+  STATUS current
+  DESCRIPTION 
+    "A conceptual row in the gServerControlTable."
+  INDEX { gsCtrlServerID, gsCtrlTableID }
+  ::= {gServerControlTable 1 }
+
+GServerControlEntry ::= SEQUENCE
+{
+  gsCtrlServerID         ServerDBID,
+  gsCtrlTableID          TableID,
+  gsCtrlRefreshStatus    INTEGER,
+  gsCtrlLastRefreshed    TimeTicks,
+  gsCtrlAutomaticRefresh Unsigned32,
+  gsCtrlRowStatus        RowStatus
+}
+
+gsCtrlServerID OBJECT-TYPE
+  SYNTAX ServerDBID
+  MAX-ACCESS not-accessible
+  STATUS current
+  DESCRIPTION
+    "A server that is to be managed by this control row."
+  ::= { gServerControlEntry 1 }
+
+gsCtrlTableID OBJECT-TYPE
+  SYNTAX TableID
+  MAX-ACCESS not-accessible
+  STATUS current
+  DESCRIPTION
+    " A particular data table to be refreshed by this control row."
+  ::= { gServerControlEntry 2 }
+
+gsCtrlRefreshStatus OBJECT-TYPE
+  SYNTAX INTEGER
+  {
+    dataNotReady(1),
+    dataRefreshInProgress(2),
+    dataReady(3),
+    mgmtIsNotAvailable(4),
+    dataRefreshFailed(5)
+  }
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Indicates refresh status of corresponding data table as specified by gsCtrlTableID.
+
+         dataNotReady - indicates that data table refresh has not been attempted yet
+                (the row was just created with createAndWait RowStatus value),
+                or data table was not refreshed because the user has set gsCtrlRowStatus
+                to notInService while refresh was in progress
+         dataRefreshInProgress - indicates that data table refresh has been started but not finished yet
+         dataReady - indicates that data table has been successfully refreshed
+         mgmtIsNotAvailable - indicates that data table refresh failed for one of the following reasons:
+                (a) no mgmt port is configured for this server
+                (b) this server does not provide for mgmt instrumentation
+                (c) this server does not provide for requested data (like if config server is requested for tsCallsList) 
+                (d) LCA is not started (or terminated) on host where this server 
+                is running
+        dataRefreshFailed - indicates that refresh failed for any reason other then described above; 
+                this situation may typically arise when mgmt connection could not be established 
+                or was lost during refresh"
+  DEFVAL {1}
+  ::= { gServerControlEntry 3 }
+
+gsCtrlLastRefreshed OBJECT-TYPE
+  SYNTAX TimeTicks
+  MAX-ACCESS read-only
+  STATUS current
+  DESCRIPTION
+    "The time in hundredths of seconds since the row was last successfully refreshed
+    (gsCtrlRefreshStatus was set to dataReady) or 0 for the rest of refresh states"
+  ::= { gServerControlEntry 4 }
+
+gsCtrlAutomaticRefresh OBJECT-TYPE
+  SYNTAX Unsigned32
+  MAX-ACCESS read-create
+  STATUS current
+  DESCRIPTION
+    "The time in seconds the agent should perform automatic refresh for
+    a data table managed by this control row.
+    Any value other then zero activates the automatic refresh
+    mechanism, otherwise automatic refresh is disabled (default)."
+  DEFVAL {0}
+  ::= { gServerControlEntry 5 }
+
+gsCtrlRowStatus OBJECT-TYPE
+  SYNTAX RowStatus
+  MAX-ACCESS read-create
+  STATUS current
+  DESCRIPTION
+    "The status of this conceptual control entry.
+
+     The agent may change the value of this object to 'notInService' if a  
+     connection to a managed server has been lost or some internal error has 
+     occurred. The manager also sets this object to 'active' in order to
+     refresh table(s). 
+
+     The following is a detailed description of the object's functions
+     and data refresh mechanism:
+
+    (a) Creating new conceptual row. 
+
+     Management station should set value `createAndWait'
+     for gsCtrlRowStatus with instance id specifying managed server and refreshed
+     table. Agent MUST create a row and set gsCtrlRowStatus to `notReady' and return
+     noError. No data refresh is performed.
+
+     Alternatively, management station may set value `createAndGo'. In this case
+     the agent MUST create a row, set gsCtrlRowStatus to `active', return	noError
+     and immediatly start data refresh.
+
+    (b) Refreshing data tables. 
+
+    In order to refresh the table specified by row instance id the manager should set
+    value of object gsCtrlRowStatus 'active'. In response, the agent MUST set 
+    gsCtrlRefreshStatus to dataRefreshInProgress, start data table refresh, and 
+    return noError.
+
+    Upon successful completion of data table refresh the agent MUST set 
+    gsCtrlRefreshStatus to dataReady.
+
+    In some cases data retrieval may not be completed successfully. In
+    such case, the agent MUST set gsCtrlRefreshStatus to a value indicating the
+    reason of failure and delete all corresponding rows from the refreshed table.
+
+    (c) Canceling data collection in progress.
+
+    If the agent receives request to set gsCtrlRowStatus to `notInService' when
+    data collection is in progress, it MUST interrupt data collection, delete
+    corresponding rows from data table and set gsCtrlRefresh to dataNotReady.
+
+    (d) Cleaning data tables upon management station request.
+
+    If the agent receives request to set gsCtrlRowStatus to `destroy' it MUST
+    interrupt data collection in progress (if any), delete the row from 
+    gServerControlTable and all corresponding rows from data table.
+
+    (e) Automated cleaning of data tables.
+
+    The agent MUST keep track of the times when the last SNMP request to 
+    gServerControlTable row or corresponding data table rows occur for each 
+    gServerControlTable row. If no requests occur during threshold time 
+    interval specified by gsCleanupTimeout object, corresponding rows MUST 
+    be deleted from gServerControlTable and data tables. That would save memory 
+    in case when management station *forgets* to clean data tables.
+
+    (f) Data tables should always contain snapshots of corresponding information and
+    the agent MUST NOT update them the way other then described above. The only 
+    exception is gsPollingTable that MUST be automatically updated in response to
+    notifications from managed servers." 
+
+  ::= { gServerControlEntry 6 }
+
+
+-- ####################################################################################
+-- Generic Server - Info Table
+-- ####################################################################################
+
+gsInfoTable OBJECT-TYPE
+  SYNTAX SEQUENCE OF GsInfoEntry
+  MAX-ACCESS  not-accessible
+  STATUS current
+  DESCRIPTION
+    " Collection of statistics about server's client. As well it contains object
+      to send delete client command to a server."
+  ::= { genericServer 4 }
+
+gsInfoEntry OBJECT-TYPE
+  SYNTAX      GsInfoEntry
+  MAX-ACCESS  not-accessible
+  STATUS      current
+  DESCRIPTION
+    " "
+  INDEX { gsCtrlServerID }
+  ::= { gsInfoTable 1 }
+
+GsInfoEntry ::= SEQUENCE
+{
+  gsClientsExistNum       Unsigned32,
+  gsClientsTotalNum       Integer32,
+  gsServerConfigFile      DisplayString
+}
+
+gsClientsExistNum OBJECT-TYPE
+  SYNTAX Unsigned32
+  MAX-ACCESS read-only
+  STATUS current
+  DESCRIPTION
+    "Indicates the number of clients currently connected to a server."
+  ::= { gsInfoEntry 1 }
+
+gsClientsTotalNum OBJECT-TYPE
+  SYNTAX      Integer32
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Indicates the total number of clients connected so far to a server."
+  ::= { gsInfoEntry 2 }
+
+gsServerConfigFile OBJECT-TYPE
+  SYNTAX      DisplayString
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Indicates configuration file name, if any, used to start a server."
+  ::= { gsInfoEntry 3 }
+
+-- ####################################################################################
+-- Generic Server - Log Table 
+-- ####################################################################################
+
+gsLogTable OBJECT-TYPE
+  SYNTAX SEQUENCE OF GsLogEntry
+  MAX-ACCESS not-accessible
+  STATUS current
+  DESCRIPTION
+    " "
+  ::= { genericServer 5 }
+
+gsLogEntry OBJECT-TYPE
+  SYNTAX     GsLogEntry
+  MAX-ACCESS not-accessible
+  STATUS     current
+  DESCRIPTION
+    " "
+  INDEX { gsCtrlServerID }
+  ::= { gsLogTable 1 }
+
+GsLogEntry ::= SEQUENCE
+{
+  logVerbose       DisplayString,
+  logTrace         DisplayString,
+  logStandard      DisplayString,
+  logDebug         DisplayString,
+  logAll           DisplayString,
+  logBuffering     DisplayString,
+  logSegment       DisplayString,
+  logExpire        DisplayString,
+  logMessageFile   DisplayString,
+  logMessageFormat DisplayString,
+  logTimeFormat    DisplayString,
+  logTimeConvert   DisplayString
+}
+
+logVerbose OBJECT-TYPE
+  SYNTAX     DisplayString (SIZE(1..10))
+  MAX-ACCESS read-write
+  STATUS     current
+  DESCRIPTION
+    "Specifies logging verbose mode. Determines the minimum level
+     of log events to be generated by a server.
+     Activates or deactivates server event log feature according to
+     the verbose mode specified.
+     Possible settings: one of the following keywords:
+
+     none
+     debug
+     trace
+     standard
+     all
+
+     The SET request takes effect immediately."
+  ::= { gsLogEntry 1 }
+
+logTrace OBJECT-TYPE
+  SYNTAX     DisplayString
+  MAX-ACCESS read-write
+  STATUS     current
+  DESCRIPTION
+    "Specifies the log outputs that log events of the
+     Trace level are to be sent to.
+     Possible settings: any combination of the following key words
+     separated by space:
+
+     stdout
+     stderr
+     filename
+     network
+
+     The SET request takes effect immediately."
+  ::= { gsLogEntry 2 }
+
+logStandard OBJECT-TYPE
+  SYNTAX     DisplayString
+  MAX-ACCESS read-write
+  STATUS     current
+  DESCRIPTION
+    "Specifies the log outputs that log events of the Standard
+     level are to be sent to.
+     Possible settings: any combination of the following keywords
+     separated by space:
+
+     stdout
+     stderr
+     filename
+     network
+
+     Note: to avoid network congestion log events of Standard level
+     can be logged locally only.
+     The SET request takes effect immediately."
+  ::= { gsLogEntry 3 }
+
+logDebug OBJECT-TYPE
+  SYNTAX      DisplayString (SIZE (0..22))
+  MAX-ACCESS  read-write
+  STATUS      current
+  DESCRIPTION
+    "Specifies the log outputs that log events of the Debug
+    level are to be sent to.
+    Possible settings: any combination of the following keywords
+    separated by space:
+
+      stdout
+      stderr
+      filename
+
+    Note: to avoid network congestion log events of Debug level
+    can be logged locally only.
+    The SET request takes effect immediately."
+  ::= { gsLogEntry 4 }
+
+logAll OBJECT-TYPE
+  SYNTAX      DisplayString 
+  MAX-ACCESS  read-write
+  STATUS      current
+  DESCRIPTION
+    "Specifies the log outputs that log events of all levels are to be sent to.
+     Possible settings: any combination of one or more of
+     the following keywords separated by space:
+
+     stdout
+     stderr
+     filename
+     network
+
+     Note: to avoid network congestion log events of Debug level
+     can be logged locally only.
+     The SET request takes effect immediately."
+  ::= { gsLogEntry 5 }
+
+logBuffering OBJECT-TYPE
+  SYNTAX      DisplayString
+  MAX-ACCESS  read-write
+  STATUS      current
+  DESCRIPTION
+    "Turns on/off operating system file buffering.
+     To set this object use the following keywords:
+       true
+       false
+     The SET request takes effect immediately."
+  ::= { gsLogEntry 6 }
+
+logSegment OBJECT-TYPE
+  SYNTAX      DisplayString
+  MAX-ACCESS  read-write
+  STATUS      current
+  DESCRIPTION
+    "Specifies log file segmentation mode.
+    When currently opened log segment exceeds the size set by this
+    option, then current segment is closed and a new empty
+    log segment is created.
+    Possible settings: one of the following keywords:
+
+      false
+      <number> KB
+      <number> MB
+      <number> hr
+
+    Setting object to a value other than false will activate log
+    segmentation feature according to the mode specified.
+    The SET request takes effect immediately."
+  ::= { gsLogEntry 7 }
+
+logExpire OBJECT-TYPE
+  SYNTAX      DisplayString
+  MAX-ACCESS  read-write
+  STATUS      current
+  DESCRIPTION
+    "Specifies log file expiration mode.
+    When old file is expired, new file is created while the old one is removed.
+    Possible settings: one of the following keywords:
+
+      false
+      <number> file
+      <number> day
+
+    Setting object to a value other than false will activate log
+    expiration feature according to the expiration method specified.
+    The SET request takes effect immediately."
+  ::= { gsLogEntry 8 }
+
+logMessageFile OBJECT-TYPE
+  SYNTAX      DisplayString
+  MAX-ACCESS  read-write
+  STATUS      current
+  DESCRIPTION
+    "Specifies the file name for application-specific log events.
+    Valid filename is of the following format:
+
+      <filename>.lms
+
+    The SET request takes effect after an application is restarted.
+    NOTE: object intended for use by Genesys personnel only."
+  ::= { gsLogEntry 9 }
+
+
+logMessageFormat OBJECT-TYPE
+  SYNTAX      DisplayString (SIZE(1..10))
+  MAX-ACCESS  read-write
+  STATUS      current
+  DESCRIPTION
+    "Specifies the format of log record headers that an 
+     application uses when writing logs in the log file. Using compressed
+     log record headers improves application performance and reduces the 
+     log file size.
+     Possible settings: one of the following keywords:
+
+     full
+     short
+
+     The SET request takes effect immediately."
+  ::= { gsLogEntry 10 }
+
+logTimeFormat OBJECT-TYPE
+  SYNTAX      DisplayString (SIZE(1..10))
+  MAX-ACCESS  read-write
+  STATUS      current
+  DESCRIPTION
+    "Specifies how to represent in a log file the time when 
+     an application generates log records.
+     Possible settings: one of the following keywords:
+
+    locale
+    iso8601
+
+    The SET request takes effect immediately."
+  ::= { gsLogEntry 11 }
+
+logTimeConvert OBJECT-TYPE
+  SYNTAX      DisplayString (SIZE(1..10))
+  MAX-ACCESS  read-write
+  STATUS      current
+  DESCRIPTION
+    "Specifies in which system an application calculates the log record time
+     when generating a log file. The time is converted from the time in seconds
+     since the Epoch (00:00:00 UTC,January 1, 1970).
+     Possible settings: one of the following keywords:
+
+    local
+    utc
+
+    The SET request takes effect immediately."
+  ::= { gsLogEntry 12 }
+
+
+-- ###################################################################################
+-- Generic Server Polling Table 
+-- ###################################################################################
+
+gsPollingTable OBJECT-TYPE
+  SYNTAX SEQUENCE OF GsPollingEntry
+  MAX-ACCESS not-accessible
+  STATUS current
+  DESCRIPTION
+    " A set of parameters to control the server's polling feature. As well as
+      contains an object to watch the progress of the polling signals from
+      a particular server." 
+  ::= { genericServer 6 }
+
+gsPollingEntry OBJECT-TYPE
+  SYNTAX GsPollingEntry
+  MAX-ACCESS not-accessible
+  STATUS current
+  DESCRIPTION
+    " "
+  INDEX { gsCtrlServerID }
+  ::= { gsPollingTable 1 }
+
+GsPollingEntry ::= SEQUENCE
+{
+  gsPollingStatus      DisplayString,
+  gsPollingInterval    Unsigned32,
+  gsPollingID          Unsigned32,
+  gsPollingLastTrap    DisplayString
+}
+
+gsPollingStatus OBJECT-TYPE
+  SYNTAX      DisplayString (SIZE(1..10))
+  MAX-ACCESS  read-write
+  STATUS      current
+  DESCRIPTION
+    "Activates or deactivates server polling feature, which
+     sends NMS periodical signals describing server
+     operational status. Possible settings on/off."
+  ::= { gsPollingEntry 1 }
+
+gsPollingInterval OBJECT-TYPE
+  SYNTAX      Unsigned32 (0..120)
+  MAX-ACCESS  read-write
+  STATUS      current
+  DESCRIPTION
+    "Specifies interval in seconds between polling signals from server."
+  ::= { gsPollingEntry 2 }
+
+gsPollingID OBJECT-TYPE
+  SYNTAX      Unsigned32
+  MAX-ACCESS  read-write
+  STATUS      current
+  DESCRIPTION
+    "Event ID assigned to each polling signal, used by NMS for monitoring purposes."
+  DEFVAL {1}
+  ::= { gsPollingEntry 3 }
+
+gsPollingLastTrap OBJECT-TYPE
+  SYNTAX      DisplayString (SIZE(1..64))
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Last ID assigned to polling signal by the agent."
+  ::= { gsPollingEntry 4 }
+
+-- ##################################################################################
+-- Generic Server Client Table 
+-- ##################################################################################
+
+gsClientTable OBJECT-TYPE
+  SYNTAX SEQUENCE OF GsClientEntry
+  MAX-ACCESS not-accessible
+  STATUS     current
+  DESCRIPTION
+    " "
+  ::= { genericServer 7 }
+
+gsClientEntry OBJECT-TYPE
+  SYNTAX      GsClientEntry
+  MAX-ACCESS  not-accessible
+  STATUS      current
+  DESCRIPTION
+    " "
+  INDEX { gsCtrlServerID, gsClientSocket }
+  ::= { gsClientTable 1 }
+
+GsClientEntry ::= SEQUENCE
+{
+  gsClientSocket      Unsigned32,
+  gsClientAppName     DisplayString,
+  gsClientAuthorized  Integer32,
+  gsClientType        INTEGER,
+  gsClientGotEvents   Unsigned32,
+  gsClientSentReqs    Unsigned32
+}
+
+gsClientSocket OBJECT-TYPE
+  SYNTAX      Unsigned32
+  MAX-ACCESS  not-accessible
+  STATUS      current
+  DESCRIPTION
+    "Specifies socket number through which client connected to server."
+  ::= { gsClientEntry 1 }
+
+gsClientAppName OBJECT-TYPE
+  SYNTAX      DisplayString 
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Specifies client app name."
+  ::= { gsClientEntry 2 }
+
+gsClientAuthorized OBJECT-TYPE
+  SYNTAX      Integer32
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Specifies level of client authorization."
+  ::= { gsClientEntry 3 }
+
+gsClientType OBJECT-TYPE
+  SYNTAX INTEGER
+  {
+    typeTClient(0),
+    typeMClient(1),
+    typeEXRClient(2),
+    typeUnknown(3)
+  }
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Indicates client type."
+  ::= { gsClientEntry 4 }
+
+gsClientGotEvents OBJECT-TYPE
+  SYNTAX      Unsigned32
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Specifies number of events received by clients."
+  ::= { gsClientEntry 5 }
+
+gsClientSentReqs OBJECT-TYPE
+  SYNTAX      Unsigned32
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Specifies number of requests sent by client."
+  ::= { gsClientEntry 6 }
+
+
+-- ############################################################################
+-- Generic server alarm objects
+-- ############################################################################
+
+gsAlarmObjects OBJECT IDENTIFIER
+  ::= { genericServer 10 }
+
+gsServersLastAlarm OBJECT-TYPE
+  SYNTAX      DisplayString
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Specifies the last alarm message sent to NMS.
+     Note: object provides for backward compatibility in Genesys v5."
+  ::= { gsAlarmObjects 11 }
+
+gsServersLastTrap OBJECT-TYPE
+  SYNTAX      DisplayString
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Specifies the last server-status (server up or down) trap sent to NMS.
+     Note: object provides for backward compatibility in Genesys v5."
+  ::= { gsAlarmObjects 12 }
+
+gsAlarmId OBJECT-TYPE
+  SYNTAX      Unsigned32
+  MAX-ACCESS  accessible-for-notify
+  STATUS      current
+  DESCRIPTION
+    "Uniquely identifies an alarm condition upon
+    which Management Layer can react with sending of SNMP
+    Trap. The alarm condition is configured in
+    the Configuration Server and assigned with an unique
+    configuration object ID (smlAlarmId) which is
+    unique within the Genesys Configuration Database."
+  ::= { gsAlarmObjects 13 }
+
+gsAlarmLogText OBJECT-TYPE
+  SYNTAX      DisplayString
+  MAX-ACCESS  accessible-for-notify
+  STATUS      current
+  DESCRIPTION
+    "A textual description of an alarm event.
+     For example: Connection to [server type] [servername] at host [hostname], port [port number] lost."
+  ::= { gsAlarmObjects 14 }
+
+gsAlarmMessagesIds OBJECT-TYPE
+  SYNTAX      DisplayString
+  MAX-ACCESS  accessible-for-notify
+  STATUS      current
+  DESCRIPTION
+    "Uniquely identifies log event (or a set of log events) upon which an
+    active alarm condition has been created (or deleted).
+    Currently, only one log event can create or destroy an Alarm condition.
+    For example, 4003."
+  ::= { gsAlarmObjects 15 }
+
+gsAlarmApplicationName OBJECT-TYPE
+  SYNTAX      DisplayString
+  MAX-ACCESS  accessible-for-notify
+  STATUS      current
+  DESCRIPTION
+    "Application name which is the source of this alarm. For example: tserver."
+  ::= { gsAlarmObjects 16 }
+
+gsAlarmApplicationType OBJECT-TYPE
+  SYNTAX      DisplayString
+  MAX-ACCESS  accessible-for-notify
+  STATUS      current
+  DESCRIPTION
+    "Application type which is the source of this alarm. For example: G3tserver."
+  ::= { gsAlarmObjects 17 }
+
+gsAlarmCategory OBJECT-TYPE
+  SYNTAX      DisplayString
+  MAX-ACCESS  accessible-for-notify
+  STATUS      current
+  DESCRIPTION
+    "A category assigned to this alarm. The following
+     categories are defined: Critical, Major, Minor, Clearance.
+     Category Clearance indicates that this notification is sent in response to an
+     active alarm being canceled."
+  ::= { gsAlarmObjects 18 }
+
+
+gsAlarmGUID OBJECT-TYPE
+  SYNTAX      DisplayString
+  MAX-ACCESS  accessible-for-notify
+  STATUS      current
+  DESCRIPTION
+    " Uniquely identifies Alarm Clearance Trap with Alarm Creation Trap."
+  ::= { gsAlarmObjects 19 }
+
+
+gsAlarmAppHostName OBJECT-TYPE
+  SYNTAX      DisplayString
+  MAX-ACCESS  accessible-for-notify
+  STATUS      current
+  DESCRIPTION
+    "Host name the application that generated the alarm is running on." 
+  ::= { gsAlarmObjects 20 }
+
+
+
+-- ##################################################################################
+-- TServer Info Table
+-- ##################################################################################
+tsInfoTable OBJECT-TYPE
+  SYNTAX SEQUENCE OF TsInfoEntry
+  MAX-ACCESS not-accessible
+  STATUS current
+  DESCRIPTION
+    "This table contains some statistical data about TServer."
+  ::= { tServer 1 }
+
+tsInfoEntry OBJECT-TYPE
+  SYNTAX     TsInfoEntry
+  MAX-ACCESS not-accessible
+  STATUS     current
+  DESCRIPTION
+    " "
+  INDEX { gsCtrlServerID }
+  ::= { tsInfoTable 1 }
+
+TsInfoEntry ::= SEQUENCE
+{
+  tsCallsExistNum          Unsigned32,
+  tsCallsTotalNum          Unsigned32,
+  tsLinksCommand           DisplayString,
+  tsLastChangedLinkStatus  DisplayString
+}
+
+tsCallsExistNum OBJECT-TYPE
+  SYNTAX     Unsigned32
+  MAX-ACCESS read-only
+  STATUS     current
+  DESCRIPTION
+    "Specifies number of calls being handled by TServer."
+  ::= { tsInfoEntry 1 }
+
+tsCallsTotalNum OBJECT-TYPE
+  SYNTAX     Unsigned32
+  MAX-ACCESS read-only
+  STATUS     current
+  DESCRIPTION
+    "Specifies total number of calls handled by TServer."
+  ::= { tsInfoEntry 2 }
+
+tsLinksCommand OBJECT-TYPE
+  SYNTAX      DisplayString
+  MAX-ACCESS  read-write
+  STATUS      current
+  DESCRIPTION
+    "Specifies command which will be sent to T-Server."
+  ::= { tsInfoEntry 3 }
+
+tsLastChangedLinkStatus OBJECT-TYPE
+  SYNTAX      DisplayString
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Last changed link status sent from T-Server."
+  ::= { tsInfoEntry 4 }
+
+
+-- ####################################################################################
+-- T-Server Calls Table 
+-- ####################################################################################
+
+tsCallTable OBJECT-TYPE
+  SYNTAX SEQUENCE OF TsCallEntry
+  MAX-ACCESS not-accessible
+  STATUS     current
+  DESCRIPTION
+    " A collection of telephony calls data for one or more 
+      T-Server (for which an entry has been created in the 
+      tsControlTable). "
+  ::= { tServer 2 }
+
+tsCallEntry OBJECT-TYPE
+  SYNTAX     TsCallEntry
+  MAX-ACCESS not-accessible
+  STATUS     current
+  DESCRIPTION
+    "A conceptual row in the tsCalls table.   
+
+     The gsCtrlServerID identifies a managed TServer, and along with the TableID (6), 
+     identifies a row in the gServerControlTable on which behalf this entry was created.
+
+     The tsCallInstanceID is the call instance ID assigned by the management library.
+
+     An example of the indexing of this entry is 
+     tsCallType.101.1508, where 101 is the server ID and 1508 is the call instance ID."
+
+  INDEX {gsCtrlServerID, callInstanceID }
+  ::= { tsCallTable 1 }
+
+TsCallEntry ::= SEQUENCE
+{
+  callInstanceID            Unsigned32,
+  callConnID                DisplayString,
+  callState                 INTEGER,
+  callCallID                Unsigned32,
+  callType                  INTEGER,
+  callReferenceID           Unsigned32,
+  callTimeStamp             TimeTicks,
+  callDNIS                  DisplayString,
+  callANI                   DisplayString,
+  callNumParties            Unsigned32,
+  callPartiesList           DisplayString,
+  callCustomerID            DisplayString,
+  callFirstTransferLocation DisplayString,
+  callFirstTransferDN       DisplayString,
+  callLastTransferLocation  DisplayString,
+  callLastTransferDN        DisplayString
+}
+
+callInstanceID OBJECT-TYPE
+  SYNTAX     Unsigned32
+  MAX-ACCESS not-accessible
+  STATUS     current
+  DESCRIPTION
+    "Specifies number of instance of call."
+  ::= { tsCallEntry 1 }
+
+callConnID OBJECT-TYPE
+  SYNTAX      DisplayString
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+     "Specifies ID assigned to call by TServer."
+  ::= { tsCallEntry 2 }
+
+callState OBJECT-TYPE  
+  SYNTAX INTEGER
+  {
+    stateOk(0),
+    stateTransferred(1),
+    stateConferenced(2),
+    stateGeneralError(3),
+    stateSystemError(4),
+    stateRemoteRelease(5),
+    stateBusy(6),
+    stateNoAnswer(7),
+    stateSitDetected(8),
+    stateAnsweringMachineDetected(9),
+    stateAllTrunksBusy(10),
+    stateSitInvalidnum(11),
+    stateSitVacant(12),
+    stateSitIntercept(13),
+    stateSitUnknown(14),
+    stateSitNocircuit(15),
+    stateSitReorder(16),
+    stateFaxDetected(17),
+    stateQueueFull(18),
+    stateCleared(19),
+    stateOverflowed(20),
+    stateAbandoned(21),
+    stateRedirected(22),
+    stateForwarded(23),
+    stateConsult(24),
+    statePickedup(25),
+    stateDropped(26),
+    stateDroppednoanswer(27),
+    stateUnknown(28)
+}
+
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Specifies call state."
+  ::= { tsCallEntry 3 }
+
+callCallID OBJECT-TYPE
+  SYNTAX      Unsigned32
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Specifies ID assigned to call by switch."
+  ::= { tsCallEntry 4 }
+
+callType OBJECT-TYPE
+  SYNTAX INTEGER
+  {
+    typeUnknown(0),
+    typeInternal(1),
+    typeInbound(2),
+    typeOutbound(3),
+    typeConsult(4)
+   }
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Specifies call type."
+  ::= { tsCallEntry 5 }
+
+callReferenceID OBJECT-TYPE
+  SYNTAX      Unsigned32
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Specifies call reference ID."
+  ::= { tsCallEntry 6 }
+
+callTimeStamp OBJECT-TYPE
+  SYNTAX      TimeTicks
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Specifies the timestamp when the call was created, in seconds starting from January 1, 1970."
+  ::= { tsCallEntry 7 }
+
+callDNIS OBJECT-TYPE
+  SYNTAX      DisplayString
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Specifies DNIS field in call structure."
+  ::= { tsCallEntry 8 }
+
+callANI OBJECT-TYPE
+  SYNTAX      DisplayString
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Specifies ANI field in call structure."
+  ::= { tsCallEntry 9 }
+
+callNumParties OBJECT-TYPE
+  SYNTAX      Unsigned32
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Specifies number of parties currently participating in call."
+  ::= { tsCallEntry 10 }
+
+callPartiesList OBJECT-TYPE
+  SYNTAX      DisplayString
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Specifies list of parties involved in call."
+  ::= { tsCallEntry 11 }
+
+callCustomerID OBJECT-TYPE
+  SYNTAX      DisplayString 
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Specifies customer id field in call structure."
+  ::= { tsCallEntry 12 }
+
+callFirstTransferLocation OBJECT-TYPE
+  SYNTAX      DisplayString 
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Specifies location of T-Server which first transfer has been made from."
+  ::= { tsCallEntry 13 }
+
+callFirstTransferDN OBJECT-TYPE
+  SYNTAX      DisplayString 
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Specifies DN on remote T-Server which first transfer has been made from."
+  ::= { tsCallEntry 14 }
+
+callLastTransferLocation OBJECT-TYPE
+  SYNTAX      DisplayString 
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Specifies location of T-Server which last transfer has been made from."
+  ::= { tsCallEntry 15 }
+
+callLastTransferDN OBJECT-TYPE
+  SYNTAX      DisplayString 
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Specifies DN on remote T-Server which last transfer has been made from."
+  ::= { tsCallEntry 16 }
+
+
+-- ##############################################################################
+-- T-Server Dta Table 
+-- ##############################################################################
+
+tsDtaTable OBJECT-TYPE
+  SYNTAX SEQUENCE OF TsDtaEntry
+  MAX-ACCESS not-accessible
+  STATUS	current
+  DESCRIPTION
+    "A collection of telephony calls data for one or more 
+     T-Server (for which an entry has been created in the 
+     tsControlTable). "
+  ::= { tServer 3 }
+
+tsDtaEntry OBJECT-TYPE
+  SYNTAX     TsDtaEntry
+  MAX-ACCESS not-accessible
+  STATUS     current
+  DESCRIPTION
+    "A conceptual row in the tsDtaTable.
+     The gsCtrlServerID identifies the manager on whose behalf this entry was created. 
+     The tsDtaInstanceID value in the index identifies the call instance  
+     assigned by the management library to this Dta instance. 
+     An example of the indexing of this entry is 
+     tsDtaDigits.1.134, where 1 is the index to to control table and 134 is the instance of dta."
+  INDEX {gsCtrlServerID, tsDtaInstanceID }
+  ::= { tsDtaTable 1 }
+
+TsDtaEntry ::= SEQUENCE
+{
+  tsDtaInstanceID Unsigned32,
+  tsDtaDigits     DisplayString,
+  tsDtaMode       INTEGER,
+  tsDtaState      INTEGER,
+  tsDtaType       DisplayString
+}
+
+tsDtaInstanceID OBJECT-TYPE
+  SYNTAX      Unsigned32
+  MAX-ACCESS  not-accessible
+  STATUS      current
+  DESCRIPTION
+    "Specifies instance field in dta structure."
+  ::= { tsDtaEntry 1 }
+
+tsDtaDigits OBJECT-TYPE
+  SYNTAX      DisplayString
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Specifies digits field dta structure."
+  ::= { tsDtaEntry 2 }
+
+tsDtaMode OBJECT-TYPE
+  SYNTAX INTEGER
+  {
+    modeShared(0),
+    modePrivate(1),
+    modeMonitor(2),
+    modeUnknown(3)
+  }
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Specifies mode field in dta structure."
+  ::= { tsDtaEntry 3 }
+
+tsDtaState OBJECT-TYPE
+  SYNTAX INTEGER
+  {
+    stateIdle(0),
+    stateNonIdle(1)
+  }
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Specifies state field in dta structure."
+  ::= { tsDtaEntry 4 }
+
+tsDtaType OBJECT-TYPE
+  SYNTAX      DisplayString 
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Specifies type field in dta structure."
+  ::= { tsDtaEntry 5 }
+
+
+-- #############################################
+-- T-Server Link Table 
+-- #############################################
+
+tsLinkTable OBJECT-TYPE
+  SYNTAX SEQUENCE OF TsLinkEntry
+  MAX-ACCESS not-accessible
+  STATUS	current
+  DESCRIPTION
+    " A collection of CTI link data."
+ ::= { tServer 4 }
+
+tsLinkEntry OBJECT-TYPE
+  SYNTAX TsLinkEntry
+  MAX-ACCESS not-accessible
+  STATUS    current
+  DESCRIPTION
+    "A conceptual row in the tsLink table.
+     The gsCtrlServerID identifies the manager on whose behalf this entry was created. 
+     The tsLinkID value in the index identifies the call instance  
+     assigned by the management library.
+     An example of the indexing of this entry is 
+     tsLinkProtocol.9.2, where 9 is the index to the control table and 2 is the link id."
+  INDEX {gsCtrlServerID, tsLinkID}
+  ::= { tsLinkTable 1 }
+
+TsLinkEntry ::= SEQUENCE
+{
+  tsLinkID              Unsigned32,
+  tsLinkName            DisplayString,
+  tsLinkStatus          INTEGER,
+  tsLinkProtocol        INTEGER,
+  tsLinkSocket          Unsigned32,
+  tsLinkPID             Unsigned32,
+  tsLinkDelay           Unsigned32,
+  tsLinkPort            Unsigned32,
+  tsLinkAddress         DisplayString,
+  tsLinkX25LocalAddress DisplayString,
+  tsLinkMode            Unsigned32,
+  tsLinkX25Device       DisplayString,
+  tsLinkDTEClass        DisplayString,
+  tsLinkTemplate        DisplayString
+}
+
+tsLinkID OBJECT-TYPE
+  SYNTAX      Unsigned32
+  MAX-ACCESS  not-accessible
+  STATUS      current
+  DESCRIPTION
+    "Specifies link identificator."
+  ::= { tsLinkEntry 1 }
+
+tsLinkName OBJECT-TYPE
+  SYNTAX      DisplayString 
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Specifies link name."
+  ::= { tsLinkEntry 2 }
+
+tsLinkStatus OBJECT-TYPE
+  SYNTAX INTEGER
+  {
+    statusNone(0),
+    statusIdle(1),
+    statusUp(2),
+    statusDown(3),
+    statusUnknown(4)
+  }
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Specifies link current status."
+  ::= { tsLinkEntry 3 }
+
+tsLinkProtocol OBJECT-TYPE
+  SYNTAX INTEGER
+  {
+    protoX25(0),
+    protoTCPIP(1),
+    protoX25server(2),
+    protoTCPIPdebug(3),
+    protoUnknown(4)
+  }
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Specifies protocol type."
+  ::= { tsLinkEntry 4 }
+
+tsLinkSocket OBJECT-TYPE
+  SYNTAX      Unsigned32
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+  "Specifies socket number through which server connected to link."
+  ::= { tsLinkEntry 5 }
+
+tsLinkPID OBJECT-TYPE
+  SYNTAX      Unsigned32
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Specifies link process ID."
+  ::= { tsLinkEntry 6 }
+
+tsLinkDelay OBJECT-TYPE
+  SYNTAX      Unsigned32
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Specifies delay."
+  ::= { tsLinkEntry 7 }
+
+tsLinkPort OBJECT-TYPE
+  SYNTAX      Unsigned32
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Specifies link physical port number."
+  ::= { tsLinkEntry 8 }
+
+tsLinkAddress OBJECT-TYPE
+  SYNTAX      DisplayString
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Specifies link address."
+  ::= { tsLinkEntry 9 }
+
+tsLinkX25LocalAddress OBJECT-TYPE
+  SYNTAX     DisplayString
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Specifies local address for x25 connection."
+  ::= { tsLinkEntry 10 }
+
+tsLinkMode OBJECT-TYPE
+  SYNTAX      Unsigned32
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Specifies mode."
+  ::= { tsLinkEntry 11 }
+
+tsLinkX25Device OBJECT-TYPE
+  SYNTAX      DisplayString
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Specifies x25 device."
+  ::= { tsLinkEntry 12 }
+
+tsLinkDTEClass OBJECT-TYPE
+  SYNTAX      DisplayString
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Specifies DTE class for x25 connection."
+  ::= { tsLinkEntry 13 }
+
+tsLinkTemplate OBJECT-TYPE
+  SYNTAX      DisplayString
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Specifies template."
+    ::= { tsLinkEntry 14 }
+
+
+-- #############################################
+-- T-Server Call Filter Table 
+-- #############################################
+
+tsCallFilterTable OBJECT-TYPE
+  SYNTAX SEQUENCE OF TsCallFilterEntry
+  MAX-ACCESS not-accessible
+  STATUS     current
+  DESCRIPTION
+    " A collection of CallFilter data."
+ ::= { tServer 5 }
+
+tsCallFilterEntry OBJECT-TYPE
+  SYNTAX TsCallFilterEntry
+  MAX-ACCESS not-accessible
+  STATUS     current
+  DESCRIPTION
+    "A conceptual row in the tsCallFilter table.
+
+     tsCallFilterTable and tsCallInfoTable introduced to facilitate the discovery of stuck calls. 
+
+     gsCtrlServerID identifies a managed TServer, and along with TableID (9),
+     identifies a row in the gServerControlTable on which behalf this entry was 
+     created.
+
+     An example of the indexing of this entry is 
+     fltCallUpdatedBefore.101, where 101 is the server ID.
+
+     This table is used to set filtering criteria for the tsCallInfoTabe and provides 
+     the interface for clearing call by Connection ID."
+  INDEX {gsCtrlServerID }
+  ::= { tsCallFilterTable 1 }
+
+TsCallFilterEntry ::= SEQUENCE
+{
+  fltCallCreatedBefore  Unsigned32,
+  fltCallCreatedAfter   Unsigned32,
+  fltCallUpdatedBefore  Unsigned32,
+  fltCallUpdatedAfter   Unsigned32,
+  fltClearCallByConnId  DisplayString
+}
+
+fltCallCreatedBefore OBJECT-TYPE
+  SYNTAX      Unsigned32
+  MAX-ACCESS  read-write
+  STATUS      current
+  DESCRIPTION
+    "Filters calls reported via tsCallInfoTable to those created more than
+     specified number of seconds before the request to get information.
+     Zero value means filter is not used."
+  ::= { tsCallFilterEntry 1 }
+
+fltCallCreatedAfter OBJECT-TYPE
+  SYNTAX      Unsigned32
+  MAX-ACCESS  read-write
+  STATUS      current
+  DESCRIPTION
+    "Filters reported calls to those created less than specified number of
+     seconds before the request."
+  ::= { tsCallFilterEntry 2 }
+
+fltCallUpdatedBefore OBJECT-TYPE
+  SYNTAX      Unsigned32
+  MAX-ACCESS  read-write
+  STATUS      current
+  DESCRIPTION
+    "Filters calls reported to those updated more than specified number of
+     seconds before the request to get information."
+  ::= { tsCallFilterEntry 3 }
+
+fltCallUpdatedAfter OBJECT-TYPE
+  SYNTAX      Unsigned32
+  MAX-ACCESS  read-write
+  STATUS      current
+  DESCRIPTION
+    "Filters calls reported to those updated less than specified number of
+     seconds before the request to get information."
+  ::= { tsCallFilterEntry 4 }
+
+fltClearCallByConnId OBJECT-TYPE
+  SYNTAX      DisplayString 
+  MAX-ACCESS  read-write
+  STATUS      current
+  DESCRIPTION
+    "Connection ID (converted to string by connid_to_str function) of the call
+     to be cleared."
+  ::= { tsCallFilterEntry 5 }
+
+-- #############################################
+-- T-Server Call Info Table 
+-- #############################################
+
+tsCallInfoTable OBJECT-TYPE
+  SYNTAX SEQUENCE OF TsCallInfoEntry
+  MAX-ACCESS not-accessible
+  STATUS     current
+  DESCRIPTION
+    " A collection of CallInfo data."
+ ::= { tServer 6 }
+
+tsCallInfoEntry OBJECT-TYPE
+  SYNTAX     TsCallInfoEntry
+  MAX-ACCESS not-accessible
+  STATUS     current
+  DESCRIPTION
+    "A conceptual row in the tsCallFilter table.
+
+     gsCtrlServerID identifies a managed TServer, and along with the TableID of this 
+     table (10), identifies a row in the gServerControlTable on which behalf this entry was 
+     created.
+
+     The tsCallFilterID value in the index identifies the call instance  
+     assigned by the management library. 
+
+     An example of the indexing of this entry is 
+     callLastUpdatedTimemark.101.5510, where 101 is the server ID and 5510 is the call instance 
+     ID as assigned by the management library.
+     
+     This table stores the latest snapshot of active calls from a given T-Server.
+     Contains a set of attributes that facilitates the discovery of stuck calls."
+  INDEX { gsCtrlServerID, callInfoInstanceID }
+  ::= { tsCallInfoTable 1 }
+
+TsCallInfoEntry ::= SEQUENCE
+{
+  callInfoInstanceID            Unsigned32,
+  callInfoConnID                DisplayString,
+  callInfoType                  INTEGER,
+  callInfoCreationTimestamp     Unsigned32,
+  callInfoLastUpdatedTimestamp  Unsigned32,
+  callInfoInternalParties       DisplayString
+}
+
+callInfoInstanceID OBJECT-TYPE
+  SYNTAX      Unsigned32
+  MAX-ACCESS  not-accessible
+  STATUS      current
+  DESCRIPTION
+    "Call instance ID."
+  ::= { tsCallInfoEntry 1 }
+
+callInfoConnID OBJECT-TYPE
+  SYNTAX      DisplayString
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+     "Specifies ID assigned to call by TServer."
+  ::= { tsCallInfoEntry 2 }
+
+callInfoType OBJECT-TYPE
+  SYNTAX INTEGER
+  {
+    typeUnknown(0),
+    typeInternal(1),
+    typeInbound(2),
+    typeOutbound(3),
+    typeConsult(4)
+  }
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Specified call type."
+  ::= { tsCallInfoEntry 3 }
+
+callInfoCreationTimestamp OBJECT-TYPE
+  SYNTAX      Unsigned32
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Call creation timestamp - seconds since Epoch as returned by time()
+     system function.
+     The epoch on most UNIX and POSIX systems is 1970-01-01 00:00:00 UTC."
+  ::= { tsCallInfoEntry 4 }
+
+callInfoLastUpdatedTimestamp OBJECT-TYPE
+  SYNTAX      Unsigned32
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Call info last updated timestamp - seconds since Epoch as returned by
+     time() system function.
+     The epoch on most UNIX and POSIX systems is 1970-01-01 00:00:00 UTC."
+  ::= { tsCallInfoEntry 5 }
+
+callInfoInternalParties OBJECT-TYPE
+  SYNTAX      DisplayString
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Internal DN where the call is believed to be located; in case of multiple
+     internal parties, all of them are merged into one string, separated by the
+     '\n' (new line) character."
+  ::= { tsCallInfoEntry 6 }
+
+-- #############################################
+-- T-Server Link Stats Table
+-- #############################################
+
+tsLinkStatsTable OBJECT-TYPE
+  SYNTAX SEQUENCE OF TsLinkStatsEntry
+  MAX-ACCESS not-accessible
+  STATUS     current
+  DESCRIPTION
+    " Info about current statistics on TServer link"
+  ::= { tServer 7 }
+  
+tsLinkStatsEntry OBJECT-TYPE
+  SYNTAX     TsLinkStatsEntry
+  MAX-ACCESS not-accessible
+  STATUS     current
+  DESCRIPTION
+"A conceptual row in the tsLinkStatsTable.
+
+gsCtrlServerID identifies a managed TServer, and along with the TableID of this table (11), identifies a row in the gServerControlTable on which behalf this entry was created.
+
+An example of the indexing of this entry is numberOfRequests.101, where 101 is the server ID.
+ 
+Table contains link send/receive messages statistics."
+
+  INDEX { gsCtrlServerID }
+  ::= { tsLinkStatsTable 1 }
+
+TsLinkStatsEntry ::= SEQUENCE
+{
+linkId                Unsigned32,
+timeElapsedSec        Unsigned32,
+numberMessagesTx      Unsigned32,
+rateMessagesTx        Unsigned32,
+numberMessagesRx      Unsigned32,
+rateMessagesRx        Unsigned32
+}
+
+linkId OBJECT-TYPE
+  SYNTAX      Unsigned32
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    " The id of the link "
+  ::= { tsLinkStatsEntry 1 }
+
+timeElapsedSec OBJECT-TYPE
+  SYNTAX      Unsigned32
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    " The time (seconds) that have elapsed since the last statistics read."
+  ::= { tsLinkStatsEntry 2 }
+
+numberMessagesTx OBJECT-TYPE
+  SYNTAX      Unsigned32
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    " The number of CTI messages sent by T-Server over this link since last statistics read."
+  ::= { tsLinkStatsEntry 3 }
+
+rateMessagesTx OBJECT-TYPE
+  SYNTAX      Unsigned32
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    " Literally cti-msg-tx / time-elapsed-sec."
+  ::= { tsLinkStatsEntry 4 }
+
+numberMessagesRx OBJECT-TYPE
+  SYNTAX      Unsigned32
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    " The number of CTI messages received since the last statistics read."
+  ::= { tsLinkStatsEntry 5 }
+
+rateMessagesRx OBJECT-TYPE
+  SYNTAX      Unsigned32
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    " Literally cti-msg-rx / time-elapsed-sec."
+  ::= { tsLinkStatsEntry 6 }
+
+-- ##############################################################################
+-- Hosts 
+-- ##############################################################################
+
+hostsTable OBJECT-TYPE
+  SYNTAX SEQUENCE OF HostsEntry
+  MAX-ACCESS not-accessible
+  STATUS current
+  DESCRIPTION
+    " "
+  ::= { hosts 1 }
+
+hostsEntry OBJECT-TYPE
+  SYNTAX      HostsEntry
+  MAX-ACCESS  not-accessible
+  STATUS      current
+  DESCRIPTION
+    " "
+  INDEX { hostId }
+  ::= { hostsTable 1 }
+
+HostsEntry ::= SEQUENCE
+{
+  hostId              HostDBID,
+  hostName            DisplayString,
+  hostStatus          DisplayString,
+  hostIPAddress       IpAddress,
+  hostOSType          DisplayString,
+  hostLCAPort         Unsigned32
+}
+
+hostId OBJECT-TYPE
+  SYNTAX      HostDBID
+  MAX-ACCESS  not-accessible
+  STATUS      current
+  DESCRIPTION
+    " "
+  ::= { hostsEntry 1 }
+
+hostName OBJECT-TYPE
+  SYNTAX      DisplayString
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    " "
+  ::= { hostsEntry 2 }
+
+
+hostStatus OBJECT-TYPE
+  SYNTAX      DisplayString
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    " "
+  ::= { hostsEntry 3 }
+
+hostIPAddress OBJECT-TYPE
+  SYNTAX      IpAddress
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    " "
+  ::= { hostsEntry 4 }
+
+hostOSType OBJECT-TYPE
+  SYNTAX      DisplayString
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    " "
+  ::= { hostsEntry 5 }
+
+hostLCAPort OBJECT-TYPE
+  SYNTAX      Unsigned32
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    " "
+  ::= { hostsEntry 6 }
+
+
+
+-- ##############################################################################
+-- Solutions 
+-- ##############################################################################
+
+solutionsTable OBJECT-TYPE
+  SYNTAX SEQUENCE OF SolutionsEntry
+  MAX-ACCESS not-accessible
+  STATUS current
+  DESCRIPTION
+    " "
+  ::= { solutions 1 }
+
+solutionsEntry OBJECT-TYPE
+  SYNTAX      SolutionsEntry
+  MAX-ACCESS  not-accessible
+  STATUS      current
+  DESCRIPTION
+    " "
+  INDEX { solutionId }
+  ::= { solutionsTable 1 }
+
+SolutionsEntry ::= SEQUENCE
+{
+  solutionId              SolutionDBID,
+  solutionName            DisplayString,
+  solutionType            DisplayString,
+  solutionStatus          DisplayString,
+  solutionControlServer   DisplayString
+}
+
+solutionId OBJECT-TYPE
+  SYNTAX      SolutionDBID
+  MAX-ACCESS  not-accessible
+  STATUS      current
+  DESCRIPTION
+    " "
+  ::= { solutionsEntry 1 }
+
+solutionName OBJECT-TYPE
+  SYNTAX      DisplayString
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    " "
+  ::= { solutionsEntry 2 }
+
+solutionType OBJECT-TYPE
+  SYNTAX      DisplayString
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    " "
+  ::= { solutionsEntry 3 }
+
+solutionStatus OBJECT-TYPE
+  SYNTAX      DisplayString
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    " "
+  ::= { solutionsEntry 4 }
+
+solutionControlServer OBJECT-TYPE
+  SYNTAX      DisplayString
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Name of the Solution Control Server application that controls this solution."
+  ::= { solutionsEntry 5 }
+
+--
+-- Solution components
+--
+
+solutionsComponentsTable OBJECT-TYPE
+  SYNTAX SEQUENCE OF SolutionsComponentsEntry
+  MAX-ACCESS not-accessible
+  STATUS current
+  DESCRIPTION
+    " "
+  ::= { solutions 2 }
+
+solutionsComponentsEntry OBJECT-TYPE
+  SYNTAX      SolutionsComponentsEntry
+  MAX-ACCESS  not-accessible
+  STATUS      current
+  DESCRIPTION
+    " "
+  INDEX { solutionId, componentId }
+  ::= { solutionsComponentsTable 1 }
+
+SolutionsComponentsEntry ::= SEQUENCE
+{
+  componentId             ServerDBID,
+  componentName           DisplayString
+}
+
+componentId OBJECT-TYPE
+  SYNTAX      ServerDBID
+  MAX-ACCESS  not-accessible
+  STATUS      current
+  DESCRIPTION
+    "Uniquely identifies a server that is part of this particular Solution."
+  ::= { solutionsComponentsEntry 1 }
+
+componentName OBJECT-TYPE
+  SYNTAX      DisplayString
+  MAX-ACCESS  read-only
+  STATUS      current
+  DESCRIPTION
+    "Name of this components."
+  ::= { solutionsComponentsEntry 2 }
+
+
+-- ######################################################################################
+-- Conformance Information
+-- ######################################################################################
+
+genesysmibConformance  OBJECT IDENTIFIER ::= { genesys 110 }
+genesysmibGroups       OBJECT IDENTIFIER ::= { genesysmibConformance 1 }
+genesysmibCompliances  OBJECT IDENTIFIER ::= { genesysmibConformance 2 }
+
+-- Compliance Statements
+
+genesysmibCompliance MODULE-COMPLIANCE
+  STATUS current
+  DESCRIPTION
+    "The compliance statement for SNMPv2 entities."
+  MODULE -- this module
+  MANDATORY-GROUPS
+  {
+    gServersListGroup,
+    genericServerControlGroup,
+    genericServerInfoGroup,
+    genericServerLogGroup,
+    genericServerPollingGroup,
+    genericServerClientGroup,
+    tServerInfoGroup,
+    tServerCallGroup,
+    tServerDtaGroup,
+    tServerLinkGroup,
+    genericAlarmObjectGroup,
+    specificAlarmObjectGroup,
+    hostsGroup,
+    solutionsGroup,
+    solutionsComponentsGroup,
+    notificationGroup,
+    tServerCallFilterGroup,
+    tServerCallInfoGroup
+  }
+  ::= { genesysmibCompliances 1 }
+
+-- Units of Conformance
+
+gServersListGroup OBJECT-GROUP
+  OBJECTS
+  {
+    gServerName,
+    gServerStatus,
+    gServerType,
+    gServerVersion,
+    gServerWorkDir,
+    gServerCommandLine,
+    gServerPID, gServerCommand,
+    gServerDeleteClient
+  }
+  STATUS current
+  DESCRIPTION
+    "A collection of objects providing information about Genesys managed servers."
+  ::= { genesysmibGroups 1 }
+
+genericServerControlGroup OBJECT-GROUP
+  OBJECTS
+  {
+    gsCleanupTimeout,
+    gsCtrlRefreshStatus,
+    gsCtrlLastRefreshed,
+    gsCtrlAutomaticRefresh,
+    gsCtrlRowStatus
+  }
+  STATUS current
+  DESCRIPTION
+    " "
+  ::= { genesysmibGroups 2 }
+
+genericServerInfoGroup OBJECT-GROUP
+  OBJECTS
+  {
+    gsClientsExistNum,
+    gsClientsTotalNum,
+    gsServerConfigFile
+  }
+  STATUS current
+  DESCRIPTION
+    " "
+  ::= { genesysmibGroups 3 }
+
+genericServerLogGroup OBJECT-GROUP
+  OBJECTS
+  {
+    logVerbose,
+    logTrace,
+    logStandard,
+    logDebug,
+    logAll,
+    logBuffering,
+    logSegment,
+    logExpire,
+    logMessageFile,
+    logMessageFormat,
+    logTimeFormat,
+    logTimeConvert
+  }
+  STATUS current
+  DESCRIPTION
+    " "
+  ::= { genesysmibGroups 4 }
+
+
+genericServerPollingGroup OBJECT-GROUP
+  OBJECTS
+  {
+    gsPollingStatus,
+    gsPollingInterval,
+    gsPollingID,
+    gsPollingLastTrap
+  }
+  STATUS current
+  DESCRIPTION
+    " "
+  ::= { genesysmibGroups 5 }
+
+genericServerClientGroup OBJECT-GROUP
+  OBJECTS
+  {
+    gsClientAppName,
+    gsClientAuthorized,
+    gsClientType,
+    gsClientGotEvents,
+    gsClientSentReqs
+  }
+  STATUS current
+  DESCRIPTION
+    " "
+  ::= { genesysmibGroups 6 }
+
+
+tServerInfoGroup OBJECT-GROUP
+  OBJECTS
+  {
+    tsCallsExistNum,
+    tsCallsTotalNum,
+    tsLinksCommand,
+    tsLastChangedLinkStatus
+  }
+  STATUS current
+  DESCRIPTION
+    " "
+  ::= { genesysmibGroups 7 }
+
+tServerCallGroup OBJECT-GROUP
+  OBJECTS
+  {
+    callConnID,
+    callState,
+    callCallID,
+    callType,
+    callReferenceID,
+    callTimeStamp,
+    callDNIS,
+    callANI,
+    callNumParties,
+    callPartiesList,
+    callCustomerID,
+    callFirstTransferLocation,
+    callFirstTransferDN,
+    callLastTransferLocation,
+    callLastTransferDN
+  }
+  STATUS current
+  DESCRIPTION
+    " "
+  ::= { genesysmibGroups 8 }
+
+tServerDtaGroup OBJECT-GROUP
+  OBJECTS
+  {
+    tsDtaDigits,
+    tsDtaMode,
+    tsDtaState,
+    tsDtaType
+  }
+  STATUS current
+  DESCRIPTION
+    " "
+  ::= { genesysmibGroups 9 }
+
+tServerLinkGroup OBJECT-GROUP
+  OBJECTS
+  {
+    tsLinkName,
+    tsLinkStatus,
+    tsLinkProtocol,
+    tsLinkSocket,
+    tsLinkPID,
+    tsLinkDelay,
+    tsLinkPort,
+    tsLinkAddress,
+    tsLinkX25LocalAddress,
+    tsLinkMode,
+    tsLinkX25Device,
+    tsLinkDTEClass,
+    tsLinkTemplate
+  }
+  STATUS current
+  DESCRIPTION
+    " "
+  ::= { genesysmibGroups 10 }
+
+
+genericAlarmObjectGroup OBJECT-GROUP
+  OBJECTS
+  {
+    gsAlarmId,
+    gsAlarmLogText,
+    gsAlarmMessagesIds,
+    gsAlarmApplicationName,
+    gsAlarmApplicationType,
+    gsAlarmCategory,
+    gsServersLastAlarm,
+    gsServersLastTrap,
+    gsAlarmAppHostName,
+    gsAlarmGUID 
+  }
+  STATUS current
+  DESCRIPTION
+    " "
+  ::= { genesysmibGroups 11 }
+
+specificAlarmObjectGroup OBJECT-GROUP
+  OBJECTS
+  {
+    tsLastChangedLinkStatus
+  }
+  STATUS current
+  DESCRIPTION
+    " "
+  ::= { genesysmibGroups 12 }
+
+hostsGroup OBJECT-GROUP
+  OBJECTS
+  {
+    hostName,
+    hostStatus,
+    hostIPAddress,
+    hostOSType,
+    hostLCAPort
+  }
+  STATUS current
+  DESCRIPTION
+    " "
+  ::= { genesysmibGroups 13 }
+
+solutionsGroup OBJECT-GROUP
+  OBJECTS
+  {
+    solutionName,
+    solutionType,
+    solutionStatus,
+    solutionControlServer
+  }
+  STATUS current
+  DESCRIPTION
+    " "
+  ::= { genesysmibGroups 14 }
+
+solutionsComponentsGroup OBJECT-GROUP
+  OBJECTS
+  {
+    componentName
+  }
+  STATUS current
+  DESCRIPTION
+    " "
+  ::= { genesysmibGroups 15 }
+
+notificationGroup NOTIFICATION-GROUP
+  NOTIFICATIONS
+  {
+    gsAlarm,
+    gsMLAlarm,
+    gsServerUpTrap,
+    gsServerDownTrap,
+    gsPollingSignal,
+    tsLinkStatusTrap
+  }
+  STATUS current
+  DESCRIPTION
+    "List of notifications generated by ML SNMP agent."
+  ::= { genesysmibGroups  16 }
+
+tServerCallFilterGroup OBJECT-GROUP
+  OBJECTS
+  {
+    fltCallCreatedBefore,
+    fltCallCreatedAfter,
+    fltCallUpdatedBefore,
+    fltCallUpdatedAfter,
+    fltClearCallByConnId
+  }
+  STATUS current
+  DESCRIPTION
+    " "
+  ::= { genesysmibGroups 17 }
+
+tServerCallInfoGroup OBJECT-GROUP
+  OBJECTS
+  {
+    callInfoConnID,
+    callInfoType,
+    callInfoCreationTimestamp,
+    callInfoLastUpdatedTimestamp,
+    callInfoInternalParties
+  }
+  STATUS current
+  DESCRIPTION
+    " "
+  ::= { genesysmibGroups 18 }
+
+END

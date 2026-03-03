@@ -1,0 +1,12 @@
+HP-AUTZ-MIB,1.3.6.1.4.1.11.2.14.11.5.1.32,hpSwitchAuthorizationMIB,""200510050000Z"  -- OCTOBER 5, 2005",,"Hewlett Packard Company 8000 Foothills Blvd. Roseville, CA 95747"
+HP-AUTZ-MIB,1.3.6.1.4.1.11.2.14.11.5.1.32.1,hpSwitchAuthorizationConfig,"OBJECT IDENTIFIER",,
+HP-AUTZ-MIB,1.3.6.1.4.1.11.2.14.11.5.1.32.1.1,hpSwitchAutzServiceTable,"SEQUENCE OF HPSWITCHAUTZSERVICEENTRY",NOT-ACCESSIBLE,"The (conceptual) table listing the authorization service types."
+HP-AUTZ-MIB,1.3.6.1.4.1.11.2.14.11.5.1.32.1.1.1,hpSwitchAutzServiceEntry,SEQUENCE,NOT-ACCESSIBLE,"An entry (conceptual row) in the hpSwitchAutzServiceTable."
+HP-AUTZ-MIB,1.3.6.1.4.1.11.2.14.11.5.1.32.1.1.1.1,hpSwitchAutzServiceType,INTEGER,NOT-ACCESSIBLE,"Signifies the authorization service type for which this entry contains configuration information."
+HP-AUTZ-MIB,1.3.6.1.4.1.11.2.14.11.5.1.32.1.1.1.2,hpSwitchAutzServicePrimaryMethod,INTEGER,READ-WRITE,"Specifies the primary method used for authorization."
+HP-AUTZ-MIB,1.3.6.1.4.1.11.2.14.11.5.1.32.1.1.1.3,hpSwitchAutzServiceSecondaryMethod,INTEGER,READ-WRITE,"Specifies the secondary (backup) method used for authorization."
+HP-AUTZ-MIB,1.3.6.1.4.1.11.2.14.11.5.1.32.2,hpSwitchAuthorizationConformance,"OBJECT IDENTIFIER",READ-WRITE,
+HP-AUTZ-MIB,1.3.6.1.4.1.11.2.14.11.5.1.32.2.1,hpSwitchAuthorizationMIBCompliances,"OBJECT IDENTIFIER",READ-WRITE,
+HP-AUTZ-MIB,1.3.6.1.4.1.11.2.14.11.5.1.32.2.1.1,hpSwitchAuthorizationMIBCompliance,MODULE-COMPLIANCE,READ-WRITE,"The compliance statement for devices implementing the HP-AUTZ-MIB."
+HP-AUTZ-MIB,1.3.6.1.4.1.11.2.14.11.5.1.32.2.2,hpSwitchAuthorizationMIBGroups,"OBJECT IDENTIFIER",READ-WRITE,
+HP-AUTZ-MIB,1.3.6.1.4.1.11.2.14.11.5.1.32.2.2.1,hpSwitchAuthorizationConfigGroup,OBJECT-GROUP,READ-WRITE,"A collection of objects to support authorization service."

@@ -1,0 +1,160 @@
+ASC-SNMP-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+    OBJECT-TYPE, MODULE-IDENTITY, enterprises
+        FROM SNMPv2-SMI
+
+    DisplayString
+        FROM SNMPv2-TC;
+
+asc MODULE-IDENTITY
+    LAST-UPDATED "200404140653Z"
+    ORGANIZATION "ASC telecom AG"
+    CONTACT-INFO
+                "       ASC telecom AG
+                        Customer Service
+
+                Postal: Seibelstrasse 2
+                        63768 Hoesbach
+                        Germany
+
+                   Tel: +49 6021 5001 0
+
+                 email: hotline@asc.de"
+    DESCRIPTION
+        "This file defines the ASC SNMP MIB extensions."
+    ::= { enterprises 4063 }
+
+evolution OBJECT IDENTIFIER ::= { asc 2 }
+
+evoTrap OBJECT IDENTIFIER ::= { evolution 1 }
+
+ASCDateTime ::= OCTET STRING( SIZE( 0..23 ) )
+    -- format is YYYY/MM/DD hh:mm:ss,SSS
+
+    --   where: YYYY - last four digits of the year (any year)
+    --          MM   - month (01 through 12)
+    --          DD   - day of month (01 through 31)
+    --          hh   - hours (00 through 23)
+    --          mm   - minutes (00 through 59)
+    --          ss   - seconds (00 throug 59)
+    --          SSS  - milliseconds (00 throug 999)
+    --
+
+evoSystemID OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+            "System ID, this is the unique recorder ID"
+    ::= { evoTrap 1 }
+
+evoSystemName OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION
+            "System name, the hostname of the recorder"
+    ::= { evoTrap 2 }
+
+evoModuleName OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION
+            "Module name, the process which caused the message"
+    ::= { evoTrap 3 }
+
+evoErrType OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION
+            "Error type LOG_ERROR, LOG_WARNING, LOG_INFO, LOG_AUDIT"
+    ::= { evoTrap 4 }
+
+evoErrCode OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION
+            "Error code"
+    ::= { evoTrap 5 }
+
+evoErrUniqueID OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0..20))
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION
+            "Unique error counter"
+    ::= { evoTrap 6 }
+
+evoErrOpenTime OBJECT-TYPE
+    SYNTAX      ASCDateTime
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION
+            "Error opened time"
+    ::= { evoTrap 7 }
+
+evoErrUpdateTime OBJECT-TYPE
+    SYNTAX      ASCDateTime
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION
+            "Error updated time is the same as evoOpenTime on first occurence"
+    ::= { evoTrap 8 }
+
+evoErrCloseTime OBJECT-TYPE
+    SYNTAX      ASCDateTime
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION
+            "Error closed time if closed else empty"
+    ::= { evoTrap 9 }
+
+evoErrText OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION
+            "Error text as an additional description"
+    ::= { evoTrap 10 }
+
+evoErrCloseComment OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION
+            "Error close comment if closed else empty"
+    ::= { evoTrap 11 }
+
+evoTrap TRAP-TYPE
+	ENTERPRISE evoTrap
+	VARIABLES {
+		evoSystemID,
+		evoSystemName,
+		evoModuleName,
+		evoErrType,
+		evoErrCode,
+		evoErrUniqueID,
+		evoErrOpenTime,
+		evoErrUpdateTime,
+		evoErrCloseTime,
+		evoErrText,
+		evoErrCloseComment
+	}
+	DESCRIPTION
+        "RecorderID:    %s
+         Module:        %s
+         Type:          %s
+         Code:          %s
+         Number:        %s
+         Opened:        %s
+         Updated:       %s
+         Text:          %s
+         Closed:        %s
+         Close Comment: %s"
+    ::= 100
+END
+

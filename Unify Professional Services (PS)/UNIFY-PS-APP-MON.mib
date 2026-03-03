@@ -1,0 +1,184 @@
+UNIFY-PS-APP-MON DEFINITIONS ::= BEGIN
+
+-- ===================================================================
+-- Copyright © 2013 Unify GmbH & Co. KG
+-- formerly Siemens Enterprise Communications
+--
+-- All Rights Reserved.
+--
+-- Reproduction of this document is authorized on condition that
+-- this copyright notice is included.
+--
+-- This MIB document embodies proprietary intellectual property. 
+-- of Unify, which retains all title and ownership in this MIB,
+-- including any revisions.
+--
+-- This module will be extended, as required.
+--
+-- Unify reserves the right to make changes in specification and
+-- other information contained in this document without prior notice.
+-- The reader should consult Unify to determine whether any such
+-- changes have been made.
+--
+-- Copyright © 2013 Unify GmbH & Co. KG  
+-- ===================================================================
+
+-- ===================================================================
+-- Revision History              (Date needs to match LAST-UPDATED below)
+-- 2023-10-25 Ivan Madjarov      Initial release
+-- ===================================================================
+
+IMPORTS
+    MODULE-IDENTITY, OBJECT-TYPE, Integer32, NOTIFICATION-TYPE, enterprises FROM SNMPv2-SMI
+    DisplayString, RowStatus FROM SNMPv2-TC
+    senExperimental FROM SEN-ROOT-MIB;
+
+        psAppMon                OBJECT IDENTIFIER ::= { senExperimental 9999 }
+                                -- Unify Professional Services Custom MIB
+                                --             = senExperimental     9999
+                                --             = enterprises sen   1 9999
+                                --             = enterprises 32804 1 9999
+                                --             = 1 3 6 1 4 1 32804 1 9999
+
+        alarms                MODULE-IDENTITY
+        LAST-UPDATED            "202310250000Z"
+        ORGANIZATION            "Unify"
+        CONTACT-INFO            "Ivan Madjarov
+                                 email: ivan.madjarov@mitel.com"
+
+	    DESCRIPTION		"This MIB module implements the SNMP alarms
+				         reported by custom application developed by Unify
+                         Professional Services Team (Thiago Costa)."
+
+        ::= { psAppMon 9 }
+
+        trapParameters             OBJECT IDENTIFIER ::= { alarms 1 }
+        traps                      OBJECT IDENTIFIER ::= { alarms 2 }
+
+        --********************************************************************
+        -- Alarm Trap Parameters:
+        --********************************************************************
+
+        severity                   OBJECT-TYPE
+        SYNTAX                     INTEGER
+                                   {    critical(5),
+                                        error(4),
+                                        warning(3),
+                                        info(2),
+                                        debug(1),
+                                        clear(0)     }
+        MAX-ACCESS                 not-accessible
+        STATUS                     current
+        DESCRIPTION                "Alarm severity integer format: critical(5), error(4), warning(3), info(2), debug(1), clear(0)"
+        ::= { trapParameters 1 }
+
+
+        productRAW                 OBJECT-TYPE
+        SYNTAX                     DisplayString
+        MAX-ACCESS                 not-accessible
+        STATUS                     current
+        DESCRIPTION                "Product type related to this alarm in RAW format, no additional text"
+        ::= { trapParameters 2 }
+
+
+        endpointApi                OBJECT-TYPE
+        SYNTAX                     DisplayString
+        MAX-ACCESS                 not-accessible
+        STATUS                     current
+        DESCRIPTION                "Endpoint API information"
+        ::= { trapParameters 3 }
+
+        customerName               OBJECT-TYPE
+        SYNTAX                     DisplayString
+        MAX-ACCESS                 not-accessible
+        STATUS                     current
+        DESCRIPTION                "Customer name"
+        ::= { trapParameters 4 }
+
+        product                    OBJECT-TYPE
+        SYNTAX                     DisplayString
+        MAX-ACCESS                 not-accessible
+        STATUS                     current
+        DESCRIPTION                "Product type"
+        ::= { trapParameters 5 }
+
+        accountNumber              OBJECT-TYPE
+        SYNTAX                     DisplayString
+        MAX-ACCESS                 not-accessible
+        STATUS                     current
+        DESCRIPTION                "Account number"
+        ::= { trapParameters 6 }
+
+        routerId                   OBJECT-TYPE
+        SYNTAX                     DisplayString
+        MAX-ACCESS                 not-accessible
+        STATUS                     current
+        DESCRIPTION                "Router ID"
+        ::= { trapParameters 7 }
+
+        routerIpAddr               OBJECT-TYPE
+        SYNTAX                     DisplayString
+        MAX-ACCESS                 not-accessible
+        STATUS                     current
+        DESCRIPTION                "Router IP address"
+        ::= { trapParameters 8 }
+        
+        severityStr                OBJECT-TYPE
+        SYNTAX                     DisplayString
+        MAX-ACCESS                 not-accessible
+        STATUS                     current
+        DESCRIPTION                "Alarm severity text format: critical, error, warning, info, debug, clear"
+        ::= { trapParameters 9 }
+
+        description                OBJECT-TYPE
+        SYNTAX                     DisplayString
+        MAX-ACCESS                 not-accessible
+        STATUS                     current
+        DESCRIPTION                "Alarm description"
+        ::= { trapParameters 10 }
+        
+        date                       OBJECT-TYPE
+        SYNTAX                     DisplayString
+        MAX-ACCESS                 not-accessible
+        STATUS                     current
+        DESCRIPTION                "Alarm date"
+        ::= { trapParameters 11 }
+        
+        eventUUID                  OBJECT-TYPE
+        SYNTAX                     DisplayString
+        MAX-ACCESS                 not-accessible
+        STATUS                     current
+        DESCRIPTION                "Event UUID"
+        ::= { trapParameters 12 }
+        
+        additionalInfo             OBJECT-TYPE
+        SYNTAX                     DisplayString
+        MAX-ACCESS                 not-accessible
+        STATUS                     current
+        DESCRIPTION                "Additional information, blank if not applicable"
+        ::= { trapParameters 13 }
+        
+        --********************************************************************
+        -- Alarm Trap Definitions
+        --********************************************************************
+
+
+        commonTrap     NOTIFICATION-TYPE
+        OBJECTS        {        severity,
+                                productRAW,
+                                endpointApi,
+                                customerName,
+                                product,
+                                accountNumber,
+                                routerId,
+                                routerIpAddr,
+                                severityStr,
+                                description,
+                                date,
+                                eventUUID,
+                                additionalInfo     }
+        STATUS              current
+        DESCRIPTION         "This trap reports general alarms triggered by Unify Professional Services Monitoring App"
+        ::= { traps 1 }
+
+END

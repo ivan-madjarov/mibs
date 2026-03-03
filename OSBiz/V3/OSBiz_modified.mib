@@ -1,0 +1,956 @@
+--************************************************************************--
+--  Name    SNMP MIB for HiPath OpenOffice	                          --
+--		              					          --
+--  Date     : tbd                                  		          --
+--		              						  --
+--  Version  :tbd 1.1.1                                                   --
+--                                                                        --
+--  Author   : tbd                                                        --
+--		              						  --
+--  Purpose  : alarm forwarding, error history, statistics, cdr,          --
+--             inventory                                                  --
+--                                                                        --
+--************************************************************************-- 
+
+--*HOC********************************************************************--
+--*                                                                      *--
+--*    HISTORY OF CHANGE:               VARIANTE: HiPath Open Office     *--
+--*                                                                      *--
+--************************************************************************--
+--*VERS| DATE | CHANGES                                      | KZ | VGNO *--
+--*    |ttmmjj|                                              |    |      *--
+--*001 |240707|Initial Creation				     |dpo |H12442*-- 
+--*002 |260907|Remove osbizSysState from sendAlarm	     |dpo |H15739*-- 
+--************************************************************************--
+
+
+
+   OSBIZ-MIB DEFINITIONS ::= BEGIN
+ 
+   IMPORTS
+        IpAddress	
+       	   FROM RFC1155-SMI
+        MODULE-IDENTITY, OBJECT-TYPE, NOTIFICATION-TYPE, enterprises
+           FROM SNMPv2-SMI
+        TEXTUAL-CONVENTION
+           FROM SNMPv2-TC;
+
+
+-- Some MIB compilers require that the following 4 lines
+-- which define the path to this MIB are added.
+
+   mgmt              OBJECT IDENTIFIER ::= { iso org(3) dod(6) internet(1)  mgmt(2) }
+   mib               OBJECT IDENTIFIER ::= { mgmt 1 }
+   private           OBJECT IDENTIFIER ::= { internet 4 }
+   enterprises       OBJECT IDENTIFIER ::= { private 1 }
+
+   sni               OBJECT IDENTIFIER ::= {enterprises 231}
+   siemensUnits      OBJECT IDENTIFIER ::= {sni 7}
+   pn                OBJECT IDENTIFIER ::= {siemensUnits 2}
+
+   osbiz MODULE-IDENTITY
+       LAST-UPDATED  "1307100000Z" -- Jul 10, 2013
+       ORGANIZATION  "Siemens Enterprise Communcations"
+       CONTACT-INFO  "            Technical Support               "
+       DESCRIPTION
+       "OpenScape Business MIB"
+       ::= { pn 9 }
+
+
+   
+   osbizErrorHistoryGroup        OBJECT IDENTIFIER ::= {osbiz 2}
+   osbizSystemInfoGroup          OBJECT IDENTIFIER ::= {osbiz 3}
+   osbizStatisticsGroup          OBJECT IDENTIFIER ::= {osbiz 4}
+   osbizCdrConfigGroup           OBJECT IDENTIFIER ::= {osbiz 5}
+   osbizTrapSpecifications       OBJECT IDENTIFIER ::= {osbiz 6}
+   umProxyGroup                  OBJECT IDENTIFIER ::= {osbiz 8}
+
+--************************************************************************-- 
+--******                     textual conventions                    ******--
+--************************************************************************-- 
+
+   DisplayString ::= OCTET STRING
+       -- This data type is used to model textual information taken
+       -- from the NVT ASCII character set.  By convention, objects
+       -- with this syntax are declared as having SIZE (0..255)
+
+
+   DateAndTime ::= TEXTUAL-CONVENTION
+       DISPLAY-HINT "2d-1d-1d,1d:1d:1d.1d"                                   
+       STATUS       current
+       DESCRIPTION
+            "A date-time specification identical to rfc 1443 definition.
+
+            field  octets  contents                  range
+            -----  ------  --------                  -----
+              1      1-2   year                      0..65536
+              2       3    month                     1..12
+              3       4    day                       1..31
+              4       5    hour                      0..23
+              5       6    minutes                   0..59
+              6       7    seconds                   0..60
+                           (use 60 for leap-second)
+              7       8    deci-seconds              0..9
+
+            For example, Tuesday May 26, 2003 at 1:30:15 PM EDT would be
+            displayed as:
+                             2003-5-26,13:30:15.0"
+       SYNTAX      OCTET STRING (SIZE (8))
+
+
+    ReadWrite ::= TEXTUAL-CONVENTION
+       STATUS       current
+       DESCRIPTION
+            "A textual convention for describing objects that
+             enable or disable some sort of write access."
+       SYNTAX INTEGER {
+            readWrite(1),
+            readOnly(2)
+            }
+
+
+
+--********************************************************************--
+--******                 Error History Group                    ******--
+--********************************************************************--
+
+   numberOfErrorHistoryEntries  OBJECT-TYPE
+       SYNTAX      INTEGER (0..2147483187)
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+                   "Contains the number of errors to be found in the error history table.
+                    This value can be used to delete the last x entries (reduce value by x)
+                    or to delete all entries (value = 0)."
+       ::= { osbizErrorHistoryGroup 1 }
+  
+   osbizErrorHistoryTable  OBJECT-TYPE
+       SYNTAX      SEQUENCE OF OsbizErrorHistoryEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+                   "This table contains information about the errors that occured."
+       ::= { osbizErrorHistoryGroup 2 }
+
+   osbizErrorHistoryEntry  OBJECT-TYPE
+       SYNTAX      OsbizErrorHistoryEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+                   "The trap history table entries."
+       INDEX { osbizErrorIndex }
+       ::= { osbizErrorHistoryTable 1 }
+
+   OsbizErrorHistoryEntry ::= SEQUENCE {
+       osbizErrorIndex         INTEGER,
+       osbizErrorDateTime      DateAndTime,
+       osbizErrorClass         INTEGER,
+       osbizErrorCode          INTEGER,
+       osbizAccessSlot         INTEGER,
+       osbizAccessPort         INTEGER,
+       osbizErrorDescription   DisplayString,
+       osbizErrorSeverity      INTEGER,
+       osbizAccessBox         INTEGER,
+       osbizAccessInterface   INTEGER
+       }                 
+
+   osbizErrorIndex  OBJECT-TYPE
+       SYNTAX      INTEGER (1..2147483187)
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "Identification of an table entry enabled by this index."
+       ::= { osbizErrorHistoryEntry 1 }
+
+   osbizErrorDateTime  OBJECT-TYPE
+       SYNTAX      DateAndTime
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "Time, when the error occurred."
+       ::= { osbizErrorHistoryEntry 2 }
+
+   osbizErrorClass  OBJECT-TYPE
+       SYNTAX      INTEGER (1..2147483187)
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "Contains the error class number (type of trap)."
+       ::= { osbizErrorHistoryEntry 3 }
+
+   osbizErrorCode  OBJECT-TYPE
+       SYNTAX      INTEGER (1..2147483187)
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "Contains the error code."
+       ::= { osbizErrorHistoryEntry 4 }
+
+   osbizAccessSlot  OBJECT-TYPE
+       SYNTAX      INTEGER (1..2147483187)
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "Contains the access slot for the error."
+       ::= { osbizErrorHistoryEntry 5 }
+    
+   osbizAccessPort  OBJECT-TYPE
+       SYNTAX      INTEGER (1..2147483187)
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "Contains the local access port of the error. Local means
+                    that port numbering starts with 0 for each card."
+       ::= { osbizErrorHistoryEntry 6 }
+
+   osbizErrorDescription  OBJECT-TYPE
+       SYNTAX      DisplayString (SIZE (1..255))
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "Detailed information about errors."
+       ::= { osbizErrorHistoryEntry 7 }
+
+   osbizErrorSeverity  OBJECT-TYPE
+       SYNTAX      INTEGER {
+                     normal(1),
+                     warning(2),
+                     minor(3),
+                     major(4),
+                     critical(5)
+                   }
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "Contains the severity of the specific error."
+       ::= { osbizErrorHistoryEntry 8 } 
+       
+       osbizAccessBox  OBJECT-TYPE
+       SYNTAX      INTEGER (1..2147483187)
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "Contains the access Box for the error."
+       ::= { osbizErrorHistoryEntry 9 } 
+       
+       osbizAccessInterface  OBJECT-TYPE
+       SYNTAX      INTEGER (1..2147483187)
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "Contains the access Interface for the error."
+       ::= { osbizErrorHistoryEntry 10 }
+       
+       
+       
+
+--********************************************************************--
+--******                     System Info                        ******--
+--********************************************************************--
+ 
+   sysHardwareVersion  OBJECT-TYPE
+       SYNTAX      DisplayString (SIZE (1..25))
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "Contains the version string of the system hardware."
+       ::= { osbizSystemInfoGroup 1 }
+
+   sysSoftwareVersion  OBJECT-TYPE
+       SYNTAX      DisplayString (SIZE (1..25))
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "Contains the version string of the system software."
+       ::= { osbizSystemInfoGroup 2 }
+ 
+   sysCodeNumber  OBJECT-TYPE
+       SYNTAX      DisplayString (SIZE (1..25))
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "Contains the code number of the system software."
+       ::= { osbizSystemInfoGroup 3 }
+
+   sysSoftwareLocation  OBJECT-TYPE
+       SYNTAX  INTEGER {
+                    lower(1),
+                    upper(2)
+               }
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "Contains location (address space) where the system
+                    software is currently running."
+       ::= { osbizSystemInfoGroup 4 }
+
+
+--******      slot info      ******--
+
+   numberOfSlotTableEntries  OBJECT-TYPE
+       SYNTAX      INTEGER (0..2147483187)
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "Contains the number of entries in the slot table."
+       ::= { osbizSystemInfoGroup 5 }
+   
+   osbizSlotTable  OBJECT-TYPE
+       SYNTAX      SEQUENCE OF OsbizSlotTableEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+                   "This table contains information about the system slots."
+       ::= { osbizSystemInfoGroup 6 }
+ 
+   osbizSlotTableEntry  OBJECT-TYPE
+       SYNTAX      OsbizSlotTableEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+                   "The slot table entries."
+       INDEX { cardIndex }
+       ::= { osbizSlotTable 1 }
+
+   OsbizSlotTableEntry ::= SEQUENCE {
+       cardIndex             INTEGER,
+       cardBoxNum            INTEGER,
+       cardSlotNum           INTEGER,
+       cardType              DisplayString,
+       cardDescription       DisplayString,
+       cardCodeNumber        DisplayString,
+       cardState             INTEGER
+       }
+
+   cardIndex  OBJECT-TYPE
+       SYNTAX      INTEGER (1..2147483187)
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "Identification of an table entry enabled by this index."
+       ::= { osbizSlotTableEntry 1 }
+
+   cardBoxNum  OBJECT-TYPE
+       SYNTAX      INTEGER (1..2147483187)
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "Index of the box where the card is placed."
+       ::= { osbizSlotTableEntry 2 }
+
+   cardSlotNum  OBJECT-TYPE
+       SYNTAX      INTEGER (1..2147483187)
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "Index of the slot where the card is placed."
+       ::= { osbizSlotTableEntry 3 }
+ 
+   cardType  OBJECT-TYPE
+       SYNTAX      DisplayString (SIZE (1..40))
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "Code for the type of the card."
+       ::= { osbizSlotTableEntry 4 }
+  
+   cardDescription  OBJECT-TYPE
+       SYNTAX      DisplayString (SIZE (1..255))
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "Textual card description."
+       ::= { osbizSlotTableEntry 5 }
+
+   cardCodeNumber  OBJECT-TYPE
+       SYNTAX      DisplayString (SIZE (1..25))
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "Contains the code number of the card software."
+       ::= { osbizSlotTableEntry 6 }
+
+    cardState  OBJECT-TYPE
+       SYNTAX      INTEGER {
+                     normal(1),
+                     warning(2),
+                     minor(3),
+                     major(4),
+                     critical(5)
+                   }
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "Contains the state of the card."
+       ::= { osbizSlotTableEntry 7 }
+
+
+--******      port info      ******--
+
+   numberOfPortTableEntries  OBJECT-TYPE
+       SYNTAX      INTEGER (0..2147483187)
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "Contains the number of entries in the port table."
+       ::= { osbizSystemInfoGroup 7 }
+   
+   osbizPortTable  OBJECT-TYPE
+       SYNTAX      SEQUENCE OF OsbizPortTableEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+                   "This table contains information about the system ports."
+       ::= { osbizSystemInfoGroup 8 }
+
+   osbizPortTableEntry  OBJECT-TYPE
+       SYNTAX      OsbizPortTableEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+                   "The port table entries."
+       INDEX { portIndex }
+       ::= { osbizPortTable 1 }
+  
+   OsbizPortTableEntry ::= SEQUENCE {
+       portIndex       INTEGER,
+       portCardIndex   INTEGER,
+       portType        DisplayString,
+       portState       INTEGER,
+       portLock        INTEGER,
+       portLogicalPortNumber	INTEGER       
+       }
+
+   portIndex  OBJECT-TYPE
+       SYNTAX      INTEGER (1..2147483187)
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "Identification of an table entry enabled by this index."
+       ::= { osbizPortTableEntry 1 }
+
+   portCardIndex  OBJECT-TYPE
+       SYNTAX      INTEGER (1..2147483187)
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "Reference to the card the port is assigned to."
+       ::= { osbizPortTableEntry 2 }
+
+   portType  OBJECT-TYPE
+       SYNTAX      DisplayString (SIZE (1..40))
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "Contains the type of the port."
+       ::= { osbizPortTableEntry 3 }
+ 
+   portState  OBJECT-TYPE
+       SYNTAX      INTEGER { 
+                     inactive(1),
+                     active (2)
+                   }
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "Contains the general state of the port."
+       ::= { osbizPortTableEntry 4 }
+
+   portLock  OBJECT-TYPE
+       SYNTAX      INTEGER {
+                     unlocked(1),
+                     lockedBySoftware(2),
+                     lockedByHardware(3),
+                     lockedBySoftAndHardware(4)
+                   }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+                   "This object contains the lock state of the port. A software lock
+                    can be enabled / disabled. Possible state transitions:
+                        unlocked -> lockedBySoftware
+                        lockedByHardware -> lockedBySoftAndHardware
+                        lockedBySoftware -> unlocked
+                        lockedBySoftAndHardware -> lockedByHardware"
+       ::= { osbizPortTableEntry 5 }   
+       
+       portLogicalPortNumber  OBJECT-TYPE
+       SYNTAX      INTEGER (0..2147483187)
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "The logical port number."
+       ::= { osbizPortTableEntry 6 }
+
+--******      LAN connection info      ******--
+
+   numberOfLanConnTableEntries  OBJECT-TYPE
+       SYNTAX      INTEGER (0..2147483187)
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "Contains the number of entries in the LAN connection table."
+       ::= { osbizSystemInfoGroup 11 }
+   
+   osbizLanConnTable  OBJECT-TYPE
+       SYNTAX      SEQUENCE OF OsbizLanConnTableEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+                   "This table contains information about the interfaces available
+                    for LAN access of the device or its cards."
+       ::= { osbizSystemInfoGroup 12 }
+ 
+   osbizLanConnTableEntry  OBJECT-TYPE
+       SYNTAX      OsbizLanConnTableEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+                   "The LAN connection table entries."
+       INDEX { lanConnIndex }
+       ::= { osbizLanConnTable 1 }
+
+   OsbizLanConnTableEntry ::= SEQUENCE {
+       lanConnIndex             INTEGER,
+       lanConnDescription       DisplayString,
+       lanConnIpAddress         IpAddress,
+       lanConnSubnetMask        IpAddress,
+       lanConnStatus            INTEGER
+       }
+
+   lanConnIndex  OBJECT-TYPE
+       SYNTAX      INTEGER (1..2147483187)
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "Identification of an table entry enabled by this index."
+       ::= { osbizLanConnTableEntry 1 }
+
+   lanConnDescription  OBJECT-TYPE
+       SYNTAX  DisplayString (SIZE (0..255))
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "Textual desription on the LAN connection."
+       ::= { osbizLanConnTableEntry 2 }
+
+   lanConnIpAddress  OBJECT-TYPE
+       SYNTAX  IpAddress
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "IP address of the LAN connection."
+       ::= { osbizLanConnTableEntry 3 }
+
+   lanConnSubnetMask  OBJECT-TYPE
+       SYNTAX  IpAddress
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "Subnet mask of the LAN connection."
+       ::= { osbizLanConnTableEntry 4 }
+
+   lanConnStatus  OBJECT-TYPE
+       SYNTAX  INTEGER {
+                 up(1),
+                 down(2),
+                 testing(3)
+               }
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "Status of the LAN Connection."
+       ::= { osbizLanConnTableEntry 5 }
+      
+
+--***         additional system info       ***--
+
+   sysSnmpAgentVersion  OBJECT-TYPE
+       SYNTAX  DisplayString (SIZE (0..255))
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "Version number of the systems SNMP agent (formatting: x.y.z.)"
+       ::= { osbizSystemInfoGroup 15 }
+
+
+   sysHiPathSymbolSubInfo  OBJECT-TYPE
+       SYNTAX      DisplayString (SIZE (0..255))
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "Contains an URL to detailed symbol information in addition to the symbol
+                   information contained in the common mib object deviceSymbolInfo."
+       ::= { osbizSystemInfoGroup 17 }
+       
+   sysHiPathBranding  OBJECT-TYPE
+       SYNTAX      DisplayString (SIZE (0..255))
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "Contains the branding string of the device."
+       ::= { osbizSystemInfoGroup 18 }
+
+   sysTimezoneOffset  OBJECT-TYPE
+       SYNTAX      INTEGER (-1440..1440)
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "Timezone offset in minutes."
+       ::= { osbizSystemInfoGroup 19 }
+
+
+--********************************************************************--
+--******                   Statistics Group                     ******--
+--********************************************************************--
+
+   numberOfFeatureStatTableEntries  OBJECT-TYPE
+       SYNTAX      INTEGER (1..2147483187)
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "Contains the number of feature counters to be found in the table."
+       ::= { osbizStatisticsGroup 1 }
+    
+   osbizFeatureStatTable  OBJECT-TYPE
+       SYNTAX      SEQUENCE OF OsbizFeatureStatEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+                   "This table contains information about the usage of specific system
+                    features. It is designed to monitor the use of these features for
+                    a limited time only, because each counter is limited to one byte."
+       ::= { osbizStatisticsGroup 2 }
+
+   osbizFeatureStatEntry  OBJECT-TYPE
+       SYNTAX      OsbizFeatureStatEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+                   "The feature statistics table entries."
+       INDEX { featureIndex }
+       ::= { osbizFeatureStatTable 1 }
+
+   OsbizFeatureStatEntry ::= SEQUENCE {
+       featureIndex        INTEGER,
+       featureDescription  DisplayString,
+       featureCounter      INTEGER
+       }
+
+   featureIndex  OBJECT-TYPE
+       SYNTAX      INTEGER (1..2147483187)
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "Identification of an table entry enabled by this index."
+       ::= { osbizFeatureStatEntry 1 }
+
+   featureDescription  OBJECT-TYPE
+       SYNTAX      DisplayString (SIZE (1..255))
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "Description of the feature."
+       ::= { osbizFeatureStatEntry 2 }
+
+   featureCounter  OBJECT-TYPE
+       SYNTAX      INTEGER (1..2147483187)
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "This Counter indicates how often the feature was used since
+                    last system reload"
+       ::= { osbizFeatureStatEntry 3 }
+
+   featureStatTableReset  OBJECT-TYPE
+       SYNTAX      INTEGER {
+                     counting(1),
+                     reset(2)
+                   }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+                   "Enables reset (2) of all counters of the featureStatTable."
+       ::= { osbizStatisticsGroup 3 }
+
+
+--********************************************************************--
+--******                        CDR Group                       ******--
+--********************************************************************--
+
+                  
+--*** CDR output format only relevant over LAN ***--
+
+   osbizCdrSeparator  OBJECT-TYPE
+       SYNTAX      INTEGER {
+                     dosMode(1),
+                     unixMode(2)
+                   }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+                   "Separator between following CDRs:
+                   DOS mode (1): CRLF
+                   UNIX mode (2): LF"
+       ::= { osbizCdrConfigGroup 1 }
+
+   osbizCdrElementSeparator  OBJECT-TYPE
+       SYNTAX      INTEGER {
+                     pipe(124),
+                     semicolon(59),
+                     blank(32)
+                   }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+                   "Separator between the different elements of one CDR:
+                   pipe (0x7c): '|'
+                   semicolon (0x3b): ';'
+                   blank (0x20): ' ' NOTE: no write access for blank"
+       ::= { osbizCdrConfigGroup 2 }
+
+--*** embedded TCP-based CDR Client ***--
+
+   osbizCdrTcpServerDestAddress  OBJECT-TYPE
+       SYNTAX     IpAddress
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+		"Destination IP addresse of CDR TCP server (only relevant for TCP client mode)"
+       ::= { osbizCdrConfigGroup 8 }
+
+   osbizCdrTcpServerDestPort  OBJECT-TYPE
+       SYNTAX      INTEGER (1..2147483187)
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+		"Destination TCP port of CDR TCP server (only relevant for TCP client mode)"
+       ::= { osbizCdrConfigGroup 9 }
+
+
+--*** CDR Output Mode ***--
+
+   osbizCdrOutputMode  OBJECT-TYPE
+       SYNTAX      INTEGER {
+                     httpsServer(5),
+                     tcpClient(6),
+                     noOutput(7)
+                   }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+		"CDR (Call Detailed Record) output mode:
+			Https-Server (5): an extern client can request the collected CDRs via Https
+			TCP-Client  (6): the PABX is permanently connected to an extern TCP server and sends
+                                 each CDR immidiatly
+			NoOutput    (7): no output for CDR"
+       ::= { osbizCdrConfigGroup 10 }
+
+--********************************************************************--
+--******                 trap specifications                    ******--
+--********************************************************************--
+
+   sendAlarm  NOTIFICATION-TYPE
+       OBJECTS {
+          osbizErrorIndex,
+          osbizErrorDateTime,
+          osbizErrorClass,
+          osbizErrorCode,
+          osbizAccessSlot,
+          osbizAccessPort,
+          osbizErrorDescription,
+          osbizErrorSeverity
+          }
+       STATUS      current
+       DESCRIPTION
+                   "If an error occurs, there will be checked if the errorClass is configured
+                    to trigger an immediate signalling. If so, a trap will be send to the
+                    management station containing the information shown above."
+       ::= { osbizTrapSpecifications 1 }
+
+
+   
+--********************************************************************--
+--******                 UM proxy information                   ******--
+--********************************************************************--
+
+
+
+
+   umSrsEnabled  OBJECT-TYPE
+       SYNTAX      INTEGER {
+                     disabled(0),
+                     enabled(1)
+                   }
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "Indicates whether the SRS feature flag of the 
+                    machine is enabled or not.
+                    The small remote site flag is an overall flag
+                    of the system."
+       ::= { umProxyGroup 2 }
+
+   umDefaultLanguage  OBJECT-TYPE
+       SYNTAX      INTEGER {
+                     german(1),
+                     english(2),
+                     french(3)
+                   }
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "Default language"
+       ::= { umProxyGroup 3 }
+
+   umNumberOfSubscriberEntries  OBJECT-TYPE
+       SYNTAX      INTEGER (0..2147483187)
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "Number of entries in subscriber table."
+       ::= { umProxyGroup 4 }
+
+   umSubscriberTable  OBJECT-TYPE
+       SYNTAX      SEQUENCE OF UmSubscriberTableEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+                   "This table contains information about all HFA-Clients
+                    available for UM-configuration."
+       ::= { umProxyGroup 5 }
+ 
+   umSubscriberTableEntry  OBJECT-TYPE
+       SYNTAX      UmSubscriberTableEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+                   "The UM-subscriber table entries."
+       INDEX { umLogicalPortNumber }
+       ::= { umSubscriberTable 1 }
+
+   UmSubscriberTableEntry ::= SEQUENCE {
+          umLogicalPortNumber        INTEGER,
+          umInternalCallNumber       DisplayString,
+          umDIDNumber                DisplayString,
+          umE164Number               DisplayString,
+          umDisplayName              DisplayString,
+          umStationType              INTEGER,
+          umPortStatus               INTEGER,
+          umClassOfService           INTEGER,
+          umDisplayLanguage          INTEGER,
+          umCfssTarget               DisplayString
+          }
+
+   umLogicalPortNumber  OBJECT-TYPE
+       SYNTAX      INTEGER (0..9999)
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "The logical port number of the subscriber."
+       ::= { umSubscriberTableEntry 1 }
+
+   umInternalCallNumber  OBJECT-TYPE
+       SYNTAX      DisplayString
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "The internal call number of the subscriber."
+       ::= { umSubscriberTableEntry 2 }
+
+   umDIDNumber  OBJECT-TYPE
+       SYNTAX      DisplayString
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "The DID number of the subscriber."
+       ::= { umSubscriberTableEntry 3 }
+
+   umE164Number  OBJECT-TYPE
+       SYNTAX      DisplayString
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "The E.164 call number of the subscriber."
+       ::= { umSubscriberTableEntry 4 } 
+
+   umDisplayName  OBJECT-TYPE
+       SYNTAX      DisplayString
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "The display name of the subscriber."
+       ::= { umSubscriberTableEntry 5 } 
+
+   umStationType  OBJECT-TYPE
+       SYNTAX      INTEGER {
+                     s0(0),
+                     up0(1),
+                     hfa(2),
+                     analog(3),
+                     sip(8)
+                   }
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "The type of the station.
+                    e.g. UP0, S0, HFA, SIP ..."
+       ::= { umSubscriberTableEntry 6 }
+
+   umPortStatus  OBJECT-TYPE
+       SYNTAX      INTEGER {
+                     inactive(0),
+                     active(1)
+                   }
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "The status of the logical port."
+       ::= { umSubscriberTableEntry 7 }
+
+   umClassOfService  OBJECT-TYPE
+       SYNTAX      INTEGER (1..15)
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "Classes of service can be used to restrict
+                    external calls. The types of calls that can
+                    be made from each station are defined for
+                    this purpose."
+       ::= { umSubscriberTableEntry 8 }
+
+   umDisplayLanguage  OBJECT-TYPE
+       SYNTAX      INTEGER {
+                     german(1),
+                     english(2),
+                     french(3)
+                   }
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "Display language"
+       ::= { umSubscriberTableEntry 9 }
+
+   umCfssTarget  OBJECT-TYPE
+       SYNTAX      DisplayString
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "The target for Call Forwarding for Station
+                    out of Service."
+       ::= { umSubscriberTableEntry 10 } 
+
+
+ 
+
+
+   umNetworkElementKey  OBJECT-TYPE
+       SYNTAX      DisplayString
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+                   "A key that uniquely identifies the node towards UM.
+                    A simulator should additionally provide the port."
+       ::= { umProxyGroup 8 }
+
+END

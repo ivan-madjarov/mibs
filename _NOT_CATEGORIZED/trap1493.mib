@@ -1,0 +1,53 @@
+BRIDGE-MIB DEFINITIONS ::= BEGIN
+ 
+ -- Note: This mib files is a part from Rfc1493.mib, we just take the
+ --       trap definition out from Rfc1493, James 
+ 
+ 
+ 
+ IMPORTS   mib-2         FROM RFC1213-MIB
+          TRAP-TYPE     FROM RFC-1215;
+ 
+ 
+ dot1dBridge   OBJECT IDENTIFIER ::= { mib-2 17 }
+ 
+ -- Traps for use by Bridges
+
+ -- Traps for the Spanning Tree Protocol
+
+          newRoot TRAP-TYPE
+              ENTERPRISE  dot1dBridge
+              DESCRIPTION
+                      "The newRoot trap indicates that the sending agent
+                      has become the new root of the Spanning Tree; the
+                      trap is sent by a bridge soon after its election
+                      as the new root, e.g., upon expiration of the
+                      Topology Change Timer immediately subsequent to
+                      its election.  Implementation of this trap is
+                      optional."
+           --#TYPE         "a new root of the Spanning True trap "
+           --#SUMMARY     "A trap to inicated when a node has become a new 
+           --               root of the Spanning True"
+           --#SEVERITY     INFORMATIONAL
+           --#TIMEINDEX    1
+           --#STATE        NON-OPERATIONAL
+              ::= 1
+
+          topologyChange TRAP-TYPE
+              ENTERPRISE  dot1dBridge
+              DESCRIPTION
+                      "A topologyChange trap is sent by a bridge when
+                      any of its configured ports transitions from the
+                      Learning state to the Forwarding state, or from
+                      the Forwarding state to the Blocking state.  The
+                      trap is not sent if a newRoot trap is sent for the
+                      same transition.  Implementation of this trap is
+                      optional."
+          --#TYPE         "topology changed trap"
+          --#SUMMARY     "A trap to inicated when the topology has changed"
+          --#SEVERITY     INFORMATIONAL
+          --#TIMEINDEX    1
+          --#STATE        NON-OPERATIONAL
+              ::= 2
+
+          END

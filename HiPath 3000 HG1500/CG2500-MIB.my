@@ -1,0 +1,1363 @@
+-- entspricht cg2500.my ( label MIB-HG1500-V5.0-04.05.28 )
+  
+
+   CG2500-MIB DEFINITIONS ::= BEGIN
+
+   IMPORTS 
+       enterprises
+                               FROM RFC1155-SMI
+       MODULE-IDENTITY, OBJECT-TYPE, Counter32, Gauge32, Counter64, TimeTicks, Integer32 
+                               FROM SNMPv2-SMI
+       DateAndTime, TruthValue FROM SNMPv2-TC
+       DisplayString           FROM RFC1213-MIB
+	ifIndex,InterfaceIndex FROM IF-MIB
+	IANAifType FROM IANAifType-MIB;
+--	rg2500 FROM AR2500-DEFS;
+
+RowCmd ::= TEXTUAL-CONVENTION
+       STATUS	current
+       DESCRIPTION
+	"Setting this to destroy causes the row to be deleted."
+       SYNTAX	INTEGER { active(0), destroy(1) }
+
+BooleanValue ::= TEXTUAL-CONVENTION
+      STATUS current
+      DESCRIPTION
+	"A value that can be true(1) or false(0)."
+      SYNTAX	 INTEGER { false(0),true(1) }
+
+AttenuatorDBValues ::= TEXTUAL-CONVENTION
+      STATUS current
+      DESCRIPTION
+	"Dezibel values for the CPM-attenuators."
+      SYNTAX	 INTEGER { zeroDB    (0),
+                           oneDB     (1),
+                           twoDB     (2),
+                           threeDB   (3),
+                           fourDB    (4),
+                           minus1DB  (5),
+                           minus2DB  (6),
+                           minus3DB  (7),
+                           minus4DB  (8),
+                           minus5DB  (9),
+                           minus6DB  (10),
+                           minus7DB  (11),
+                           minus8DB  (12),
+                           minus9DB  (13),
+                           minus10DB (14),
+                           minus11DB (15),
+                           minus12DB (16),
+                           forceFF   (17) }
+
+
+   sni		        OBJECT IDENTIFIER ::= { enterprises 231 }
+
+   siemensUnits		OBJECT IDENTIFIER ::= { sni 7 }
+
+   pn		        OBJECT IDENTIFIER ::= { siemensUnits 2 }
+
+   hg1500mib            OBJECT IDENTIFIER ::= { pn 7 }
+
+   rg2500             	OBJECT IDENTIFIER ::= { hg1500mib 13 }
+
+
+   gwMSCandApplications  MODULE-IDENTITY
+       LAST-UPDATED  "200202260000Z" -- Feb 26, 2002
+       ORGANIZATION  "Siemens Information & Communication Networks"
+       CONTACT-INFO  "            Technical Support               "
+       DESCRIPTION
+       "HG1500 / HiPath 3000 MIB."
+       ::= { rg2500 3 }
+
+
+
+	msc			OBJECT IDENTIFIER ::= {gwMSCandApplications 1}
+	mscStats		OBJECT IDENTIFIER ::= {msc 1}
+	mscStatsOverall		OBJECT IDENTIFIER ::= {mscStats 1}
+	mscConfig		OBJECT IDENTIFIER ::= {msc 2}
+	mscDspConfig		OBJECT IDENTIFIER ::= {msc 3}
+--	mscResMgmt		OBJECT IDENTIFIER ::= {msc 4}
+--	scnResMgmt		OBJECT IDENTIFIER ::= {msc 5}
+--	lanfaxResMgmt		OBJECT IDENTIFIER ::= {msc 6}
+
+--------------------------
+-- msc overall statistics
+--------------------------
+
+	mscOutgoingRTPpackets OBJECT-TYPE
+		SYNTAX  Counter32
+		MAX-ACCESS  read-only
+		STATUS  current
+		DESCRIPTION
+			"Outgoing RTP packets (overall)."
+		::= { mscStatsOverall 1 }
+
+	mscOutgoingRTPLostpackets OBJECT-TYPE
+		SYNTAX  Counter32
+		MAX-ACCESS  read-only
+		STATUS  current
+		DESCRIPTION
+			"Outgoing RTP packets lost (overall)."
+		::= { mscStatsOverall 2 }
+
+	mscIncomingRTPpackets OBJECT-TYPE
+		SYNTAX  Counter32
+		MAX-ACCESS  read-only
+		STATUS  current
+		DESCRIPTION
+			"Incoming RTP packets (overall)."
+		::= {  mscStatsOverall 3 }
+
+	mscIncomingRTPLostpackets OBJECT-TYPE
+		SYNTAX  Counter32
+		MAX-ACCESS  read-only
+		STATUS  current
+		DESCRIPTION
+			"Incoming RTP packets lost (overall)."
+		::= {  mscStatsOverall 4 }
+
+	mscTotalBytesSent OBJECT-TYPE
+		SYNTAX  Counter32
+		MAX-ACCESS  read-only
+		STATUS  current
+		DESCRIPTION
+			"Total bytes sent."
+		::= {  mscStatsOverall 5 }
+
+	mscTotalBytesReceived OBJECT-TYPE
+		SYNTAX  Counter32
+		MAX-ACCESS  read-only
+		STATUS  current
+		DESCRIPTION
+			"Total bytes received."
+		::= {  mscStatsOverall 6 }
+
+
+--------------------------
+-- msc per-call statistics
+--------------------------
+
+	mscStatsPerCallTable OBJECT-TYPE
+		SYNTAX     SEQUENCE OF MscStatsPerCallEntry
+		MAX-ACCESS not-accessible
+		STATUS     current
+		DESCRIPTION
+			"The table of per-call msc statistics."
+		::= { mscStats 2 }
+   
+	mscStatsPerCallEntry OBJECT-TYPE
+		SYNTAX     MscStatsPerCallEntry
+		MAX-ACCESS not-accessible
+		STATUS     current
+		DESCRIPTION
+			"The Msc statistics about one resource."
+		INDEX { mscStatsPerCallInd }
+		::= { mscStatsPerCallTable 1 }
+   
+	MscStatsPerCallEntry ::= SEQUENCE {
+		mscStatsPerCallInd  		INTEGER (0..2147483647),
+		mscPeerCanonicalName  		OCTET STRING,
+		mscDestIP         		OCTET STRING,
+		mscBeginTime	 		OCTET STRING,
+		mscEncoder			INTEGER,
+		mscDecoder			INTEGER,
+		mscSpecOutgoingRTPpackets	Counter32,
+		mscSpecOutgoingRTPpacketsLost	Counter32,
+		mscSpecIncomingRTPpackets	Counter32,
+		mscSpecIncomingRTPpacketsLost	Counter32,
+		mscSpecBytesSent		Counter32,
+		mscSpecBytesReceived		Counter32,
+		mscSpecRndTripNetworkDelay	Integer32,
+		mscSpecActualJitter		Integer32,
+		mscSpecJitterBufferDepth	Integer32,
+		mscSpecRtpEncodings		Integer32,
+		mscSpecAverageNetworkDelay	Integer32,
+		mscSpecJitterLan		Integer32,
+		mscFractionLostOutgoing		Integer32,
+		mscMaxFractionLostOutgoing	Integer32,
+		mscSpecCumLatePacketCount	Integer32,
+		mscEncTimePerPacket		Integer32
+	}
+
+	mscStatsPerCallInd OBJECT-TYPE
+		SYNTAX		INTEGER (0..2147483647)
+		MAX-ACCESS	not-accessible
+		STATUS		current
+		DESCRIPTION
+			"The table index"
+		::= { mscStatsPerCallEntry 1 }
+
+	mscPeerCanonicalName OBJECT-TYPE
+		SYNTAX		OCTET STRING (SIZE (0..64))
+		MAX-ACCESS	read-only
+		STATUS		current
+		DESCRIPTION
+			"The cannection name of the number called."
+		::= { mscStatsPerCallEntry 2 }
+
+	mscDestIP OBJECT-TYPE
+		SYNTAX		OCTET STRING (SIZE (0..15))
+		MAX-ACCESS	read-only
+		STATUS		current
+		DESCRIPTION
+			"The destination IP address (H.323)."
+		::= { mscStatsPerCallEntry 3 }
+
+	mscBeginTime OBJECT-TYPE
+		SYNTAX		OCTET STRING (SIZE (0..64))
+		MAX-ACCESS	read-only
+		STATUS		current
+		DESCRIPTION
+			"Time when the last call started."
+		::= { mscStatsPerCallEntry 4 }
+
+
+	mscEncoder OBJECT-TYPE
+		SYNTAX	INTEGER {
+			g711ULaw(0),
+--			g711ALaw56KAudio (1),
+--			g711ULaw64KAudio(2),
+--			g711ULaw56KAudio(3),
+			g723(4),
+			g711ALaw(8),
+			g729(18)
+		}
+		MAX-ACCESS	read-only
+		STATUS		current
+		DESCRIPTION
+			"Encoder used with this call."
+		::= { mscStatsPerCallEntry 5 }
+
+	mscDecoder OBJECT-TYPE
+		SYNTAX	INTEGER  {
+			g711ULaw(0),
+--			g711ALaw56KAudio (1),
+--			g711ULaw64KAudio(2),
+--			g711ULaw56KAudio(3),
+			g723(4),
+			g711ALaw(8),
+			g729(18)
+		}
+		MAX-ACCESS	read-only
+		STATUS		current
+		DESCRIPTION
+			"Decoder used with this call."
+		::= { mscStatsPerCallEntry 6 }
+
+	mscSpecOutgoingRTPpackets OBJECT-TYPE
+		SYNTAX  Counter32
+		MAX-ACCESS  read-only
+		STATUS  current
+		DESCRIPTION
+			"Outgoing RTP packets (per-call)."
+		::= { mscStatsPerCallEntry 7 }
+
+	mscSpecOutgoingRTPpacketsLost OBJECT-TYPE
+		SYNTAX  Counter32
+		MAX-ACCESS  read-only
+		STATUS  current
+		DESCRIPTION
+			"Outgoing RTP packets lost (per-call). The number of packets
+			lost doesn't include packets which arrived late."
+		::= { mscStatsPerCallEntry 8 }
+
+	mscSpecIncomingRTPpackets OBJECT-TYPE
+		SYNTAX  Counter32
+		MAX-ACCESS  read-only
+		STATUS  current
+		DESCRIPTION
+			"Incoming RTP packets (per-call)."
+		::= { mscStatsPerCallEntry 9 }
+
+	mscSpecIncomingRTPpacketsLost OBJECT-TYPE
+		SYNTAX  Counter32
+		MAX-ACCESS  read-only
+		STATUS  current
+		DESCRIPTION
+			"Incoming RTP packets lost (per-call)."
+		::= { mscStatsPerCallEntry 10 }
+
+	mscSpecBytesSent OBJECT-TYPE
+		SYNTAX  Counter32
+		MAX-ACCESS  read-only
+		STATUS  current
+		DESCRIPTION
+			"Total bytes sent."
+		::= { mscStatsPerCallEntry 11 }
+
+	mscSpecBytesReceived OBJECT-TYPE
+		SYNTAX  Counter32
+		MAX-ACCESS  read-only
+		STATUS  current
+		DESCRIPTION
+			"Total bytes received."
+		::= { mscStatsPerCallEntry 12 }
+
+	mscSpecRndTripNetworkDelay OBJECT-TYPE
+		SYNTAX	Integer32
+		MAX-ACCESS	read-only
+		STATUS	current
+		DESCRIPTION
+                        "Round Trip Network Delaz (in ms) for this connection."
+		::= { mscStatsPerCallEntry 13 }
+
+	mscSpecActualJitter OBJECT-TYPE
+		SYNTAX	Integer32
+		MAX-ACCESS	read-only
+		STATUS	current
+		DESCRIPTION
+			"The actual jitter (in ms) for this connection."
+		::= { mscStatsPerCallEntry 14 }
+
+	mscSpecJitterBufferDepth OBJECT-TYPE
+		SYNTAX	Integer32
+		MAX-ACCESS	read-only
+		STATUS	current
+		DESCRIPTION
+			"Current size of the DSP jitter buffer (in ms)."
+		::= { mscStatsPerCallEntry 15 }
+
+	mscSpecRtpEncodings OBJECT-TYPE
+		SYNTAX	Integer32
+		MAX-ACCESS	read-only
+		STATUS	current
+		DESCRIPTION
+			"Number of collected frames in one RTP packet sent from this gateway."
+		::= { mscStatsPerCallEntry 16 }
+
+	mscSpecAverageNetworkDelay OBJECT-TYPE
+		SYNTAX	Integer32
+		MAX-ACCESS	read-only
+		STATUS	current
+		DESCRIPTION
+			"Average network delay for this call (in ms)."
+		::= { mscStatsPerCallEntry 17 }
+
+	mscSpecJitterLan OBJECT-TYPE
+		SYNTAX	Integer32
+		MAX-ACCESS	read-only
+		STATUS	current
+		DESCRIPTION
+			"Jitter in the LAN of this connection."
+		::= { mscStatsPerCallEntry 18 }
+
+	mscFractionLostOutgoing OBJECT-TYPE
+		SYNTAX	Integer32
+		MAX-ACCESS	read-only
+		STATUS	current
+		DESCRIPTION
+			"Fraction of RTP data packets from a specific source that were lost since the previous
+			receiver report was sent. (This fraction is defined to be the number of packet lost
+			divided by the number of packets expected )."
+		::= { mscStatsPerCallEntry 19 }
+
+	mscMaxFractionLostOutgoing OBJECT-TYPE
+		SYNTAX	Integer32
+		MAX-ACCESS	read-only
+		STATUS	current
+		DESCRIPTION
+			"Maximum fractional packet loss among all currently participating session members
+			except ourself."
+		::= { mscStatsPerCallEntry 20 }
+
+	mscSpecCumLatePacketCount OBJECT-TYPE
+		SYNTAX	Integer32
+		MAX-ACCESS	read-only
+		STATUS	current
+		DESCRIPTION
+			"The number of late packets, since the beginning of the connection."
+		::= { mscStatsPerCallEntry 21 }
+
+	mscEncTimePerPacket OBJECT-TYPE
+		SYNTAX	Integer32
+		MAX-ACCESS	read-only
+		STATUS	current
+		DESCRIPTION
+			"Encoding time (in ms) per packet."
+		::= { mscStatsPerCallEntry 22 }
+
+
+
+--------------------------
+-- Msc configuration
+--------------------------
+
+	mscUdpPortLow OBJECT-TYPE
+		SYNTAX	INTEGER (1024..65535)
+		MAX-ACCESS	read-write
+		STATUS	current
+		DESCRIPTION
+			"The low port boundary of RTP/RTCP ports."
+		::= { mscConfig 1 }
+
+	mscUdpPortHigh OBJECT-TYPE
+		SYNTAX	INTEGER (1024..65535)
+		MAX-ACCESS	read-write
+		STATUS	current
+		DESCRIPTION
+			"The high port boundary of RTP/RTCP ports."
+		::= { mscConfig 2 }
+
+	mscTcpPortLow OBJECT-TYPE
+		SYNTAX	INTEGER (1024..65535)
+		MAX-ACCESS	read-write
+		STATUS	current
+		DESCRIPTION
+			"The low port boundary of TCP ports (T38-fax)."
+		::= { mscConfig 3 }
+
+	mscTcpPortHigh OBJECT-TYPE
+		SYNTAX	INTEGER (1024..65535)
+		MAX-ACCESS	read-write
+		STATUS	current
+		DESCRIPTION
+			"The high port boundary of TCP ports (T38-fax)."
+		::= { mscConfig 4 }
+		
+	mscTrafficStatistic OBJECT-TYPE
+		SYNTAX	BooleanValue
+		MAX-ACCESS	read-write
+		STATUS	current
+		DESCRIPTION
+			"TrafficStatistic on / off; Generating of the per call statistic
+			(by the GW / GK) is enabled or disabled. If disabled SNMP has no
+			access to the per call statistic data."
+		::= { mscConfig 5 }
+
+	dspJitterBufferAdaptationEnable	OBJECT-TYPE
+		SYNTAX	BooleanValue
+		MAX-ACCESS	read-write
+		STATUS	current
+		DESCRIPTION
+			"If this is set by host the DSP jitter buffer adapts its
+			depth based on its statistics. If not, host has to explicitly
+			adjust the jitter buffer depth at run time, based on
+			statistics generated by the DSP."
+		::= { mscConfig 9 }
+
+	mscJitterType	OBJECT-TYPE
+		SYNTAX INTEGER { tis(0), hlb2(1) }
+		MAX-ACCESS	read-write
+		STATUS	current
+		DESCRIPTION
+			"Jitter buffer adaptation algorithm (0..TIS, 1..HLB2)."
+		::= { mscConfig 10 }
+
+	mscJitterCacheUpdateInterval	OBJECT-TYPE
+		SYNTAX	INTEGER (5..10)
+		MAX-ACCESS	read-write
+		STATUS	current
+		DESCRIPTION
+			"Jitter Cache update interval: 5 - 10 seconds. "
+		::= { mscConfig 11 }
+
+	mscJitterTotalFractionLostWeight	OBJECT-TYPE
+		SYNTAX	INTEGER (0..1000)
+		MAX-ACCESS	read-write
+		STATUS	current
+		DESCRIPTION
+			"Factor for smoothing the varying fraction lost of incoming RTP packets caused by jitter
+			in 10th of percents, i.e. 1000 is 100.0%. Default: 300 (30%)."
+		::= { mscConfig 15 }
+
+	mscJitterMinFractionLost	OBJECT-TYPE
+		SYNTAX	INTEGER (0..1000)
+		MAX-ACCESS	read-write
+		STATUS	current
+		DESCRIPTION
+			"Lower threshold for the adaptive control of jitter buffer size for incoming RTP packets
+			in 10th of percents, i.e. 1000 is 100.0%. Default: 5 (0.5%)."
+		::= { mscConfig 16 }
+
+	mscJitterMaxFractionLost	OBJECT-TYPE
+		SYNTAX	INTEGER (0..1000)
+		MAX-ACCESS	read-write
+		STATUS	current
+		DESCRIPTION
+			"Upper threshold for the adaptive control of jitter buffer size for incoming RTP packets
+			in 10th of percents, i.e. 1000 is 100.0%. Default: 40 (4%)."
+		::= { mscConfig 17 }
+
+	mscJitterFactor	OBJECT-TYPE
+		SYNTAX	INTEGER (0..1000)
+		MAX-ACCESS	read-write
+		STATUS	current
+		DESCRIPTION
+			"Factor for resizing the jitter buffer with respect to the average jitter: Default: 4."
+		::= { mscConfig 18 }
+
+	mscJitterIncrement	OBJECT-TYPE
+		SYNTAX	INTEGER (100..300)
+		MAX-ACCESS	read-write
+		STATUS	current
+		DESCRIPTION
+			"Increment of jitter buffer, if jitterMinFractionLost is exceeded
+			in 100microsecond steps: Default: 200 (20ms)."
+		::= { mscConfig 19 }
+
+	mscJitterDecrement	OBJECT-TYPE
+		SYNTAX	INTEGER (100..300)
+		MAX-ACCESS	read-write
+		STATUS	current
+		DESCRIPTION
+			"Decrement of jitter buffer, if smoothed average jitter falls below
+			jitterMaxFractionLost n 100microsecond steps: Default: 100 (10ms)."
+		::= { mscConfig 20 }
+
+	mscJitterBufferAvarageDelay	OBJECT-TYPE
+		SYNTAX	INTEGER  (0..300)
+		MAX-ACCESS	read-write
+		STATUS	current
+		DESCRIPTION
+			"The depth of the jitter buffer in ms. Set by host at the configuration
+			time. The DSP will round the value to multiple of 10 ms.
+			(Range: 0 - 300 ms)"
+		::= { mscConfig 21 }
+		
+--------------------------
+-- Msc DSP configuration
+--------------------------
+		
+	mscVadEnable		OBJECT-TYPE
+		SYNTAX	BooleanValue
+		MAX-ACCESS	read-write
+		STATUS	current
+		DESCRIPTION
+			"Voice Activity Detection on / off; VAD is explicitly performed
+			for G.711 only. Other Speech codecs perform VAD internally
+			in their encoders."
+		::= { mscDspConfig 3 }
+
+	mscEchoCancellerEnable	OBJECT-TYPE
+		SYNTAX	BooleanValue
+		MAX-ACCESS	read-write
+		STATUS	current
+		DESCRIPTION
+			"Echo Canceller on / off; Compensation for echos which can
+			occur in the case of connection via the voice gateway to
+			analog telephones."
+		::= { mscDspConfig 4 }
+		
+	mscDtmfReceiveEnable	OBJECT-TYPE
+		SYNTAX	BooleanValue
+		MAX-ACCESS	read-write
+		STATUS	current
+		DESCRIPTION
+			"Dtmf Outband Signalization on / off."
+		::= { mscDspConfig 5 }
+
+	mscDtmfDefaultToneLength	OBJECT-TYPE
+		SYNTAX	INTEGER (50..300)
+		MAX-ACCESS read-write
+		STATUS	current
+		DESCRIPTION
+			"Default length of pulse of the DTMF tones."
+		::= { mscDspConfig 6 }
+
+	mscG711MaxRecvBytes OBJECT-TYPE
+		SYNTAX	INTEGER (80..960)
+--		SYNTAX	INTEGER { max711bytes80(80),
+--		                  max711bytes160(160),
+--		                  max711bytes240(240) }
+		MAX-ACCESS read-write
+		STATUS	current
+		DESCRIPTION
+			"Max. Bytes of G711 coded RTP data."
+		::= { mscDspConfig 7 }
+
+	mscG723MaxRecvBytes OBJECT-TYPE
+		SYNTAX	INTEGER (24..96)
+--		SYNTAX	INTEGER { max723bytes24(24),
+--		                  max723bytes48(48) }
+		MAX-ACCESS read-write
+		STATUS	current
+		DESCRIPTION
+			"Max. Bytes of G723A coded RTP data."
+		::= { mscDspConfig 8 }
+
+	mscG729MaxRecvBytes OBJECT-TYPE
+		SYNTAX	INTEGER (20..120)
+--		SYNTAX	INTEGER { max729bytes20(20),
+--		                  max729bytes30(30),
+--		                  max729bytes40(40) }
+		MAX-ACCESS read-write
+		STATUS	current
+		DESCRIPTION
+			"Max. Bytes of G729A/AB coded RTP data."
+		::= { mscDspConfig 9 }
+
+	mscG711EncTimePerPacket OBJECT-TYPE
+		SYNTAX	INTEGER (10..120)
+		MAX-ACCESS read-write
+		STATUS	current
+		DESCRIPTION
+			"Defines the encoding time (in ms) per packet for encoder
+			control."
+		::= { mscDspConfig 10 }
+
+	mscG723EncTimePerPacket OBJECT-TYPE
+		SYNTAX	INTEGER (30..120)
+		MAX-ACCESS read-write
+		STATUS	current
+		DESCRIPTION
+			"Defines the encoding time (in ms) per packet for encoder
+			control."
+		::= { mscDspConfig 11 }
+
+	mscG729EncTimePerPacket OBJECT-TYPE
+		SYNTAX	INTEGER (20..120)
+		MAX-ACCESS read-write
+		STATUS	current
+		DESCRIPTION
+			"Defines the encoding time (in ms) per packet for encoder
+			control."
+		::= { mscDspConfig 12 }
+
+	mscDtmfDefaultPauseLength	OBJECT-TYPE
+		SYNTAX	INTEGER (50..300)
+		MAX-ACCESS read-write
+		STATUS	current
+		DESCRIPTION
+			"Default length of pause of the sent DMTF tones."
+		::= { mscDspConfig 13 }
+
+--------------------------
+-- Msc resource management:
+--------------------------
+
+--	mscMaxavailConnections OBJECT-TYPE
+--		SYNTAX  Counter32
+--		MAX-ACCESS  read-only
+--		STATUS  current
+--		DESCRIPTION
+--			"Total bytes received."
+--		::= {  mscResMgmt 1 }
+
+--	mscMaxavailBChannels OBJECT-TYPE
+--		SYNTAX  Counter32
+--		MAX-ACCESS  read-only
+--		STATUS  current
+--		DESCRIPTION
+--			"Total bytes received."
+--		::= {  mscResMgmt 2 }
+
+--	mscMaxavailLANChannels OBJECT-TYPE
+--		SYNTAX  Counter32
+--		MAX-ACCESS  read-only
+--		STATUS  current
+--		DESCRIPTION
+--			"Total bytes received."
+--		::= {  mscResMgmt 3 }
+--
+--	mscMaxavailFAXChannels OBJECT-TYPE
+--		SYNTAX  Counter32
+--		MAX-ACCESS  read-only
+--		STATUS  current
+--		DESCRIPTION
+--			"Total bytes received."
+--		::= {  mscResMgmt 4 }
+
+--	mscUsedConnections OBJECT-TYPE
+--		SYNTAX  Counter32
+--		MAX-ACCESS  read-only
+--		STATUS  current
+--		DESCRIPTION
+--			"Total bytes received."
+--		::= {  mscResMgmt 5 }
+
+--	mscUsedBChannels OBJECT-TYPE
+--		SYNTAX  Counter32
+--		MAX-ACCESS  read-only
+--		STATUS  current
+--		DESCRIPTION
+--			"Total bytes received."
+--		::= {  mscResMgmt 6 }
+
+--	mscUsedLANChannels OBJECT-TYPE
+--		SYNTAX  Counter32
+--		MAX-ACCESS  read-only
+--		STATUS  current
+--		DESCRIPTION
+--			"Total bytes received."
+--		::= {  mscResMgmt 7 }
+
+--	mscUsedFAXChannels OBJECT-TYPE
+--		SYNTAX  Counter32
+--		MAX-ACCESS  read-only
+--		STATUS  current
+--		DESCRIPTION
+--			"Total bytes received."
+--		::= {  mscResMgmt 8 }
+
+--	mscFreeConnections OBJECT-TYPE
+--		SYNTAX  Counter32
+--		MAX-ACCESS  read-only
+--		STATUS  current
+--		DESCRIPTION
+--			"Total bytes received."
+--		::= {  mscResMgmt 9 }
+
+--	mscFreeBChannels OBJECT-TYPE
+--		SYNTAX  Counter32
+--		MAX-ACCESS  read-only
+--		STATUS  current
+--		DESCRIPTION
+--			"Total bytes received."
+--		::= {  mscResMgmt 10 }
+
+--	mscFreeLANChannels OBJECT-TYPE
+--		SYNTAX  Counter32
+--		MAX-ACCESS  read-only
+--		STATUS  current
+--		DESCRIPTION
+--			"Total bytes received."
+--		::= {  mscResMgmt 11 }
+
+--	mscFreeFAXChannels OBJECT-TYPE
+--		SYNTAX  Counter32
+--		MAX-ACCESS  read-only
+--		STATUS  current
+--		DESCRIPTION
+--			"Total bytes received."
+--		::= {  mscResMgmt 12 }
+
+
+          gwApplications        OBJECT IDENTIFIER ::= { gwMSCandApplications 2 }
+
+	 --  This is the TIS-2.0 Gateway data.  
+
+		-- Section 2.1 - Board Configuration
+
+         	deviceConfiguration        OBJECT IDENTIFIER ::= { gwApplications 1 }
+
+		--
+		-- ** 2.1.1 Table Definitions for the Board Data
+		-- 
+--------------------------
+-- SCND device table:
+--------------------------
+
+--------------------------
+-- LAN device table:
+--------------------------
+
+--------------------------
+-- SCNA device table:
+--------------------------
+
+         	deviceResourceStatistics        OBJECT IDENTIFIER ::= { gwApplications 2 }
+--                     merge of scnResMgmt and lanfaxResMgmt
+--	scnResMgmt		OBJECT IDENTIFIER ::= {msc 5}
+--	lanfaxResMgmt		OBJECT IDENTIFIER ::= {msc 6}
+
+	deviceResourceMgmtTable OBJECT-TYPE
+		SYNTAX  SEQUENCE OF DeviceResourceMgmtEntry
+		MAX-ACCESS  not-accessible
+		STATUS  current
+		DESCRIPTION
+			"Device resource management statistics table "
+	::= { deviceResourceStatistics 1 }
+
+	deviceResourceMgmtEntry OBJECT-TYPE
+		SYNTAX DeviceResourceMgmtEntry
+		MAX-ACCESS not-accessible
+		STATUS current
+		DESCRIPTION
+			" "
+		INDEX {deviceId}
+	::= {deviceResourceMgmtTable 1}
+
+	DeviceResourceMgmtEntry ::= SEQUENCE
+	{
+		deviceId  		        INTEGER,
+		devMaxChannels		        Integer32,
+		devSeizedChannels	        Integer32
+	}
+
+	deviceId OBJECT-TYPE
+		SYNTAX INTEGER { devIdISDNSubs(0), 
+		                 devIdISDNTrunk(1),
+		                 devIdHFA(2),
+		                 devIdPayload(3),
+		                 devIdMoH(4),
+--
+		                 devHXG3RTP(5),
+		                 devHXG3Fax(6),
+		                 devHXG3PPP(7),
+		                 devHXG3Vcapi(8),
+--
+		                 devIdWAML(10),
+		                 devIdISDNTrunk1(11),
+		                 devIdISDNTrunk2(12),
+		                 devIdISDNTrunk3(13),
+		                 devIdISDNTrunk4(14),
+		                 devIdDMC(15),
+		                 devIdRTP(100),
+		                 devIdFax(101),
+		                 devIdPPP(102),
+		                 devIdVcapi(103),
+		                 devIdNu(104),
+		                 devIdLegk(105),
+		                 devIdUnused(106) }
+		MAX-ACCESS read-only
+		STATUS current
+		DESCRIPTION
+			"unique id of a device."
+		::= { deviceResourceMgmtEntry 1 }
+
+	devMaxChannels OBJECT-TYPE
+		SYNTAX Integer32
+		MAX-ACCESS read-only
+		STATUS current
+		DESCRIPTION
+			"Effective max. number of useable channels."
+		::= { deviceResourceMgmtEntry 2 }
+
+	devSeizedChannels OBJECT-TYPE
+		SYNTAX Integer32
+		MAX-ACCESS read-only
+		STATUS current
+		DESCRIPTION
+			"Number of channels currently in use."
+		::= { deviceResourceMgmtEntry 3 }
+
+
+--------------------------
+--  Gateway Parameters
+--------------------------
+
+	gwParameters        OBJECT IDENTIFIER ::= { gwApplications 3 }
+
+
+		--
+		-- Trace objects
+		--
+
+
+	gwGlobalTrace OBJECT IDENTIFIER ::= { gwParameters 2 }
+
+		
+	gwGlobalTraceID OBJECT-TYPE
+		SYNTAX Integer32
+		MAX-ACCESS	read-write
+		STATUS	current
+		DESCRIPTION
+			" "
+		::= { gwGlobalTrace 1 }
+		
+	gwConsoleTraceOnOff OBJECT-TYPE
+		SYNTAX BooleanValue
+		MAX-ACCESS	read-write
+		STATUS	current
+		DESCRIPTION
+			"Switch whole console tracing on or off."
+		::= { gwGlobalTrace 2 }
+		
+	gwFileTraceOnOff OBJECT-TYPE
+		SYNTAX BooleanValue
+		MAX-ACCESS	read-write
+		STATUS	current
+		DESCRIPTION
+			"Switch whole file tracing on or off."
+		::= { gwGlobalTrace 3 }
+		
+	gwTraceMaxFileSize OBJECT-TYPE
+		SYNTAX Integer32
+		MAX-ACCESS	read-only
+		STATUS	current
+		DESCRIPTION
+			"Maximum size of trace file. "
+		::= { gwGlobalTrace 4 }
+		
+	gwTraceTimerValue OBJECT-TYPE
+		SYNTAX Integer32
+		MAX-ACCESS	read-only
+		STATUS	current
+		DESCRIPTION
+			"Timer for tracing. "
+		::= { gwGlobalTrace 5 }
+		
+	gwTraceMaxBuffSize OBJECT-TYPE
+		SYNTAX Integer32
+		MAX-ACCESS	read-only
+		STATUS	current
+		DESCRIPTION
+			"Maximum buffer size for tracing. "
+		::= { gwGlobalTrace 6 }
+		
+
+
+	gwEventLog OBJECT IDENTIFIER ::= { gwParameters 4 }
+
+	gwTrapGenerationTbl OBJECT-TYPE
+		SYNTAX SEQUENCE OF GwTrapGenerationEntry
+		MAX-ACCESS not-accessible
+		STATUS current
+		DESCRIPTION
+			"The trap generation table indicates for which events traps
+			are generated and for which not."
+		::= { gwEventLog 1 }
+
+	gwTrapGenerationEntry OBJECT-TYPE
+		SYNTAX GwTrapGenerationEntry
+		MAX-ACCESS not-accessible
+		STATUS current
+		DESCRIPTION
+			"An entry in the trap generation table for a particular event."
+		INDEX { gwTrapEventID }
+		::= { gwTrapGenerationTbl 1 }
+
+	GwTrapGenerationEntry ::= SEQUENCE
+	{
+		gwTrapEventID	Integer32,
+		gwTrapEventName OCTET STRING,
+		gwTrapType	Integer32,
+		gwTrapFlag	BooleanValue,
+		gwRebootFlag	BooleanValue,
+		gwRebootType	Integer32,
+		gwTrapGenRowCmd RowCmd
+	}
+
+	gwTrapEventID OBJECT-TYPE
+		SYNTAX Integer32
+		MAX-ACCESS read-create
+		STATUS current
+		DESCRIPTION
+			"This index of the trap generation table identifies a particular event."
+		::= { gwTrapGenerationEntry 1 }
+
+	gwTrapEventName OBJECT-TYPE
+		SYNTAX OCTET STRING (SIZE (0..64))
+		MAX-ACCESS read-create
+		STATUS current
+		DESCRIPTION
+			" "
+		::= { gwTrapGenerationEntry 2 }
+
+	gwTrapType OBJECT-TYPE
+		SYNTAX Integer32
+		MAX-ACCESS read-create
+		STATUS current
+		DESCRIPTION
+			"This determines whether a trap is generated for that event or not."
+		::= { gwTrapGenerationEntry 3 }
+
+	gwTrapFlag OBJECT-TYPE
+		SYNTAX BooleanValue
+		MAX-ACCESS read-create
+		STATUS current
+		DESCRIPTION
+			" "
+		::= { gwTrapGenerationEntry 4 }
+
+	gwRebootFlag OBJECT-TYPE
+		SYNTAX BooleanValue
+		MAX-ACCESS read-create
+		STATUS current
+		DESCRIPTION
+			" "
+		::= { gwTrapGenerationEntry 5 }
+
+	gwRebootType OBJECT-TYPE
+		SYNTAX Integer32
+		MAX-ACCESS read-create
+		STATUS current
+		DESCRIPTION
+			"This determines whether a trap is generated for that event or not."
+		::= { gwTrapGenerationEntry 6 }
+
+	gwTrapGenRowCmd OBJECT-TYPE
+		SYNTAX RowCmd
+		MAX-ACCESS read-create
+		STATUS current
+		DESCRIPTION
+			"Setting this to destroy will delete this entry."
+		::= { gwTrapGenerationEntry 7 }
+
+		--
+		-- ** 2.6 Gateway Resources and Routing
+		--
+
+--         	gwRoutesAndResources      OBJECT IDENTIFIER ::= { gwApplications 4 }
+
+		--
+		-- ** 2.6.1 Gateway Routing Table
+		--
+
+
+		--
+		-- ** 2.7 Gateway Statistics
+		--
+
+         	gwStatistics      OBJECT IDENTIFIER ::= { gwApplications 5 }
+
+	  gwStatsNumLANVoiceCallsRcvd1H OBJECT-TYPE
+		SYNTAX  Counter32
+		MAX-ACCESS  read-only
+		STATUS  current
+		DESCRIPTION
+			"Number of incoming voice calls received in the last hour."
+		 ::= { gwStatistics 1 }
+
+	  gwStatsNumLANVoiceCallsRcvd24H OBJECT-TYPE
+		SYNTAX  Counter32
+		MAX-ACCESS  read-only
+		STATUS  current
+		DESCRIPTION
+			"Number of incoming voice calls received in the last 24 hours."
+	 	::= { gwStatistics 2 }
+
+	  gwStatsNumLANFaxCallsRcvd1H OBJECT-TYPE
+		SYNTAX  Counter32
+		MAX-ACCESS  read-only
+		STATUS  current
+		DESCRIPTION
+			"Number of incoming fax calls received in the last hour."
+		::= { gwStatistics 3 }
+
+	  gwStatsNumLANFaxCallsRcvd24H OBJECT-TYPE
+		SYNTAX  Counter32
+		MAX-ACCESS  read-only
+		STATUS  current
+		DESCRIPTION
+			"Number of incoming fax calls received in the last 24 hours."
+		::= { gwStatistics 4 }
+
+	  gwStatsNumLANVoiceCallsConn1H OBJECT-TYPE
+  		SYNTAX  Counter32
+		MAX-ACCESS  read-only
+		STATUS  current
+		DESCRIPTION
+			"Number of incoming voice calls connected in the last hour."
+		 ::= { gwStatistics 5 }
+
+	  gwStatsNumLANVoiceCallsConn24H OBJECT-TYPE
+		SYNTAX  Counter32
+		MAX-ACCESS  read-only
+		STATUS  current
+		DESCRIPTION
+			"Number of incoming voice calls connected in the last 24 hours."
+		 ::= { gwStatistics 6 }
+
+	  gwStatsNumLANFaxCallsConn1H OBJECT-TYPE
+		SYNTAX  Counter32
+		MAX-ACCESS  read-only
+		STATUS  current
+		DESCRIPTION
+			"Number of incoming fax calls connected in the last hour."
+		::= { gwStatistics 7 }
+
+	  gwStatsNumLANFaxCallsConn24H OBJECT-TYPE
+		SYNTAX  Counter32
+		MAX-ACCESS  read-only
+		STATUS  current
+		DESCRIPTION
+			"Number of incoming fax calls connected in the last 24 hours."
+	 	::= { gwStatistics 8 }
+
+	  gwStatsNumPBXVoiceCallsRcvd1H OBJECT-TYPE
+		SYNTAX  Counter32
+		MAX-ACCESS  read-only
+		STATUS  current
+		DESCRIPTION
+			"Number of outgoing voice calls received in the last hour."
+		 ::= { gwStatistics 9 }
+
+	  gwStatsNumPBXVoiceCallsRcvd24H OBJECT-TYPE
+		SYNTAX  Counter32
+		MAX-ACCESS  read-only
+		STATUS  current
+		DESCRIPTION
+			"Number of outgoing voice calls received in the last 24 hours."
+		 ::= { gwStatistics 10 }
+
+	gwStatsNumPBXFaxCallsRcvd1H OBJECT-TYPE
+		SYNTAX  Counter32
+		MAX-ACCESS  read-only
+		STATUS  current
+		DESCRIPTION
+			"Number of outgoing fax calls received in the last hour."
+		::= { gwStatistics 11 }
+	
+	gwStatsNumPBXFaxCallsRcvd24H OBJECT-TYPE
+		SYNTAX  Counter32
+		MAX-ACCESS  read-only
+		STATUS  current
+		DESCRIPTION
+			"Number of outgoing fax calls received in the last 24 hours."
+		::= { gwStatistics 12 }
+	
+	gwStatsNumPBXVoiceCallsConn1H OBJECT-TYPE
+		SYNTAX  Counter32
+		MAX-ACCESS  read-only
+		STATUS  current
+		DESCRIPTION
+			"Number of outgoing voice calls connected in the last hour."
+		::= { gwStatistics 13 }
+	
+	gwStatsNumPBXVoiceCallsConn24H OBJECT-TYPE
+		SYNTAX  Counter32
+		MAX-ACCESS  read-only
+		STATUS  current
+		DESCRIPTION
+			"Number of outgoing voice calls connected in the last 24 hours."
+		::= { gwStatistics 14 }
+	
+	gwStatsNumPBXFaxCallsConn1H OBJECT-TYPE
+		SYNTAX  Counter32
+		MAX-ACCESS  read-only
+		STATUS  current
+		DESCRIPTION
+			"Number of outgoing fax calls connected in the last hour."
+		::= { gwStatistics 15 }
+	
+	gwStatsNumPBXFaxCallsConn24H OBJECT-TYPE
+		SYNTAX  Counter32
+		MAX-ACCESS  read-only
+		STATUS  current
+		DESCRIPTION
+			"Number of outgoing fax calls connected in the last 24 hours."
+		::= { gwStatistics 16 }
+	
+	gwStatsCumLANCallDuration1H OBJECT-TYPE
+		SYNTAX  Counter32
+		MAX-ACCESS  read-only
+		STATUS  current
+		DESCRIPTION
+			"Cumulative call duration in seconds in the last hour."
+		::= { gwStatistics 17 }
+	
+	gwStatsCumLANCallDuration24H OBJECT-TYPE
+		SYNTAX  Counter32
+		MAX-ACCESS  read-only
+		STATUS  current
+		DESCRIPTION
+			"Cumulative call duration in seconds in the last 24 hours."
+		::= { gwStatistics 18 }
+	
+	gwStatsCumPBXCallDuration1H OBJECT-TYPE
+		SYNTAX  Counter32
+		MAX-ACCESS  read-only
+		STATUS  current
+		DESCRIPTION
+			"Cumulative call duration in seconds in the last hour."
+		::= { gwStatistics 19 }
+	
+	gwStatsCumPBXCallDuration24H OBJECT-TYPE
+		SYNTAX  Counter32
+		MAX-ACCESS  read-only
+		STATUS  current
+		DESCRIPTION
+			"Cumulative call duration in seconds in the last 24 hours."
+		::= { gwStatistics 20 }
+
+
+	gwStatsNumCurCalls OBJECT-TYPE
+		SYNTAX  Counter32
+		MAX-ACCESS  read-only
+		STATUS  current
+		DESCRIPTION
+			"Cumulative number of current calls"
+		::= { gwStatistics 25 }
+
+
+
+	  gwStatsNumLANDataCallsRcvd1H OBJECT-TYPE
+		SYNTAX  Counter32
+		MAX-ACCESS  read-only
+		STATUS  current
+		DESCRIPTION
+			"Number of incoming LAN data calls received in the last hour."
+		::= { gwStatistics 30 }
+
+	  gwStatsNumLANDataCallsRcvd24H OBJECT-TYPE
+		SYNTAX  Counter32
+		MAX-ACCESS  read-only
+		STATUS  current
+		DESCRIPTION
+			"Number of incoming LAN data calls received in the last 24 hours."
+		::= { gwStatistics 31 }
+
+	  gwStatsNumLANDataCallsConn1H OBJECT-TYPE
+  		SYNTAX  Counter32
+		MAX-ACCESS  read-only
+		STATUS  current
+		DESCRIPTION
+			"Number of incoming LAN data calls connected in the last hour."
+		 ::= { gwStatistics 32 }
+
+	  gwStatsNumLANDataCallsConn24H OBJECT-TYPE
+		SYNTAX  Counter32
+		MAX-ACCESS  read-only
+		STATUS  current
+		DESCRIPTION
+			"Number of incoming LAN data calls connected in the last 24 hours."
+		 ::= { gwStatistics 33 }
+
+	  gwStatsNumPBXDataCallsRcvd1H OBJECT-TYPE
+		SYNTAX  Counter32
+		MAX-ACCESS  read-only
+		STATUS  current
+		DESCRIPTION
+			"Number of incoming PBX data calls received in the last hour."
+		::= { gwStatistics 34 }
+
+	  gwStatsNumPBXDataCallsRcvd24H OBJECT-TYPE
+		SYNTAX  Counter32
+		MAX-ACCESS  read-only
+		STATUS  current
+		DESCRIPTION
+			"Number of incoming PBX data calls received in the last 24 hours."
+		::= { gwStatistics 35 }
+
+	  gwStatsNumPBXDataCallsConn1H OBJECT-TYPE
+  		SYNTAX  Counter32
+		MAX-ACCESS  read-only
+		STATUS  current
+		DESCRIPTION
+			"Number of incoming PBX data calls connected in the last hour."
+		 ::= { gwStatistics 36 }
+
+	  gwStatsNumPBXDataCallsConn24H OBJECT-TYPE
+		SYNTAX  Counter32
+		MAX-ACCESS  read-only
+		STATUS  current
+		DESCRIPTION
+			"Number of incoming PBX data calls connected in the last 24 hours."
+		 ::= { gwStatistics 37 }
+
+
+--------------------------
+--  H323 Stack Parameters
+--------------------------
+
+
+
+
+-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+--                                                                        |
+--        The HXG3 SNMP Traps                                             |
+--                                                                        |
+-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+	gwTrapGroup       OBJECT IDENTIFIER ::= { gwApplications 8 }
+
+
+		--
+		-- Trap objects
+		--
+
+-- This is the "classic" RG2500 trap
+	tisTrap NOTIFICATION-TYPE
+		OBJECTS  { trapNum,trapText,trapType,gwtrapSeverity }
+		STATUS	current
+		DESCRIPTION
+			"Indicates a problem with the RG2500 software. Sent when the Admin
+			server detects a trapable event in the event log."
+		::= {gwTrapGroup 1}
+
+	gwStartup NOTIFICATION-TYPE
+		OBJECTS  { trapNum,trapText,trapType,gwtrapSeverity }
+		STATUS	current
+		DESCRIPTION
+			"Indicates the startup of HG1500."
+		::= {gwTrapGroup 3}
+
+	gwReboot NOTIFICATION-TYPE
+		OBJECTS  { trapNum,trapText,trapType,gwtrapSeverity }
+		STATUS	current
+		DESCRIPTION
+			"Indicates the reboot of HG1500."
+		::= {gwTrapGroup 4}
+
+	gwThreshold NOTIFICATION-TYPE
+		OBJECTS  { trapNum,trapText,trapType,gwtrapSeverity }
+		STATUS	current
+		DESCRIPTION
+			"Indicates that a threshold has reached in HG1500."
+		::= {gwTrapGroup 5}
+
+	gwWanLinkUp NOTIFICATION-TYPE
+		OBJECTS  { trapNum,trapText,trapType,gwtrapSeverity }
+		STATUS	current
+		DESCRIPTION
+			"Indicates a WAN Linkup of HG1500."
+		::= {gwTrapGroup 6}
+
+	gwWanLinkDown NOTIFICATION-TYPE
+		OBJECTS  { trapNum,trapText,trapType,gwtrapSeverity }
+		STATUS	current
+		DESCRIPTION
+			"Indicates a WAN Linkdown of HG1500."
+		::= {gwTrapGroup 7}
+
+	gwIpLinkUp NOTIFICATION-TYPE
+		OBJECTS  { trapNum,trapText,trapType,gwtrapSeverity }
+		STATUS	current
+		DESCRIPTION
+			"Indicates an IP Link up of HG1500."
+		::= {gwTrapGroup 8}
+
+	gwIpLinkDown NOTIFICATION-TYPE
+		OBJECTS  { trapNum,trapText,trapType,gwtrapSeverity }
+		STATUS	current
+		DESCRIPTION
+			"Indicates an IP Linkdown of HG1500."
+		::= {gwTrapGroup 9}
+
+	gwAuxTrap NOTIFICATION-TYPE
+		OBJECTS  { trapNum,trapText,trapType,gwtrapSeverity }
+		STATUS	current
+		DESCRIPTION
+			"Indicates an auxiliary trap of HG1500."
+		::= {gwTrapGroup 10}
+
+--
+--
+	trapNum OBJECT-TYPE
+		SYNTAX  DisplayString
+		MAX-ACCESS  read-only
+		STATUS      current
+		DESCRIPTION
+			"Used for traps - defines a software error number - use with
+			type of trap and info like software component ID or board/port
+			to isolate exact error."
+		::= { gwApplications 9 }
+
+	trapText OBJECT-TYPE
+		SYNTAX DisplayString
+		MAX-ACCESS  read-only
+		STATUS      current
+		DESCRIPTION
+			"Used for traps - defines text to be sent up with the trap."
+		::= { gwApplications 10 }
+
+	trapType OBJECT-TYPE
+		SYNTAX INTEGER { software(1), 
+		                 hardware(2),
+		                 startup(3),
+		                 reboot(4),
+		                 threshold(5),
+		                 wanLinkUp(6),
+		                 wanLinkDown(7),
+		                 ipLinkUp(8),
+		                 ipLinkDown(9),
+		                 auxTrap(10) }
+		MAX-ACCESS read-only
+		STATUS	   current
+		DESCRIPTION
+			"Used for traps - the type of error occurred."
+		::= { gwApplications 11 }
+
+	gwtrapSeverity OBJECT-TYPE
+		SYNTAX  DisplayString
+		MAX-ACCESS  read-only
+		STATUS      current
+		DESCRIPTION
+			"Used for traps - defines the severity of the trap."
+		::= { gwApplications 12 }
+
+
+
+
+END

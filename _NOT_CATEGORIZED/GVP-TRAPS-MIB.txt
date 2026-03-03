@@ -1,0 +1,2922 @@
+GVP-TRAPS-MIB DEFINITIONS ::= BEGIN
+
+--- Genesys Voice Platform Traps MIB v8.1.3
+
+IMPORTS
+	DisplayString FROM SNMPv2-TC
+
+	MODULE-IDENTITY,
+	OBJECT-TYPE,
+	NOTIFICATION-TYPE FROM SNMPv2-SMI
+
+	gvpCommon, gvpConfigName, gvpReporting, ccp, rm, mrcpp, mcp, fm, ssg, ctic, pstnc, rs FROM GVP-MIB;
+
+---
+--- MIB High Level description
+---
+
+gvpTraps MODULE-IDENTITY
+	LAST-UPDATED "201007050000Z"
+	ORGANIZATION "Genesys Telecommunications Labs, Inc. An Alcatel Company"
+	CONTACT-INFO
+		"Postal: 2001 Junipero Serra Blvd
+		Daly City, CA 94014
+		US
+		Tel: +1 888 GENESYS
+		Fax: +1 415 437 1260
+		email: support@genesyslab.com"
+	DESCRIPTION
+	"Collection of notifications that provides for remote
+	management of Genesys Call Center server applications."
+	REVISION "201007050000Z"
+	DESCRIPTION
+		"Version 8.1.3."
+::= { gvpCommon 1 }
+
+
+
+-- #############################################################################
+-- Object Identifiers
+-- #############################################################################
+
+ccpTraps OBJECT IDENTIFIER
+	::= { ccp 0 }
+
+rmTraps OBJECT IDENTIFIER
+	::= { rm 0 }
+
+mrcppTraps OBJECT IDENTIFIER
+	::= { mrcpp 0 }
+
+mcpTraps OBJECT IDENTIFIER
+	::= { mcp 0 }
+
+fmTraps OBJECT IDENTIFIER
+	::= { fm 0 }
+
+pstncTraps OBJECT IDENTIFIER
+	::= { pstnc 0 }
+
+ssgTraps OBJECT IDENTIFIER
+	::= { ssg 0 }
+
+cticTraps OBJECT IDENTIFIER
+	::= { ctic 0 }
+
+rsTraps OBJECT IDENTIFIER
+	::= { rs 0 }
+
+gvpReportingTraps OBJECT IDENTIFIER
+	::= { gvpReporting 0 }
+
+
+gvpTrapSeverity    OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  accessible-for-notify
+    STATUS      current
+    DESCRIPTION
+        "gvpTrapSeverity: This indicates the severity of a trap."
+    ::= { gvpTraps 1 }
+
+gvpTrapMessage    OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  accessible-for-notify
+    STATUS      current
+    DESCRIPTION
+        "gvpTrapMessage: Trap text message."
+    ::= { gvpTraps 2 }
+
+-- #############################################################################
+-- CCP BRANCH
+-- #############################################################################
+
+ccpStopped	NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+		"148.CCP_STOPPED: The CCP has been stopped"
+	::= { ccpTraps 1000 }
+
+
+ccpStarted	NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+		"148.CCP_STARTED: The CCP has been started"
+	::= { ccpTraps 1001 }
+
+ccpCriticalInitFailure	NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+		"148.CCP_CRITICAL_INIT_FAILURE: The CCP initialization failed"
+	::= { ccpTraps 1002 }
+
+
+-- #############################################################################
+-- RM BRANCH
+-- #############################################################################
+
+rmUnrecoverableerr 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_UNRECOVERABLEERR: Unrecoverable Error"
+  	::= { rmTraps 1000 }
+
+rmConfigerr 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_CONFIGERR: RM proxy initalization failed"
+  	::= { rmTraps 1001 }
+
+rmSocketerr 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_SOCKETERR: Socket Error"
+  	::= { rmTraps 1003 }
+
+rmResourceallocerr 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_RESOURCEALLOCERR: Resource allocation failure"
+  	::= { rmTraps 1004 }
+
+rmCdriniterr 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_CDRINITERR: This is a CDR initialization failure"
+  	::= { rmTraps 1005 }
+
+rmCdruniniterr 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_CDRUNINITERR: This is a CDR uninitialization failure"
+  	::= { rmTraps 1006 }
+
+rmCdrrecordcreateerr 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_CDRRECORDCREATEERR: This is a CDR record creation failure"
+  	::= { rmTraps 1007 }
+
+rmCdrrecorddeleteerr 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_CDRRECORDDELETEERR: This is a CDR record deletion failure"
+  	::= { rmTraps 1008 }
+
+rmDialingrangeexceed 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_DIALINGRANGEEXCEED: The dialing rule range was exceeded"
+  	::= { rmTraps 1009 }
+
+rmDialingtypeinvalid 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_DIALINGTYPEINVALID: The dialing rule type that was specified is invalid."
+  	::= { rmTraps 1010 }
+
+rmDialingexprinvalid 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_DIALINGEXPRINVALID: The dialing expression was invalid."
+  	::= { rmTraps 1011 }
+
+rmDnisnotexist 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_DNISNOTEXIST: The DNIS that was specified in the call was not configured; therefore, the call played the default IVR Profile"
+  	::= { rmTraps 1012 }
+
+rmDefaulttentantnotfound 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_DEFAULTTENTANTNOTFOUND: The default tenant was not found"
+  	::= { rmTraps 1013 }
+
+rmRequesturitranslationfail 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_REQUESTURITRANSLATIONFAIL: Request URI translation failure"
+  	::= { rmTraps 1014 }
+
+rmCallcreatefail 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_CALLCREATEFAIL: Call creation failed"
+  	::= { rmTraps 1015 }
+
+rmAppprofilenotfound 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_APPPROFILENOTFOUND: An Application / IVR Profile was not found "
+  	::= { rmTraps 1016 }
+
+rmTenantnotfound 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_TENANTNOTFOUND: The tenant ID that was requested cannot be found."
+  	::= { rmTraps 1017 }
+
+rmDefaultivrprofilenotfound 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_DEFAULTIVRPROFILENOTFOUND: The default IVR Profile was not found."
+  	::= { rmTraps 1018 }
+
+rmDefaultservicetypenotfound 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_DEFAULTSERVICETYPENOTFOUND: The default service type was not found."
+  	::= { rmTraps 1019 }
+
+rmMandatoryuriparamnotfound 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_MANDATORYURIPARAMNOTFOUND: The mandatory URI parameter was not found."
+  	::= { rmTraps 1020 }
+
+rmInvaliduriparam 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_INVALIDURIPARAM: An invalid URI parameter was encountered."
+  	::= { rmTraps 1021 }
+
+rmServiceprereqnotfound 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_SERVICEPREREQNOTFOUND: The service prerequisite was not found."
+  	::= { rmTraps 1022 }
+
+rmNomatchingservicetype 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_NOMATCHINGSERVICETYPE: A matching logical group for the specified service type was not defined"
+  	::= { rmTraps 1023 }
+
+rmNomatchinggwpreference 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_NOMATCHINGGWPREFERENCE: The RM was unable to allocate a resource based on the gateway preference."
+  	::= { rmTraps 1024 }
+
+rmCcilibinvalidparam 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_CCILIBINVALIDPARAM: The CCILib agent encountered an invalid parameter."
+  	::= { rmTraps 1025 }
+
+rmCcilibconfigobjerr 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_CCILIBCONFIGOBJERR: The CCILib failed to get the configuration object."
+  	::= { rmTraps 1026 }
+
+rmCcilibrmobjerr 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_CCILIBRMOBJERR: The CCILib failed to get the RM object."
+  	::= { rmTraps 1027 }
+
+rmCcilibresobjnotfound 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_CCILIBRESOBJNOTFOUND: The CCILib failed to locate the resource object."
+  	::= { rmTraps 1028 }
+
+rmCciliblogicalrescreatefail 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_CCILIBLOGICALRESCREATEFAIL: The CCILib failed to create a logical resource."
+  	::= { rmTraps 1029 }
+
+rmCcilibphysicalrescreatefail 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_CCILIBPHYSICALRESCREATEFAIL: The CCILib failed to create a physical resource."
+  	::= { rmTraps 1030 }
+
+rmCcilibtenantnotfound 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_CCILIBTENANTNOTFOUND: The CCILib was unable to find information for the tenant."
+  	::= { rmTraps 1031 }
+
+rmCcilibtenantcreatefail 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_CCILIBTENANTCREATEFAIL: The CCILib was unable to create a tenant."
+  	::= { rmTraps 1032 }
+
+rmCcilibappidnotfound 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_CCILIBAPPIDNOTFOUND: The CCILib was unable to find the application ID."
+  	::= { rmTraps 1033 }
+
+rmCciliblinkedresnotfound 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_CCILIBLINKEDRESNOTFOUND: The CCILib linked resource was not found."
+  	::= { rmTraps 1034 }
+
+rmCcilibparentnotfound 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_CCILIBPARENTNOTFOUND: The CCILib was unable to find parent information for the resource object."
+  	::= { rmTraps 1035 }
+
+rmCciliblogicalresgroupnotfound 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_CCILIBLOGICALRESGROUPNOTFOUND: The CCILib was unable to find the logical resource group"
+  	::= { rmTraps 1036 }
+
+rmCcilibtenantconverterror 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_CCILIBTENANTCONVERTERROR: The CCILib was unable to convert the tenant object."
+  	::= { rmTraps 1037 }
+
+rmCcilibcapadderror 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_CCILIBCAPADDERROR: The CCILib was unable to add capability for the specified service type"
+  	::= { rmTraps 1038 }
+
+rmCcilibappconverterror 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_CCILIBAPPCONVERTERROR: The CCILib was unable to convert an application object."
+  	::= { rmTraps 1039 }
+
+rmRessessioncreatefail 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_RESSESSIONCREATEFAIL: Creating a resource session failed."
+  	::= { rmTraps 1041 }
+
+rmCcilibappcreatefail 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_CCILIBAPPCREATEFAIL: The CCILib was unable to create an application."
+  	::= { rmTraps 1042 }
+
+rmCcilibupdateinvalidcfgobj 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_CCILIBUPDATEINVALIDCFGOBJ: The CCILib was updated; however, the configuration object was invalid."
+  	::= { rmTraps 1043 }
+
+rmCcilibupdatetenantnotfound 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_CCILIBUPDATETENANTNOTFOUND: The CCILib was updated; however, the tenant could not be found."
+  	::= { rmTraps 1044 }
+
+rmCcilibupdatetenantpopulatefail 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_CCILIBUPDATETENANTPOPULATEFAIL: The CCILib was updated; however, the tenant population failed."
+  	::= { rmTraps 1045 }
+
+rmCcilibupdateappnotfound 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_CCILIBUPDATEAPPNOTFOUND: The CCILib was updated; however, the application could not be found."
+  	::= { rmTraps 1046 }
+
+rmCcilibupdateapppopulatefail 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_CCILIBUPDATEAPPPOPULATEFAIL: The CCILib was updated; however, populating the application failed."
+  	::= { rmTraps 1047 }
+
+rmCcilibupdatelogicalresnotfound 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_CCILIBUPDATELOGICALRESNOTFOUND: The CCILib was updated; however, the logical resource group could not be found."
+  	::= { rmTraps 1048 }
+
+rmCcilibupdatelogicalresadderr 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_CCILIBUPDATELOGICALRESADDERR: The CCILib was updated; however, adding the logical resource group failed."
+  	::= { rmTraps 1049 }
+
+rmCcilibupdateresobjnotfound 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_CCILIBUPDATERESOBJNOTFOUND: The CCILib was updated; however, the resource object was not found."
+  	::= { rmTraps 1050 }
+
+rmCcilibupdatephyrescreatefail 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_CCILIBUPDATEPHYRESCREATEFAIL: The CCILib was updated; however, creating the physical resource failed."
+  	::= { rmTraps 1051 }
+
+rmCcilibupdateinvalidobj 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_CCILIBUPDATEINVALIDOBJ: The CCILib was updated; however, an invalid delta object was encountered."
+  	::= { rmTraps 1052 }
+
+rmCcilibupdateinvalidobjtype 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_CCILIBUPDATEINVALIDOBJTYPE: The CCILib was updated; however, an invalid object type was encountered."
+  	::= { rmTraps 1053 }
+
+rmCcilibupdatetenantaddfail 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_CCILIBUPDATETENANTADDFAIL: The CCILib update tenant addition failed."
+  	::= { rmTraps 1054 }
+
+rmCcilibupdateappaddfail 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_CCILIBUPDATEAPPADDFAIL: The CCILib update application addition failed."
+  	::= { rmTraps 1055 }
+
+rmCcilibupdatetenantremovefail 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_CCILIBUPDATETENANTREMOVEFAIL: The CCILib update tenant deletion failed."
+  	::= { rmTraps 1056 }
+
+rmCcilibupdateappremovefail 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_CCILIBUPDATEAPPREMOVEFAIL: The CCILib update application deletion failed."
+  	::= { rmTraps 1057 }
+
+rmCcilibupdatetenantupdatefail 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_CCILIBUPDATETENANTUPDATEFAIL: The CCILib update tenant update failed."
+  	::= { rmTraps 1058 }
+
+rmCcilibupdateapplicationupdatefail 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_CCILIBUPDATEAPPLICATIONUPDATEFAIL: The CCILib update application update failed."
+  	::= { rmTraps 1059 }
+
+rmRegistererror 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_REGISTERERROR: Received error related to SIP REGISTER."
+  	::= { rmTraps 1060 }
+
+rmInvalidmsg 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_INVALIDMSG: Message exchanged between the active and standby RM is invalid"
+  	::= { rmTraps 1061 }
+
+rmInvalidconfig 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_INVALIDCONFIG:  Configuration syntax is incorrect."
+  	::= { rmTraps 1062 }
+
+rmNetworkproblem 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_NETWORKPROBLEM: This was a LAN problem."
+  	::= { rmTraps 1064 }
+
+rmRequesturiparsefail 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_REQUESTURIPARSEFAIL: Request URI parse failure."
+  	::= { rmTraps 1065 }
+
+rmOptionuserinfoexist 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_OPTIONUSERINFOEXIST: User Info should not exist in option message."
+  	::= { rmTraps 1066 }
+
+rmToheaderparsefail 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_TOHEADERPARSEFAIL: Failed to parse TO header"
+  	::= { rmTraps 1067 }
+
+rmServiceagentbadmsgformat 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_RMSERVICEAGENTBADMSGFORMAT: The RM service agent received a bad message."
+  	::= { rmTraps 1068 }
+
+rmSuspend 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_RMSUSPEND: The RM is in the process of a suspension."
+  	::= { rmTraps 1069 }
+
+rmSipservicesameprecedence 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_SIPSERVICESAMEPRECEDENCE: A SIP service with the same precedence value was found."
+  	::= { rmTraps 1070 }
+
+rmInvalidcalltenantid 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_INVALIDCALLTENANTID: The gvp-tenant-id did not belong to the current call tenant."
+  	::= { rmTraps 1071 }
+
+rmFailedtofindlinkedtenant 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_FAILEDTOFINDLINKEDTENANT: Failed to get linked tenant"
+  	::= { rmTraps 1072 }
+
+rmFailedtofindlinkedresource 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_FAILEDTOFINDLINKEDRESOURCE: Failed to get linked resource"
+  	::= { rmTraps 1073 }
+
+rmLogicalresinfonotfound 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_LOGICALRESINFONOTFOUND: The logical resource group information was not found."
+  	::= { rmTraps 1074 }
+
+rmLogicalrespopulatefail 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_LOGICALRESPOPULATEFAIL: The logical resource population failed."
+  	::= { rmTraps 1075 }
+
+rmLogicalressectionnotfound 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_LOGICALRESSECTIONNOTFOUND: The logical resource section was not found."
+  	::= { rmTraps 1076 }
+
+rmPhysrespopulatefail 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_PHYSRESPOPULATEFAIL: The logical resource population failed."
+  	::= { rmTraps 1077 }
+
+rmTenantpopulateincomplete 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_TENANTPOPULATEINCOMPLETE: The tenant population was incomplete."
+  	::= { rmTraps 1078 }
+
+rmAppinfonotfound 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_APPINFONOTFOUND: The IVR application information was not found."
+  	::= { rmTraps 1079 }
+
+rmApppopulateincomplete 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_APPPOPULATEINCOMPLETE: The application information population was incomplete."
+  	::= { rmTraps 1080 }
+
+rmDnisextractfail 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_DNISEXTRACTFAIL: The DNIS extraction failed."
+  	::= { rmTraps 1081 }
+
+rmSettinglogicalresproperties 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_SETTINGLOGICALRESPROPERTIES: The RM has set logical resource properties."
+  	::= { rmTraps 1082 }
+
+rmAornotfound 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_AORNOTFOUND: The address of record was not found for the resource."
+  	::= { rmTraps 1083 }
+
+rmCapacitynotfound 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_CAPACITYNOTFOUND: Capacity was not found for the resource."
+  	::= { rmTraps 1084 }
+
+rmCapacitynonunsigned 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_CAPACITYNONUNSIGNED: Capacity is not an unsigned integer."
+  	::= { rmTraps 1085 }
+
+rmSettingphyresproperties 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_SETTINGPHYRESPROPERTIES: Setting Phyiscal Resource Properties"
+  	::= { rmTraps 1086 }
+
+rmUpdatelogicalresgroupnotfound 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_UPDATELOGICALRESGROUPNOTFOUND: CCILib update - logical resource group was not found."
+  	::= { rmTraps 1087 }
+
+rmUpdatepopulatephyresfail 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_UPDATEPOPULATEPHYRESFAIL: CCILib update failed to populate physical resource."
+  	::= { rmTraps 1088 }
+
+rmUpdatefailgetphyres 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_UPDATEFAILGETPHYRES: CCILib update failed to get physical resource."
+  	::= { rmTraps 1089 }
+
+rmUpdatepopulatelogicalresfail 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_UPDATEPOPULATELOGICALRESFAIL: CCILib update failed to populate logical resource."
+  	::= { rmTraps 1090 }
+
+rmUpdatelogicalresnotfound 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_UPDATELOGICALRESNOTFOUND: CCILib update - logical resource section was not found."
+  	::= { rmTraps 1091 }
+
+rmUpdatephyresremoved 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_UPDATEPHYRESREMOVED: CCILib update - physical resource was removed."
+  	::= { rmTraps 1092 }
+
+rmUpdatetenantadded 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_UPDATETENANTADDED: CCILib update - new tenant was added."
+  	::= { rmTraps 1093 }
+
+rmUpdateappadded 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_UPDATEAPPADDED: CCILib update: CCILib update - new application was added."
+  	::= { rmTraps 1094 }
+
+rmUpdatelinkedtenantremoved 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_UPDATELINKEDTENANTREMOVED: CCILib update - linked tenant was removed."
+  	::= { rmTraps 1095 }
+
+rmUpdateappremoved 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_UPDATEAPPREMOVED: CCILib update - application was removed."
+  	::= { rmTraps 1096 }
+
+rmUdpatelinkedtenantupdated 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_UDPATELINKEDTENANTUPDATED: CCILib update - linked tenant was updated."
+  	::= { rmTraps 1097 }
+
+rmUdpateappdataupdated 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_UDPATEAPPDATAUPDATED: CCILib update - application data was updated."
+  	::= { rmTraps 1098 }
+
+rmUpdateignored 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_UPDATEIGNORED: CCILib update - ignored update for the application."
+  	::= { rmTraps 1099 }
+
+rmWarningBadRegex 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_WARNING_BAD_REGEX: Bad regular expression"
+  	::= { rmTraps 1100 }
+
+rmStartup 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_STARTUP: The RM was started."
+  	::= { rmTraps 1105 }
+
+rmShutdown 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_SHUTDOWN: The RM was shut down."
+  	::= { rmTraps 1106 }
+
+rmPolicyViolationError 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_POLICYVIOLATIONERROR: The usage limit was exceeded for the call."
+  	::= { rmTraps 1116 }
+
+rmBurstAppBegin 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_BURSTAPPBEGIN: Burst above usage limit has been started for IVR Profile"
+  	::= { rmTraps 1117 }
+
+rmBurstAppEnd 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_BURSTAPPEND: Burst above usage limt has been ended for IVR Profile"
+  	::= { rmTraps 1118 }
+
+rmBurstTenantBegin 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_BURSTTENANTBEGIN: Burst above usage limit has been started for Tenant"
+  	::= { rmTraps 1119 }
+
+rmBurstTenantEnd 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_BURSTTENANTEND: Burst above usage limt has been ended for Tenant"
+  	::= { rmTraps 1120 }
+
+rmActiveMode         NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_ACTIVEMODE: RM Node is going Active"
+  	::= { rmTraps 1121 }
+
+rmStandbyMode        NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_STANDBYMODE: RM Node is going Standby"
+  	::= { rmTraps 1122 }
+
+rmNetworkrecovery    NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "149.GVPLOG_RM_NETWORKRECOVERY: LAN recovered"
+  	::= { rmTraps 1123 }
+
+rmRedundancyundefined 	 NOTIFICATION-TYPE
+ 	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	STATUS current
+ 	DESCRIPTION
+ 	        "149.GVPLOG_RM_REDUNDANCYUNDEFINED: Specify a value for redundancy-type on physical resource managed by RM."
+  	::= { rmTraps 1124 }
+
+rmSubscriptionError 	 NOTIFICATION-TYPE
+ 	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	STATUS current
+ 	DESCRIPTION
+ 	        "149.GVPLOG_RM_SUBSCRIPTION_ERROR: SUBSCRIBE request with an event name not known to RM was received. Specify the correct event name in the SUBSCRIBE request."
+  	::= { rmTraps 1125 }
+
+rmUnsubscribe 	 NOTIFICATION-TYPE
+ 	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	STATUS current
+ 	DESCRIPTION
+ 	        "149.GVPLOG_RM_UNSUBSCRIBE: RM unsubscribed an event subscription"
+  	::= { rmTraps 1126 }
+  	
+rmPolicyEnforcementViolationError 	 NOTIFICATION-TYPE
+ 	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	STATUS current
+ 	DESCRIPTION
+ 	        "149.GVPLOG_RM_POLICYENFORCEMENTVIOLATIONERROR: Invalid configuration caused a policy enforcement error"
+  	::= { rmTraps 1127 }
+
+rmSingleTenant 	 NOTIFICATION-TYPE
+ 	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	STATUS current
+ 	DESCRIPTION
+ 	        "149.GVPLOG_RM_SINGLETENANT: RM started in single tenant mode"
+  	::= { rmTraps 1128 }
+
+
+rmHAMode 	 NOTIFICATION-TYPE
+ 	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	STATUS current
+ 	DESCRIPTION
+ 	        "149.GVPLOG_RM_HAMODE: RM started in HA mode"
+  	::= { rmTraps 1129 }
+
+
+rmConfigInfo 	 NOTIFICATION-TYPE
+ 	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	STATUS current
+ 	DESCRIPTION
+ 	        "149.GVPLOG_RM_CONFIGINFO: RM configuration information"
+  	::= { rmTraps 1130 }
+
+-- #############################################################################
+-- MRCPP BRANCH
+-- #############################################################################
+
+mrcppStartUp		NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "173.GVPLOG_PROXY_STARTUP: The MRCP Proxy was started."
+  	::= { mrcppTraps 1000 }
+
+mrcppShutdown		NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "173.GVPLOG_PROXY_SHUTDOWN: The MRCP Proxy was shut down."
+  	::= { mrcppTraps 1001 }
+
+mrcppHAMode		NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "173.GVPLOG_PXY_HAMODE: The MRCP Proxy was started in HA mode."
+  	::= { mrcppTraps 1002 }
+
+mrcppActive		NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "173.GVPLOG_PXY_ACTIVEMODE: The MRCP Proxy node is going active."
+  	::= { mrcppTraps 1003 }
+
+mrcppStandby		NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "173.GVPLOG_PXY_STANDBYMODE: The MRCP Proxy node is going standby."
+  	::= { mrcppTraps 1004 }
+
+mrcppFIPSDisabled	NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "173.GVPLOG_PXY_FIPSDISABLED: The MRCP Proxy was started with FIPS disabled."
+  	::= { mrcppTraps 1005 }
+
+
+-- #############################################################################
+-- MCP BRANCH
+-- #############################################################################
+
+mcpCmSessmgrDesturinotsupp NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_SESSMGR_DESTURINOTSUPP: The destination URI is not supported."
+	::= { mcpTraps 1004 }
+
+mcpCmSessmgrAppmodulenotfound	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_SESSMGR_APPMODULENOTFOUND: The desired Application module (<app module name>) was not found"
+	::= { mcpTraps 1008 }
+
+mcpCmSessmgrFailupdteopencallidfile	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_SESSMGR_FAILUPDTEOPENCALLIDFILE: The platform was unable to create the 0x<orig>.id file or open the file for editing."
+	::= { mcpTraps 1009 }
+
+mcpCmSessmgrIdgendirunaccble	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_SESSMGR_IDGENDIRUNACCBLE: The ID generator directory was not accessible."
+	::= { mcpTraps 1011 }
+
+mcpCmSessmgrInitcallsesswnolnmgr	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_SESSMGR_INITCALLSESSWNOLNMGR: Initializing CallSession with a NULL line manager."
+	::= { mcpTraps 1012 }
+
+mcpCmSessmgrIsdncausecodeerr	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_SESSMGR_ISDNCAUSECODEERR: The ISDN cause code (<isdn cause>) is out of range."
+	::= { mcpTraps 1013 }
+
+mcpCmSessmgrNotputseqnumtocallidfile	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_SESSMGR_NOTPUTSEQNUMTOCALLIDFILE: The 0x<orig>.id file was opened successfully to write to, but the MCP was unable to write an initial sequence number to the file, or the MCP cannot overwrite the existing sequence number."
+	::= { mcpTraps 1015 }
+
+mcpCmSessmgrOutcallnoresource	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_SESSMGR_OUTCALLNORESOURCE: An outbound call was rejected due to no resource."
+	::= { mcpTraps 1016 }
+
+mcpCmSessmgrStrmodunexptevent	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_SESSMGR_STRMMODUNEXPTEVENT: An attempt to open a media stream for ASR has failed, and the streaming module returned an unexpected event <event> on the StreamID <stream ID>."
+	::= { mcpTraps 1019 }
+
+mcpCmSessmgrSysipnotretrvable	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_SESSMGR_SYSIPNOTRETRVABLE: The system IP address was not retrievable."
+	::= { mcpTraps 1021 }
+
+mcpCmSessmgrVrminitfail	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_SESSMGR_VRMINITFAIL: The VRM initialization failed (<return value>)."
+	::= { mcpTraps 1025 }
+
+mcpCmCmutilConflictext	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_CMUTIL_CONFLICTEXT: A URI had both 'x' and 'postd=' (conflicting extensions)."
+	::= { mcpTraps 1028 }
+
+mcpCmCmutilPostdialinvchar	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_CMUTIL_POSTDIALINVCHAR: The post dial number contained invalid characters."
+	::= { mcpTraps 1031 }
+
+mcpCmCmutilPostdiallong	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_CMUTIL_POSTDIALLONG: The post dial number was more than 196 characters."
+	::= { mcpTraps 1032 }
+
+mcpChCmutilTelnuminvchar	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_CMUTIL_TELNUMINVCHAR: The telephone number contained invalid characters."
+	::= { mcpTraps 1033 }
+
+mcpChCmutilTelnumlong	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_CMUTIL_TELNUMLONG: The telephone number was more than 60 characters."
+	::= { mcpTraps 1034 }
+
+mcpCmLmbaseFailupdteopencallidfile	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_LMBASE_FAILUPDTEOPENCALLIDFILE: The 0x<orig>.id file could not be opened for updating."
+	::= { mcpTraps 1038 }
+
+mcpCmLmbaseIdgendirunaccble	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_LMBASE_IDGENDIRUNACCBLE: The ID generator directory was not accessible."
+	::= { mcpTraps 1039 }
+
+mcpCmLmbaseNotputseqnumtocallidfile	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_LMBASE_NOTPUTSEQNUMTOCALLIDFILE: Could not update the sequence number to the 0x<orig>.id file."
+	::= { mcpTraps 1045 }
+
+mcpCmLmbaseSysipnotretrvable	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_LMBASE_SYSIPNOTRETRVABLE: The system IP address was not retrievable."
+	::= { mcpTraps 1049 }
+
+mcpCmLmsip2Customparamerror	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_LMSIP2_CUSTOMPARAMERROR: Unable to set custom parameter value for the header <name>."
+	::= { mcpTraps 1053 }
+
+mcpCmLmsip2Errparsesdpcontent	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_LMSIP2_ERRPARSESDPCONTENT: Failed to parse SDP content due to <reason>."
+	::= { mcpTraps 1056 }
+
+mcpCmLmsip2Mediaerror	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_LMSIP2_MEDIAERROR: A media error detected; terminating the call."
+	::= { mcpTraps 1058 }
+
+mcpCmLmsip2Nonmatchingsipinfo	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_LMSIP2_NONMATCHINGSIPINFO: The received SIP INFO message did not match any existing calls."
+	::= { mcpTraps 1059 }
+
+mcpCmLmsip2Recvunexpctack	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_LMSIP2_RECVUNEXPCTACK: The MCP received an unexpected ACK."
+	::= { mcpTraps 1060 }
+
+mcpCmLmsip2Registeralgonotsupported	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_LMSIP2_REGISTERALGONOTSUPPORTED: The SIP authentication algorithm was not supported by the media platform."
+	::= { mcpTraps 1061 }
+
+mcpCmLmsip2Registerauthenticationerror	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_LMSIP2_REGISTERAUTHENTICATIONERROR: This was an authentication error for SIP registration."
+	::= { mcpTraps 1062 }
+
+mcpCmLmsip2Registerbadrequest	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_LMSIP2_REGISTERBADREQUEST: The REGISTER request was considered a bad request (invalid) and was rejected by the registrar."
+	::= { mcpTraps 1063 }
+
+mcpCmLmsip2Registerforbidden	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_LMSIP2_REGISTERFORBIDDEN: GVP was not authorized to change the address of record."
+	::= { mcpTraps 1064 }
+
+mcpCmLmsip2Regisernotacceptable	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_LMSIP2_REGISTERNOTACCEPTABLE: The address of record was not acceptable by the registrar."
+	::= { mcpTraps 1065 }
+
+mcpCmLmsip2Registernotfound	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_LMSIP2_REGISTERNOTFOUND: The address of record was not found by the registrar."
+	::= { mcpTraps 1066 }
+
+mcpCmLmsip2Registerothererror	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_LMSIP2_REGISTEROTHERERROR: This was a general error for SIP registration."
+	::= { mcpTraps 1067 }
+
+mcpCmLmsip2Registertimeout	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_LMSIP2_REGISTERTIMEOUT: The REGISTER request timed out, possibly due to the registrar not being active or due to a misconfiguration."
+	::= { mcpTraps 1068 }
+
+mcpCmLmsip2Registerdefadjexpiry	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_LMSIP2_REGISTERDEFADJEXPIRY: Registered, but the value configured for the sip.registerexpiryadjustment parameter was greater than the expires time.  The default value used."
+	::= { mcpTraps 1069 }
+
+mcpCmLmsip2Sipstackwarning	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_LMSIP2_SIPSTACKWARNING: SIP Stack warning. Check the WARN message in the MCP log file for details of the problem."
+	::= { mcpTraps 1070 }
+
+
+mcpCmAppmoduleFailregapp	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_APPMODULE_FAILREGAPP: (<result>) Failed to register application."
+	::= { mcpTraps 1072 }
+
+mcpCmAppmoduleFailregappmod	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_APPMODULE_FAILREGAPPMOD: (<result>) Failed to register application module <app module name> of type <app module type name>."
+	::= { mcpTraps 1073 }
+
+mcpCmAppmoduleFailstrtworkngthrd	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_APPMODULE_FAILSTRTWORKNGTHRD: Failed to start working thread (<thread name>)."
+	::= { mcpTraps 1074 }
+
+mcpCmRemdialCantcreateserversock	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_REMDIAL_CANTCREATESERVERSOCK: The MCP could not create the server socket at port <port>, or the MCP could not create the server socket at a negative port <port>."
+	::= { mcpTraps 1077 }
+
+mcpCmRemdialFailregremdlmod	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_REMDIAL_FAILREGREMDLMOD: (<result>) Failed to register remdial module <module name> of type <module type name>."
+	::= { mcpTraps 1078 }
+
+mcpCmNetannInvalidParam	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_NETANN_INVALIDPARAM: The Netann inbound call was rejected due to an invalid parameter."
+	::= { mcpTraps 1079 }
+
+mcpCmNetannJoinConferenceFailed	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_NETANN_JOINCONFERENCEFAILED: The Join conference failed."
+	::= { mcpTraps 1080 }
+
+mcpCmNetannErrorPlayingMedia	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_NETANN_ERRORPLAYINGMEDIA: Error playing the requested media: <media URL>."
+	::= { mcpTraps 1081 }
+
+mcpCmRemdialSocketerror	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_REMDIAL_SOCKETERROR: The user attempted a connection to the Remdial port, and there was an error at the socket level."
+	::= { mcpTraps 1083 }
+
+mcpCmMtmpcInitfailed	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_MTMPC_INITFAILED: Failed to initialize MTMPC."
+	::= { mcpTraps 1084 }
+
+mcpMpcMediamgrBadavichnksize	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_MPC_MEDIAMGR_BADAVICHNKSIZE: A bad AVI chunk size was found: <details>."
+	::= { mcpTraps 1095 }
+
+mcpMpcMediamgrBadisoboxsize	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_MPC_MEDIAMGR_BADISOBOXSIZE: A bad size in the ISO box was found: <details>."
+	::= { mcpTraps 1096 }
+
+mcpMpcMediamgrBadmaj3gppbrand	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_MPC_MEDIAMGR_BADMAJ3GPPBRAND: A bad 3GPP major brand was found: <details>."
+	::= { mcpTraps 1099 }
+
+mcpMpcMediamgrBrandincompt3gpp	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_MPC_MEDIAMGR_BRANDINCOMPT3GPP: Brand incompatible with 3GPP: <details>."
+	::= { mcpTraps 1100 }
+
+mcpMpcMediamgrFailtostartrecord	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_MPC_MEDIAMGR_FAILTOSTARTRECORD: Unable to start recording <url> <details>."
+	::= { mcpTraps 1103 }
+
+mcpMpcMediamgrInvalidmedia	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_MPC_MEDIAMGR_INVALIDMEDIA: Error in ParseMedia: <reason>, or invalid media: a malformed media frame of type <name> has been found."
+	::= { mcpTraps 1104 }
+
+mcpMpcMediamgrMalformedavihdr	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_MPC_MEDIAMGR_MALFORMEDAVIHDR: A malformed AVI header was found: <details>."
+	::= { mcpTraps 1105 }
+
+mcpMpcMediamgrNoisotrak	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_MPC_MEDIAMGR_NOISOTRAK: No ISO media track was recognized: <details>."
+	::= { mcpTraps 1107 }
+
+mcpMpcMediamgrRecbuffisotoosmall	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_MPC_MEDIAMGR_RECBUFFISOTOOSMALL: The recording buffer for ISO too small: <details>."
+	::= { mcpTraps 1108 }
+
+
+mcpMpcMediamgrRtspreplyerror	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_MPC_MEDIAMGR_RTSPREPLYERROR: An RTSP reply error occurred: <details>."
+	::= { mcpTraps 1110 }
+
+mcpMpcMediamgrRtspreqfail	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_MPC_MEDIAMGR_RTSPREQFAIL: An RTSP request error occurred: <details>."
+	::= { mcpTraps 1111 }
+
+mcpMpcMediamgrRtsprtperror	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_MPC_MEDIAMGR_RTSPRTPERROR: An RTSP RTP interface error occurred: <details>."
+	::= { mcpTraps 1112 }
+
+mcpMpcMediamgrUnabletoallocmem	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_MPC_MEDIAMGR_UNABLETOALLOCMEM: Unable to allocate new memory: <details>."
+	::= { mcpTraps 1113 }
+
+mcpMpcMediamgrUnexpectedrtspdisc	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_MPC_MEDIAMGR_UNEXPECTEDRTSPDISC: An unexpected RTSP disconnect occurred: <details>."
+	::= { mcpTraps 1114 }
+
+mcpMpcMediamgrUnsupportedaudchnls	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_MPC_MEDIAMGR_UNSUPPORTEDAUDCHNLS: The number of audio channels was not supported: <details>."
+	::= { mcpTraps 1116 }
+
+mcpMpcRtpifTxrtcpapppktfail	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_MPC_RTPIF_TXRTCPAPPPKTFAIL: MPCRTPStream: RTCP App Packet cannot be sent: <details>."
+	::= { mcpTraps 1117 }
+
+mcpMpcMediamgrUnsupportedvidfmt	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_MPC_MEDIAMGR_UNSUPPORTEDVIDFMT: The video format was not supported: <details>."
+	::= { mcpTraps 1118 }
+
+mcpMpcRtpifTxrtcpapppktdelay	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_MPC_RTPIF_TXRTCPAPPPKTDELAY: MPCRTPStream: RTCP App Packet transmission is delayed: <details>."
+	::= { mcpTraps 1119 }
+
+mcpCmMtmpcConnerror	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_MTMPC_CONNERROR: A connection error occurred: <error name>."
+	::= { mcpTraps 1120 }
+
+mcpCmSmmainCallmgrcfgparamerr	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_SMMAIN_CALLMGRCFGPARAMERR: The configuration parameter <config parameter name> was not set properly."
+	::= { mcpTraps 1121 }
+
+mcpCmSmmainCantstartcmgr	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_SMMAIN_CANTSTARTCMGR: Unable to start CallManager."
+	::= { mcpTraps 1124 }
+
+mcpCmSmmainCreatevrmfail	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_SMMAIN_CREATEVRMFAIL: CreateVRMLib() failed for (<vrm client dll>)."
+	::= { mcpTraps 1125 }
+
+mcpCmSmmainFailcreatecmgrmod	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_SMMAIN_FAILCREATECMGRMOD: Failed to create <module name>."
+	::= { mcpTraps 1126 }
+
+mcpCmSmmainFailcreatedevice	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_SMMAIN_FAILCREATEDEVICE: Failed to create <device module name>."
+	::= { mcpTraps 1127 }
+
+mcpCmSmmainFailcreatelnmgr	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_SMMAIN_FAILCREATELNMGR: Failed to create <line manager module name>."
+	::= { mcpTraps 1128 }
+
+mcpCmSmmainFailcreatemedtrpt	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_SMMAIN_FAILCREATEMEDTRPT: Failed to create <media transport name>."
+	::= { mcpTraps 1129 }
+
+mcpCmSmmainFailinitappmod	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_SMMAIN_FAILINITAPPMOD: The Application module <app module name> failed to initialize."
+	::= { mcpTraps 1130 }
+
+mcpCmSmmainFailinitdevice	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_SMMAIN_FAILINITDEVICE: Failed to initialize <device module name>."
+	::= { mcpTraps 1131 }
+
+mcpCmSmmainFailinitlnmgr	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_SMMAIN_FAILINITLNMGR: Failed to initialize <line manager module name>."
+	::= { mcpTraps 1132 }
+
+mcpCmSmmainFailinitmedtrpt	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_SMMAIN_FAILINITMEDTRPT: Failed to initialize <media transport name>."
+	::= { mcpTraps 1133 }
+
+mcpCmSmmainFailloadappmodlib	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_SMMAIN_FAILLOADAPPMODLIB: The Application module library <app module name> failed to load."
+	::= { mcpTraps 1134 }
+
+mcpCmSmmainLibnodefmakeappmod	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_SMMAIN_LIBNODEFMAKEAPPMOD: Library <app module name> did not define MakeAppModule()."
+	::= { mcpTraps 1135 }
+
+mcpCmSmmainLoadtoomanyappmod	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_SMMAIN_LOADTOOMANYAPPMOD: Tried to load more than <module count> sessmgr.appmodules."
+	::= { mcpTraps 1136 }
+
+mcpCmSmmainLoadtoomanycmgrmod	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_SMMAIN_LOADTOOMANYCMGRMOD: Tried to load more than <module count> callmgr.modules."
+	::= { mcpTraps 1137 }
+
+mcpCmSmmainLoadtoomanydevice	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_SMMAIN_LOADTOOMANYDEVICE: Tried to load more than <device module name> callmgr.devices."
+	::= { mcpTraps 1138 }
+
+mcpCmSmmainLoadtoomanylnmgrs	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_SMMAIN_LOADTOOMANYLNMGRS: Tried to load more than <module count> callmgr.linemanagers."
+	::= { mcpTraps 1139 }
+
+mcpCmSmmainLoadtoomanymedtrpt	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_SMMAIN_LOADTOOMANYMEDTRPT: Tried to load more than <media transport name> callmgr.mediatransports."
+	::= { mcpTraps 1140 }
+
+mcpCmSmmainLoadtoomanysessmod	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_SMMAIN_LOADTOOMANYSESSMOD: Tried to load more than <module count> sessmgr.modules."
+	::= { mcpTraps 1141 }
+
+mcpCmSmmainMakevrmfail	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_SMMAIN_MAKEVRMFAIL: MakeVRMModule() failed for (<vrm client dll>)."
+	::= { mcpTraps 1142 }
+
+mcpCmSmmainNovldappmodinlib	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_SMMAIN_NOVLDAPPMODINLIB: The library <app module name> did not contain any valid Application module."
+	::= { mcpTraps 1143 }
+
+mcpCmSmmainSessmgrappmodcfgerr	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_SMMAIN_SESSMGRAPPMODCFGERR: The configuration parameter <name> was not set properly."
+	::= { mcpTraps 1144 }
+
+mcpCmSmmainSessmgrmodcfgerr	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_SMMAIN_SESSMGRMODCFGERR: The configuration parameter <name> was not set properly."
+	::= { mcpTraps 1145 }
+
+mcpCmSmmainVrmdllloadfail	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_SMMAIN_VRMDLLLOADFAIL: The VRM DLL(<vrm client dll>) load failed."
+	::= { mcpTraps 1146 }
+
+mcpCmSmmainVrmsetlogfail	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_SMMAIN_VRMSETLOGFAIL: SET_VGLOG() could not be found in (<vrm client dll>)."
+	::= { mcpTraps 1147 }
+
+mcpCmSmmainVxmlappmodnotload	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS obsolete
+	DESCRIPTION
+	"145.MCP_CM_SMMAIN_VXMLAPPMODNOTLOAD: The VoiceXML Application module was not loaded."
+	::= { mcpTraps 1148 }
+
+mcpMpcMediamgrNomediainfoobject	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_MPC_MEDIAMGR_NOMEDIAINFOOBJECT: No Media Info Object: <reason>."
+	::= { mcpTraps 1149 }
+
+mcpMpcControlInitvgmediainfofailed	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_MPC_CONTROL_INITVGMEDIAINFOFAILED: Initializing VGMediaInfo failed: <reason>."
+	::= { mcpTraps 1150 }
+
+mcpMpcControlInitdspcpafailed	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_MPC_CONTROL_INITDSPCPAFAILED: Initializing DSPCPA failed: <reason>."
+	::= { mcpTraps 1151 }
+
+mcpMpcControlSdpparsefailed	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_MPC_CONTROL_SDPPARSEFAILED: Failed to parse SDP due to <reason>."
+	::= { mcpTraps 1152 }
+
+mcpMpcControlUnabletosethrres	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_MPC_CONTROL_UNABLETOSETHRRES: Unable to set the HR Timer Resolution to an acceptable value. Exiting."
+	::= { mcpTraps 1153 }
+
+mcpMpcMediaRecordopenfailed	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_MPC_MEDIA_RECORDOPENFAILED: RecordOpen failed, nOpenResult = <id>."
+	::= { mcpTraps 1156 }
+
+mcpMpcMediaPlaybackopenfailed	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_MPC_MEDIA_PLAYBACKOPENFAILED: Error opening media: <human readable error>."
+	::= { mcpTraps 1157 }
+
+mcpCmSmmainFailsetfdlimit	NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_SMMAIN_FAILSETFDLIMIT: Unable to increase fd limit: <error>."
+	::= { mcpTraps 1158}
+
+mcpMtinternalMinormaxport	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_MTINTERNAL_MINORMAXPORT: One of <configuration variable> and <configuration variable> was set while the other was not."
+	::= { mcpTraps 1168 }
+
+mcpMtinternalMinlargerthanmax	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_MTINTERNAL_MINLARGERTHANMAX: The <configuration variable> was larger than the <configuration variable>."
+	::= { mcpTraps 1169 }
+
+mcpCmSessmgrInvalidvrmmessage	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_CM_SESSMGR_INVALIDVRMMESSAGE: The VRM session <session> had received an invalid VRM message: <message>."
+	::= { mcpTraps 1170 }
+
+
+-- #############################################################################
+-- NGI traps extension
+-- #############################################################################
+
+ngiApplog  NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.NGI_APPLOG: VoiceXML application <log>"
+	::= { mcpTraps 2000 }
+
+ngiFetchTimeout		NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.NGI_LOG_FETCH_RESOURCE_TIMEOUT: There was a fetch resource timeout."
+	::= { mcpTraps 2001 }
+
+ngiFetchError		NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.NGI_LOG_FETCH_RESOURCE_ERROR: There was a fetch resource error."
+	::= { mcpTraps 2002 }
+
+ngiParseError		NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.NGI_LOG_PARSE_ERROR: A parse error in the VoiceXML page has occurred."
+	::= { mcpTraps 2003 }
+
+
+
+-- #############################################################################
+-- GVPi traps extension
+-- #############################################################################
+
+
+gvpiIVRError	NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.GVPI_IVRERRORTRAP: This is a generic IVR error that is not covered by other IVR traps."
+	::= { mcpTraps 2101 }
+
+gvpiNetworkTimeout	NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.GVPI_NETWORKTIMEOUT: A timeout occurred between GVPi module and a web server."
+	::= { mcpTraps 2102 }
+
+gvpiResourceNotFound	NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.GVPI_RESOURCENOTFOUND: GVPi was unable to find the file that it needs to access."
+	::= { mcpTraps 2103 }
+
+gvpiBadXMLPage	NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.GVPI_BADXMLPAGE: This trap indicates a syntax error in the XML page."
+	::= { mcpTraps 2104 }
+
+gvpiNetworkError	NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.GVPI_NETWORKERROR: The GVPi module experienced a network error."
+	::= { mcpTraps 2105 }
+
+gvpiDialError	NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.GVPI_DIALERROR: The platform has failed to connect the user to the voice application's outbound number."
+	::= { mcpTraps 2106 }
+
+gvpiCallDropped	NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.GVPI_CALLDROPPED: A call failed when being set up, because of an unrecoverable failure in the call routing process. No failover number was provisioned."
+	::= { mcpTraps 2107 }
+
+gvpiAbnormalCallTerm	NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.GVPI_ABNORMALCALLTERM: A call failed in the middle of its session because of an unrecoverable failure, and no fail-over number was provisioned."
+	::= { mcpTraps 2108 }
+
+gvpiCallTransferred	NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.GVPI_CALLTRANSFERRED: A call failed because of san unrecoverable failure in the call routing process. The call was transferred to the provisioned failover number."
+	::= { mcpTraps 2109 }
+
+gvpiTelephonyError	NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.GVPI_TELEPHONYERROR: The GVPi module experienced an unrecoverable error when processing call manager requests and replies."
+	::= { mcpTraps 2110 }
+
+-- #############################################################################
+-- SRM traps extension, reserving 3000 - 4000
+-- #############################################################################
+mcpSrmMrcpadptFailLoadingMrcpModule     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPADPT_FAIL_LOADING_MRCP_MODULE: The MRCP adaptor failed to load the configured MRCP client library."
+	::= { mcpTraps 3000 }
+
+mcpSrmMrcpadptConfigurationError     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPADPT_CONFIGURATION_ERROR: The MRCP adaptor failed to get configuration data."
+	::= { mcpTraps 3001 }
+
+mcpSrmMrcpadptCloseSessionFail     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPADPT_CLOSE_SESSION_FAIL: The MRCP adaptor failed to close an MRCP session."
+	::= { mcpTraps 3002 }
+
+mcpSrmMrcpadptStopFail     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPADPT_STOP_FAIL: The MRCP adaptor failed to close an MRCP session."
+	::= { mcpTraps 3003 }
+
+mcpSrmMrcpadptLoadGrammarFail     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPADPT_LOAD_GRAMMAR_FAIL: The MRCP adaptor failed to load grammar to an MRCP ASR server."
+	::= { mcpTraps 3005 }
+
+mcpSrmMrcpadptAsrSetParamsFail     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPADPT_ASR_SETPARAMS_FAIL: The MRCP adaptor failed to set parameters to an MRCP ASR server."
+	::= { mcpTraps 3006 }
+
+mcpSrmMrcpadptAsrRecognizeFail     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPADPT_ASR_RECOGNIZE_FAIL: The MRCP adaptor failed to send a RECOGNIZE request."
+	::= { mcpTraps 3007 }
+
+mcpSrmMrcpadptPromptdoneFail     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPADPT_PROMPTDONE_FAIL: The MRCP adaptor failed to send a RECOGNITION-START-TIMERS request."
+	::= { mcpTraps 3008 }
+
+mcpSrmMrcpadptTtsSpeakFail     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPADPT_TTS_SPEAK_FAIL: The MRCP adaptor failed to send a TTS SPEAK request."
+	::= { mcpTraps 3012 }
+
+mcpSrmMrcpadptOpenSessionFail     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPADPT_OPEN_SESSION_FAIL: The MRCP adaptor failed to establish an MRCP session."
+	::= { mcpTraps 3017 }
+
+mcpSrmMrcpadptUnknownMrcpprotocol     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPADPT_UNKNOWN_MRCPPROTOCOL: The MRCP protocol type is not supported."
+	::= { mcpTraps 3018 }
+
+mcpSrmMrcpadptProvisionHandlerFail     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPADPT_PROVISION_HANDLER_FAIL: The MRCP adaptor failed to process the Speech Resource provision update."
+	::= { mcpTraps 3019 }
+
+mcpSrmMrcpadptRedirectFailed           NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPADPT_REDIRECT_FAILED: The MRCP adaptor failed to process Redirect request."
+	::= { mcpTraps 3020 }
+
+mcpSrmMrcpadptDtmfInputFailed            NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPADPT_DTMFINPUT_FAILED: The MRCP adaptor failed to process DTMF input request."
+	::= { mcpTraps 3021 }
+
+mcpSrmMrcpAsrSendrequestTimeout     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCP_ASR_SENDREQUEST_TIMEOUT: The ASR request sent to the MRCP server timed-out."
+	::= { mcpTraps 3022 }
+
+mcpSrmMrcpAsrSendrequestFailure     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCP_ASR_SENDREQUEST_FAILURE: The ASR request was not sent to the MRCP server because of a connection failure."
+	::= { mcpTraps 3023 }
+
+mcpSrmMrcpAsrReceiveMrcpresponseerr     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCP_ASR_RECEIVE_MRCPRESPONSEERR: The MRCP server returned an error response."
+	::= { mcpTraps 3024 }
+
+mcpSrmMrcpAsrReceiveMrcpeventerr     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCP_ASR_RECEIVE_MRCPEVENTERR: The MRCP server returned an error event."
+	::= { mcpTraps 3025 }
+
+mcpSrmMrcpAsrReceiveServerresponseerr     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCP_ASR_RECEIVE_SERVERRESPONSEERR: An error occurred with the MRCP ASR server."
+	::= { mcpTraps 3026 }
+
+mcpSrmMrcpTtsSendrequestTimeout     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCP_TTS_SENDREQUEST_TIMEOUT: The TTS request sent to the MRCP server timed-out."
+	::= { mcpTraps 3027 }
+
+mcpSrmMrcpTtsSendrequestFailure     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCP_TTS_SENDREQUEST_FAILURE: The TTS request was not sent to the MRCP server because of a connection failure."
+	::= { mcpTraps 3028 }
+
+mcpSrmMrcpTtsReceiveMrcpresponseerr     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCP_TTS_RECEIVE_MRCPRESPONSEERR: The MRCP server returned an error response."
+	::= { mcpTraps 3029 }
+
+mcpSrmMrcptTtsReceiveMrcpeventerr     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCP_TTS_RECEIVE_MRCPEVENTERR: The MRCP server returned an error event."
+	::= { mcpTraps 3030 }
+
+mcpSrmMrcptTtsReceiveServerresponseerr     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCP_TTS_RECEIVE_SERVERRESPONSEERR: An error occurred with the MRCP TTS server."
+	::= { mcpTraps 3031 }
+
+mcpSrmMrcpv1stackNewFailed     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV1STACK_NEW_FAILED: The MRCPv1 stack failed to allocate memory for data."
+	::= { mcpTraps 3200 }
+
+mcpSrmMrcpv1stackInvalidConfig     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV1STACK_INVALID_CONFIG: Invalid configuration setup in the MRCPv1 stack."
+	::= { mcpTraps 3201 }
+
+mcpSrmMrcpv1stackUninit     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV1STACK_UNINIT: Operation while the MRCPv1 stack is uninitialized."
+	::= { mcpTraps 3202 }
+
+mcpSrmMrcpv1stackConstructBadMsg     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV1STACK_CONSTRUCT_BAD_MSG: The MRCPv1 stack was unable to construct a malformed message."
+	::= { mcpTraps 3203 }
+
+mcpSrmMrcpv1stackParseBadMsg     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV1STACK_PARSE_BAD_MSG: The MRCPv1 stack is unable to parse a malformed message."
+	::= { mcpTraps 3204 }
+
+mcpSrmMrcpv1stackBadRequest     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV1STACK_BAD_REQUEST: The MRCPv1 stack received an invalid request."
+	::= { mcpTraps 3205 }
+
+mcpSrmMrcpv1InvalidEngType     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV1_INVALID_ENG_TYPE: An invalid engine type was specified in the MRCPv1 client."
+	::= { mcpTraps 3400 }
+
+mcpSrmMrcpv1InvalidEngUri     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV1_INVALID_ENG_URI: An invalid engine URI was specified in the MRCPv1 client."
+	::= { mcpTraps 3401 }
+
+mcpSrmMrcpv1InvalidEngEntry     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV1_INVALID_ENG_ENTRY: An invalid engine entry was specified in the configuration file for the MRCPv1 client."
+	::= { mcpTraps 3402 }
+
+mcpSrmMrcpv1InvalidEngIpPort     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV1_INVALID_ENG_IP_PORT: An invalid IP or port existed for the MRCPv1 engine."
+	::= { mcpTraps 3403 }
+
+mcpSrmMrcpv1InvalidStack     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV1_INVALID_STACK: The MRCPv1 client failed; error creating stack."
+	::= { mcpTraps 3407 }
+
+mcpSrmMrcpv1EngTypeInitError     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV1_ENG_TYPE_INIT_ERROR: The MRCPv1 client failed on initializing the engine type map."
+	::= { mcpTraps 3408 }
+
+mcpSrmMrcpv1StackInitError     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV1_STACK_INIT_ERROR: The MRCPv1 client failed on initializing the stack."
+	::= { mcpTraps 3409 }
+
+mcpSrmMrcpv1ReqMgrInitError     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV1_REQ_MGR_INIT_ERROR: The MRCPv1 client failed on initializing the request manager."
+	::= { mcpTraps 3410 }
+
+mcpSrmMrcpv1ConnectionMgrInitError     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV1_CONNECTION_MGR_INIT_ERROR: The MRCPv1 client failed on initializing the connection manager."
+	::= { mcpTraps 3411 }
+
+mcpSrmMrcpv1StackHdlrInitError     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV1_STACK_HDLR_INIT_ERROR: The MRCPv1 client failed on initializing the stack handler."
+	::= { mcpTraps 3412 }
+
+mcpSrmMrcpv1ProvisionError     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV1_PROVISION_ERROR: The MRCPv1 client failed to read the vrmclient provision file."
+	::= { mcpTraps 3413 }
+
+mcpSrmMrcpv1FileStatError     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV1_FILE_STAT_ERROR: The MRCPv1 client failed to obtain information about the file."
+	::= { mcpTraps 3414 }
+
+mcpSrmMrcpv1GramSizeError     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV1_GRAM_SIZE_ERROR: The grammar file size, after stripping the header, is less than 0 in MRCPv1."
+	::= { mcpTraps 3415 }
+
+mcpSrmMrcpv1GramOpenError     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV1_GRAM_OPEN_ERROR: The MRCPv1 client was unable to find the grammar file."
+	::= { mcpTraps 3416 }
+
+mcpSrmMrcpv1GramOffsetError     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV1_GRAM_OFFSET_ERROR: The MRCPv1 client was unable to locate information in the grammar file."
+	::= { mcpTraps 3417 }
+
+mcpSrmMrcpv1MemAllocError2005     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV1_MEM_ALLOC_ERROR2005: The MRCPv1 client failed to allocate memory."
+	::= { mcpTraps 3418 }
+
+mcpSrmMrcpv1GramReadError     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV1_GRAM_READ_ERROR: The MRCPv1 client failed to read from the grammar file."
+	::= { mcpTraps 3419 }
+
+mcpSrmMrcpv1ServerConnectError     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV1_SERVER_CONNECT_ERROR: The MRCPv1 client failed to connect to the server."
+	::= { mcpTraps 3420 }
+
+mcpSrmMrcpv1InvalidParam     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV1_INVALID_PARAM: The MRCPv1 client had an invalid configuration parameter."
+	::= { mcpTraps 3422 }
+
+mcpSrmMrcpv1NoGramBase     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV1_NO_GRAM_BASE: The MRCPv1 client was unable to read the grammar base path."
+	::= { mcpTraps 3423 }
+
+mcpSrmMrcpv1PingError     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV1_PING_ERROR: The MRCPv1 client was unable to ping the servers."
+	::= { mcpTraps 3424 }
+
+mcpSrmMrcpv1ResponseFailure     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV1_RESPONSE_FAILURE: The MRCPv1 client received an error code in the response message from the server."
+	::= { mcpTraps 3435 }
+
+mcpSrmMrcpv1SocketDisconnect     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV1_SOCKET_DISCONNECT: The MRCPv1 client received an unexpected socket disconnect."
+	::= { mcpTraps 3438 }
+
+mcpSrmMrcpv1SendRequestError     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV1_SEND_REQUEST_ERROR: The MRCPv1 client was unable to send a request."
+	::= { mcpTraps 3440 }
+
+mcpSrmMrcpv1StackSystemError     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV1_STACK_SYSTEM_ERROR: An error occurred while the MRCPv1 client was processing a message. This is most likely a memory allocation error."
+	::= { mcpTraps 3441 }
+
+mcpSrmMrcpv1LostConnection     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV1_LOST_CONNECTION: The MRCPv1 client lost a connection to an ASR/TTS server."
+	::= { mcpTraps 3443 }
+
+mcpSrmMrcpv1RecoError     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV1_RECO_ERROR: The MRCPv1 client received an error message in the recognize session."
+	::= { mcpTraps 3444 }
+
+mcpSrmMrcpv1ReconnectSuccess     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV1_RECONNECT_SUCCESS: The MRCPv1 client successfully reconnected to the server."
+	::= { mcpTraps 3445 }
+
+mcpSrmMrcpv1IncorrectNlsmlFormat     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV1_INCORRECT_NLSML_FORMAT: The NLSML format was not correct in MRCPv1."
+	::= { mcpTraps 3447 }
+
+mcpSrmMrcpv1ErrorDecodeFailure     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV1_ERROR_DECODE_FAILURE: The MRCPv1 client failed decode the message data."
+	::= { mcpTraps 3448 }
+
+mcpSrmMrcpv1GrammarReadingError     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV1_GRAMMAR_READING_ERROR: An error encountered when the MRCPv1 client was reading a grammar file."
+	::= { mcpTraps 3450 }
+
+mcpSrmMrcpv1HotkeyGrammarError     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV1_HOTKEY_GRAMMAR_ERROR: An error encountered when the MRCPv1 client was handling a hotkey grammar."
+	::= { mcpTraps 3451 }
+
+mcpSrmMrcpv2stackNewFailed     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV2STACK_NEW_FAILED: The MRCPv2 stack failed to allocate memory for data."
+	::= { mcpTraps 3600 }
+
+mcpSrmMrcpv2stackInvalidConfig     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV2STACK_INVALID_CONFIG: The MRCPv2 stack had an invalid configuration setup."
+	::= { mcpTraps 3601 }
+
+mcpSrmMrcpv2stackUninit     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV2STACK_UNINIT: The MRCPv2 stack operation uninitialized."
+	::= { mcpTraps 3602 }
+
+mcpSrmMrcpv2stackConstructBadMsg     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV2STACK_CONSTRUCT_BAD_MSG: The MRCPv2 stack was unable to construct a malformed message."
+	::= { mcpTraps 3603 }
+
+mcpSrmMrcpv2stackParseBadMsg     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV2STACK_PARSE_BAD_MSG: The MRCPv2 stack was unable to parse malformed message."
+	::= { mcpTraps 3604 }
+
+mcpSrmMrcpv2stackBadRequest     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV2STACK_BAD_REQUEST: The MRCPv2 stack received invalid request."
+	::= { mcpTraps 3605 }
+
+mcpSrmMrcpv2stackSocketError     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV2STACK_SOCKET_ERROR: The MRCPv2 stack had a socket error."
+	::= { mcpTraps 3606 }
+
+mcpSrmMrcpv2stackSocketClose     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV2STACK_SOCKET_CLOSE: The MRCPv2 stack had a socket close error."
+	::= { mcpTraps 3607 }
+
+mcpSrmMrcpv2stackInvalidSessionid     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV2STACK_INVALID_SESSIONID: The MRCPv2 stack received an invalid session ID."
+	::= { mcpTraps 3609 }
+
+mcpSrmMrcpv2stackInvalidMethod     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV2STACK_INVALID_METHOD: The MRCPv2 stack received an invalid MRCP method."
+	::= { mcpTraps 3610 }
+
+mcpSrmMrcpv2InvalidEngEntry     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV2_INVALID_ENG_ENTRY: The MRCPv2 client had an invalid engine entry in the configuration file."
+	::= { mcpTraps 3801 }
+
+mcpSrmMrcpv2ResourceMgrInitError     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV2_RESOURCE_MGR_INIT_ERROR: The MRCPv2 client failed to create a Resource Manager."
+	::= { mcpTraps 3804 }
+
+mcpSrmMrcpv2FailedToOpensession     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV2_FAILED_TO_OPENSESSION: The MRCPv2 client failed to open a session."
+	::= { mcpTraps 3805 }
+
+mcpSrmMrcpv2ConfigurationError     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV2_CONFIGURATION_ERROR: The MRCPv2 client failed to obtain configuration information."
+	::= { mcpTraps 3806 }
+
+mcpSrmMrcpv2CloseSessionFail     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV2_CLOSE_SESSION_FAIL: The MRCPv2 client failed to close a session."
+	::= { mcpTraps 3807 }
+
+mcpSrmMrcpv2StopFail     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV2_STOP_FAIL: The MRCPv2 client failed on a STOP request."
+	::= { mcpTraps 3808 }
+
+mcpSrmMrcpv2LoadGrammarFail     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV2_LOAD_GRAMMAR_FAIL: The MRCPv2 client failed on a DEFINE-GRAMMAR request."
+	::= { mcpTraps 3810 }
+
+mcpSrmMrcpv2AsrSetParamsFail     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV2_ASR_SET_PARAMS_FAIL: The MRCPv2 client failed on a SET-PARAM request."
+	::= { mcpTraps 3811 }
+
+mcpSrmMrcpv2AsrRecognizeFail     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV2_ASR_RECOGNIZE_FAIL: The MRCPv2 client failed on a RECOGNIZE request."
+	::= { mcpTraps 3812 }
+
+mcpSrmMrcpv2PromptdoneFail     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV2_PROMPTDONE_FAIL: The MRCPv2 client failed on a START-INPUT-TIMERS request."
+	::= { mcpTraps 3813 }
+
+mcpSrmMrcpv2TtsSpeakFail     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV2_TTS_SPEAK_FAIL: The MRCPv2 client failed on a SPEAK request."
+	::= { mcpTraps 3817 }
+
+mcpSrmMrcpv2OpenSessionFail     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV2_OPEN_SESSION_FAIL: The MRCPv2 client failed on an OpenSession request."
+	::= { mcpTraps 3822 }
+
+mcpSrmMrcpv2SocketDisconnect     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV2_SOCKET_DISCONNECT: The MRCPv2 client received an unexpected socket disconnect."
+	::= { mcpTraps 3827 }
+
+mcpSrmMrcpv2StackSystemError     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV2_STACK_SYSTEM_ERROR: An error occurred while the MRCPv2 client was processing a message. This is most likely a memory allocation error."
+	::= { mcpTraps 3828 }
+
+mcpSrmMrcpv2ReqMgrInitError     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV2_REQ_MGR_INIT_ERROR: The MRCPv2 client failed on initializing the request manager."
+	::= { mcpTraps 3833 }
+
+mcpSrmMrcpv2StackHdlrInitError     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV2_STACK_HDLR_INIT_ERROR: The MRCPv2 client failed to initiate the stack handler."
+	::= { mcpTraps 3834 }
+
+mcpSrmMrcpv2NoGrammarBase     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV2_NO_GRAMMAR_BASE: The MRCPv2 client did not have a grammar base folder defined."
+	::= { mcpTraps 3835 }
+
+mcpSrmMrcpv2SendRequestError     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV2_SEND_REQUEST_ERROR: The MRCPv2 client failed to send an MRCP request."
+	::= { mcpTraps 3836 }
+
+mcpSrmMrcpv2InitializationFail     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV2_INITIALIZATION_FAIL: The MRCPv2 client failed on initialization."
+	::= { mcpTraps 3838 }
+
+mcpSrmMrcpv2SipsendRequestError     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV2_SIPSEND_REQUEST_ERROR: The MRCPv2 client failed to send a SIP request."
+	::= { mcpTraps 3839 }
+
+mcpSrmMrcpv2ReceiveResponseError     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV2_RECEIVE_RESPONSE_ERROR: The MRCPv2 client failed to process the response."
+	::= { mcpTraps 3840 }
+
+mcpSrmMrcpv2ResponseFailure     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV2_RESPONSE_FAILURE: The MRCPv2 client received a failed response."
+	::= { mcpTraps 3841 }
+
+mcpSrmMrcpv2ServerConnectionError     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV2_SERVER_CONNECTION_ERROR: The MRCPv2 client failed to connect to a server."
+	::= { mcpTraps 3847 }
+
+mcpSrmMrcpv2HotkeyGrammarError     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV2_HOTKEY_GRAMMAR_ERROR: An error was encountered when the MRCPv2 client was handling a hotkey grammar."
+	::= { mcpTraps 3855 }
+
+mcpSrmMrcpv2FailCreateSipUserAgent     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV2_FAIL_CREATE_SIP_USER_AGENT: The MRCPv2 client failed to create a SIP user agent."
+	::= { mcpTraps 3856 }
+
+mcpSrmMrcpv2FailToInitiateSipSession     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV2_FAIL_TO_INITIATE_SIP_SESSION: The MRCPv2 client failed to initiate a SIP session."
+	::= { mcpTraps 3857 }
+
+mcpSrmMrcpv2SipError     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"145.MCP_SRM_MRCPV2_SIP_ERROR: The MRCPv2 client received a SIP error."
+	::= { mcpTraps 3858 }
+	
+-- #############################################################################
+-- NGMS Traps
+-- #############################################################################
+
+ngmsStartupErrFailFindHostname     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS deprecated
+	DESCRIPTION
+	"145.NGMS_STARTUP_ERR_FAIL_FIND_HOSTNAME: Failed to retrive ME-BUS hostname alias."
+	::= { mcpTraps 4500 }
+
+ngmsTranscodingFailure     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS deprecated
+	DESCRIPTION
+	"145.NGMS_TRANSCODING_FAILURE: Transcoder failure."
+	::= { mcpTraps 4501 }
+
+ngmsFileCacheFailure     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS deprecated
+	DESCRIPTION
+	"145.NGMS_FILE_CACHE_FAILURE: File cache failure."
+	::= { mcpTraps 4502 }
+
+ngmsMcrtInvalidCodecName     NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS deprecated
+	DESCRIPTION
+	"145.NGMS_MCTR_INVALID_CODEC_NAME: Invalid codec name found in configuration file."
+	::= { mcpTraps 4503 }
+
+-- #############################################################################
+-- FM BRANCH
+-- #############################################################################
+
+fmFailure  NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS obsolete
+	DESCRIPTION
+		"146.FM_FAILURE: The Fetching Module has encountered an unrecoverable error."
+	::= { fmTraps 1000 }
+
+-- #############################################################################
+-- PSTNC BRANCH
+-- #############################################################################
+
+pstncProcessStarted	NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+		"152.PSTNC_PROC_STARTED: PSTN Connector has been started"
+	::= { pstncTraps 1001 }
+
+pstncProcessStopped	NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+		"152.PSTNC_PROC_STOPPED: PSTN Connector has been stopped"
+	::= { pstncTraps 1002 }
+
+pstncDlgcMgrInitFailed		NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+		"152.PSTNC_DLGCMGR_INIT_FAILED: Dialogic Manager initialization has failed"
+	::= { pstncTraps 1003 }
+
+pstncDChannelStatusDown		NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+		"152.PSTNC_DLGC_D_CHAN_STATUS_DOWN: Dialogic D Channel is down"
+	::= { pstncTraps 1004 }
+
+pstncDChannelStatusUp		NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+		"152.PSTNC_DLGC_D_CHAN_STATUS_UP: Dialogic D Channel is up"
+	::= { pstncTraps 1005 }
+
+pstncBChannelStatusUp		NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+		"152.PSTNC_DLGC_B_CHAN_STATUS_UP: Dialogic B Channel is up"
+	::= { pstncTraps 1006 }
+
+pstncBChannelStatusDown		NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+		"152.PSTNC_DLGC_B_CHAN_STATUS_DOWN: Dialogic B Channel is down"
+	::= { pstncTraps 1007 }
+
+pstncBChannelStatusChanged		NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+		"152.PSTNC_DLGC_B_CHAN_STATUS_CHANGED: Dialogic B Channel status has changed"
+	::= { pstncTraps 1008 }
+
+pstncDlgcLinkMalfunctional		NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+		"152.PSTNC_DLGC_MGR_LINK_ERROR: Dialogic Link is malfunctioning."
+	::= { pstncTraps 1009 }
+
+pstncDlgcLinkOperational		NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+		"152.PSTNC_DLGC_MGR_LINK_OK: Dialogic Link is operational."
+	::= { pstncTraps 1010 }
+
+pstncDlgcNoFreePorts		NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+		"152.PSTNC_DLGC_NO_FREE_PORTS: There are no Dialogic ports available."
+	::= { pstncTraps 1011 }
+
+pstncDlgcDialError		NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+		"152.PSTNC_DLGC_DIAL_ERROR: There was a dial error."
+	::= { pstncTraps 1012 }
+
+
+-- #############################################################################
+-- SSG BRANCH
+-- #############################################################################
+
+ssgStarted	NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+		"154.SSG_STARTED:  SSG process has been started."
+	::= { ssgTraps 1001 }
+
+ssgStopped	NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+		"154.SSG_STOPPED: SSG process has been stopped."
+	::= { ssgTraps 1002 }
+
+ssgResourceDNUnregistered	NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+		"154.SSG_RESOURCE_DN_NOT_REGISTERED: SSG process failed to register a Resource DN for a Tenant."
+	::= { ssgTraps 1003 }
+
+ssgSIPServerContactFailed	NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+		"154.SSG_SIPSERVER_CONTACT_FAILED: SSG process failed to contact the SIP Server to place an outbound call."
+	::= { ssgTraps 1004 }
+
+ssgNotificationURLGetFailed	NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+		"154.SSG_NOTIFICATION_URL_GET_FAILED: SSG process failed to contact the Notification URL of the Trigger Application."
+	::= { ssgTraps 1005 }
+
+ssgRequestRejectedUnRegisteredResourceDN	NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+		"154.SSG_REQUEST_REJECTION_RESOURCE_DN_NOT_REGISTERED: SSG rejected requests from the Trigger Application because it was unable to register the Resource DN for a particular tenant within a predefined time."
+	::= { ssgTraps 1006 }
+
+ssgRequestRejectedSIPServerNotConnected	NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+		"154.SSG_REQUEST_REJECTION_SIPSERVER_NOT_CONNECTED: SSG rejected requests from the Trigger Application because it was unable to connect to SIP Server within a predefined time."
+	::= { ssgTraps 1007 }
+
+ssgSIPServerAppNotFound	NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+		"154.SSG_SIPSERVER_APPLICATION_NOT_FOUND: SSG was unable to find the SIP Server Application."
+	::= { ssgTraps 1008 }
+
+ssgTenantResourceDNNotAvailable	NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+		"154.SSG_TENANT_RESOURCE_DN_NOT_AVAILABLE: SSG was unable to find a Resource DN for the Tenant."
+	::= { ssgTraps 1009 }
+
+ssgMaxDBThresholdReached	NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+		"154.SSG_MAXDB_THRESHOLD_REACHED: The size of the SSG process database has reached 95% of the maximum number of records allowed."
+	::= { ssgTraps 1010 }
+
+ssgClearMaxDBThreshhold		NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+		"154.SSG_CLEAR_MAXDB_THRESHOLD_REACHED: The size of the SSG process database is now 90% below the maximum number of records allowed."
+	::= { ssgTraps 1011 }
+
+-- #############################################################################
+-- CTIC BRANCH
+-- #############################################################################
+
+cticProcessStarted NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"155.CTIC_PROC_STARTED: CTI Connector process has been started successfully."
+	::= { cticTraps 1001 }
+
+cticProcessStopped NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"155.CTIC_PROC_STOPPED: CTI Connector process has been stopped."
+	::= { cticTraps 1002 }
+
+cticIVRServerDown NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"155.CTIC_IVR_SERVER_DOWN: The IVR Server has gone down, or the TCP/IP connection has gone down."
+	::= { cticTraps 1003 }
+
+cticIVRServerUp NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"155.CTIC_IVR_SERVER_UP: The IVR Server has come up again, or the TCP/IP connection has been established."
+	::= { cticTraps 1004 }
+
+cticFailedToContactRM NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS obsolete
+	DESCRIPTION
+	"155.CTIC_RM_DOWN: CTIConnector failed to contact RM."
+	::= { cticTraps 1005 }
+
+cticICMConnectionUP NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"155.CTIC_ICM_CONN_UP: New connection request received from ICM on the listener port."
+	::= { cticTraps 1006 }
+
+cticICMConnectionDOWN NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"155.CTIC_ICM_CONN_DOWN: Closing the connection received from ICM on the listener port."
+	::= { cticTraps 1007 }
+
+cticHeartbeatFailure NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"155.CTIC_HEARTBEAT_FAILURE: Hearbeat messages not received on the listener port."
+	::= { cticTraps 1008 }
+
+cticPGNotAvailable NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"155.CTIC_PG_NOT_AVAILABLE: VRU PG connection is not available for making calls"
+	::= { cticTraps 1009 }
+
+-- #############################################################################
+-- Reporting BRANCH
+-- #############################################################################
+
+gvpReportingEmsrcerrinitqueue	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"x.EMSRC_ERR_INIT_QUEUE: Failed to initialize Reporting Client`s persistent queue."
+	::= { gvpReportingTraps 5000 }
+
+gvpReportingEmsrcerrinvalidaqsession	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"x.EMSRC_ERR_INVALID_AQ_SESSION: An internal ActiveMQ error in the Reporting Client."
+	::= { gvpReportingTraps 5001 }
+
+gvpReportingEmsrcerrreadfail	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"x.EMSRC_ERR_READ_FAIL: Failed to read data from the Reporting Client`s persistent queue."
+	::= { gvpReportingTraps 5002 }
+
+gvpReportingEmsrcerrreadaccessfail	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"x.EMSRC_ERR_READ_ACCESS_FAIL: Failed to access read data from the Reporting Client`s persistent queue."
+	::= { gvpReportingTraps 5003 }
+
+gvpReportingEmsrcErrbatchmismatch	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"x.EMSRC_ERR_BATCH_MISMATCH: An internal batch size error occurred within the Reporting Client."
+	::= { gvpReportingTraps 5004 }
+
+gvpReportingEmsrcErrdequeuefail	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"x.EMSRC_ERR_DEQUEUE_FAIL: Failed to dequeue data from the Reporting Client`s persistent queue."
+	::= { gvpReportingTraps 5005 }
+
+
+gvpReportingEmsrcErrenqueuefail	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"x.EMSRC_ERR_ENQUEUE_FAIL: Failed to enqueue data to the Reporting Client`s persistent queue."
+	::= { gvpReportingTraps 5006 }
+
+gvpReportingEmsrcErrflushtodb	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"x.EMSRC_ERR_FLUSH_TO_DB: Failed to flush Reporting Client message data to the local database."
+	::= { gvpReportingTraps 5007 }
+
+gvpReportingEmsrcErrflushshutdown	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"x.EMSRC_ERR_FLUSH_SHUTDOWN: Failed to flush Reporting Client message data to the local database during shutdown."
+	::= { gvpReportingTraps 5008 }
+
+gvpReportingCdrservErrinvalidparam	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"x.CDRSERV_ERR_INVALID_PARAM: An invalid data value was encountered when setting up a CDR."
+	::= { gvpReportingTraps 5009 }
+
+gvpReportingCdrservErrinvalidsubmit	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"x.CDRSERV_ERR_INVALID_SUBMIT: An invalid CDR was submitted."
+	::= { gvpReportingTraps 5010 }
+
+gvpReportingOprErrcallstatthread	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"x.OPR_ERR_CALL_STAT_THREAD: Failed to start Operational Reporting Service's call stat queue thread."
+	::= { gvpReportingTraps 5011 }
+
+gvpReportingOprErrusermsgthread	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"x.OPR_ERR_USER_MSG_THREAD: Failed to start Operational Reporting Service's user message queue thread."
+	::= { gvpReportingTraps 5012 }
+
+gvpReportingOprErrnegativepeakreported	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"x.OPR_ERR_NEGATIVE_PEAK_REPORTED: A negative peak value was reported to the Operational Reporting Service."
+	::= { gvpReportingTraps 5013 }
+
+gvpReportingEmsdcErrnobrgsessfound	 NOTIFICATION-TYPE
+	OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+	STATUS current
+	DESCRIPTION
+	"x.EMSDC_ERR_NO_BRG_SESS_FOUND: The Data Collection Sink was unable to find a call session related to the bridge session."
+	::= { gvpReportingTraps 5014 }
+
+-- #############################################################################
+-- RS BRANCH
+-- #############################################################################
+
+rsHABackupActivated 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "153.GCTI_REDUNDANCY_WARM_STANDBY_BACKUP_ACTIVATED: Application backup mode activated"
+  	::= { rsTraps 4560 }
+
+rsHAPrimaryActivated 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "153.GCTI_REDUNDANCY_WARM_STANDBY_PRIMARY_ACTIVATED: Application primary mode activated"
+  	::= { rsTraps 4562 }
+
+rsAppStarted 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "153.GCTI_APP_STARTED: Application started"
+  	::= { rsTraps 5060 }
+
+rsLatencyNotification2 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "153.RS_LATENCY_NOTIFICATION2: Latency is below the configured threshold." 
+  	::= { rsTraps 20032 }
+
+rsGenericError 	 NOTIFICATION-TYPE
+ 	 OBJECTS { gvpConfigName, gvpTrapSeverity, gvpTrapMessage }
+ 	 STATUS current
+ 	 DESCRIPTION
+ 	 	 "153.RS_GENERIC_ERROR_OBSOLETE: Generic error." 
+  	::= { rsTraps 50000 }
+
+END

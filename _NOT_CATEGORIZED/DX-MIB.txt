@@ -1,0 +1,608 @@
+DX-MIB DEFINITIONS ::= BEGIN
+
+-- Title:         Siemens Communications Limited
+--                Enterprise MIB for DX range of PABXs
+-- Version:       1.0.003
+-- Date:          20 December 1999
+-- Author:        Mike Baylis
+-- Comment:       This version of the DX MIB primarily supports alarm
+--                reporting.
+--                The DX SNMP Agent also supports the standard MIB-II defined
+--                in RFC 1213.
+--                The Agent sends coldStart, warmStart, linkDown, linkUp, 
+--                authenticationFailure traps and enterpriseSpecific traps as
+--                defined in RFC 1157.
+--                DX alarm related events are reported as enterpriseSpecific
+--                traps.
+
+IMPORTS
+      enterprises
+           FROM RFC1155-SMI
+      OBJECT-TYPE
+           FROM RFC-1212
+      DisplayString
+           FROM RFC1213-MIB;
+
+sni               OBJECT IDENTIFIER  ::= { enterprises 231 }
+siemensunits      OBJECT IDENTIFIER  ::= { sni 7 }
+pn                OBJECT IDENTIFIER  ::= { siemensunits 2 }
+sgcs              OBJECT IDENTIFIER  ::= { pn 2 }
+dxMib             OBJECT IDENTIFIER  ::= { sgcs 1 }
+
+dxSystem          OBJECT IDENTIFIER ::= { dxMib 1 }
+dxAlarm           OBJECT IDENTIFIER ::= { dxMib 2 }
+dxTrap            OBJECT IDENTIFIER ::= { dxMib 3 }
+
+-- *************************************
+-- DX System Group - general information
+-- *************************************
+
+dxSysPABXType     OBJECT-TYPE
+                  SYNTAX DisplayString (SIZE (0..20))
+                  ACCESS read-only
+                  STATUS mandatory
+                  DESCRIPTION
+                  "The specific type of DX PABX, e.g. Realitis DX, iSDX-S"
+                  ::= { dxSystem 1 }
+
+dxSysRevision     OBJECT-TYPE
+                  SYNTAX DisplayString (SIZE (0..8))
+                  ACCESS read-only
+                  STATUS mandatory
+                  DESCRIPTION
+                  "The revision of software running on the DX, e.g. 6.2.001"
+                  ::= { dxSystem 2 }
+
+
+dxSysLocationId   OBJECT-TYPE
+                  SYNTAX DisplayString (SIZE (0..4))
+                  ACCESS read-only
+                  STATUS mandatory
+                  DESCRIPTION
+                  "The unique identity (SPLOC) of the DX within a network, a
+                  maximum of 4 digits.  This value is included in alarm
+                  reports via DPNSS to a Remote Alarm Reporting Centre DX
+                  (RARC).  The RARC logs the value within Type 24 or Type 25
+                  Remote Alarm entries in its alarm table to identify the
+                  remote DX generating the error."
+                  ::= { dxSystem 3 }
+
+dxSysCPUs         OBJECT-TYPE
+                  SYNTAX INTEGER
+                  ACCESS read-only
+                  STATUS mandatory
+                  DESCRIPTION
+                  "The number of CPU cards on the DX, value 1 or 2"
+                  ::= { dxSystem 4 }
+
+dxSysActiveCPU    OBJECT-TYPE
+                  SYNTAX INTEGER {
+                                  cpu-A(1),
+                                  cpu-B(2)
+                                 }
+                  ACCESS read-only
+                  STATUS mandatory
+                  DESCRIPTION
+                  "The currently active CPU on the DX: cpu-A(1) or cpu-B(2).
+                  Always cpu-A(1) on a single CPU system"
+                  ::= { dxSystem 5 }
+
+dxSysAgentReset   OBJECT-TYPE
+                  SYNTAX INTEGER {
+                                  running(1),
+                                  reset(2)
+                                 }
+                  ACCESS read-write
+                  STATUS mandatory
+                  DESCRIPTION
+                  "The normal value of this object is running(1).  Setting
+                  the value to reset(2), causes the Agent to re-read its
+                  configuration file and take account of changes (e.g. a new 
+                  destination for traps or a new value for a community string).
+                  The agent restores the value to running(1) on completion of
+                  the re-read."
+                  ::= { dxSystem 6 }
+
+
+dxSysAgentStatus  OBJECT-TYPE
+                  SYNTAX INTEGER {
+                                  stream-disabled(1),
+                                  initialisation-failed(2),
+                                  initialisation-complete(3)
+                                 }
+                  ACCESS read-only
+                  STATUS mandatory
+                  DESCRIPTION
+                  "An indication of the state of the SNMP agent during its
+                  initialisation sequence.  Success is indicated by
+                  initialisation-complete(3).  stream-disabled(1) warns that
+                  no alarm reports will be received from the DX main software
+                  since SNMP has been disabled there (DX system parameter
+                  SPSNM=0): arrange for SPSNM to be set to 1, then
+                  re-synchronise the Agent (see dxAlarmSync).  initialisation-
+                  failed(2) indicates a major initialisation failure such as
+                  the inability to communicate with the main DX software: 
+                  re-set the Agent to try again (see dxSysAgentReset)."  
+                  ::= { dxSystem 7 }
+
+
+-- **************
+-- DX Alarm Group
+-- **************
+
+dxAlarmControl    OBJECT-TYPE
+                  SYNTAX INTEGER (0..127)
+                  ACCESS read-write
+                  STATUS mandatory
+                  DESCRIPTION
+                  "This object controls the options for reporting alarm
+                  related events as traps.  The value is a sum.  The sum
+                  initially takes the value zero (no traps for any alarm
+                  events).  Then for each category of alarm event to be
+                  reported as a trap, the appropriate value is added to the
+                  sum:
+                    Urgent(64)       - report all urgent alarms
+                    NonUrgent(32)    - report all non-urgent alarms
+                    Unclassified(16) - report all unclassified alarms
+                    Remote(8)        - report alarms received from other DXs
+                                       in the network
+                    Localised(4)     - continue to report when alarms are
+                                       localised by the maintainer
+
+                    Examples:
+                      All alarms including when localised:
+                                          64 + 32 + 16 + 8 + 4 = 124
+                      All alarms except when localised:
+                                          64 + 32 + 16 + 8 = 120
+                      All local alarms except when localised:
+                                          64 + 32 + 16 = 112
+                      Urgent alarms only, remote and local, except when localised:
+                                          64 + 8 = 72
+                      Urgent and non-urgent alarms, remote and local, except when
+                        localised:        64 + 32 + 8 = 104
+
+                      At least one of 64, 32 or 16 must be included to receive
+                      any alarm reports"
+                  ::= { dxAlarm 1 }
+
+
+dxAlarmSync       OBJECT-TYPE
+                  SYNTAX INTEGER {
+                                  running(1),
+                                  resync(2)
+                                 }
+                  ACCESS read-write
+                  STATUS mandatory
+                  DESCRIPTION
+                  "The normal value of this object is running(1).  Setting the
+                  value to resync(2), causes the Agent to re-synchronise its
+                  Alarm Table data with information held internally within the
+                  main DX software.  Although the Agent will normally
+                  automatically synchronise its alarm view (e.g. at DX re-start
+                  or DX switchover), it is recommended that a Management System
+                  periodically issues a re-synchronisation request (e.g. once a
+                  day).  The agent restores the value to running(1) on
+                  completion of the re-synchronisation."
+                  ::= { dxAlarm 2 }
+
+dxAlarmTotUrgent  OBJECT-TYPE
+                  SYNTAX INTEGER (0..80)
+                  ACCESS read-only
+                  STATUS mandatory
+                  DESCRIPTION
+                  "The total number of currently active Urgent Alarms."
+                  ::= { dxAlarm 3 }
+
+dxAlarmTotNonUrgent OBJECT-TYPE
+                  SYNTAX INTEGER (0..80)
+                  ACCESS read-only
+                  STATUS mandatory
+                  DESCRIPTION
+                  "The total number of currently active Non-urgent Alarms."
+                  ::= { dxAlarm 4 }
+
+dxAlarmTotUnclassified OBJECT-TYPE
+                  SYNTAX INTEGER (0..80)
+                  ACCESS read-only
+                  STATUS mandatory
+                  DESCRIPTION
+                  "The total number of currently active Unclassified Alarms."
+                  ::= { dxAlarm 5 }
+
+dxAlarmLocalised  OBJECT-TYPE
+                  SYNTAX INTEGER {
+                                  not-localised(1),
+                                  localised(2)
+                                  }
+                  ACCESS read-only
+                  STATUS mandatory
+                  DESCRIPTION
+                  "Indicates whether alarms have been localised by the
+                  maintainer or not.  Localisation indicates that the
+                  maintainer is currently on site working on the DX.  The
+                  object takes values not-localised(1) or localised(2)."
+                  ::= { dxAlarm 6 }
+
+
+dxAlarmTableSize  OBJECT-TYPE
+                  SYNTAX INTEGER (0..80)
+                  ACCESS read-only
+                  STATUS mandatory
+                  DESCRIPTION
+                  "The number of entries (rows) in dxAlarmTable.  The maximum
+                  number of entries is 80."
+                  ::= { dxAlarm 7 }
+
+-- **************
+-- DX Alarm Table
+-- **************
+
+dxAlarmTable      OBJECT-TYPE
+                  SYNTAX SEQUENCE OF DxAlarmEntry
+                  ACCESS not-accessible
+                  STATUS mandatory
+                  DESCRIPTION
+                  "The table contains information about individual DX Alarms.
+                  The table has a number of entries defined by
+                  dxAlarmTableSize."
+                  ::= { dxAlarm 8 }
+
+dxAlarmEntry      OBJECT-TYPE
+                  SYNTAX DxAlarmEntry
+                  ACCESS not-accessible
+                  STATUS mandatory
+                  DESCRIPTION
+                  "Information about one DX Alarm."
+                  INDEX { dxAlarmIndex }
+                  ::= { dxAlarmTable 1 }
+
+DxAlarmEntry ::=
+                  SEQUENCE {
+                            dxAlarmIndex        INTEGER,
+                            dxAlarmRefNo        INTEGER,
+                            dxAlarmStatus       INTEGER,
+                            dxAlarmCategory     INTEGER,
+                            dxAlarmRemote       INTEGER,
+                            dxAlarmType         INTEGER,
+                            dxAlarmPasses       INTEGER,
+                            dxAlarmReportRAS    INTEGER,
+                            dxAlarmDateTime     DisplayString,
+                            dxAlarmCode         DisplayString,
+                            dxAlarmDesc         DisplayString,
+                            dxAlarmPhysAddr     DisplayString,
+                            dxAlarmCPU          INTEGER,
+                            dxAlarmExtraDetail  DisplayString
+                           }
+
+dxAlarmIndex      OBJECT-TYPE
+                  SYNTAX INTEGER (1..80)
+                  ACCESS read-only
+                  STATUS mandatory
+                  DESCRIPTION
+                  "The index value which uniquely identifies a row in the
+                  Alarm Table.  This value is one more than dxAlarmRefNo."
+                  ::= { dxAlarmEntry 1 }
+
+
+dxAlarmRefNo      OBJECT-TYPE
+                  SYNTAX INTEGER (0..79)
+                  ACCESS read-only
+                  STATUS mandatory
+                  DESCRIPTION
+                  "The unique identifier for the alarm within the DX.  This
+                  value is the same as the Reference Number used with DX LET
+                  and CET MMI commands."
+                  ::= { dxAlarmEntry 2 }
+
+dxAlarmStatus     OBJECT-TYPE
+                  SYNTAX INTEGER {
+                                  unused(1),
+                                  cleared(2),
+                                  passed(3),
+                                  failed-again(4),
+                                  new-alarm(5),
+                                  overwritten(6)
+                                 }
+                  ACCESS read-only
+                  STATUS mandatory
+                  DESCRIPTION
+                  "Indicates the current status of this entry in the Alarm
+                  Table.
+
+                  unused(1) indicates a table entry that has not yet been
+                  allocated to an alarm.  In this case, the values of following
+                  variables in this table entry are undefined.
+
+                  cleared(2) indicates that the DX maintainer has cleared the
+                  alarm via the DX MMI CET command.
+
+                  passed(3) indicates the passing of a self-test so that the
+                  problem has cleared itself. This will cause the dxAlarmPasses
+                  to be incremented.
+
+                  failed-again(4) indicates the failing of a self-test so that
+                  a previous problem has recurred.
+
+                  new-alarm(5) indicates a new alarm.  (The previous status was
+                  unused(1) or cleared(2)).
+
+                  overwritten(6) also indicates a new alarm, but where the
+                  table already has 80 active entries (i.e. entries with status
+                  other than unused(1) or cleared(2)).  The values associated
+                  with the previous alarm in the current entry have been
+                  replaced with values relating to the new alarm."
+                  ::= { dxAlarmEntry 3 }
+
+dxAlarmCategory   OBJECT-TYPE
+                  SYNTAX INTEGER {
+                                  unclassified(1),
+                                  non-urgent(2),
+                                  urgent(3)
+                                 }
+                  ACCESS read-only
+                  STATUS mandatory
+                  DESCRIPTION
+                  "The DX internal alarm classification.  Major = urgent(3).
+                  Minor = non-urgent(2) and unclassified(1).  unclassified(1)
+                  is a very low priority  problem."
+                  ::= { dxAlarmEntry 4 }
+
+dxAlarmRemote     OBJECT-TYPE
+                  SYNTAX INTEGER {
+                                  local(1),
+                                  remote(2)
+                                 }
+                  ACCESS read-only
+                  STATUS mandatory
+                  DESCRIPTION
+                  "Indicates whether the problem is local(1) at the DX where
+                  the Agent is running, or whether the Agent is reporting a
+                  problem on behalf of a remote(2) DX elsewhere in the
+                  network."
+                  ::= { dxAlarmEntry 5 }
+
+dxAlarmType       OBJECT-TYPE
+                  SYNTAX INTEGER (1..99)
+                  ACCESS read-only
+                  STATUS mandatory
+                  DESCRIPTION
+                  "A number indicating the type of problem, e.g. 40 = Storage
+                  Media Fault.  dxAlarmDesc in the table entry contains a 
+                  corresponding text description."
+                  ::= { dxAlarmEntry 6 }
+
+dxAlarmPasses     OBJECT-TYPE
+                  SYNTAX INTEGER (0..99)
+                  ACCESS read-only
+                  STATUS mandatory
+                  DESCRIPTION
+                  "The alarm intermittency, i.e. the number of times an alarm
+                  has changed state from new/failed-again to passed."
+                  ::= { dxAlarmEntry 7 }
+
+dxAlarmReportRAS  OBJECT-TYPE
+                  SYNTAX INTEGER {
+                                  not-accessed(1),
+                                  accessed(2)
+                                 }
+                  ACCESS read-only
+                  STATUS mandatory
+                  DESCRIPTION
+                  "This relates to urgent alarms reported remotely to a Maintainer
+                  via the DX Remote Access System (RAS).  accessed(2) indicates
+                  that the Maintainer has dialled in via RAS and has issued a
+                  LET MMI command to investigate this alarm.  not-accessed(1)
+                  indicates that this alarm has not yet been investigated."
+                  ::= { dxAlarmEntry 8 }
+
+dxAlarmDateTime   OBJECT-TYPE
+                  SYNTAX DisplayString (SIZE (0..16))
+                  ACCESS read-only
+                  STATUS mandatory
+                  DESCRIPTION
+                  "The date and time logged against the fault by the DX.
+                  Format DD/MM/YYYY HH:MM"
+                  ::= { dxAlarmEntry 9 }
+
+
+dxAlarmCode       OBJECT-TYPE
+                  SYNTAX DisplayString (SIZE (0..4))
+                  ACCESS read-only
+                  STATUS mandatory
+                  DESCRIPTION
+                  "A supplementary Fail Code for certain Alarm Types.
+                  An empty string indicates no Fail Code for the current alarm.
+                  Otherwise the string has up to 4 characters for codes 1 to 99
+                  or for code 7777 (minus 1)."
+                  ::= { dxAlarmEntry 10 }
+
+dxAlarmDesc       OBJECT-TYPE
+                  SYNTAX DisplayString (SIZE (0..40))
+                  ACCESS read-only
+                  STATUS mandatory
+                  DESCRIPTION
+                  "A text description of the Alarm Type of this table entry 
+                  indicating the type of problem."
+                  ::= { dxAlarmEntry 11 }
+
+dxAlarmPhysAddr   OBJECT-TYPE
+                  SYNTAX DisplayString (SIZE (0..12))
+                  ACCESS read-only
+                  STATUS mandatory
+                  DESCRIPTION
+                  "The physical location of the faulty equipment in one of the
+                  following formats:
+                   XX/YY/ZZ:     Shelf, Slot and Channel, e.g. 02/04/03
+                                 [XX/YY/00 where channel is not applicable]
+                   XX/YY/ZZ L:   Shelf, Slot, Channel and Line Number,
+                                 e.g. 06/12/01 2
+                   XX/YY Ann:    Shelf, Slot and Access Number, e.g. 07/03 A02
+                   XX/YY Ann Z:  Shelf, Slot, Access Number and A or B channel,
+                                 e.g. 07/03 A02 B"
+                  ::= { dxAlarmEntry 12 }
+
+dxAlarmCPU        OBJECT-TYPE
+                  SYNTAX INTEGER {
+                                  no-cpu(0),
+                                  cpu-A(1),
+                                  cpu-B(2)
+                                 }
+                  ACCESS read-only
+                  STATUS mandatory
+                  DESCRIPTION
+                  "Indicates the relevant CPU, cpu-A(1) or cpu-B(2), for
+                  alarms relating to a specific CPU on a redundant DX.  The
+                  value is no-cpu(0) for a non-redundant DX or for alarms not
+                  related to a specific CPU."
+                  ::= { dxAlarmEntry 13 }
+
+dxAlarmExtraDetail OBJECT-TYPE
+                  SYNTAX DisplayString (SIZE (0..50))
+                  ACCESS read-only
+                  STATUS mandatory
+                  DESCRIPTION
+                  "Additional information for certain faults.  e.g. an
+                  additional text string, or the physical address of  another
+                  card used in the self-test that identified the faulty card."
+                  ::= { dxAlarmEntry 14 }
+
+-- ***************************************
+-- DX Trap Group - information about traps
+-- ***************************************
+
+dxStandardTraps   OBJECT-TYPE
+                  SYNTAX INTEGER
+                  ACCESS read-only
+                  STATUS mandatory
+		  DESCRIPTION
+	"The coldStart(0) trap is issued after Agent load and initialisation
+	following DX power up or DX reset or after Agent reconfiguration
+	following processing of a Set request on dxSysAgentReset.
+
+	The warmStart(1) trap is issued after Agent re-initialisation of its
+	data following DX restart, DX switchover on a dual processor system or
+	after processing a Set request on dxAlarmSync.
+
+	The linkDown(2) and linkUp(3) traps are issued in conjunction with
+	MIB-II monitoring of the DX Ethernet interface, DX V.24 SLIP interface
+	over TCP/IP and the TCP/IP component of the DX common I/O interface.
+
+	The authenticationFailure(4) trap is issued as per RFC 1157.
+
+	The enterpriseSpecific(6) trap is issued as described under
+	dxEnterpriseTraps."
+
+                  ::= { dxTrap 1 }
+
+dxEnterpriseTraps OBJECT-TYPE
+                  SYNTAX INTEGER {
+                                  newMajorAlarmLocal(1),
+                                  newMajorAlarmRemote(2),
+                                  newMinorAlarmLocal(3),
+                                  newMinorAlarmRemote(4),
+                                  existingAlarmStateChange(5),
+                                  alarmsLocalised(6),
+                                  alarmsNotLocalised(7),
+                                  allAlarmsCleared(8)
+                                 }
+                  ACCESS read-only
+                  STATUS mandatory
+		  DESCRIPTION
+       "The enterpriseSpecific(6) trap is issued for the following DX alarm
+	related events (subject to dxAlarmControl):
+	  New alarm
+	  Existing alarm cleared automatically following a successful self-test
+	  Existing alarm failed again after a subsequent self-test
+	  Maintainer has cleared an alarm using the CET MMI command
+	  Maintainer has globally cleared all alarms using the CET MMI command
+	  Maintainer has localised alarms
+	  Maintainer has extended alarms so that they are no longer localised
+
+	The specific-trap variable in the Trap PDU takes values:
+	       newMajorAlarmLocal(1)
+	       newMajorAlarmRemote(2)
+	       newMinorAlarmLocal(3)
+	       newMinorAlarmRemote(4)
+	       existingAlarmStateChange(5)
+	       alarmsLocalised(6)
+	       alarmsNotLocalised(7)
+	       allAlarmsCleared(8)
+
+	alarmsLocalised(6), alarmsNotLocalised(7) and allAlarmsCleared(8) are
+	global to all alarms.  The other specific-trap values relate to an
+	individual alarm for which information is available in an entry in the 
+	dxAlarmTable. Specific-trap AllAlarmsCleared means all alarms except
+	type 53 alarms have been cleared (via DX MMI command CET M A).
+
+	The variable-bindings list in the Trap PDU contains a single object
+	pair: object identity of dxAlarmIndex ,  value of dxAlarmIndex
+	whose value matches dxAlarmIndex in the corresponding dxAlarmTable row.
+
+	The value variable-bindings list is not present where specific-trap is 
+	alarmsLocalised(6), alarmsNotLocalised(7) or allAlarmsCleared(8)."
+
+                  ::= { dxTrap 2 }
+
+-- ****************
+-- TRAP DEFINITIONS
+-- ****************
+
+newMajorAlarmLocal   TRAP-TYPE
+                     ENTERPRISE dxMib
+                     VARIABLES { dxAlarmIndex }
+                     DESCRIPTION
+                     "A new major (urgent) alarm at the originating Realitis DX"
+                     ::= 1
+
+newMajorAlarmRemote  TRAP-TYPE
+                     ENTERPRISE dxMib
+                     VARIABLES { dxAlarmIndex }
+                     DESCRIPTION
+                     "One or more major (urgent) alarms have been reported by
+                     another Realitis DX"
+                     ::= 2
+
+newMinorAlarmLocal   TRAP-TYPE
+                     ENTERPRISE dxMib
+                     VARIABLES { dxAlarmIndex }
+                     DESCRIPTION
+                     "A new minor (non-urgent or unclassified) alarm at the
+                     originating Realitis DX"
+                     ::= 3
+
+newMinorAlarmRemote  TRAP-TYPE
+                     ENTERPRISE dxMib
+                     VARIABLES { dxAlarmIndex }
+                     DESCRIPTION
+                     "One or more minor (non-urgent) alarms have been reported by
+                     another Realitis DX"
+                     ::= 4
+
+existingAlarmStateChange  TRAP-TYPE
+                     ENTERPRISE dxMib
+                     VARIABLES { dxAlarmIndex }
+                     DESCRIPTION
+                     "A previously reported Realitis DX alarm has changed its state"
+                     ::= 5
+
+alarmsLocalised      TRAP-TYPE
+                     ENTERPRISE dxMib
+                     DESCRIPTION
+                     "Maintainer is on site repairing the realitis DX"
+                     ::= 6
+
+alarmsNotLocalised   TRAP-TYPE
+                     ENTERPRISE dxMib
+                     DESCRIPTION
+                     "Maintainer is no longer on site repairing the realitis DX"
+                     ::= 7
+
+
+allAlarmsCleared     TRAP-TYPE
+                     ENTERPRISE dxMib
+                     DESCRIPTION
+                     "Maintainer has cleared the Realitis DX's alarm table. Alarms
+                     may re-occur as a result of self-tests at the Realitis DX."
+                     ::= 8
+
+END

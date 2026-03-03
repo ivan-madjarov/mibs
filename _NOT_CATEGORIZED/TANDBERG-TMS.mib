@@ -1,0 +1,435 @@
+TANDBERG-TMS-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+
+MODULE-IDENTITY, OBJECT-TYPE, OBJECT-IDENTITY, NOTIFICATION-TYPE, Integer32, enterprises, IpAddress
+
+FROM SNMPv2-SMI
+
+sysUpTime, snmpTrapOID
+
+FROM SNMPv2-MIB
+
+DisplayString, TEXTUAL-CONVENTION, MacAddress
+
+FROM SNMPv2-TC;
+
+tandbergTMSEVENTModule MODULE-IDENTITY
+
+  LAST-UPDATED    "201010131310Z"
+
+  ORGANIZATION    "Tandberg Telecom AS"
+
+  CONTACT-INFO
+
+    "Postal:
+
+      Lysaker,
+
+      NORWAY"
+
+  DESCRIPTION
+
+  "The TANDBERG-TMS MIB specifies a conceptual group of observable
+
+   events and objects.  These events and objects comprise the management information
+
+   necessary to effectively administrate TANDBERGS TMS videoconferencing management suite.
+
+  Copyright 2006-2010 Tandberg Telecom AS.  All rights reserved.  Reproduction of this
+
+  document is authorized on the condition that the foregoing copyright notice is included.
+
+  This SNMP MIB module (Specification) embodies Tandberg Telecom AS's proprietary
+
+  intellectual property. Tandberg Telecom AS retains all title and ownership in the
+
+  Specification, including any revisions.
+
+  Tandberg Telecom AS grants all interested parties a non-exclusive license to use
+
+  and distribute an unmodified copy of this Specification in connection with management
+
+  of Tandberg Telecom AS's products, and without fee, provided this copyright notice
+
+  and license appear on all copies.
+
+  This Specification is supplied 'AS IS,' and Tandberg Telecom AS makes no warranty,
+
+  either express or implied, as to the use, operation, condition, or performance of the
+
+  Specification."
+
+  REVISION        "201010131310Z"
+
+  DESCRIPTION     "Update copyright notice"
+
+  REVISION        "201010081400Z"
+
+  DESCRIPTION     "Add endpoint name and MAC address to traps."
+
+  REVISION        "201001251300Z"
+
+  DESCRIPTION     "Fix copyright notice"
+
+  REVISION        "200910291200Z"
+
+  DESCRIPTION     "Fixed some trap OIDs: 5596.110.6.1.3 added, 5596.110.6.1.8 was incorrectly labeled, and 5596.110.6.1.23 was renumbered from 5596.110.6.1.21"
+
+  REVISION        "200909251200Z"
+
+  DESCRIPTION     "Remove two textual description fields which were unused"
+
+  REVISION        "200909221200Z"
+
+  DESCRIPTION     "Fixed many syntax errors"
+
+  REVISION        "200909181200Z"
+
+  DESCRIPTION     "Mib updated with event 9 and 21"
+
+  REVISION        "200606190000Z"
+
+  DESCRIPTION     "Mib Created"
+
+::= { tms 6 }
+
+tandberg                OBJECT IDENTIFIER ::= { enterprises 5596 }
+
+tms                     OBJECT IDENTIFIER ::= { tandberg 110 }
+
+EventType ::= TEXTUAL-CONVENTION
+
+  STATUS  current
+
+  DESCRIPTION
+
+    "Enumerated type representing an event type from TMS"
+
+  SYNTAX  INTEGER {
+
+    boot(1),
+
+    linkDown(2),
+
+    linkUp(3),
+
+    lowBattery(6),
+
+    lostResponse(7),
+
+    gotResponse(8),
+
+    downspeeding(9),
+
+    authenticationFailure(18),
+
+    flowControl(21),
+
+    ipConflict(22),
+
+    userAssistanceRequested(23),
+
+    rogueSystemFound(118),
+
+    preregisteredSystemActivated(119),
+
+    systemChangedType(120),
+
+    packetLossOccurred(121)
+
+  }
+
+AlertLevel ::= TEXTUAL-CONVENTION
+
+  STATUS  current
+
+  DESCRIPTION
+
+    "Enumerated type representing the alert Level"
+
+  SYNTAX  INTEGER {
+
+    noAlert(0),
+
+    critical(1),
+
+    major(2),
+
+    minor(3),
+
+    warning(4),
+
+    cleared(5)
+
+  }
+
+IsClearingNotification ::= TEXTUAL-CONVENTION
+
+  STATUS  current
+
+  DESCRIPTION
+
+    "Enumerated type representing whether trap is a clearing notification or not"
+
+  SYNTAX  INTEGER {
+
+    no(0),
+
+    yes(1)
+
+  }
+
+tmsMonitoring       OBJECT-IDENTITY
+
+  STATUS          current
+
+  DESCRIPTION     "OID for tandbergTMSEVENTModule monitoring branch"
+
+  ::= { tandbergTMSEVENTModule 1 }
+
+tmsTrapSystemBoot NOTIFICATION-TYPE
+
+  OBJECTS { sysUpTime, snmpTrapOID, tmsAlertLevel, tmsEventTypeId, tmsSystemId, tmsSystemIpadress, tmsIsClearingNotification, tmsSystemMacAddress, tmsSystemName}
+
+  STATUS  current
+
+  DESCRIPTION
+
+    "Notification that system has just booted"
+
+  ::= { tmsMonitoring 1 }
+
+tmsTrapLinkUpDown NOTIFICATION-TYPE
+
+  OBJECTS { sysUpTime, snmpTrapOID, tmsAlertLevel, tmsEventTypeId, tmsSystemId, tmsSystemIpadress, tmsIsClearingNotification, tmsSystemMacAddress, tmsSystemName}
+
+  STATUS  current
+
+  DESCRIPTION
+
+    "Notification that system has just has a LinkUp/LinkDown event"
+
+  ::= { tmsMonitoring 3 }
+
+tmsTrapLostOrGotResponse NOTIFICATION-TYPE
+
+  OBJECTS { sysUpTime, snmpTrapOID, tmsAlertLevel, tmsEventTypeId, tmsSystemId, tmsSystemIpadress, tmsIsClearingNotification, tmsSystemMacAddress, tmsSystemName}
+
+  STATUS  current
+
+  DESCRIPTION
+
+    "Notification that TMS has lost or regained connection with system. tmsIsClearingNotification = 1 if got response 0 if lost"
+
+  ::= { tmsMonitoring 7 }
+
+tmsTrapLowBattery NOTIFICATION-TYPE
+
+  OBJECTS { sysUpTime, snmpTrapOID, tmsAlertLevel, tmsEventTypeId, tmsSystemId, tmsSystemIpadress, tmsIsClearingNotification, tmsSystemMacAddress, tmsSystemName}
+
+  STATUS  current
+
+  DESCRIPTION
+
+    "Notification that a system is reporting low battery"
+
+  ::= { tmsMonitoring 8 }
+
+tmsTrapDownspeeding NOTIFICATION-TYPE
+
+  OBJECTS { sysUpTime, snmpTrapOID, tmsAlertLevel, tmsEventTypeId, tmsSystemId, tmsSystemIpadress, tmsIsClearingNotification, tmsSystemMacAddress, tmsSystemName}
+
+  STATUS  current
+
+  DESCRIPTION
+
+    "Notification that system is downspeeding"
+
+  ::= { tmsMonitoring 9 }
+
+tmsTrapAuthenticationFailure NOTIFICATION-TYPE
+
+  OBJECTS { sysUpTime, snmpTrapOID, tmsAlertLevel, tmsEventTypeId, tmsSystemId, tmsSystemIpadress, tmsIsClearingNotification, tmsSystemMacAddress, tmsSystemName}
+
+  STATUS  current
+
+  DESCRIPTION
+
+    "A failed attempt to log in on system has occurred"
+
+  ::= { tmsMonitoring 20 }
+
+tmsTrapFlowControl NOTIFICATION-TYPE
+
+  OBJECTS { sysUpTime, snmpTrapOID, tmsAlertLevel, tmsEventTypeId, tmsSystemId, tmsSystemIpadress, tmsIsClearingNotification, tmsSystemMacAddress, tmsSystemName}
+
+  STATUS  current
+
+  DESCRIPTION
+
+    "Notification that system is experiencing flow control"
+
+  ::= { tmsMonitoring 23 }
+
+tmsTrapIpConflict NOTIFICATION-TYPE
+
+  OBJECTS { sysUpTime, snmpTrapOID, tmsAlertLevel, tmsEventTypeId, tmsSystemId, tmsSystemIpadress, tmsIsClearingNotification, tmsSystemMacAddress, tmsSystemName}
+
+  STATUS  current
+
+  DESCRIPTION
+
+    "Notification of an ipconflict on network"
+
+  ::= { tmsMonitoring 24 }
+
+tmsTrapUserAssistanceRequested NOTIFICATION-TYPE
+
+  OBJECTS { sysUpTime, snmpTrapOID, tmsAlertLevel, tmsEventTypeId, tmsSystemId, tmsSystemIpadress, tmsIsClearingNotification, tmsSystemMacAddress, tmsSystemName}
+
+  STATUS  current
+
+  DESCRIPTION
+
+    "Notification that a user has requested assistance"
+
+  ::= { tmsMonitoring 25 }
+
+tmsTrapRogueSystemFound NOTIFICATION-TYPE
+
+  OBJECTS { sysUpTime, snmpTrapOID, tmsAlertLevel, tmsEventTypeId, tmsSystemId, tmsSystemIpadress, tmsIsClearingNotification, tmsSystemMacAddress, tmsSystemName}
+
+  STATUS  current
+
+  DESCRIPTION
+
+    "Notification that a rogue system (system not registered in TMS) has been found on the network"
+
+  ::= { tmsMonitoring 28 }
+
+tmsTrapPreregisteredSystemActivated NOTIFICATION-TYPE
+
+  OBJECTS { sysUpTime, snmpTrapOID, tmsAlertLevel, tmsEventTypeId, tmsSystemId, tmsSystemIpadress, tmsIsClearingNotification, tmsSystemMacAddress, tmsSystemName}
+
+  STATUS  current
+
+  DESCRIPTION
+
+    "Notification that a preregistered system in TMS has been activated"
+
+  ::= { tmsMonitoring 29 }
+
+tmsTrapSystemChangedType NOTIFICATION-TYPE
+
+  OBJECTS { sysUpTime, snmpTrapOID, tmsAlertLevel, tmsEventTypeId, tmsSystemId, tmsSystemIpadress, tmsIsClearingNotification, tmsSystemMacAddress, tmsSystemName}
+
+  STATUS  current
+
+  DESCRIPTION
+
+    "Notification that a system registered in TMS has changed system type"
+
+  ::= { tmsMonitoring 30 }
+
+tmsTrapPacketLossOccurred NOTIFICATION-TYPE
+
+  OBJECTS { sysUpTime, snmpTrapOID, tmsAlertLevel, tmsEventTypeId, tmsSystemId, tmsSystemIpadress, tmsIsClearingNotification, tmsSystemMacAddress, tmsSystemName}
+
+  STATUS  current
+
+  DESCRIPTION
+
+    "Notification that system is experiencing problems in a conference and is dropping packets"
+
+  ::= { tmsMonitoring 31 }
+
+tmsBindingPrefix OBJECT IDENTIFIER
+
+  ::= { tms 1 }
+
+tmsEventTypeId   OBJECT-TYPE
+
+  SYNTAX      EventType
+
+  MAX-ACCESS  read-only
+
+  STATUS      current
+
+  DESCRIPTION "The type of event that was thrown"
+
+  ::= { tmsBindingPrefix 1 }
+
+tmsSystemId   OBJECT-TYPE
+
+  SYNTAX      Integer32
+
+  MAX-ACCESS  read-only
+
+  STATUS      current
+
+  DESCRIPTION "System id"
+
+  ::= { tmsBindingPrefix 3 }
+
+tmsAlertLevel   OBJECT-TYPE
+
+  SYNTAX      AlertLevel
+
+  MAX-ACCESS  read-only
+
+  STATUS      current
+
+  DESCRIPTION "The alert Level of the event that was thrown"
+
+  ::= { tmsBindingPrefix 4 }
+
+tmsSystemIpadress   OBJECT-TYPE
+
+  SYNTAX      IpAddress
+
+  MAX-ACCESS  read-only
+
+  STATUS      current
+
+  DESCRIPTION "System ip address"
+
+  ::= { tmsBindingPrefix 6 }
+
+tmsIsClearingNotification   OBJECT-TYPE
+
+  SYNTAX      IsClearingNotification
+
+  MAX-ACCESS  read-only
+
+  STATUS      current
+
+  DESCRIPTION "0 = new alert, 1 = clear old alert"
+
+  ::= { tmsBindingPrefix 7 }
+
+tmsSystemMacAddress   OBJECT-TYPE
+
+  SYNTAX      MacAddress
+
+  MAX-ACCESS  read-only
+
+  STATUS      current
+
+  DESCRIPTION "System MAC address in canonical order as defined by IEEE 802.1a (least significant bit first)"
+
+  ::= { tmsBindingPrefix 8 }
+
+tmsSystemName   OBJECT-TYPE
+
+  SYNTAX      DisplayString
+
+  MAX-ACCESS  read-only
+
+  STATUS      current
+
+  DESCRIPTION "Name of system in TMS"
+
+  ::= { tmsBindingPrefix 9 }
+
+END    

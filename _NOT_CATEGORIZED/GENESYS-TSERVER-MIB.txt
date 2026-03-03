@@ -1,0 +1,868 @@
+---
+--- $Id: gproxy.mib,v 2.1.1.2 1998/03/04 00:24:05 nickts Exp $
+---
+GENESYS-TSERVER-MIB DEFINITIONS ::= BEGIN
+
+        IMPORTS 
+                                Counter, enterprises
+                                        FROM RFC1155-SMI
+                                OBJECT-TYPE
+                                        FROM RFC-1212
+                                TRAP-TYPE
+                                        FROM RFC-1215;
+
+
+        genesys           OBJECT IDENTIFIER ::= { enterprises 1729 }
+
+        server            OBJECT IDENTIFIER ::= { genesys 100 }
+
+        gpTserver         OBJECT IDENTIFIER ::= { genesys 101 }
+
+        gpStatServer      OBJECT IDENTIFIER ::= { genesys 102 }
+
+        gpServers         OBJECT IDENTIFIER ::= { server 1 }
+
+        gpPolling         OBJECT IDENTIFIER ::= { server 2 }
+
+        gpLog             OBJECT IDENTIFIER ::= { server 3  }
+
+        gpAgent           OBJECT IDENTIFIER ::= { server 4 }
+
+        tsClients         OBJECT IDENTIFIER ::= { gpTserver 1 }
+
+        tsCalls           OBJECT IDENTIFIER ::= { gpTserver 2 }
+
+        tsDtas            OBJECT IDENTIFIER ::= { gpTserver 3 }
+
+        tsLinks           OBJECT IDENTIFIER ::= { gpTserver 4 }
+
+
+        DisplayString ::=  OCTET STRING
+
+
+---
+---     'gpServers' obj
+---
+
+
+        gpServersList   OBJECT-TYPE
+                SYNTAX  SEQUENCE OF Server
+                ACCESS  not-accessible
+                STATUS  mandatory
+                ::= { gpServers 1 }
+
+        gpServersCurrent        OBJECT-TYPE
+                SYNTAX  DisplayString (SIZE(1..255))
+                ACCESS  read-write
+                STATUS  mandatory
+                DESCRIPTION
+                        "The name of the current monitored Server"
+                ::= { gpServers 2 }
+
+        gpServersLastTrap       OBJECT-TYPE
+                SYNTAX  DisplayString (SIZE(1..255))
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "The last trap sent to the NMS"
+                ::= { gpServers 3 }
+
+        gpServer        OBJECT-TYPE
+                SYNTAX  Server
+                ACCESS  not-accessible
+                STATUS  mandatory
+                INDEX   { gpServerId }
+                ::= { gpServersList 1 }
+
+        Server ::= SEQUENCE {   gpServerId INTEGER , 
+                                gpServerName DisplayString,
+                                gpServerStatus DisplayString,
+                                gpServerType DisplayString,
+                                gpServerVersion DisplayString,
+                                gpServerWorkDir DisplayString,
+                                gpServerConfigFile DisplayString,
+                                gpServerPID INTEGER,
+                                gpServerStartup DisplayString,
+                                gpServerShutdown DisplayString
+                        }
+
+---
+---     'gpServer' obj
+---
+                
+        gpServerId      OBJECT-TYPE
+                SYNTAX  INTEGER
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies server id"
+                ::= { gpServer 1 }
+
+        gpServerName    OBJECT-TYPE
+                SYNTAX  DisplayString
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies server name"
+                ::= { gpServer 2 }
+
+        gpServerStatus  OBJECT-TYPE
+                SYNTAX  DisplayString (SIZE(1..10))
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION 
+                   "Indicates whether it is possible to connect to the server at the
+                    current time."
+                ::= { gpServer 3 }
+
+        gpServerType    OBJECT-TYPE
+                SYNTAX  DisplayString (SIZE(1..10))
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION 
+                   "Indicates server type"
+                ::= { gpServer 4 }
+
+        gpServerVersion OBJECT-TYPE
+                SYNTAX  DisplayString (SIZE(0..255))
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies server's current version"
+                ::= { gpServer 5 }
+
+        gpServerWorkDir OBJECT-TYPE
+                SYNTAX  DisplayString (SIZE(0..255))
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies server working directory"
+                ::= { gpServer 6 }
+
+        gpServerConfigFile      OBJECT-TYPE
+                SYNTAX  DisplayString (SIZE(0..255))
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies config file name"
+                ::= { gpServer 7 }
+
+        gpServerPID     OBJECT-TYPE
+                SYNTAX  INTEGER
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies server process ID"
+                ::= { gpServer 8 } 
+
+        gpServerStartup OBJECT-TYPE
+                SYNTAX  DisplayString (SIZE(0..255))
+                ACCESS  read-write
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies server command line"
+                ::= { gpServer 9 }
+
+        gpServerShutdown        OBJECT-TYPE
+                SYNTAX  DisplayString (SIZE(0..255))
+                ACCESS  read-write
+                STATUS  mandatory
+                DESCRIPTION
+                        "Stops server."
+                ::= { gpServer 10 }
+
+        gpServerDownTrap        TRAP-TYPE
+                ENTERPRISE      server
+                VARIABLES       { gpServersLastTrap }
+                DESCRIPTION
+                        "Signal from proxy agent to NMS that server has ceased
+                         operating or has failed to restart."
+                ::= 0
+
+        gpServerUpTrap          TRAP-TYPE
+                ENTERPRISE      server
+                VARIABLES       { gpServersLastTrap }
+                DESCRIPTION
+                        "Signal from proxy agent to NMS that server has resumed operating."
+                ::= 1
+
+
+
+---
+---     'gpPolling' object
+---
+        gpPollingStatus OBJECT-TYPE
+                SYNTAX  DisplayString (SIZE(1..10))
+                ACCESS  read-write
+                STATUS  mandatory
+                DESCRIPTION 
+                "Activates and deactivates server polling feature, which
+                sends the NMS periodical signals describing server's 
+                operational status. Possible settings on/off."
+                ::= { gpPolling 1 }
+
+        gpPollingInterval       OBJECT-TYPE
+                SYNTAX  INTEGER (0..120)
+                ACCESS  read-write
+                STATUS  mandatory
+                DESCRIPTION 
+                "Specifies the interval in seconds between polling signals from server."
+
+                ::= { gpPolling 2 }
+
+        gpPollingID     OBJECT-TYPE
+                SYNTAX  INTEGER
+                ACCESS  read-write
+                STATUS  mandatory
+                DESCRIPTION 
+                "The event ID assigned to each polling signal, for monitoring purposes."
+                ::= { gpPolling 3 }
+
+        gpPollingLastTrap       OBJECT-TYPE
+                SYNTAX  DisplayString (SIZE(1..64))
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION 
+                "The last ID assigned to the polling signal."
+                ::= { gpPolling 4 }
+
+        gpPollingSignal TRAP-TYPE
+                ENTERPRISE      server
+                VARIABLES       { gpPollingLastTrap }
+                DESCRIPTION
+                        "SNMP polling signal received from server."
+                ::= 2
+
+
+---
+---     'log' object
+---
+
+        gpLogStatus     OBJECT-TYPE
+                SYNTAX  DisplayString (SIZE(1..10))
+                ACCESS  read-write
+                STATUS  mandatory
+                DESCRIPTION 
+                        "Activates and deactivates T-Server's event log
+                feature. Possible settings are on/off."
+                ::= { gpLog 1 }
+
+        gpLogFileName   OBJECT-TYPE
+                SYNTAX  DisplayString (SIZE (0..255))
+                ACCESS  read-write
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies the name of the file in which the T-Server log is
+                        recorded."
+                ::= { gpLog 2 }
+
+        gpLogFileSize   OBJECT-TYPE
+                SYNTAX  INTEGER
+                ACCESS  read-write
+                STATUS  mandatory
+                DESCRIPTION 
+                        "Specifies the size of the file in which the T-Server log is 
+                        recorded"
+                ::= { gpLog 3 }
+
+        gpLogRemOldFiles        OBJECT-TYPE
+                SYNTAX  DisplayString (SIZE(1..10))
+                ACCESS  read-write
+                STATUS  mandatory
+                DESCRIPTION
+                        "Activates and deactivates the allowing to remove old log files.
+                        Possible settings are false/true/keep-one"
+                ::= { gpLog 4 }
+
+        gpLogCheckInterval      OBJECT-TYPE
+                SYNTAX  INTEGER
+                ACCESS  read-write
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies the interval in sec in what a size of the log file
+                        should be checked"
+                ::= { gpLog 5 }
+
+        gpLogLevel      OBJECT-TYPE
+                SYNTAX  INTEGER
+                ACCESS  read-write
+                STATUS  mandatory
+                DESCRIPTION
+                        "Debug info output level"
+                ::= { gpLog 6 }
+
+
+---
+---     'gpAgent' obj
+---
+
+        gpAgentVersion          OBJECT-TYPE
+                SYNTAX  DisplayString (SIZE(0..255))
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies the current version of the running Management Agent"
+                ::= { gpAgent 1 }
+
+        gpAgentShutdown OBJECT-TYPE
+                SYNTAX  DisplayString (SIZE(0..255))
+                ACCESS  read-write
+                STATUS  mandatory
+                DESCRIPTION
+                        "Starts and stops the running Management Agent"
+                ::= { gpAgent 2 }
+
+
+
+---
+---     'tsClients' obj
+---
+
+        tsClientsExistNum       OBJECT-TYPE
+                SYNTAX  INTEGER
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "The number of clients being handled by T-Server."
+                ::= { tsClients 1 }
+
+        tsClientsTotalNum       OBJECT-TYPE
+                SYNTAX  INTEGER
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies a total number of clients connected to T-Server"
+                ::= { tsClients 2 }
+
+
+        tsClientsDeleteClient   OBJECT-TYPE
+                SYNTAX  INTEGER
+                ACCESS  read-write
+                STATUS  mandatory
+                DESCRIPTION
+                        "Sends 'delete client' command to T-Server" 
+                ::= { tsClients 3 }
+
+        tsClientsList   OBJECT-TYPE
+                SYNTAX  SEQUENCE OF Client
+                ACCESS  not-accessible
+                STATUS  mandatory
+                ::= { tsClients 4 }
+
+        tsClient        OBJECT-TYPE
+                SYNTAX  Client
+                ACCESS  not-accessible
+                STATUS  mandatory
+                INDEX   { tsClientSocket }
+                ::= { tsClientsList 1 }
+
+        Client ::= SEQUENCE {   tsClientSocket INTEGER, 
+                                tsClientAppName DisplayString, 
+                                tsClientAuthorized DisplayString, 
+                                tsClientType DisplayString, 
+                                tsClientGotEvents DisplayString, 
+                                tsClientSentReqs DisplayString }
+
+---
+---     'tsClient' obj
+---
+                
+        tsClientSocket  OBJECT-TYPE
+                SYNTAX  INTEGER
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies a socket number through that client has been
+                        connected to the tserver"
+                ::= { tsClient 1 }
+
+        tsClientAppName OBJECT-TYPE
+                SYNTAX  DisplayString (SIZE(1..255))
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION     
+                                "Specifies an client's app name"
+                ::= { tsClient 2 }
+
+        tsClientAuthorized      OBJECT-TYPE
+                SYNTAX  DisplayString (SIZE(1..255))
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies a level of the cleint's authorization"
+                ::= { tsClient 3 }
+
+        tsClientType    OBJECT-TYPE
+                SYNTAX  DisplayString (SIZE(1..255))
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies a type of the client"
+                ::= { tsClient 4 }
+
+        tsClientGotEvents       OBJECT-TYPE
+                SYNTAX  DisplayString (SIZE(1..255))
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies number of events which has been received by 
+                        the clients"
+                ::= { tsClient 5 }
+
+        tsClientSentReqs        OBJECT-TYPE
+                SYNTAX  DisplayString (SIZE(1..255))
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies number of requests which has been sent by
+                        the client"
+                ::= { tsClient 6 }
+
+
+---
+---     'tsCalls' object
+---
+
+        tsCallsExistNum OBJECT-TYPE
+                SYNTAX  INTEGER
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies a number of calls being handled by T-Server"
+                ::= { tsCalls 1 }
+                        
+        tsCallsTotalNum OBJECT-TYPE
+                SYNTAX  INTEGER
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies a total number of calls handled by T-Server"
+                ::= { tsCalls 2 }
+
+        tsCallsList     OBJECT-TYPE
+                SYNTAX  SEQUENCE OF Call
+                ACCESS  not-accessible
+                STATUS  mandatory
+                ::= { tsCalls 3 }
+
+        tsCall          OBJECT-TYPE
+                SYNTAX  Call
+                ACCESS  not-accessible
+                STATUS  mandatory
+                INDEX   { tsCallInstanceID }
+                ::= { tsCallsList 1 }
+
+        Call ::= SEQUENCE {     tsCallInstanceID Counter,
+                                tsCallConnID DisplayString, 
+                                tsCallState DisplayString,
+                                tsCallCallID DisplayString,
+                                tsCallType DisplayString,
+                                tsCallReferenceID DisplayString,
+                                tsCallTimeStamp DisplayString,
+                                tsCallDNIS DisplayString,
+                                tsCallANI DisplayString,
+                                tsCallNumParties DisplayString,
+                                tsCallPartiesList DisplayString,
+                                tsCallCustomerID DisplayString,
+                                tsCallFirstTransferLocation DisplayString,
+                                tsCallFirstTransferDN DisplayString,
+                                tsCallLastTransferLocation DisplayString,
+                                tsCallLastTransferDN DisplayString 
+                        }
+
+---
+---     'tsCall' object
+---
+
+        tsCallInstanceID        OBJECT-TYPE
+                SYNTAX  Counter
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies a number of instance of a call"
+                ::= { tsCall 1 }
+
+        tsCallConnID    OBJECT-TYPE
+                SYNTAX  DisplayString
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies an ID that a T-Server has assigned to a call"
+                ::= { tsCall 2 }
+
+        tsCallState     OBJECT-TYPE
+                SYNTAX  DisplayString
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies a state in which a call is"
+                ::= { tsCall 3 }
+
+        tsCallCallID    OBJECT-TYPE
+                SYNTAX  DisplayString
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies an ID that a switch has assigned to a call"
+                ::= { tsCall 4 }
+
+        tsCallType      OBJECT-TYPE
+                SYNTAX  DisplayString
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies a call type"
+                ::= { tsCall 5 }
+
+        tsCallReferenceID       OBJECT-TYPE
+                SYNTAX  DisplayString
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies a reference ID for a call"
+                ::= { tsCall 6 }
+
+        tsCallTimeStamp OBJECT-TYPE
+                SYNTAX  DisplayString
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies a time in msec when call has been created"
+                ::= { tsCall 7 }
+
+        tsCallDNIS      OBJECT-TYPE
+                SYNTAX  DisplayString (SIZE(0..255))
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies a DNIS field in the call structure"
+                ::= { tsCall 8 }
+
+        tsCallANI       OBJECT-TYPE
+                SYNTAX  DisplayString (SIZE(0..255))
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies an ANI field in the call structure"
+                ::= { tsCall 9 }
+
+        tsCallNumParties        OBJECT-TYPE
+                SYNTAX  DisplayString
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies a number of parties currently being in a call"
+                ::= { tsCall 10 }
+
+        tsCallPartiesList       OBJECT-TYPE
+                SYNTAX  DisplayString
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies a list of parties involved in a call"
+                ::= { tsCall 11 }
+
+
+        tsCallCustomerID        OBJECT-TYPE
+                SYNTAX  DisplayString (SIZE(0..255))
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies a customer id field in the call structure"
+                ::= { tsCall 12 }
+
+
+        tsCallFirstTransferLocation     OBJECT-TYPE
+                SYNTAX  DisplayString (SIZE(0..255))
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies a location of T-Server which first transfer has been made from"
+                ::= { tsCall 13 }
+  
+        tsCallFirstTransferDN   OBJECT-TYPE
+                SYNTAX  DisplayString (SIZE(0..255))
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies a DN on remote T-Server which first transfer has been made from"
+                ::= { tsCall 14 }
+  
+  
+        tsCallLastTransferLocation      OBJECT-TYPE
+                SYNTAX  DisplayString (SIZE(0..255))
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies a location of T-Server which last transfer has been made from"
+                ::= { tsCall 15 }
+  
+        tsCallLastTransferDN    OBJECT-TYPE
+                SYNTAX  DisplayString (SIZE(0..255))
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies a DN on remote T-Server which last transfer has been made from"
+                ::= { tsCall 16 }
+
+
+---
+---     'tsDtas' object
+---
+
+        tsDtaNum        OBJECT-TYPE
+                SYNTAX  INTEGER
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "The number of taddress'  being handled by T-Server."
+                ::= { tsDtas 1 }
+
+        tsDtaList       OBJECT-TYPE
+                SYNTAX  SEQUENCE OF Dta
+                ACCESS  not-accessible
+                STATUS  mandatory
+                ::= { tsDtas 2 }
+
+        tsDta           OBJECT-TYPE
+                SYNTAX  Dta
+                ACCESS  not-accessible
+                STATUS  mandatory
+                INDEX   { tsDtaInstanceID }
+                ::= { tsDtaList 1 }
+
+        Dta     ::= SEQUENCE {  tsDtaInstanceID Counter,
+                                tsDtaDigits DisplayString,
+                                tsDtaMode DisplayString,
+                                tsDtaState DisplayString,
+                                tsDtaType DisplayString }
+                                
+
+---
+---     'tsDta' object
+---
+
+        tsDtaInstanceID OBJECT-TYPE
+                SYNTAX  Counter
+                ACCESS  read-only
+                STATUS  mandatory       
+                DESCRIPTION
+                        "Specifies instance field in dta structure"
+                ::= { tsDta 1 }
+
+        tsDtaDigits     OBJECT-TYPE
+                SYNTAX  DisplayString (SIZE(0..255))
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies digits field dta structure"
+                ::= { tsDta 2 }
+
+        tsDtaMode       OBJECT-TYPE
+                SYNTAX  DisplayString   
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies mode field in dta structure"
+                ::= { tsDta 3 }
+
+        tsDtaState      OBJECT-TYPE
+                SYNTAX  DisplayString
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies state field in dta structure"
+                ::= { tsDta 4 }
+
+        tsDtaType       OBJECT-TYPE
+                SYNTAX  DisplayString
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies type field in dta structure"
+                ::= { tsDta 5 }
+
+
+
+
+---
+---     'tsLinks' object
+---
+
+        tsLinksNum      OBJECT-TYPE
+                SYNTAX  INTEGER
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "The number of links which a T-Server has connected to."
+                ::= { tsLinks 1 }
+
+        tsLinksCommand  OBJECT-TYPE
+                SYNTAX  DisplayString (SIZE(1..255))    
+                ACCESS  read-write
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies a command which will be sent to T-Server."
+                ::= { tsLinks 2 }
+
+        tsLinksList     OBJECT-TYPE
+                SYNTAX  SEQUENCE OF Link
+                ACCESS  not-accessible
+                STATUS  mandatory
+                ::= { tsLinks 3 }
+
+        tsLink          OBJECT-TYPE
+                SYNTAX  Link
+                ACCESS  not-accessible
+                STATUS  mandatory
+                INDEX   { tsLinkID }
+                ::= { tsLinksList 1 }
+
+        Link    ::= SEQUENCE {  tsLinkID INTEGER,
+                                tsLinkName DisplayString,
+                                tsLinkStatus DisplayString,
+                                tsLinkProtocol DisplayString, 
+                                tsLinkSocket DisplayString,
+                                tsLinkPID DisplayString,
+                                tsLinkDelay DisplayString,
+                                tsLinkPort DisplayString,
+                                tsLinkAddress DisplayString,
+                                tsLinkX25LocalAddress DisplayString,
+                                tsLinkMode DisplayString,
+                                tsLinkX25Device DisplayString,
+                                tsLinkDTEClass DisplayString,
+                                tsLinkTemplate DisplayString }
+                                
+
+---
+---     'tsLink' object
+---     
+
+        tsLinkID        OBJECT-TYPE
+                SYNTAX  INTEGER
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies an identificator of a link"
+                ::= { tsLink 1 }
+
+        tsLinkName      OBJECT-TYPE
+                SYNTAX  DisplayString (SIZE(0..255))
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies a name of a link"
+                ::= { tsLink 2 }
+
+        tsLinkStatus    OBJECT-TYPE
+                SYNTAX  DisplayString
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies a current status of a link"
+                ::= { tsLink 3 }
+
+        tsLinkProtocol  OBJECT-TYPE
+                SYNTAX  DisplayString
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies a protocol type"
+                ::= { tsLink 4 }
+
+        tsLinkSocket    OBJECT-TYPE
+                SYNTAX  DisplayString
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies a socket number through which the server 
+                        connected to a link"
+                ::= { tsLink 5 }
+
+        tsLinkPID       OBJECT-TYPE
+                SYNTAX  DisplayString
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies a process ID for a link"
+                ::= { tsLink 6 }
+
+        tsLinkDelay     OBJECT-TYPE
+                SYNTAX  DisplayString
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies a delay"
+                ::= { tsLink 7 }
+
+        tsLinkPort      OBJECT-TYPE
+                SYNTAX  DisplayString
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies a physical port number for a link"
+                ::= { tsLink 8 }
+
+        tsLinkAddress   OBJECT-TYPE
+                SYNTAX  DisplayString (SIZE(0..255))
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies an address for a link"
+                ::= { tsLink 9 }
+
+        tsLinkX25LocalAddress   OBJECT-TYPE
+                SYNTAX  DisplayString (SIZE(0..255))
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies a local address for x25 connection"
+                ::= { tsLink 10 }
+
+        tsLinkMode      OBJECT-TYPE
+                SYNTAX  DisplayString
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies a mode"
+                ::= { tsLink 11 }
+
+        tsLinkX25Device OBJECT-TYPE
+                SYNTAX  DisplayString (SIZE(0..255))
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies a x25 device"
+                ::= { tsLink 12 }
+
+        tsLinkDTEClass  OBJECT-TYPE
+                SYNTAX  DisplayString (SIZE(0..255))
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies a DTE class for x25 connection"
+                ::= { tsLink 13 }
+
+        tsLinkTemplate  OBJECT-TYPE
+                SYNTAX  DisplayString (SIZE(0..255))
+                ACCESS  read-only
+                STATUS  mandatory
+                DESCRIPTION
+                        "Specifies a template"
+                ::= { tsLink 14 }
+
+---
+---     'statserver' obj
+---
+
+        ssReconfigStatus        OBJECT-TYPE
+                SYNTAX  INTEGER
+                ACCESS  read-write
+                STATUS  mandatory
+                DESCRIPTION 
+                "Activates StatServer's Reconfig feature, which
+                sends the NMS periodical signals describing StatServer's 
+                reconfig status. Possible setting is '1'"
+                ::= { gpStatServer 1 }
+
+END

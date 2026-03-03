@@ -1,0 +1,254 @@
+-- Copyright 2011 prairieFyre Software Inc
+-- All rights reserved.
+-- This prairieFyre SNMP Management Information Base Specification
+-- (Specification) embodies prairieFyre's confidential and
+-- proprietary intellectual property. prairieFyre retains all
+-- title and ownership in the Specification, including any
+-- revisions.
+
+-- This Specification is supplied "AS IS", and prairieFyre makes
+-- no warranty, either express or implied, as to the use,
+-- operation, condition, or performance of the Specification.
+
+
+PRAIRIEFYRE-MIB DEFINITIONS ::= BEGIN
+
+    IMPORTS
+        MODULE-IDENTITY,
+        OBJECT-TYPE, 
+        NOTIFICATION-TYPE,
+        enterprises
+            FROM    SNMPv2-SMI
+        DisplayString 
+            FROM SNMPv2-TC
+
+
+        MODULE-COMPLIANCE,
+        OBJECT-GROUP
+            FROM SNMPv2-CONF;
+
+
+    prairieFyre            MODULE-IDENTITY
+        LAST-UPDATED      "201103080000Z"
+        ORGANIZATION      "prairieFyre Software Inc"
+        CONTACT-INFO      "R+D Group,
+                           Postal:  prairieFyre Software Inc.
+                           10 Brewer Hunt Way
+                           Ottawa, Ontario
+                           Canada  K2K 2B5
+                           Tel: +1 613 599 0045
+                           Fax: +1 613 599 7677
+                           E-mail: clarke@prairiefyre.com"
+        DESCRIPTION       "The top-level prairieFyre MIB module."
+    ::= { enterprises 5378 }
+
+    --All SNMP Variables/Object Types should start with Lower Case..
+    --Verify correctness with Unbrowse MIB compiler set to highest level
+
+    -- ****************************************************************
+    -- prairieFyre sub-tree
+    -- ****************************************************************
+
+    enterpriseAlarms   OBJECT IDENTIFIER ::= { prairieFyre 1 }
+    enterpriseNotifications   OBJECT IDENTIFIER ::= { prairieFyre 2 }
+    enterpriseGroups   OBJECT IDENTIFIER ::= { prairieFyre 3 }
+
+
+    -- ****************************************************************
+    -- The enterpriseAlarms sub tree
+    -- ****************************************************************
+         manufacturer OBJECT-TYPE
+            SYNTAX      DisplayString (SIZE (0..255))
+             MAX-ACCESS  read-only
+             STATUS current
+             DESCRIPTION
+                     "prairieFyre Software's Contact Center Suite"
+             ::= { enterpriseAlarms   1 }
+
+         overridingSystemAlarm OBJECT-TYPE
+             SYNTAX  INTEGER  {
+            unknownAlarm(0),
+            noAlarm(1),
+            minorAlarm(2),
+            majorAlarm(3),
+            criticalAlarm(4)
+                     }
+             MAX-ACCESS  read-only
+             STATUS current
+             DESCRIPTION
+                     "This is the cumulative total of all reporting active alarms, and should be viewed as the overriding alarm
+                     state that the prairieFyre suite is now reporting."
+             ::= { enterpriseAlarms   2 }
+
+         generalCatagoryAlarm OBJECT-TYPE
+             SYNTAX  INTEGER  {
+            unknownAlarm(0),
+            noAlarm(1),
+            minorAlarm(2),
+            majorAlarm(3),
+            criticalAlarm(4)
+                     }
+             MAX-ACCESS  read-only
+             STATUS current
+             DESCRIPTION
+                     "When a software entity raises an alarm not covered in the following list then it is catagorized as a general alarm ."
+             ::= { enterpriseAlarms   3 }
+             
+         dataCollectionAlarm OBJECT-TYPE
+             SYNTAX  INTEGER  {
+            unknownAlarm(0),
+            noAlarm(1),
+            minorAlarm(2),
+            majorAlarm(3),
+            criticalAlarm(4)
+                     }
+             MAX-ACCESS  read-only
+             STATUS current
+             DESCRIPTION
+                     "One of the Media Controller Data Link Connections within the prairieFyre Enterprise is Offline.
+            This could be a connection to a PBX or an e-Mail Server or SMS transport server or some other 
+            controller of a media transaction that is configure to be connected to the prairieFyre suite."
+             ::= { enterpriseAlarms   4 }
+
+         serverResourceAlarm OBJECT-TYPE
+             SYNTAX  INTEGER  {
+            unknownAlarm(0),
+            noAlarm(1),
+            minorAlarm(2),
+            majorAlarm(3),
+            criticalAlarm(4)
+                     }
+             MAX-ACCESS  read-only
+             STATUS current
+             DESCRIPTION
+                     "One or more software services in the prairieFyre suite is reporting an unusual consumption of
+                     computer resources. This may be an excpetionally high CPU consumption or running low on physical 
+                     memory etc. This may require a service restart to resolve."
+             ::= { enterpriseAlarms   5 }
+
+         communicationsAlarm OBJECT-TYPE
+             SYNTAX  INTEGER  {
+            unknownAlarm(0),
+            noAlarm(1),
+            minorAlarm(2),
+            majorAlarm(3),
+            criticalAlarm(4)
+                     }
+             MAX-ACCESS  read-only
+             STATUS current
+             DESCRIPTION
+                     "One or more service endpoints is reporting an error in its control channel with an associated endpoint. 
+                     This may be a socket or WCF channel, or may be an MSMQ error that is preventing normal process flow in the 
+                     prairieFyre software suite."
+             ::= { enterpriseAlarms   6 }
+
+         licenseViolationAlarm OBJECT-TYPE
+             SYNTAX  INTEGER  {
+            unknownAlarm(0),
+            noAlarm(1),
+            minorAlarm(2),
+            majorAlarm(3),
+            criticalAlarm(4)
+                     }
+             MAX-ACCESS  read-only
+             STATUS current
+             DESCRIPTION
+                     "The prairieFye Enterprise Licensing Manager is reporting that the installation is 
+                     violating or has attempted to exceeed enforced license limits for their installation.
+                     This may be configuring the YSE services for features or capacity they have not purchased."
+             ::= { enterpriseAlarms   7 }
+
+         ivrAlarm OBJECT-TYPE
+             SYNTAX  INTEGER  {
+            unknownAlarm(0),
+            noAlarm(1),
+            minorAlarm(2),
+            majorAlarm(3),
+            criticalAlarm(4)
+                     }
+             MAX-ACCESS  read-only
+             STATUS current
+             DESCRIPTION
+                     "The IVR services are reporting an alarm, that may be due to media ports being out of service, or an inability
+                     to load a call flow"
+             ::= { enterpriseAlarms   8 }
+
+         reportingAlarm OBJECT-TYPE
+             SYNTAX  INTEGER  {
+            unknownAlarm(0),
+            noAlarm(1),
+            minorAlarm(2),
+            majorAlarm(3),
+            criticalAlarm(4)
+                     }
+             MAX-ACCESS  read-only
+             STATUS current
+             DESCRIPTION
+                     "The reporting engine is reporting an error that implies it cannot generate a requested report due to 
+                     a system inoperability error. This may be a corrupt report template or could be a transaction error
+                     on the retrieval of SQL data to fill the report."
+             ::= { enterpriseAlarms   9 }
+
+         performanceAlarm OBJECT-TYPE
+             SYNTAX  INTEGER  {
+            unknownAlarm(0),
+            noAlarm(1),
+            minorAlarm(2),
+            majorAlarm(3),
+            criticalAlarm(4)
+                     }
+             MAX-ACCESS  read-only
+             STATUS current
+             DESCRIPTION
+                     "One or more of the service endpoints in the prairieFyre suite is reporting an overload condition."
+             ::= { enterpriseAlarms   10 }
+
+         configurationAlarm OBJECT-TYPE
+             SYNTAX  INTEGER  {
+            unknownAlarm(0),
+            noAlarm(1),
+            minorAlarm(2),
+            majorAlarm(3),
+            criticalAlarm(4)
+                     }
+             MAX-ACCESS  read-only
+             STATUS current
+             DESCRIPTION
+                     "One or more of the service endpoints in the prairieFyre suite is reporting an error when loading configuration data."
+             ::= { enterpriseAlarms   11 }
+
+
+          prairieFyreTraps OBJECT IDENTIFIER ::= { enterpriseNotifications 1 }
+
+          prairieFyreAlarmAlert TRAP-TYPE
+              ENTERPRISE prairieFyreTraps
+              VARIABLES  { overridingSystemAlarm }
+              DESCRIPTION
+                      "The prairieFyre SNMP Extension uses a simple SNMP v1 model, where an ALERT is sent out
+            whenever one or more of the tracked alarm variables changes. This can be from the alarm level increasing in
+            severity or decreasing. The attached alarm level is the overriding alarm at the time of the trap"
+            ::= 1
+
+
+          prairieFyreObjectGroup OBJECT-GROUP
+                OBJECTS { manufacturer,
+                      overridingSystemAlarm,
+                      generalCatagoryAlarm,
+                      dataCollectionAlarm,
+                      serverResourceAlarm,
+                      communicationsAlarm,
+                      licenseViolationAlarm,
+                      ivrAlarm,
+                      reportingAlarm,
+                      performanceAlarm,
+                      configurationAlarm }
+                STATUS  current
+                DESCRIPTION "The entire list of prairieFyre SNMP objects that can be read by the SNMP Manger"
+             ::= { enterpriseGroups   1  }
+
+          prairieFyreNotifyGroup OBJECT-GROUP
+                OBJECTS { prairieFyreAlarmAlert }
+                STATUS  current
+                DESCRIPTION "The entire list of prairieFyre SNMP Traps that can be sent to the SNMP Manger"
+             ::= { enterpriseGroups   2 }
+END

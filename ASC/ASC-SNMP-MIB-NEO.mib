@@ -1,0 +1,215 @@
+ASC-SNMP-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+    OBJECT-TYPE, MODULE-IDENTITY, MODULE-IDENTITY, OBJECT-IDENTITY, enterprises
+        FROM SNMPv2-SMI
+
+	OBJECT-GROUP, NOTIFICATION-GROUP
+        FROM SNMPv2-CONF	
+		
+    DisplayString,TEXTUAL-CONVENTION, TruthValue
+		FROM SNMPv2-TC;
+
+asc OBJECT IDENTIFIER ::= { enterprises 4063 }		
+		
+neoSystem MODULE-IDENTITY
+    LAST-UPDATED "201404140800Z"
+    ORGANIZATION "ASC telecom AG"
+    CONTACT-INFO
+                "ASC telecom AG
+                 Customer Service
+
+                Postal: Seibelstrasse 2
+                        63768 Hoesbach
+                        Germany
+
+                Tel: +49 6021 5001 0
+
+                Email: hotline@asc.de"
+    DESCRIPTION
+        "This file defines the ASC SNMP MIB extensions."
+    ::= { asc 6 }
+
+neoNotification OBJECT IDENTIFIER ::= { neoSystem 1 }
+neoObject OBJECT IDENTIFIER ::= { neoSystem 2 }
+
+ASCDateTime ::= OCTET STRING( SIZE( 0..23 ) )
+    -- format is YYYY/MM/DD hh:mm:ss,SSS
+
+    --   where: YYYY - last four digits of the year (any year)
+    --          MM   - month (01 through 12)
+    --          DD   - day of month (01 through 31)
+    --          hh   - hours (00 through 23)
+    --          mm   - minutes (00 through 59)
+    --          ss   - seconds (00 throug 59)
+    --          SSS  - milliseconds (00 throug 999)
+    --
+
+-- Attributes of object	
+neoObjMachineIP OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+            "System ip, this is the core ip adress"
+    ::= { neoObject 1 }
+
+neoObjMachineName OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+            "System name, the hostname of the server"
+    ::= { neoObject 2 }
+
+neoObjSubject OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+            "The subject of message"
+    ::= { neoObject 3 }	
+	
+neoObjState OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+            "State: OK, WARNING, ERROR"
+    ::= { neoObject 4 }
+	
+neoObjSendTime OBJECT-TYPE
+    SYNTAX      ASCDateTime
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+            "Time when the message was created"
+    ::= { neoObject 5 }
+
+neoObjSender OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+            "Originator name, the object which caused the message"
+    ::= { neoObject 6 }	
+	
+neoObjDescription OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0..1999))
+    MAX-ACCESS  read-only
+    STATUS      current
+	
+    DESCRIPTION
+            "The description for state"
+    ::= { neoObject 7 }
+	
+-- Attributes of trap
+neoNotifyMachineIP OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+            "System ip, this is the core ip adress"
+    ::= { neoNotification 1 }
+
+neoNotifyMachineName OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+            "System name, the hostname of the server"
+    ::= { neoNotification 2 }
+
+neoNotifySubject OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+            "The subject of message"
+    ::= { neoNotification 3 }	
+	
+neoNotifyState OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+            "State: OK, WARNING, ERROR"
+    ::= { neoNotification 4 }
+	
+neoNotifyPriority OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+            "The messages priority: VERY_HIGH, HIGH, NORMAL, LOW"
+    ::= { neoNotification 5 }	
+	
+neoNotifySendTime OBJECT-TYPE
+    SYNTAX      ASCDateTime
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+            "Time when the message was created"
+    ::= { neoNotification 6 }
+
+neoNotifySender OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+            "Originator name, the object which caused the message"
+    ::= { neoNotification 7 }	
+	
+neoNotifyDescription OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0..1999))
+    MAX-ACCESS  read-only
+    STATUS      current
+	
+    DESCRIPTION
+            "The description for state"
+    ::= { neoNotification 8 }	
+	
+neoTrap NOTIFICATION-TYPE
+	OBJECTS {
+		neoNotifyMachineIP,
+		neoNotifyMachineName,
+		neoNotifySubject,
+		neoNotifyState,
+		neoNotifySendTime,
+		neoNotifySender,
+		neoNotifyDescription
+	}
+	STATUS current
+	DESCRIPTION
+        "MachineIP:        		%s
+         MachineName:      		%s
+         Subject:        		%s
+		 State:         		%s
+		 SendTime:    	    	%s
+		 Sender:    	    	%s
+         Description:    	    %s"
+    ::= {neoSystem 1}
+	
+neoGet NOTIFICATION-TYPE 
+	OBJECTS {
+		neoObjMachineIP,
+		neoObjMachineName,
+		neoObjSubject,
+		neoObjState,
+		neoObjSendTime,
+		neoObjSender,
+		neoObjDescription
+	}
+ 	STATUS current
+	DESCRIPTION
+        "MachineIP:        		%s
+         MachineName:      		%s
+         Subject:        		%s
+		 State:         		%s
+		 SendTime:    	    	%s
+		 Sender:    	    	%s
+         Description:    	    %s"
+    ::= {neoSystem 2 }	
+	
+END
+

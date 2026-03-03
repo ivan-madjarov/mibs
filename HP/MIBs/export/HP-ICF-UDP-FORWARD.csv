@@ -1,0 +1,18 @@
+HP-ICF-UDP-FORWARD,1.3.6.1.4.1.11.2.14.11.5.1.23,hpicfUdpFwd,""200405190630Z" -- MAY 19, 2004",READ-ONLY,"Hewlett-Packard Company 8000 Foothills Blvd. Roseville, CA 95747"
+HP-ICF-UDP-FORWARD,1.3.6.1.4.1.11.2.14.11.5.1.23.0,hpicfUdpFwdNotification,"OBJECT IDENTIFIER",READ-ONLY,
+HP-ICF-UDP-FORWARD,1.3.6.1.4.1.11.2.14.11.5.1.23.1,hpicfUdpFwdObjects,"OBJECT IDENTIFIER",READ-ONLY,
+HP-ICF-UDP-FORWARD,1.3.6.1.4.1.11.2.14.11.5.1.23.1.1,hpicfUdpBcastFwdAdminStatus,INTEGER,READ-WRITE,"The operational status of the UDP Broadcast Forward feature"
+HP-ICF-UDP-FORWARD,1.3.6.1.4.1.11.2.14.11.5.1.23.1.2,hpicfUdpFwdServersTable,"SEQUENCE OF HPICFUDPFWDSERVERSENTRY",NOT-ACCESSIBLE,"This table contains a list of UDP Server Address and associated port numbers for which forwarding is enabled."
+HP-ICF-UDP-FORWARD,1.3.6.1.4.1.11.2.14.11.5.1.23.1.2.1,hpicfUdpFwdServersEntry,SEQUENCE,NOT-ACCESSIBLE,"An entry of the UDP broadcast forwarding table."
+HP-ICF-UDP-FORWARD,1.3.6.1.4.1.11.2.14.11.5.1.23.1.2.1.1,hpicfUdpFwdVlanId,INTEGER32,NOT-ACCESSIBLE,"The VLAN index which uniquely identifies a row in this table."
+HP-ICF-UDP-FORWARD,1.3.6.1.4.1.11.2.14.11.5.1.23.1.2.1.2,hpicfUdpFwdServerIndex,INTEGER32,NOT-ACCESSIBLE,"Server table index which uniquely identifies a position in table of servers (for VlanIndex)."
+HP-ICF-UDP-FORWARD,1.3.6.1.4.1.11.2.14.11.5.1.23.1.2.1.3,hpicfUdpFwdServerAddressType,INTEGER,READ-CREATE,"The type of IP address for the configured server"
+HP-ICF-UDP-FORWARD,1.3.6.1.4.1.11.2.14.11.5.1.23.1.2.1.4,hpicfUdpFwdServerAddress,OCTETSTRING,READ-CREATE,"This object contains the server IP address. The type of address specified by this object is indicated by the corresponding instance of the hpicfUdpFwdServerAddressType. An attempt to create a row in which the length of this object is not consistent with the type specified by hpicfUdpFwdServerAddressType must be rejected."
+HP-ICF-UDP-FORWARD,1.3.6.1.4.1.11.2.14.11.5.1.23.1.2.1.5,hpicfUdpFwdPortNumber,INETPORTNUMBER,READ-CREATE,"UDP port number for which UDP broadcast forwarding is enabled."
+HP-ICF-UDP-FORWARD,1.3.6.1.4.1.11.2.14.11.5.1.23.1.2.1.6,hpicfUdpFwdRowStatus,INTEGER,READ-CREATE,"Status of table row."
+HP-ICF-UDP-FORWARD,1.3.6.1.4.1.11.2.14.11.5.1.23.2,hpicfUdpFwdConformance,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-UDP-FORWARD,1.3.6.1.4.1.11.2.14.11.5.1.23.2.1,hpicfUdpFwdCompliances,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-UDP-FORWARD,1.3.6.1.4.1.11.2.14.11.5.1.23.2.1.1,hpicfUdpFwdCompliance,MODULE-COMPLIANCE,READ-CREATE,"A compliance statement for HP Routing switches with UDP packet forwarding"
+HP-ICF-UDP-FORWARD,1.3.6.1.4.1.11.2.14.11.5.1.23.2.2,hpicfUdpFwdGroups,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-UDP-FORWARD,1.3.6.1.4.1.11.2.14.11.5.1.23.2.2.1,hpicfUdpFwdCfgGroup,OBJECT-GROUP,READ-CREATE,"Enable/Disable the UDP Forwader in the routing switch"
+HP-ICF-UDP-FORWARD,1.3.6.1.4.1.11.2.14.11.5.1.23.2.2.2,hpicfUdpFwdServerTableGroup,OBJECT-GROUP,READ-CREATE,"A collection of objects allowing configuration of UDP Forwarder Server Address table"

@@ -1,0 +1,16 @@
+HP-ICF-CONNECTION-RATE-FILTER,1.3.6.1.4.1.11.2.14.11.5.1.24,hpicfConnectionRateFilter,""200409070108Z"  -- SEPTEMBER 07, 2004",READ-ONLY,"Hewlett Packard Company 8000 Foothills Blvd. Roseville, CA 95747"
+HP-ICF-CONNECTION-RATE-FILTER,1.3.6.1.4.1.11.2.14.11.5.1.24.0,hpicfConnectionRateFilterNotifications,"OBJECT IDENTIFIER",READ-ONLY,
+HP-ICF-CONNECTION-RATE-FILTER,1.3.6.1.4.1.11.2.14.11.5.1.24.0.1,hpicfConnectionRateFilterNotification,NOTIFICATION-TYPE,READ-ONLY,"This Notification indicates that the host associated with the specified IP Address has been flagged by the connection rate filter and may have been throttled or blocked."
+HP-ICF-CONNECTION-RATE-FILTER,1.3.6.1.4.1.11.2.14.11.5.1.24.1,hpicfConnectionRateFilterNotificationControl,"OBJECT IDENTIFIER",READ-ONLY,
+HP-ICF-CONNECTION-RATE-FILTER,1.3.6.1.4.1.11.2.14.11.5.1.24.1.1,hpicfConnectionRateFilterNotificationControlEnable,INTEGER,READ-WRITE,"This object controls, whether or not notifications from the agent are enabled. The value true(1) means that notifications are enabled; the value false(2) means that they are not. The default value is enabled."
+HP-ICF-CONNECTION-RATE-FILTER,1.3.6.1.4.1.11.2.14.11.5.1.24.2,hpicfConnectionRateFilterObjects,"OBJECT IDENTIFIER",READ-WRITE,
+HP-ICF-CONNECTION-RATE-FILTER,1.3.6.1.4.1.11.2.14.11.5.1.24.2.1,hpicifConnectionRateFilterVlanId,INTEGER32,ACCESSIBLE-FOR-NOTIFY,"This variable uniquely identifies the vlan on which the host was flagged by the connection rate filter."
+HP-ICF-CONNECTION-RATE-FILTER,1.3.6.1.4.1.11.2.14.11.5.1.24.2.2,hpicifConnectionRateFilterInetAddress,OCTETSTRING,ACCESSIBLE-FOR-NOTIFY,"This variable uniquely identifies the IP address of the host flagged by the connection rate filter."
+HP-ICF-CONNECTION-RATE-FILTER,1.3.6.1.4.1.11.2.14.11.5.1.24.2.3,hpicifConnectionRateFilterInetAddressType,INTEGER,ACCESSIBLE-FOR-NOTIFY,"This variable uniquely identifies the type of IP address of the host flagged by the connection rate filter."
+HP-ICF-CONNECTION-RATE-FILTER,1.3.6.1.4.1.11.2.14.11.5.1.24.2.4,hpicifConnectionRateFilterMode,INTEGER,ACCESSIBLE-FOR-NOTIFY,"This variable identifies the mode applied to the host flagged by the connection rate filter."
+HP-ICF-CONNECTION-RATE-FILTER,1.3.6.1.4.1.11.2.14.11.5.1.24.3,hpicfConnectionRateFilterConformance,"OBJECT IDENTIFIER",ACCESSIBLE-FOR-NOTIFY,
+HP-ICF-CONNECTION-RATE-FILTER,1.3.6.1.4.1.11.2.14.11.5.1.24.3.1,hpicfConnectionRateFilterCompliances,"OBJECT IDENTIFIER",ACCESSIBLE-FOR-NOTIFY,
+HP-ICF-CONNECTION-RATE-FILTER,1.3.6.1.4.1.11.2.14.11.5.1.24.3.1.1,hpicfConnectionRateFilterCompliance,MODULE-COMPLIANCE,ACCESSIBLE-FOR-NOTIFY,"A compliance statement for HP Routing switches with Connection Rate Filtering capability"
+HP-ICF-CONNECTION-RATE-FILTER,1.3.6.1.4.1.11.2.14.11.5.1.24.3.2,hpicfConnectionRateFilterGroups,"OBJECT IDENTIFIER",ACCESSIBLE-FOR-NOTIFY,
+HP-ICF-CONNECTION-RATE-FILTER,1.3.6.1.4.1.11.2.14.11.5.1.24.3.2.1,hpicfConnectionRateFilterNotifyGroup,NOTIFICATION-GROUP,ACCESSIBLE-FOR-NOTIFY,"A collection of notifications used to indicate changes in Connection Rate Filter status"
+HP-ICF-CONNECTION-RATE-FILTER,1.3.6.1.4.1.11.2.14.11.5.1.24.3.2.2,hpicfConnectionRateFilterObjectGroup,OBJECT-GROUP,ACCESSIBLE-FOR-NOTIFY,"A collection of objects for configuring the Connection Rate Filter."

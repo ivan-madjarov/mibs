@@ -1,0 +1,5945 @@
+ --
+ --                Copyright (C) 2010-2020 
+ --  Ribbon Communications Operating Company, Inc. ("Ribbon"). All Rights Reserved.
+ --  4 Technology Park Drive
+ --  Westford, MA  01886, U.S.A.
+ --
+ --
+ --
+UX-TRAP-MIB DEFINITIONS ::= BEGIN
+	IMPORTS
+		MODULE-IDENTITY, OBJECT-TYPE, NOTIFICATION-TYPE, IpAddress, enterprises, Counter32, Counter64
+			FROM SNMPv2-SMI
+		TEXTUAL-CONVENTION, DisplayString
+			FROM SNMPv2-TC
+		MODULE-COMPLIANCE, OBJECT-GROUP
+			FROM SNMPv2-CONF
+			uxAlarmActiveIndex,
+			uxAlarmConfigIndex,
+			uxAlarmActiveID,
+			uxAlarmActiveSubID,
+			uxAlarmActiveCondition,
+			uxAlarmActiveSeverity,
+			uxAlarmActiveCategory,
+			uxAlarmActiveCancelType,
+			uxAlarmActiveDecodeKey,
+			uxAlarmActiveCount,
+			uxAlarmActiveState,
+			uxAlarmActiveSourceInstance,
+			uxAlarmActiveFirstOccur,
+			uxAlarmActiveLastOccur,
+			uxAlarmActiveClrEvtID,
+			uxAlarmActiveClrEvtSubID,
+			uxAlarmActiveDescription,
+			uxAlarmActiveHighestSeverityAlarm,
+			uxAlarmActiveHardWareID
+			FROM UX-OBJECTS-MIB;
+
+ --iso            OBJECT IDENTIFIER ::= { 1 }
+ --org            OBJECT IDENTIFIER ::= { iso 3 }
+ --dod            OBJECT IDENTIFIER ::= { org 6 }
+ --internet       OBJECT IDENTIFIER ::= { dod 1 }
+ --directory      OBJECT IDENTIFIER ::= { internet 1 }
+ --mgmt           OBJECT IDENTIFIER ::= { internet 2 }
+ --mib-2          OBJECT IDENTIFIER ::= { mgmt 1 }
+ --transmission   OBJECT IDENTIFIER ::= { mib-2 10 }
+ --experimental   OBJECT IDENTIFIER ::= { internet 3 }
+ --private        OBJECT IDENTIFIER ::= { internet 4 }
+ --enterprises    OBJECT IDENTIFIER ::= { private 1 }
+
+ux MODULE-IDENTITY
+				LAST-UPDATED "202012011908Z" 
+				ORGANIZATION "Ribbon Communications" 
+				CONTACT-INFO 
+					"Ribbon Service
+					E-mail: TAC_VA@rbbn.com"
+				DESCRIPTION
+					"The MIB module for Ribbon Communications SBC Edge entities. 
+					This MIB module describes the enterprise traps for the SBC Edge." 
+				::= { enterprises 177 15 }
+
+net OBJECT IDENTIFIER ::= { enterprises 177 }
+uxObjects     OBJECT IDENTIFIER ::= { ux 1 }
+uxTraps       OBJECT IDENTIFIER ::= { ux 2 }    
+
+------------------------------------------------------------------
+--ADcachingfailed ( Alarm )
+------------------------------------------------------------------
+	uxAlmADcachingfailed NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Failed to cache attributes from AD in memory. Suggested action - try again later. This alarm will be cleared by event AD caching successful."
+ 	::= { uxTraps 65537  }
+
+------------------------------------------------------------------
+--OnlineADqueryfailed ( Event )
+------------------------------------------------------------------
+	uxAlmOnlineADqueryfailed NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"Failed to execute AD query. Suggested action - confirm that AD is network reachable, check the AD configuration as well as AD access credentials."
+ 	::= { uxTraps 65538  }
+
+------------------------------------------------------------------
+--Userloggedin ( Event )
+------------------------------------------------------------------
+	uxAlmUserloggedin NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"New user 'username' logged in from 'ip address'."
+ 	::= { uxTraps 65540  }
+
+------------------------------------------------------------------
+--Userloginfailed ( Alarm )
+------------------------------------------------------------------
+	uxAlmUserloginfailed NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"User 'username' login failed from 'ip' at 'time'. This alarm will be cleared by event User logged in."
+ 	::= { uxTraps 65541  }
+
+------------------------------------------------------------------
+--ADUnreachable ( Alarm )
+------------------------------------------------------------------
+	uxAlmADUnreachable NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Either AD is network unreachable, or the AD credentials are invalid. This alarm will be cleared by 'AD Reachable' event."
+ 	::= { uxTraps 65542  }
+
+------------------------------------------------------------------
+--ADReachable ( Event )
+------------------------------------------------------------------
+	uxAlmADReachable NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"Active directory is now reachable."
+ 	::= { uxTraps 65543  }
+
+------------------------------------------------------------------
+--ADcachingsuccessful ( Event )
+------------------------------------------------------------------
+	uxAlmADcachingsuccessful NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"AD caching was successful."
+ 	::= { uxTraps 65544  }
+
+------------------------------------------------------------------
+--ADbackupfailed ( Alarm )
+------------------------------------------------------------------
+	uxAlmADbackupfailed NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Failed to backup cached values from AD to storage device. Either the storage device is not present, or it is full. Contact Ribbon Service for further assistance."
+ 	::= { uxTraps 65545  }
+
+------------------------------------------------------------------
+--ADsuccessfullybackedup ( Event )
+------------------------------------------------------------------
+	uxAlmADsuccessfullybackedup NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"Successful backup of cached values from AD to storage device."
+ 	::= { uxTraps 65546  }
+
+------------------------------------------------------------------
+--ADcachetruncated ( Alarm )
+------------------------------------------------------------------
+	uxAlmADcachetruncated NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"AD Cache is truncated, AD cache results have exceeded the maximum cache size. Consider caching only the required attributes. If the query is not found in cache, Online query will be performed, while affecting performance."
+ 	::= { uxTraps 65547  }
+
+------------------------------------------------------------------
+--RADIUSServerUnreachable ( Alarm )
+------------------------------------------------------------------
+	uxAlmRADIUSServerUnreachable NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Either the RADIUS server is network unreachable, the configuration is incorrect, or due to service impacting change.  Suggested action - check shared secret, listening port, RADIUS server IP. This alarm will be cleared by 'RADIUS Reachable' event."
+ 	::= { uxTraps 65548  }
+
+------------------------------------------------------------------
+--RADIUSReachable ( Event )
+------------------------------------------------------------------
+	uxAlmRADIUSReachable NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"RADIUS server is online."
+ 	::= { uxTraps 65549  }
+
+------------------------------------------------------------------
+--CDRloggingfailed ( Alarm )
+------------------------------------------------------------------
+	uxAlmCDRloggingfailed NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"SBC Edge failed to send CDR to RADIUS based accounting server. Either the server is network unreachable, or the configuration is incorrect.  Suggested action - check shared secret, listening port, RADIUS server IP."
+ 	::= { uxTraps 65550  }
+
+------------------------------------------------------------------
+--CDRbackupfailed ( Alarm )
+------------------------------------------------------------------
+	uxAlmCDRbackupfailed NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"SBC Edge failed to backup CDR in local file. Either running with low disk space or CDR backup maximum limit is crossed. Suggested action - Free up the disk space or save the CDR Queued file for future reference."
+ 	::= { uxTraps 65551  }
+
+------------------------------------------------------------------
+--Userpasswordchangedsuccessfully ( Event )
+------------------------------------------------------------------
+	uxAlmUserpasswordchangedsuccessfully NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"Password changed successfully by 'username' from 'ip address'."
+ 	::= { uxTraps 65553  }
+
+------------------------------------------------------------------
+--Userpasswordchangefailed ( Alarm )
+------------------------------------------------------------------
+	uxAlmUserpasswordchangefailed NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Password change attempted by 'username' from 'ip address' failed."
+ 	::= { uxTraps 65554  }
+
+------------------------------------------------------------------
+--Useraccountdisabled ( Event )
+------------------------------------------------------------------
+	uxAlmUseraccountdisabled NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"Account has been disabled by 'username' from 'ip address'."
+ 	::= { uxTraps 65555  }
+
+------------------------------------------------------------------
+--Useraccountactivated ( Event )
+------------------------------------------------------------------
+	uxAlmUseraccountactivated NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"Account has been activated by 'username' from 'ip address'."
+ 	::= { uxTraps 65556  }
+
+------------------------------------------------------------------
+--Globalsecurityoptionschanged ( Event )
+------------------------------------------------------------------
+	uxAlmGlobalsecurityoptionschanged NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"Global security options changed."
+ 	::= { uxTraps 65557  }
+
+------------------------------------------------------------------
+--Userloginblocked ( Alarm )
+------------------------------------------------------------------
+	uxAlmUserloginblocked NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"User attempting to log in from 'ip' blocked due to excessive incorrect login attempts."
+ 	::= { uxTraps 65558  }
+
+------------------------------------------------------------------
+--Userloginunblocked ( Event )
+------------------------------------------------------------------
+	uxAlmUserloginunblocked NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"User login is unblocked."
+ 	::= { uxTraps 65559  }
+
+------------------------------------------------------------------
+--Userpasswordexpired ( Event )
+------------------------------------------------------------------
+	uxAlmUserpasswordexpired NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"Password has expired. User 'username' logging in from 'ip' password is expired."
+ 	::= { uxTraps 65560  }
+
+------------------------------------------------------------------
+--ADMaximumThreadsExceeded ( Alarm )
+------------------------------------------------------------------
+	uxAlmADMaximumThreadsExceeded NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"AD has reached maximum threads. Please inform your service representative."
+ 	::= { uxTraps 65561  }
+
+------------------------------------------------------------------
+--ADcachingtimedout ( Alarm )
+------------------------------------------------------------------
+	uxAlmADcachingtimedout NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Timed out caching attributes due to lack of response from AD. Suggested action - try again later. The SBC will attempt to load the last successful cache from backup."
+ 	::= { uxTraps 65562  }
+
+------------------------------------------------------------------
+--ADCacheEncryptionFailed ( Alarm )
+------------------------------------------------------------------
+	uxAlmADCacheEncryptionFailed NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"AD Cache encryption failed. Cache will not be saved."
+ 	::= { uxTraps 65563  }
+
+------------------------------------------------------------------
+--ADCacheEncryptionSuccessful ( Event )
+------------------------------------------------------------------
+	uxAlmADCacheEncryptionSuccessful NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"AD Cache encryption successful."
+ 	::= { uxTraps 65564  }
+
+------------------------------------------------------------------
+--Licensesexpired ( Alarm )
+------------------------------------------------------------------
+	uxAlmLicensesexpired NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"License of the node has expired, all the licensed features would fail to work. Contact Ribbon Enterprise Sales."
+ 	::= { uxTraps 196609  }
+
+------------------------------------------------------------------
+--Licensewillexpirein14days ( Alarm )
+------------------------------------------------------------------
+	uxAlmLicensewillexpirein14days NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"License of the node will expire in 2 weeks."
+ 	::= { uxTraps 196610  }
+
+------------------------------------------------------------------
+--Newlicenseapplied ( Event )
+------------------------------------------------------------------
+	uxAlmNewlicenseapplied NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"New License is applied on the node."
+ 	::= { uxTraps 196611  }
+
+------------------------------------------------------------------
+--FailedtoApplyLicense ( Alarm )
+------------------------------------------------------------------
+	uxAlmFailedtoApplyLicense NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Either an invalid key is used, or the license key applies to a different node, or the license key expiry is past the present date. Contact Ribbon Sales to obtain a new license."
+ 	::= { uxTraps 196612  }
+
+------------------------------------------------------------------
+--Failedtoacquirelicense ( Alarm )
+------------------------------------------------------------------
+	uxAlmFailedtoacquirelicense NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Either 'license type' are unlicensed, or all license(s) are exhausted."
+ 	::= { uxTraps 196613  }
+
+------------------------------------------------------------------
+--FailedtogetkeyforLicensegeneration ( Alarm )
+------------------------------------------------------------------
+	uxAlmFailedtogetkeyforLicensegeneration NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Failed to get key for license generation."
+ 	::= { uxTraps 196618  }
+
+------------------------------------------------------------------
+--LicensedSIPSignalingSessionsexceedssystemcapability ( Alarm )
+------------------------------------------------------------------
+	uxAlmLicensedSIPSignalingSessionsexceedssystemcapability NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"SIP Signaling Sessions of 'number' licenses exceeds the capability of the system of 'number' (Allocated Media Ports)."
+ 	::= { uxTraps 196619  }
+
+------------------------------------------------------------------
+--LicensedSIPRegistrationsexceedssystemcapability ( Alarm )
+------------------------------------------------------------------
+	uxAlmLicensedSIPRegistrationsexceedssystemcapability NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"SIP Registration Sessions of 'number' licenses exceeds the capability of the system of 'number' (Allocated Media Ports)."
+ 	::= { uxTraps 196620  }
+
+------------------------------------------------------------------
+--EnhancedMediaSessionswithTranscodingexceedssystemcapability ( Alarm )
+------------------------------------------------------------------
+	uxAlmEnhancedMediaSessionswithTranscodingexceedssystemcapability NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"SIP Media Sessions Sessions of 'number' licenses exceeds the capability of the system of 'number' (Allocated Media Ports)."
+ 	::= { uxTraps 196621  }
+
+------------------------------------------------------------------
+--EnhancedMediaSessionswoTranscodingexceedssystemcapability ( Alarm )
+------------------------------------------------------------------
+	uxAlmEnhancedMediaSessionswoTranscodingexceedssystemcapability NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Proxy Local SRTP Media Sessions of 'number' licenses exceeds the capability of the system of 'number' (Allocated Media Ports)."
+ 	::= { uxTraps 196622  }
+
+------------------------------------------------------------------
+--LicensedRTPProxysessionsexceedsystemcapability ( Alarm )
+------------------------------------------------------------------
+	uxAlmLicensedRTPProxysessionsexceedsystemcapability NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"SIP RTP Proxy Sessions of 'number' licenses exceeds the capability of the system of 'number' licenses."
+ 	::= { uxTraps 196623  }
+
+------------------------------------------------------------------
+--LicensedVideosessionsexceedsystemcapability ( Alarm )
+------------------------------------------------------------------
+	uxAlmLicensedVideosessionsexceedsystemcapability NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"SIP Video Sessions of 'number' licenses exceeds the capability of the system of 'number' licenses. As a fix, obtain a license with correct number of SIP Video Sessions."
+ 	::= { uxTraps 196624  }
+
+------------------------------------------------------------------
+--LicensedHighCapacity250sessionsexceedsystemcapability ( Alarm )
+------------------------------------------------------------------
+	uxAlmLicensedHighCapacity250sessionsexceedsystemcapability NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"SIP High Capacity (250+) Sessions of 'number' licenses exceeds the capability of the system of 'number' licenses. As a fix, obtain a license with correct number of SIP High Capacity Sessions."
+ 	::= { uxTraps 196625  }
+
+------------------------------------------------------------------
+--SIPHighCapacity250Licenserequired ( Alarm )
+------------------------------------------------------------------
+	uxAlmSIPHighCapacity250Licenserequired NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"The license includes 250 or more SIP Sessions but no High Capacity Enabled license. Obtain a High Capacity Enabled license to use these additional sessions."
+ 	::= { uxTraps 196626  }
+
+------------------------------------------------------------------
+--NonAzureVMLicenseRejected ( Alarm )
+------------------------------------------------------------------
+	uxAlmNonAzureVMLicenseRejected NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Submitted license key does not include Azure enablement flag. Azure-related enablement flag must be included for an Azure-based SBC SWe Lite instance to accept and enable newly acquired features. Please consult product documentation for rectification."
+ 	::= { uxTraps 196627  }
+
+------------------------------------------------------------------
+--AzureLicenseInstalled ( Event )
+------------------------------------------------------------------
+	uxAlmAzureLicenseInstalled NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"An Azure-enabled license has been successfully installed."
+ 	::= { uxTraps 196628  }
+
+------------------------------------------------------------------
+--TrialLicenseExpired ( Alarm )
+------------------------------------------------------------------
+	uxAlmTrialLicenseExpired NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"The trial period has expired. Please obtain and install a production license to enable features on the SWe Lite."
+ 	::= { uxTraps 196629  }
+
+------------------------------------------------------------------
+--ObsoleteVersion2LicensePresent ( Alarm )
+------------------------------------------------------------------
+	uxAlmObsoleteVersion2LicensePresent NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"License Version 2 is unsupported. Please contact Ribbon Support for a free feature equivalent License Version 3 immediately. Roll back to the previous partition until this license is available."
+ 	::= { uxTraps 196630  }
+
+------------------------------------------------------------------
+--LicensedSILKTranscodedMediaSessionsexceedssystemcapability ( Alarm )
+------------------------------------------------------------------
+	uxAlmLicensedSILKTranscodedMediaSessionsexceedssystemcapability NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"SILK Transcoding Sessions of 'number' licenses exceeds the capability of the system of 'number' (Allocated Media Ports)."
+ 	::= { uxTraps 196631  }
+
+------------------------------------------------------------------
+--LicensedSIPRECSessionsexceedssystemcapability ( Alarm )
+------------------------------------------------------------------
+	uxAlmLicensedSIPRECSessionsexceedssystemcapability NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"SIPREC Sessions of 'number' licenses exceeds the capability of the system of 'number'."
+ 	::= { uxTraps 196632  }
+
+------------------------------------------------------------------
+--ConfigurationchangeoccurredonActionSet ( Event )
+------------------------------------------------------------------
+	uxAlmConfigurationchangeoccurredonActionSet NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"Action set modified 'id'."
+ 	::= { uxTraps 458753  }
+
+------------------------------------------------------------------
+--ConfigurationchangeoccurredonNormalizationTable ( Event )
+------------------------------------------------------------------
+	uxAlmConfigurationchangeoccurredonNormalizationTable NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"There is a normalization table number/name that should be printed with this event."
+ 	::= { uxTraps 458754  }
+
+------------------------------------------------------------------
+--ConfigurationchangeoccurredonRouteTable ( Event )
+------------------------------------------------------------------
+	uxAlmConfigurationchangeoccurredonRouteTable NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"Routing table modified 'id'."
+ 	::= { uxTraps 458755  }
+
+------------------------------------------------------------------
+--ConfigurationchangeoccurredonTransformationTables ( Event )
+------------------------------------------------------------------
+	uxAlmConfigurationchangeoccurredonTransformationTables NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"Transformation table modified 'id'."
+ 	::= { uxTraps 458756  }
+
+------------------------------------------------------------------
+--Routetemporarilydisabled ( Alarm )
+------------------------------------------------------------------
+	uxAlmRoutetemporarilydisabled NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Route temporarily disabled due to signaling group(s) down."
+ 	::= { uxTraps 458757  }
+
+------------------------------------------------------------------
+--Routeenabled ( Event )
+------------------------------------------------------------------
+	uxAlmRouteenabled NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"Route enabled as the signaling group is up."
+ 	::= { uxTraps 458758  }
+
+------------------------------------------------------------------
+--ACallexceededthelimitfornumberofdestinations ( Alarm )
+------------------------------------------------------------------
+	uxAlmACallexceededthelimitfornumberofdestinations NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Maximum(8) call forks exceeded, no more forks for this destination"
+ 	::= { uxTraps 458759  }
+
+------------------------------------------------------------------
+--Callforkingusedwithnoforkinglicense ( Alarm )
+------------------------------------------------------------------
+	uxAlmCallforkingusedwithnoforkinglicense NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Call forking used with no forking license."
+ 	::= { uxTraps 458760  }
+
+------------------------------------------------------------------
+--InvocationofInvokeActionSetexceededthemaximumnestinglimit ( Alarm )
+------------------------------------------------------------------
+	uxAlmInvocationofInvokeActionSetexceededthemaximumnestinglimit NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Maximum(10) nested InvokeActionSet exceeded."
+ 	::= { uxTraps 458761  }
+
+------------------------------------------------------------------
+--ConfigurationchangeoccurredonCallbackTables ( Event )
+------------------------------------------------------------------
+	uxAlmConfigurationchangeoccurredonCallbackTables NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"Callback table 'id' modified."
+ 	::= { uxTraps 458762  }
+
+------------------------------------------------------------------
+--EmergencyCallAttempted ( Alarm )
+------------------------------------------------------------------
+	uxAlmEmergencyCallAttempted NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Emergency Call is attempted from Calling Number, Calling Extension, Caller IP address."
+ 	::= { uxTraps 524291  }
+
+------------------------------------------------------------------
+--EmergencyCallCompleted ( Event )
+------------------------------------------------------------------
+	uxAlmEmergencyCallCompleted NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"Emergency Call completed. The alarm will be cleared after expiry time in emergency status table."
+ 	::= { uxTraps 524292  }
+
+------------------------------------------------------------------
+--CallTransferfailedduetocallnotbeinginDSPmode ( Event )
+------------------------------------------------------------------
+	uxAlmCallTransferfailedduetocallnotbeinginDSPmode NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"The call is not in DSP mode - hence the call transfer could not be honored. Set Agent Type as Access Mode to pass through the SIP REFER."
+ 	::= { uxTraps 524294  }
+
+------------------------------------------------------------------
+--CallAttemptfailedduetoMediaModemismatch ( Event )
+------------------------------------------------------------------
+	uxAlmCallAttemptfailedduetoMediaModemismatch NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"The call failed due to Media Mode mismatch across SG and Call Route configuration."
+ 	::= { uxTraps 524295  }
+
+------------------------------------------------------------------
+--SGDrained ( Alarm )
+------------------------------------------------------------------
+	uxAlmSGDrained NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"SG set to Drain Mode, all channels are idle"
+ 	::= { uxTraps 524296  }
+
+------------------------------------------------------------------
+--NonEmergencyCallPreemptedduetoanEmergencyCallAttempt ( Alarm )
+------------------------------------------------------------------
+	uxAlmNonEmergencyCallPreemptedduetoanEmergencyCallAttempt NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Non-Emergency Call Preempted due to an Emergency Call Attempt."
+ 	::= { uxTraps 524297  }
+
+------------------------------------------------------------------
+--LicensedEnhancedMediaSessionswithTranscodingcountreached ( Alarm )
+------------------------------------------------------------------
+	uxAlmLicensedEnhancedMediaSessionswithTranscodingcountreached NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Number of licensed Enhanced Media Sessions with Transcoding has been reached."
+ 	::= { uxTraps 524298  }
+
+------------------------------------------------------------------
+--SRTPCallAttemptedNoLicenseAvailable ( Alarm )
+------------------------------------------------------------------
+	uxAlmSRTPCallAttemptedNoLicenseAvailable NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Either Enhanced Media Session without Transcoding is not licensed on this node, or the license count has reached zero."
+ 	::= { uxTraps 524299  }
+
+------------------------------------------------------------------
+--NoAMRWidebandlicense ( Alarm )
+------------------------------------------------------------------
+	uxAlmNoAMRWidebandlicense NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"AMR Wideband call attempted but not licensed."
+ 	::= { uxTraps 524300  }
+
+------------------------------------------------------------------
+--MaximumCallDurationExceeded ( Alarm )
+------------------------------------------------------------------
+	uxAlmMaximumCallDurationExceeded NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Maximum call duration exceeded for call and call has been disconnected."
+ 	::= { uxTraps 524301  }
+
+------------------------------------------------------------------
+--CountryCodeUnavailable ( Alarm )
+------------------------------------------------------------------
+	uxAlmCountryCodeUnavailable NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Country Code is Unavailable. Ribbon Protect Bad Actors detection will be impacted."
+ 	::= { uxTraps 524302  }
+
+------------------------------------------------------------------
+--CountryCodeAvailable ( Event )
+------------------------------------------------------------------
+	uxAlmCountryCodeAvailable NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"Country Code is Available."
+ 	::= { uxTraps 524303  }
+
+------------------------------------------------------------------
+--LicensedSILKtranscodedmediasessioncountreached ( Alarm )
+------------------------------------------------------------------
+	uxAlmLicensedSILKtranscodedmediasessioncountreached NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Number of licensed SILK transcoded media session has been reached."
+ 	::= { uxTraps 524304  }
+
+------------------------------------------------------------------
+--SIPServerNotResponding ( Alarm )
+------------------------------------------------------------------
+	uxAlmSIPServerNotResponding NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"SIP server has failed to respond and has been taken out of service. This alarm will be cleared by the event 'SIP server became responsive'."
+ 	::= { uxTraps 589825  }
+
+------------------------------------------------------------------
+--SignalingGroupTakenoutofService ( Alarm )
+------------------------------------------------------------------
+	uxAlmSignalingGroupTakenoutofService NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"All servers in SG have failed. This alarm will be cleared by 'SIP Signaling group enabled' event."
+ 	::= { uxTraps 589826  }
+
+------------------------------------------------------------------
+--SignalingGroupDisabled ( Event )
+------------------------------------------------------------------
+	uxAlmSignalingGroupDisabled NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"Configuration action has changed this Signaling Group from Enabled to Disabled."
+ 	::= { uxTraps 589827  }
+
+------------------------------------------------------------------
+--SIPTLSServerHandshakeFailure ( Alarm )
+------------------------------------------------------------------
+	uxAlmSIPTLSServerHandshakeFailure NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"TLS server handshake failed with alert code. Action: Refer to Error Alerts in RFC 5246 for the problem."
+ 	::= { uxTraps 589828  }
+
+------------------------------------------------------------------
+--SIPTLSHandshakeInactivityTimeoutFailure ( Alarm )
+------------------------------------------------------------------
+	uxAlmSIPTLSHandshakeInactivityTimeoutFailure NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Handshake failed due to no response from peer within specified timeout. Action: Increase the Handshake Inactivity Timeout in TLS Profile."
+ 	::= { uxTraps 589829  }
+
+------------------------------------------------------------------
+--ConfiguredPortNumberMismatch ( Alarm )
+------------------------------------------------------------------
+	uxAlmConfiguredPortNumberMismatch NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Discrepancy of an FQDN/Port configured in the SipServer object that is different than the DNS SRV lookup. A DNS SRV record can return the port number for the selected protocol. The DNS SRV port value will take priority over the configured port."
+ 	::= { uxTraps 589830  }
+
+------------------------------------------------------------------
+--SIPServerBecameResponsive ( Event )
+------------------------------------------------------------------
+	uxAlmSIPServerBecameResponsive NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"SIP server came up."
+ 	::= { uxTraps 589831  }
+
+------------------------------------------------------------------
+--SIPclusterwentdown ( Alarm )
+------------------------------------------------------------------
+	uxAlmSIPclusterwentdown NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"SIP cluster went down. This is due to all the servers in the clusters being unresponsive. This alarm will be cleared by the event 'SIP Cluster Enabled'. "
+ 	::= { uxTraps 589832  }
+
+------------------------------------------------------------------
+--SIPClusterEnabled ( Event )
+------------------------------------------------------------------
+	uxAlmSIPClusterEnabled NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"SIP cluster enabled."
+ 	::= { uxTraps 589833  }
+
+------------------------------------------------------------------
+--SIPSignalingGroupEnabled ( Event )
+------------------------------------------------------------------
+	uxAlmSIPSignalingGroupEnabled NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"SIP Signaling group enabled."
+ 	::= { uxTraps 589834  }
+
+------------------------------------------------------------------
+--SIPSignalingGroupDNSFailure ( Alarm )
+------------------------------------------------------------------
+	uxAlmSIPSignalingGroupDNSFailure NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Failed to resolve the FQDN entries in the SIP Signaling Group. 'details'."
+ 	::= { uxTraps 589835  }
+
+------------------------------------------------------------------
+--SIPSignalingGroupFQDNResolved ( Event )
+------------------------------------------------------------------
+	uxAlmSIPSignalingGroupFQDNResolved NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"Successfully resolved the FQDN of the SIP Signaling group."
+ 	::= { uxTraps 589836  }
+
+------------------------------------------------------------------
+--SIPServerDNSFailure ( Alarm )
+------------------------------------------------------------------
+	uxAlmSIPServerDNSFailure NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Failed to resolve the SIP server FQDN entries in the SIP Server table. 'details'."
+ 	::= { uxTraps 589837  }
+
+------------------------------------------------------------------
+--SIPServerFQDNResolved ( Event )
+------------------------------------------------------------------
+	uxAlmSIPServerFQDNResolved NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"SIP Server config FQDN resolved."
+ 	::= { uxTraps 589838  }
+
+------------------------------------------------------------------
+--SIPCallSessionDNSFailure ( Alarm )
+------------------------------------------------------------------
+	uxAlmSIPCallSessionDNSFailure NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Failed to resolve an FQDN with DNS server during a SIP call session."
+ 	::= { uxTraps 589839  }
+
+------------------------------------------------------------------
+--AcquiringLicenseforRegisterFailed ( Alarm )
+------------------------------------------------------------------
+	uxAlmAcquiringLicenseforRegisterFailed NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Failed to acquire license from License Manager"
+ 	::= { uxTraps 589840  }
+
+------------------------------------------------------------------
+--SessionorOtherResourceLeak ( Alarm )
+------------------------------------------------------------------
+	uxAlmSessionorOtherResourceLeak NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"SIP performs self-check for leaks. Please enable logging for sip and issue 'show resources' command."
+ 	::= { uxTraps 589841  }
+
+------------------------------------------------------------------
+--FailedtoBindtoNetworkInterface ( Alarm )
+------------------------------------------------------------------
+	uxAlmFailedtoBindtoNetworkInterface NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Failed to bind to network interface due to dynamic IP address not available."
+ 	::= { uxTraps 589842  }
+
+------------------------------------------------------------------
+--SuccessfullyBoundtoNetworkInterface ( Event )
+------------------------------------------------------------------
+	uxAlmSuccessfullyBoundtoNetworkInterface NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"Successfully bound to network interface. DHCP lease renewed."
+ 	::= { uxTraps 589843  }
+
+------------------------------------------------------------------
+--SIPRegisterServerNotResponding ( Alarm )
+------------------------------------------------------------------
+	uxAlmSIPRegisterServerNotResponding NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"SIP Register server has failed to respond. This alarm will be cleared by the event 'SIP Register server became responsive'."
+ 	::= { uxTraps 589844  }
+
+------------------------------------------------------------------
+--SIPRegisterServerBecameResponsive ( Event )
+------------------------------------------------------------------
+	uxAlmSIPRegisterServerBecameResponsive NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"SIP Register server came up."
+ 	::= { uxTraps 589845  }
+
+------------------------------------------------------------------
+--RegistrationNotValidReceivedstalefalse ( Alarm )
+------------------------------------------------------------------
+	uxAlmRegistrationNotValidReceivedstalefalse NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Stale=false/Registration no longer valid due to Incorrect Credentials."
+ 	::= { uxTraps 589846  }
+
+------------------------------------------------------------------
+--ConfigChangeforSIPEndpointThatReceivedstalefalse ( Event )
+------------------------------------------------------------------
+	uxAlmConfigChangeforSIPEndpointThatReceivedstalefalse NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"Config has changed, clear StaleIsFalse Alarm."
+ 	::= { uxTraps 589847  }
+
+------------------------------------------------------------------
+--SystemOverloadDetected ( Alarm )
+------------------------------------------------------------------
+	uxAlmSystemOverloadDetected NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"System processing is overloaded"
+ 	::= { uxTraps 589850  }
+
+------------------------------------------------------------------
+--SystemOverloadCleared ( Event )
+------------------------------------------------------------------
+	uxAlmSystemOverloadCleared NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"System processing  resumes normal operation, overload cleared"
+ 	::= { uxTraps 589851  }
+
+------------------------------------------------------------------
+--MaximumNumberofSIPSessionsReached ( Alarm )
+------------------------------------------------------------------
+	uxAlmMaximumNumberofSIPSessionsReached NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"The maximum number of SIP sessions (calls/register/subscribe) has been reached on the signaling group. Increase the number of SIP Channels for the signaling group."
+ 	::= { uxTraps 589852  }
+
+------------------------------------------------------------------
+--MaximumNumberofSIPSessionsAlarmCleared ( Event )
+------------------------------------------------------------------
+	uxAlmMaximumNumberofSIPSessionsAlarmCleared NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"SIP sessions per signaling group is under the maximum limit"
+ 	::= { uxTraps 589853  }
+
+------------------------------------------------------------------
+--ErrorresolvingSRVrecord ( Alarm )
+------------------------------------------------------------------
+	uxAlmErrorresolvingSRVrecord NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Failed to execute SRV record query.  Suggested action - confirm that DNS server network is reachable, check SRV and DNS server configuration."
+ 	::= { uxTraps 589854  }
+
+------------------------------------------------------------------
+--SRVrecordresolved ( Event )
+------------------------------------------------------------------
+	uxAlmSRVrecordresolved NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"DNS server returned valid SRV record(s)."
+ 	::= { uxTraps 589855  }
+
+------------------------------------------------------------------
+--SIPTLSHandshakeNegotiationStartFailure ( Alarm )
+------------------------------------------------------------------
+	uxAlmSIPTLSHandshakeNegotiationStartFailure NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"'server' handshake failed to start with invalid certificate; 'connection ID', 'port ID'. Action: confirm that both signed Ribbon SBC Edge Certificate and Trusted CA Certificate exist."
+ 	::= { uxTraps 589856  }
+
+------------------------------------------------------------------
+--SIPTLSHandshakeNegotiationStartSuccessful ( Event )
+------------------------------------------------------------------
+	uxAlmSIPTLSHandshakeNegotiationStartSuccessful NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"Handshake response was started with valid certificate on local and remote gateway. This event clears the 'SIP-TLS Handshake Negotiation Start Failure' alarm. "
+ 	::= { uxTraps 589857  }
+
+------------------------------------------------------------------
+--MaximumsupportedSIPSGsreached ( Alarm )
+------------------------------------------------------------------
+	uxAlmMaximumsupportedSIPSGsreached NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"SIP signaling group Count Reached maximum Supported Limit. "
+ 	::= { uxTraps 589858  }
+
+------------------------------------------------------------------
+--MaximumsupportedSIPSGscleared ( Event )
+------------------------------------------------------------------
+	uxAlmMaximumsupportedSIPSGscleared NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"SIP signaling group Count is under the maximum Supported"
+ 	::= { uxTraps 589859  }
+
+------------------------------------------------------------------
+--MaximumnonSIPCallSessionsreached ( Alarm )
+------------------------------------------------------------------
+	uxAlmMaximumnonSIPCallSessionsreached NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Number of SIP Non Call Sessions is over the system capacity"
+ 	::= { uxTraps 589860  }
+
+------------------------------------------------------------------
+--MaximumnonSIPCallSessionscleared ( Event )
+------------------------------------------------------------------
+	uxAlmMaximumnonSIPCallSessionscleared NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"Number of SIP Non Call Sessions is under the system capacity"
+ 	::= { uxTraps 589861  }
+
+------------------------------------------------------------------
+--MaximumSIPCallSessionsreached ( Alarm )
+------------------------------------------------------------------
+	uxAlmMaximumSIPCallSessionsreached NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Number of SIP Call Sessions is over the system capacity"
+ 	::= { uxTraps 589862  }
+
+------------------------------------------------------------------
+--MaximumSIPCallSessionscleared ( Event )
+------------------------------------------------------------------
+	uxAlmMaximumSIPCallSessionscleared NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"Number of SIP Call Sessions is under the system capacity"
+ 	::= { uxTraps 589863  }
+
+------------------------------------------------------------------
+--BroadsoftSIPCallrerouted ( Alarm )
+------------------------------------------------------------------
+	uxAlmBroadsoftSIPCallrerouted NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Broadsoft SIP Call re-routed"
+ 	::= { uxTraps 589864  }
+
+------------------------------------------------------------------
+--BroadsoftSIPCallReroutedcleared ( Event )
+------------------------------------------------------------------
+	uxAlmBroadsoftSIPCallReroutedcleared NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"Broadsoft SIP call re-routed cleared"
+ 	::= { uxTraps 589865  }
+
+------------------------------------------------------------------
+--SIPSGListenProtocolandSIPServerHostProtocolmismatch ( Alarm )
+------------------------------------------------------------------
+	uxAlmSIPSGListenProtocolandSIPServerHostProtocolmismatch NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Verify that the Listen Ports and Protocols for the SG match those in the Server Table"
+ 	::= { uxTraps 589866  }
+
+------------------------------------------------------------------
+--ConfigurationErrorSIPSGandServerProtocolMismatch ( Alarm )
+------------------------------------------------------------------
+	uxAlmConfigurationErrorSIPSGandServerProtocolMismatch NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Verify that the Listen Ports and Protocols for the SG match those in the Server Table"
+ 	::= { uxTraps 589867  }
+
+------------------------------------------------------------------
+--SIPTLSClientHandshakeFailure ( Alarm )
+------------------------------------------------------------------
+	uxAlmSIPTLSClientHandshakeFailure NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"TLS client handshake failed with alert code. Action: Refer to Error Alerts in RFC 5246 for the problem."
+ 	::= { uxTraps 589868  }
+
+------------------------------------------------------------------
+--SIPTLSHandshakeInactivityTimeoutCleared ( Event )
+------------------------------------------------------------------
+	uxAlmSIPTLSHandshakeInactivityTimeoutCleared NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"Handshake response was received within specified timeout. This event clears the 'SIP-TLS Handshake Inactivity Timeout Failure' alarm. "
+ 	::= { uxTraps 589869  }
+
+------------------------------------------------------------------
+--SIPTLSServerHandshakeFailureCleared ( Event )
+------------------------------------------------------------------
+	uxAlmSIPTLSServerHandshakeFailureCleared NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"Handshake failure error alert condition was cleared. This event clears the 'SIP-TLS Server Handshake Failure' alarm. "
+ 	::= { uxTraps 589870  }
+
+------------------------------------------------------------------
+--SIPTLSClientHandshakeFailureCleared ( Event )
+------------------------------------------------------------------
+	uxAlmSIPTLSClientHandshakeFailureCleared NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"Handshake failure error alert condition was cleared. This event clears the 'SIP-TLS Client Handshake Failure' alarm. "
+ 	::= { uxTraps 589871  }
+
+------------------------------------------------------------------
+--SkypeLyncPresenceServerResponseFailure ( Alarm )
+------------------------------------------------------------------
+	uxAlmSkypeLyncPresenceServerResponseFailure NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"A Presence Publish Request has been sent to the configured Lync Presence Front End and has received no response or a failed response."
+ 	::= { uxTraps 589872  }
+
+------------------------------------------------------------------
+--SkypeLyncPresenceServerResponseFailureCleared ( Event )
+------------------------------------------------------------------
+	uxAlmSkypeLyncPresenceServerResponseFailureCleared NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"A presence server that previously was unreachable has successfully sent a message that the SBC has received. "
+ 	::= { uxTraps 589873  }
+
+------------------------------------------------------------------
+--SIPRequestfromUntrustedIP ( Alarm )
+------------------------------------------------------------------
+	uxAlmSIPRequestfromUntrustedIP NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"An INVITE message was received from a host without a matching Federated IP"
+ 	::= { uxTraps 589874  }
+
+------------------------------------------------------------------
+--SIPRequestfromUntrustedIPCleared ( Alarm )
+------------------------------------------------------------------
+	uxAlmSIPRequestfromUntrustedIPCleared NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Source IP is added to the list of federated IP Addresses."
+ 	::= { uxTraps 589875  }
+
+------------------------------------------------------------------
+--ReSyncmessagereceivedonSGnotselectedforAutoConfigtask ( Alarm )
+------------------------------------------------------------------
+	uxAlmReSyncmessagereceivedonSGnotselectedforAutoConfigtask NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Check Auto Configuration Task settings and verify that the Signalling Group selected is correct."
+ 	::= { uxTraps 589876  }
+
+------------------------------------------------------------------
+--MaximumNumberofSkypeLyncPresenceSessionsReached ( Alarm )
+------------------------------------------------------------------
+	uxAlmMaximumNumberofSkypeLyncPresenceSessionsReached NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"The maximum number of 500 concurrent SIP Publish sessions for Presence has been reached. Skype/Lync Presence processing will be suspended until the number of concurrent sessions drops below 500 limit. "
+ 	::= { uxTraps 589877  }
+
+------------------------------------------------------------------
+--MaximumNumberofS4BPresencePublishSessionsAlarmCleared ( Event )
+------------------------------------------------------------------
+	uxAlmMaximumNumberofS4BPresencePublishSessionsAlarmCleared NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"SIP Publish sessions for S4B Presence is under the maximum limit"
+ 	::= { uxTraps 589878  }
+
+------------------------------------------------------------------
+--EnableMonitoringonSkypePresenceServerforbetterreliability ( Alarm )
+------------------------------------------------------------------
+	uxAlmEnableMonitoringonSkypePresenceServerforbetterreliability NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Enable Monitoring on Skype Presence Server for better reliability."
+ 	::= { uxTraps 589879  }
+
+------------------------------------------------------------------
+--MonitoringonSkypePresenceServerhasbeenenabled ( Event )
+------------------------------------------------------------------
+	uxAlmMonitoringonSkypePresenceServerhasbeenenabled NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"Monitoring on Skype Presence Server has been enabled."
+ 	::= { uxTraps 589880  }
+
+------------------------------------------------------------------
+--ConfiguredRegistrationLimitreached ( Alarm )
+------------------------------------------------------------------
+	uxAlmConfiguredRegistrationLimitreached NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Configured Registration Limit reached. New SIP Registrations will be rejected until the number of registered users drops below maximum number of users configured for the Registrar."
+ 	::= { uxTraps 589887  }
+
+------------------------------------------------------------------
+--ConfiguredRegistrationLimitCleared ( Event )
+------------------------------------------------------------------
+	uxAlmConfiguredRegistrationLimitCleared NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"Configured Registration Limit Cleared."
+ 	::= { uxTraps 589888  }
+
+------------------------------------------------------------------
+--SignalingMediasourceIPissettoAuto ( Alarm )
+------------------------------------------------------------------
+	uxAlmSignalingMediasourceIPissettoAuto NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Signaling/Media source IP is set to Auto and default route uses Admin interface."
+ 	::= { uxTraps 589889  }
+
+------------------------------------------------------------------
+--SignalingMediasourceIPissettoAutocleared ( Event )
+------------------------------------------------------------------
+	uxAlmSignalingMediasourceIPissettoAutocleared NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"Signaling/Media source IP is set to Auto cleared."
+ 	::= { uxTraps 589890  }
+
+------------------------------------------------------------------
+--SIPRecordingServerNotResponding ( Alarm )
+------------------------------------------------------------------
+	uxAlmSIPRecordingServerNotResponding NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"SIP Recording server has failed to respond and has been taken out of service. This alarm will be cleared by the event 'SIP Recording server became responsive'."
+ 	::= { uxTraps 589891  }
+
+------------------------------------------------------------------
+--SIPRecordingServerBecameResponsive ( Event )
+------------------------------------------------------------------
+	uxAlmSIPRecordingServerBecameResponsive NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"SIP Recording server came up."
+ 	::= { uxTraps 589892  }
+
+------------------------------------------------------------------
+--DSPeventfailure ( Event )
+------------------------------------------------------------------
+	uxAlmDSPeventfailure NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"Call related command on Connection ID 'value' failed wtih error code 'value'."
+ 	::= { uxTraps 786436  }
+
+------------------------------------------------------------------
+--RTPRTCPPortRangeInvalid ( Alarm )
+------------------------------------------------------------------
+	uxAlmRTPRTCPPortRangeInvalid NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"This alarm is generated if a RTP/RTCP port range is found to be invalid. This condition should be resolved by reconfiguring the RTP/RTCP Port Range under Media System Configuration."
+ 	::= { uxTraps 786437  }
+
+------------------------------------------------------------------
+--RTPRTCPPortRangeInvalidCleared ( Event )
+------------------------------------------------------------------
+	uxAlmRTPRTCPPortRangeInvalidCleared NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"This event will clear the 'RTP/RTCP Port Range Invalid' alarm."
+ 	::= { uxTraps 786438  }
+
+------------------------------------------------------------------
+--MSCMediaStreamModeMismatch ( Alarm )
+------------------------------------------------------------------
+	uxAlmMSCMediaStreamModeMismatch NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"This alarm is generated when there is a mismatch in media stream mode of the two call legs. Suggested Action: Match 'Audio/Fax Stream Mode' settings and clear alarm."
+ 	::= { uxTraps 786439  }
+
+------------------------------------------------------------------
+--MusicOnHoldfailedduetoimproperlyconfiguredsource ( Alarm )
+------------------------------------------------------------------
+	uxAlmMusicOnHoldfailedduetoimproperlyconfiguredsource NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Music-On-Hold enabled; source is not properly configured. If source is set to File: upload a file, disable music on hold or switch source to an FXS port"
+ 	::= { uxTraps 786440  }
+
+------------------------------------------------------------------
+--FailedtoAllocateRTPports ( Alarm )
+------------------------------------------------------------------
+	uxAlmFailedtoAllocateRTPports NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"This alarm is generated if we exceed the configured number of RTP/RTCP port pairs. This condition should be resolved by increasing the 'Number of Port Pairs' in Media System Configuration."
+ 	::= { uxTraps 786441  }
+
+------------------------------------------------------------------
+--VirtDSPeventfailure ( Alarm )
+------------------------------------------------------------------
+	uxAlmVirtDSPeventfailure NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Virt DSP Command Failure: Conf='conf' Type='type' Error='error'"
+ 	::= { uxTraps 786442  }
+
+------------------------------------------------------------------
+--MSCDTLSServerHandshakeFailure ( Alarm )
+------------------------------------------------------------------
+	uxAlmMSCDTLSServerHandshakeFailure NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"DTLS server handshake failed with alert code. Action: Refer to Error Alerts in RFC 5246 for the problem."
+ 	::= { uxTraps 786443  }
+
+------------------------------------------------------------------
+--MSCDTLSServerHandshakeFailureCleared ( Event )
+------------------------------------------------------------------
+	uxAlmMSCDTLSServerHandshakeFailureCleared NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"Handshake failure error alert condition was cleared. This event clears the 'MSC-DTLS Server Handshake Failure' alarm. "
+ 	::= { uxTraps 786444  }
+
+------------------------------------------------------------------
+--MSCDTLSHandshakeInactivityTimeoutFailure ( Alarm )
+------------------------------------------------------------------
+	uxAlmMSCDTLSHandshakeInactivityTimeoutFailure NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"DTLS handshake failed due to no response from peer within specified timeout. Action: Increase the Handshake Inactivity Timeout in DTLS Profile."
+ 	::= { uxTraps 786445  }
+
+------------------------------------------------------------------
+--MSCDTLSHandshakeInactivityTimeoutCleared ( Event )
+------------------------------------------------------------------
+	uxAlmMSCDTLSHandshakeInactivityTimeoutCleared NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"Handshake response was received within specified timeout. This event clears the 'MSC-DTLS Handshake Inactivity Timeout Failure' alarm. "
+ 	::= { uxTraps 786446  }
+
+------------------------------------------------------------------
+--MSCDTLSHandshakeNegotiationStartFailure ( Alarm )
+------------------------------------------------------------------
+	uxAlmMSCDTLSHandshakeNegotiationStartFailure NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"'server' handshake failed to start with invalid certificate; 'connection ID', 'port ID'. Action: confirm that both signed Ribbon SBC Edge Certificate and Trusted CA Certificate exist."
+ 	::= { uxTraps 786447  }
+
+------------------------------------------------------------------
+--MSCDTLSHandshakeNegotiationStartSuccessful ( Event )
+------------------------------------------------------------------
+	uxAlmMSCDTLSHandshakeNegotiationStartSuccessful NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"DTLS Handshake response was started with valid certificate on local and remote gateway. This event clears the 'MSC-DTLS Handshake Negotiation Start Failure' alarm. "
+ 	::= { uxTraps 786448  }
+
+------------------------------------------------------------------
+--MSCDTLSClientHandshakeFailure ( Alarm )
+------------------------------------------------------------------
+	uxAlmMSCDTLSClientHandshakeFailure NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"DTLS client handshake failed with alert code. Action: Refer to Error Alerts in RFC 5246 for the problem."
+ 	::= { uxTraps 786449  }
+
+------------------------------------------------------------------
+--MSCDTLSClientHandshakeFailureCleared ( Event )
+------------------------------------------------------------------
+	uxAlmMSCDTLSClientHandshakeFailureCleared NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"Handshake failure error alert condition was cleared. This event clears the 'MSC-DTLS Client Handshake Failure' alarm. "
+ 	::= { uxTraps 786450  }
+
+------------------------------------------------------------------
+--TLSOwnServerCertificatewillExpire ( Alarm )
+------------------------------------------------------------------
+	uxAlmTLSOwnServerCertificatewillExpire NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"CommonName: 'name' StartDate: 'startdate' EndDate: 'enddata' will expire in a window time. Action: Generate, Export CSR and Import a new signed certificate."
+ 	::= { uxTraps 851969  }
+
+------------------------------------------------------------------
+--TLSOwnServerCertificatehasExpired ( Alarm )
+------------------------------------------------------------------
+	uxAlmTLSOwnServerCertificatehasExpired NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"CommonName: 'name' StartDate: 'startdate' EndDate: 'enddata' has expired. Action: Generate, Export CSR and Import a new signed certificate."
+ 	::= { uxTraps 851970  }
+
+------------------------------------------------------------------
+--TLSOwnServerCertificateismissing ( Alarm )
+------------------------------------------------------------------
+	uxAlmTLSOwnServerCertificateismissing NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"This Server certificate is found to be missing or has failed validations. Suggested Action. Generate, Export CSR and Import a new signed certificate."
+ 	::= { uxTraps 851971  }
+
+------------------------------------------------------------------
+--TLSSelfSignCertificateGenerationFailed ( Alarm )
+------------------------------------------------------------------
+	uxAlmTLSSelfSignCertificateGenerationFailed NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Failed to create a default self signed certificate on the system."
+ 	::= { uxTraps 851972  }
+
+------------------------------------------------------------------
+--NewandValidTLSOwnServerCertificateDetected ( Event )
+------------------------------------------------------------------
+	uxAlmNewandValidTLSOwnServerCertificateDetected NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"Imported and validated common name: 'name' StartDate: 'start date' EndDate: 'end date'. This event clears the Server Certificate Expiring, Expired and Missing alarms."
+ 	::= { uxTraps 851973  }
+
+------------------------------------------------------------------
+--TLSTrustedCertificateAuthoritywillExpire ( Alarm )
+------------------------------------------------------------------
+	uxAlmTLSTrustedCertificateAuthoritywillExpire NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"CommonName: 'name' StartDate: 'start date' EndDate: 'end date' will expire in a window time. Action: Obtain and Import a new valid certificate from the CA vendor."
+ 	::= { uxTraps 851974  }
+
+------------------------------------------------------------------
+--TLSTrustedCertificateAuthorityhasExpired ( Alarm )
+------------------------------------------------------------------
+	uxAlmTLSTrustedCertificateAuthorityhasExpired NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"'CommonName: 'name' StartDate: 'start date' EndDate: 'end date' has expired. Action: Obtain and Import a new valid certificate from the CA vendor."
+ 	::= { uxTraps 851975  }
+
+------------------------------------------------------------------
+--TLSTrustedCertificateAuthoritywasDeleted ( Event )
+------------------------------------------------------------------
+	uxAlmTLSTrustedCertificateAuthoritywasDeleted NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"The Trusted Certificate Authority is successfully deleted due to the expired or expiring soon validity status."
+ 	::= { uxTraps 851976  }
+
+------------------------------------------------------------------
+--TLSOwnServerCertificateExpiryNotice ( Alarm )
+------------------------------------------------------------------
+	uxAlmTLSOwnServerCertificateExpiryNotice NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"CommonName: 'name' StartDate: 'start date' EndDate: 'end date' will expire in a window time. Action: Obtain and Import a new valid certificate from the CA vendor."
+ 	::= { uxTraps 851977  }
+
+------------------------------------------------------------------
+--TLSTrustedCertificateAuthorityExpiryNotice ( Alarm )
+------------------------------------------------------------------
+	uxAlmTLSTrustedCertificateAuthorityExpiryNotice NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"CommonName: 'name' StartDate: 'start date' EndDate: 'end date' has expired. Action: Obtain and Import a new valid certificate from the CA vendor."
+ 	::= { uxTraps 851978  }
+
+------------------------------------------------------------------
+--InvalidSessionforattemptedrealtimeconnection ( Alarm )
+------------------------------------------------------------------
+	uxAlmInvalidSessionforattemptedrealtimeconnection NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"If a web-client tries to open a realtime monitor connection with invalid session ID, BMP will generate this alarm."
+ 	::= { uxTraps 917505  }
+
+------------------------------------------------------------------
+--BMPTLSHandshakeAlertFailure ( Alarm )
+------------------------------------------------------------------
+	uxAlmBMPTLSHandshakeAlertFailure NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"This alarm will be generated if TLS Connection failed with an Alert. The connection associated with a TLS Connection ID is aborted."
+ 	::= { uxTraps 917506  }
+
+------------------------------------------------------------------
+--BMPTLSHandshakeInactivityTimeoutFailure ( Alarm )
+------------------------------------------------------------------
+	uxAlmBMPTLSHandshakeInactivityTimeoutFailure NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"This alarm will be generated if there was long period of inactivity during exchange of handshake messages for an associated TLS Connection ID."
+ 	::= { uxTraps 917507  }
+
+------------------------------------------------------------------
+--Interfaceadminup ( Event )
+------------------------------------------------------------------
+	uxAlmInterfaceadminup NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"Is generated when the administrative state of the Logical Interface is configured to be enabled."
+ 	::= { uxTraps 983043  }
+
+------------------------------------------------------------------
+--Interfaceadmindown ( Event )
+------------------------------------------------------------------
+	uxAlmInterfaceadmindown NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"Is generated when the administrative state of the Logical Interface is configured to be disabled."
+ 	::= { uxTraps 983044  }
+
+------------------------------------------------------------------
+--PacketCaptureStarted ( Alarm )
+------------------------------------------------------------------
+	uxAlmPacketCaptureStarted NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Packet capture has started."
+ 	::= { uxTraps 983067  }
+
+------------------------------------------------------------------
+--PacketCaptureStopped ( Event )
+------------------------------------------------------------------
+	uxAlmPacketCaptureStopped NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"Packet capture has stopped due to 'reason'."
+ 	::= { uxTraps 983068  }
+
+------------------------------------------------------------------
+--DuplicateIPv6addressdetected ( Alarm )
+------------------------------------------------------------------
+	uxAlmDuplicateIPv6addressdetected NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"The indicated IPv6 address has been detected as a duplicate address."
+ 	::= { uxTraps 983069  }
+
+------------------------------------------------------------------
+--IPaddressconfigured ( Event )
+------------------------------------------------------------------
+	uxAlmIPaddressconfigured NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"This event is generated when an IP address is configured on the node."
+ 	::= { uxTraps 983070  }
+
+------------------------------------------------------------------
+--IPaddressremoved ( Event )
+------------------------------------------------------------------
+	uxAlmIPaddressremoved NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"This event is generated when an IP address is removed from the node."
+ 	::= { uxTraps 983071  }
+
+------------------------------------------------------------------
+--MACaddresseshavechanged ( Alarm )
+------------------------------------------------------------------
+	uxAlmMACaddresseshavechanged NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Some MAC addresses have changed since the last time the system was up. It is recommended to log into console as 'netconfig' user and remap the interfaces as desired."
+ 	::= { uxTraps 983073  }
+
+------------------------------------------------------------------
+--DomainNameEmpty ( Alarm )
+------------------------------------------------------------------
+	uxAlmDomainNameEmpty NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Domain Name for Split DNS should not be empty."
+ 	::= { uxTraps 983074  }
+
+------------------------------------------------------------------
+--ACLRuleAdditionFailed ( Alarm )
+------------------------------------------------------------------
+	uxAlmACLRuleAdditionFailed NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"ACL Rule Addition has failed on a SWeLite Instance."
+ 	::= { uxTraps 983075  }
+
+------------------------------------------------------------------
+--ACLRuleDeletionSuccessful ( Event )
+------------------------------------------------------------------
+	uxAlmACLRuleDeletionSuccessful NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"Clear Alarm for ACL Rule Addition Failure."
+ 	::= { uxTraps 983076  }
+
+------------------------------------------------------------------
+--ApplicationServicerestarted ( Alarm )
+------------------------------------------------------------------
+	uxAlmApplicationServicerestarted NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"An SBC Edge Application service was restarted. Contact Ribbon Service with the information in this alarm and any core files present. These can be found in Diagnostics->Restart Report under the 'Core Files' tab."
+ 	::= { uxTraps 1048577  }
+
+------------------------------------------------------------------
+--Activepartitionswitched ( Alarm )
+------------------------------------------------------------------
+	uxAlmActivepartitionswitched NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"System detected a problem during previous boot cycle, active partition has switched automatically. Suggested action - backup the configuration and re-apply the upgrade to the currently inactive partition."
+ 	::= { uxTraps 1048578  }
+
+------------------------------------------------------------------
+--Failedtomountpartition ( Alarm )
+------------------------------------------------------------------
+	uxAlmFailedtomountpartition NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Mounting failed for partition 'number'."
+ 	::= { uxTraps 1048579  }
+
+------------------------------------------------------------------
+--Failedtosetactivepartition ( Alarm )
+------------------------------------------------------------------
+	uxAlmFailedtosetactivepartition NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Failed to set active partition. Contact Ribbon Service with the information in this alarm."
+ 	::= { uxTraps 1048580  }
+
+------------------------------------------------------------------
+--SystemUpAfterPlannedRestart ( Event )
+------------------------------------------------------------------
+	uxAlmSystemUpAfterPlannedRestart NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"System up after planned restart. Reboot reason 'reason'."
+ 	::= { uxTraps 1048591  }
+
+------------------------------------------------------------------
+--SystemUpAfterUnplannedRestart ( Alarm )
+------------------------------------------------------------------
+	uxAlmSystemUpAfterUnplannedRestart NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"System up after unplanned restart. Reboot reason 'reason'."
+ 	::= { uxTraps 1048592  }
+
+------------------------------------------------------------------
+--Criticalapplicationcrash ( Alarm )
+------------------------------------------------------------------
+	uxAlmCriticalapplicationcrash NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"A critical SBC Edge application has crashed, and the system will be restarted. Contact Ribbon Service with the information in this alarm and any core files present. These can be found in Diagnostics->Restart Report under the 'Core Files' tab."
+ 	::= { uxTraps 1048598  }
+
+------------------------------------------------------------------
+--AutoConfigurationsuccessful ( Event )
+------------------------------------------------------------------
+	uxAlmAutoConfigurationsuccessful NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"Auto Configuration successful after receiving SIP NOTIFY message."
+ 	::= { uxTraps 1048600  }
+
+------------------------------------------------------------------
+--AutoConfigurationfailed ( Alarm )
+------------------------------------------------------------------
+	uxAlmAutoConfigurationfailed NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Failed to perform Auto Configuration after receiving SIP NOTIFY message."
+ 	::= { uxTraps 1048601  }
+
+------------------------------------------------------------------
+--SoftwareUpdateinprogress ( Alarm )
+------------------------------------------------------------------
+	uxAlmSoftwareUpdateinprogress NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Current SIP NOTIFY message cannot be processed as software update is in progress"
+ 	::= { uxTraps 1048602  }
+
+------------------------------------------------------------------
+--NodeReboot ( Alarm )
+------------------------------------------------------------------
+	uxAlmNodeReboot NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Node Reboot requested by user 'Username' from 'IP address'."
+ 	::= { uxTraps 1048603  }
+
+------------------------------------------------------------------
+--FactoryDefault ( Alarm )
+------------------------------------------------------------------
+	uxAlmFactoryDefault NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Full factory default requested by user 'Username' from 'IP address'."
+ 	::= { uxTraps 1048604  }
+
+------------------------------------------------------------------
+--InvalidSystemMemory ( Alarm )
+------------------------------------------------------------------
+	uxAlmInvalidSystemMemory NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Unexpected memory size for virtual CPU detected. Please consult documentation for memory requirement."
+ 	::= { uxTraps 1048605  }
+
+------------------------------------------------------------------
+--Configvalidationfailure ( Alarm )
+------------------------------------------------------------------
+	uxAlmConfigvalidationfailure NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Config validation failure during startup. Please check the configuration."
+ 	::= { uxTraps 1179649  }
+
+------------------------------------------------------------------
+--NewerConfigLoaded ( Alarm )
+------------------------------------------------------------------
+	uxAlmNewerConfigLoaded NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Configuration loaded from newer release than currently running release."
+ 	::= { uxTraps 1179650  }
+
+------------------------------------------------------------------
+--Passworddecryptionfailed ( Event )
+------------------------------------------------------------------
+	uxAlmPassworddecryptionfailed NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"Password decryption failed on configuration import operation."
+ 	::= { uxTraps 1179651  }
+
+------------------------------------------------------------------
+--PartialFactoryDefault ( Alarm )
+------------------------------------------------------------------
+	uxAlmPartialFactoryDefault NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Partial 'factory default or configuration import' requested by 'Username' from 'IP address'."
+ 	::= { uxTraps 1179652  }
+
+------------------------------------------------------------------
+--ConfigurationRestore ( Alarm )
+------------------------------------------------------------------
+	uxAlmConfigurationRestore NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Configuration restore requested by 'Username' from 'IP address'."
+ 	::= { uxTraps 1179653  }
+
+------------------------------------------------------------------
+--SGChannelUsageexceededTCAthreshold ( Alarm )
+------------------------------------------------------------------
+	uxAlmSGChannelUsageexceededTCAthreshold NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Signaling Group channel usage exceeded configured TCA threshold."
+ 	::= { uxTraps 1245185  }
+
+------------------------------------------------------------------
+--SGChannelUsagebelowTCAthreshold ( Event )
+------------------------------------------------------------------
+	uxAlmSGChannelUsagebelowTCAthreshold NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"Signaling Group channel usage fell below configured TCA threshold."
+ 	::= { uxTraps 1245186  }
+
+------------------------------------------------------------------
+--SIPCallLicenseUsageexceededTCAthreshold ( Alarm )
+------------------------------------------------------------------
+	uxAlmSIPCallLicenseUsageexceededTCAthreshold NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"SIP Call license usage exceeded configured TCA threshold."
+ 	::= { uxTraps 1245187  }
+
+------------------------------------------------------------------
+--SIPCallLicenseUsagebelowTCAthreshold ( Event )
+------------------------------------------------------------------
+	uxAlmSIPCallLicenseUsagebelowTCAthreshold NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"SIP Call license usage fell below configured TCA threshold."
+ 	::= { uxTraps 1245188  }
+
+------------------------------------------------------------------
+--SIPRegistrationUsageexceededTCAthreshold ( Alarm )
+------------------------------------------------------------------
+	uxAlmSIPRegistrationUsageexceededTCAthreshold NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"SIP Registration usage exceeded configured TCA threshold."
+ 	::= { uxTraps 1245189  }
+
+------------------------------------------------------------------
+--SIPRegistrationUsagebelowTCAthreshold ( Event )
+------------------------------------------------------------------
+	uxAlmSIPRegistrationUsagebelowTCAthreshold NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"SIP Registration usage fell below configured TCA threshold."
+ 	::= { uxTraps 1245190  }
+
+------------------------------------------------------------------
+--DSPUsageexceededTCAthreshold ( Alarm )
+------------------------------------------------------------------
+	uxAlmDSPUsageexceededTCAthreshold NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"DSP usage exceeded configured TCA threshold."
+ 	::= { uxTraps 1245191  }
+
+------------------------------------------------------------------
+--DSPUsagebelowTCAthreshold ( Event )
+------------------------------------------------------------------
+	uxAlmDSPUsagebelowTCAthreshold NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"DSP usage fell below configured TCA threshold."
+ 	::= { uxTraps 1245192  }
+
+------------------------------------------------------------------
+--CPUUsageexceededTCAthreshold ( Alarm )
+------------------------------------------------------------------
+	uxAlmCPUUsageexceededTCAthreshold NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"CPU usage exceeded configured TCA threshold."
+ 	::= { uxTraps 1245193  }
+
+------------------------------------------------------------------
+--CPUUsagebelowTCAthreshold ( Event )
+------------------------------------------------------------------
+	uxAlmCPUUsagebelowTCAthreshold NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"CPU usage fell below configured TCA threshold."
+ 	::= { uxTraps 1245194  }
+
+------------------------------------------------------------------
+--MemoryUsageexceededTCAthreshold ( Alarm )
+------------------------------------------------------------------
+	uxAlmMemoryUsageexceededTCAthreshold NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Memory usage exceeded configured TCA threshold."
+ 	::= { uxTraps 1245195  }
+
+------------------------------------------------------------------
+--MemoryUsagebelowTCAthreshold ( Event )
+------------------------------------------------------------------
+	uxAlmMemoryUsagebelowTCAthreshold NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"Memory usage fell below configured TCA threshold."
+ 	::= { uxTraps 1245196  }
+
+------------------------------------------------------------------
+--FileDescriptorUsageexceededTCAthreshold ( Alarm )
+------------------------------------------------------------------
+	uxAlmFileDescriptorUsageexceededTCAthreshold NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"File Descriptor Usage exceeded TCA threshold."
+ 	::= { uxTraps 1245197  }
+
+------------------------------------------------------------------
+--FileDescriptorUsagebelowTCAthreshold ( Event )
+------------------------------------------------------------------
+	uxAlmFileDescriptorUsagebelowTCAthreshold NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"File Descriptor Usage fell below TCA threshold."
+ 	::= { uxTraps 1245198  }
+
+------------------------------------------------------------------
+--CPUloadaverageinpast1minuteexceededTCAthreshold ( Alarm )
+------------------------------------------------------------------
+	uxAlmCPUloadaverageinpast1minuteexceededTCAthreshold NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"CPU load average in past 1 minute exceeded TCA threshold."
+ 	::= { uxTraps 1245199  }
+
+------------------------------------------------------------------
+--CPUloadaverageinpast1minutefellbelowTCAthreshold ( Event )
+------------------------------------------------------------------
+	uxAlmCPUloadaverageinpast1minutefellbelowTCAthreshold NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"CPU load average in past 1 minute fell below TCA threshold."
+ 	::= { uxTraps 1245200  }
+
+------------------------------------------------------------------
+--CPUloadaverageinpast5minutesexceededTCAthreshold ( Alarm )
+------------------------------------------------------------------
+	uxAlmCPUloadaverageinpast5minutesexceededTCAthreshold NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"CPU load average in past 5 minutes exceeded TCA threshold."
+ 	::= { uxTraps 1245201  }
+
+------------------------------------------------------------------
+--CPUloadaverageinpast5minutesfellbelowTCAthreshold ( Event )
+------------------------------------------------------------------
+	uxAlmCPUloadaverageinpast5minutesfellbelowTCAthreshold NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"CPU load average in past 5 minutes fell below TCA threshold."
+ 	::= { uxTraps 1245202  }
+
+------------------------------------------------------------------
+--CPUloadaverageinpast15minutesexceededTCAthreshold ( Alarm )
+------------------------------------------------------------------
+	uxAlmCPUloadaverageinpast15minutesexceededTCAthreshold NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"CPU load average in past 15 minutes exceeded TCA threshold."
+ 	::= { uxTraps 1245203  }
+
+------------------------------------------------------------------
+--CPUloadaverageinpast15minutesfellbelowTCAthreshold ( Event )
+------------------------------------------------------------------
+	uxAlmCPUloadaverageinpast15minutesfellbelowTCAthreshold NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"CPU load average in past 15 minutes fell below TCA threshold."
+ 	::= { uxTraps 1245204  }
+
+------------------------------------------------------------------
+--TemporarypartitionusageexceededTCAthreshold ( Alarm )
+------------------------------------------------------------------
+	uxAlmTemporarypartitionusageexceededTCAthreshold NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Temporary partition usage exceeded TCA threshold."
+ 	::= { uxTraps 1245205  }
+
+------------------------------------------------------------------
+--TemporarypartitionusagefellbelowTCAthreshold ( Event )
+------------------------------------------------------------------
+	uxAlmTemporarypartitionusagefellbelowTCAthreshold NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"Temporary partition usage fell below TCA threshold."
+ 	::= { uxTraps 1245206  }
+
+------------------------------------------------------------------
+--LoggingpartitionusageexceededTCAthreshold ( Alarm )
+------------------------------------------------------------------
+	uxAlmLoggingpartitionusageexceededTCAthreshold NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Logging partition usage exceeded TCA threshold."
+ 	::= { uxTraps 1245207  }
+
+------------------------------------------------------------------
+--LoggingpartitionusagefellbelowTCAthreshold ( Event )
+------------------------------------------------------------------
+	uxAlmLoggingpartitionusagefellbelowTCAthreshold NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"Logging partition usage fell below TCA threshold."
+ 	::= { uxTraps 1245208  }
+
+------------------------------------------------------------------
+--FailedtoresolveFQDN ( Alarm )
+------------------------------------------------------------------
+	uxAlmFailedtoresolveFQDN NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Failed to resolve IP address. Ensure that FQDN and DNS server is configured properly."
+ 	::= { uxTraps 1310721  }
+
+------------------------------------------------------------------
+--FQDNresolved ( Event )
+------------------------------------------------------------------
+	uxAlmFQDNresolved NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"IP address successfully resolved."
+ 	::= { uxTraps 1310722  }
+
+------------------------------------------------------------------
+--LostconnectivitytoEdgeview ( Alarm )
+------------------------------------------------------------------
+	uxAlmLostconnectivitytoEdgeview NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Failed to connect to the configured Edgeview. Make sure connectivity is available."
+ 	::= { uxTraps 1376257  }
+
+------------------------------------------------------------------
+--ConnectedtoEdgeview ( Event )
+------------------------------------------------------------------
+	uxAlmConnectedtoEdgeview NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"Successfully connected to Edgeview."
+ 	::= { uxTraps 1376258  }
+
+------------------------------------------------------------------
+--Edgeviewtunnelrequestdenied ( Alarm )
+------------------------------------------------------------------
+	uxAlmEdgeviewtunnelrequestdenied NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"A device connect request from Edgeview was denied due to a tunnel already being established."
+ 	::= { uxTraps 1376259  }
+
+------------------------------------------------------------------
+--Edgeviewtunnelconnectionestablished ( Event )
+------------------------------------------------------------------
+	uxAlmEdgeviewtunnelconnectionestablished NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"Device connect from Edgeview was established."
+ 	::= { uxTraps 1376260  }
+
+------------------------------------------------------------------
+--Edgeviewtunnelconnectionclosed ( Event )
+------------------------------------------------------------------
+	uxAlmEdgeviewtunnelconnectionclosed NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"Device connect from Edgeview was closed normally."
+ 	::= { uxTraps 1376261  }
+
+------------------------------------------------------------------
+--DidnotreceivedEdgeviewRequestforreportswhileC2Eisenabled ( Alarm )
+------------------------------------------------------------------
+	uxAlmDidnotreceivedEdgeviewRequestforreportswhileC2Eisenabled NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Please contact Edgeview support."
+ 	::= { uxTraps 1376262  }
+
+------------------------------------------------------------------
+--ReceivedEdgeviewRequestforreportswhileC2Eisdisabled ( Alarm )
+------------------------------------------------------------------
+	uxAlmReceivedEdgeviewRequestforreportswhileC2Eisdisabled NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Please contact Edgeview support."
+ 	::= { uxTraps 1376263  }
+
+------------------------------------------------------------------
+--CDRloggingfailedforvoicequalityreporting ( Alarm )
+------------------------------------------------------------------
+	uxAlmCDRloggingfailedforvoicequalityreporting NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"SBC Edge failed to log VQ CDRs in local file. Either low disk space or maximum limit crossed for logging or EV not pulling reports."
+ 	::= { uxTraps 1376264  }
+
+------------------------------------------------------------------
+--CDRloggingenabledforvoicequalityreporting ( Event )
+------------------------------------------------------------------
+	uxAlmCDRloggingenabledforvoicequalityreporting NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"SBC Edge can log voice quality CDRs in local file."
+ 	::= { uxTraps 1376265  }
+
+------------------------------------------------------------------
+--E911NotificationServerconnectionfailure ( Alarm )
+------------------------------------------------------------------
+	uxAlmE911NotificationServerconnectionfailure NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"System was unable to connect to Notification server"
+ 	::= { uxTraps 1441793  }
+
+------------------------------------------------------------------
+--EmergencyMessageSendFailure ( Alarm )
+------------------------------------------------------------------
+	uxAlmEmergencyMessageSendFailure NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveSeverity,
+		uxAlarmActiveCategory,
+		uxAlarmActiveCancelType,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveCount,
+		uxAlarmActiveState,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveFirstOccur,
+		uxAlarmActiveLastOccur,
+		uxAlarmActiveClrEvtID,
+		uxAlarmActiveClrEvtSubID,
+		uxAlarmActiveDescription,
+		uxAlarmActiveHighestSeverityAlarm,
+		uxAlarmActiveHardWareID
+	}
+	STATUS  current
+	DESCRIPTION
+		"Emergency Message could not be sent 'reason' .Check configuration"
+ 	::= { uxTraps 1441794  }
+
+------------------------------------------------------------------
+--E911Notificationserverconnected ( Event )
+------------------------------------------------------------------
+	uxAlmE911Notificationserverconnected NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"Connected with notification server"
+ 	::= { uxTraps 1441795  }
+
+------------------------------------------------------------------
+--E911Messagesendsuccess ( Event )
+------------------------------------------------------------------
+	uxAlmE911Messagesendsuccess NOTIFICATION-TYPE
+	OBJECTS { 
+		uxAlarmActiveIndex,
+		uxAlarmConfigIndex,
+		uxAlarmActiveID,
+		uxAlarmActiveSubID,
+		uxAlarmActiveCondition,
+		uxAlarmActiveCategory,
+		uxAlarmActiveDecodeKey,
+		uxAlarmActiveSourceInstance,
+		uxAlarmActiveDescription
+	}
+	STATUS  current
+	DESCRIPTION
+		"Message sent to all recipients successfully"
+ 	::= { uxTraps 1441796  }
+
+ END

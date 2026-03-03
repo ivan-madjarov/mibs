@@ -1,0 +1,1417 @@
+AVAYA-SBCE-MIB	DEFINITIONS ::= BEGIN
+	IMPORTS
+		DisplayString, RowStatus, DateAndTime
+			FROM SNMPv2-TC
+		DisplayString
+			FROM RFC1213-MIB
+		enterprises, MODULE-IDENTITY, OBJECT-TYPE, Integer32, Gauge32, Counter32, NOTIFICATION-TYPE, Counter64, IpAddress
+			FROM SNMPv2-SMI;
+
+	moduleIdentity	MODULE-IDENTITY
+		LAST-UPDATED	"201703151827Z"
+		ORGANIZATION	"Avaya"
+		CONTACT-INFO	"Avaya Customer Services
+Postal: Avaya, Inc.
+211 Mt Airy Rd.
+Basking Ridge, NJ 07920
+USA
+Tel: +1 908 953 6000
+WWW: http://www.avaya.com"
+		DESCRIPTION		"Avaya Session Border Controller for Enterprise MIB"
+
+		REVISION		"201703151827Z"
+		DESCRIPTION		"Version 1.12"	
+		
+		REVISION		"201611281827Z"
+		DESCRIPTION		"Version 1.11"	
+		
+		REVISION		"201610241557Z"
+		DESCRIPTION		"Version 1.10"	
+		
+		REVISION		"201605261815Z"
+		DESCRIPTION		"Version 1.09"	
+
+		REVISION		"201603141803Z"
+		DESCRIPTION		"Version 1.08"	
+		
+		REVISION		"201602101410Z"
+		DESCRIPTION		"Version 1.07"		
+		
+		REVISION		"201502251451Z"
+		DESCRIPTION		"Version 1.06"		
+		
+		REVISION		"201502112101Z"
+		DESCRIPTION		"Version 1.05"
+		
+		REVISION		"201501281657Z"
+		DESCRIPTION		"Version 1.04"
+		
+		REVISION		"201501141636Z"
+		DESCRIPTION		"Version 1.03"
+		
+		REVISION		"201501050626Z"
+		DESCRIPTION		"Version 1.02"
+		
+		REVISION		"201412300626Z"
+		DESCRIPTION		"Version 1.01"
+
+		REVISION		"201408120823Z"
+		DESCRIPTION		"1.0 (Initial version)"
+		
+		::=  {  enterprises  1  }
+
+	org	OBJECT IDENTIFIER
+		::=  {  iso  3  }
+
+	dod	OBJECT IDENTIFIER
+		::=  {  org  6  }
+
+	internet	OBJECT IDENTIFIER
+		::=  {  dod  1  }
+
+	private	OBJECT IDENTIFIER
+		::=  {  internet  4  }
+
+	enterprises	OBJECT IDENTIFIER
+		::=  {  private  1  }
+
+	avaya	OBJECT IDENTIFIER
+		::=  {  enterprises  6889  }
+
+	products	OBJECT IDENTIFIER
+		::=  {  avaya  1  }
+
+	mibs	OBJECT IDENTIFIER
+		::=  {  avaya  2  }
+
+	avSBCEProd	OBJECT IDENTIFIER
+		::=  {  products  77  }
+
+	avSBCEMibs	OBJECT IDENTIFIER
+		::=  {  mibs  77  }
+
+	ipcsstatisticsinfo	OBJECT IDENTIFIER
+		::=  {  avSBCEMibs  1  }
+
+	ipcsalarmsinfo	OBJECT IDENTIFIER
+		::=  {  avSBCEMibs  2  }
+
+	ipcsincidencesinfo	OBJECT IDENTIFIER
+		::=  {  avSBCEMibs  4  }
+		
+	ipcsresetuistats	OBJECT IDENTIFIER
+		::=  {  avSBCEMibs  5  }
+		
+	ipcssubscriberinfo	OBJECT IDENTIFIER
+		::=  {  avSBCEMibs  6  }
+
+	ipcsserverflowinfo	OBJECT IDENTIFIER
+		::=  {  avSBCEMibs  7  }
+
+	ipcspolicyflowinfo	OBJECT IDENTIFIER
+		::=  {  avSBCEMibs  8  }
+		
+	ipcssrcuriflowinfo	OBJECT IDENTIFIER
+		::=  {  avSBCEMibs  9  }
+
+	ipcsdsturiflowinfo	OBJECT IDENTIFIER
+		::=  {  avSBCEMibs  10  }
+	
+	ipcslicenseinfo	OBJECT IDENTIFIER
+		::=  {  avSBCEMibs  11  }
+
+	ipcssysteminfo	OBJECT IDENTIFIER
+		::=  {  avSBCEMibs  12  }		
+		
+	ipcsstatssip	OBJECT IDENTIFIER
+		::=  {  ipcsstatisticsinfo  3  }
+
+	ipcsstatswebrtc	OBJECT IDENTIFIER
+		::=  {  ipcsstatisticsinfo  4  }
+	
+	ipcsstatsces	OBJECT IDENTIFIER
+		::=  {  ipcsstatisticsinfo  5  }
+
+	ipcsstatstranscoding	OBJECT IDENTIFIER
+		::=  {  ipcsstatisticsinfo  6  }		
+
+	ipcsalarmtraps	OBJECT IDENTIFIER
+		::=  {  ipcsalarmsinfo  0  }		
+
+	ipcsTestAlarmNotification	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Test alarm"
+	::=  { ipcsalarmtraps  1 }
+
+	ipcsCPUUsageNotification	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"CPU usage alarm"
+	::=  { ipcsalarmtraps  2 }	
+
+	ipcsMemoryUsageNotification	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Memory usage alarm"
+	::=  { ipcsalarmtraps  3 }	
+
+	ipcsDiskUsageNotification	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Disk Usage notification alarm"
+	::=  { ipcsalarmtraps  4 }
+
+	ipcsDiskFailureNotification	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Disk failure alarm"
+	::=  { ipcsalarmtraps  5 }
+
+	ipcsNetworkFailureNotification	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Network failure alarm"
+	::=  { ipcsalarmtraps  6 }
+
+	ipcsHAFailureNotification	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"HA failure alarm"
+	::=  { ipcsalarmtraps  7 }
+
+	ipcsHAHeartBeatFailureNotification	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Heartbeat failure alarm"
+	::=  { ipcsalarmtraps  8 }
+
+	ipcsScpFailureNotification	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"SCP failure alarm"
+	::=  { ipcsalarmtraps  9 }	
+
+	ipcsCopyFailureNotification	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Copy failure alarm"
+	::=  { ipcsalarmtraps  10 }	
+	
+	ipcsProcessFailNotification	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"IPCS Process failure alarm"
+	::=  { ipcsalarmtraps  11 }		
+
+	ipcsDatabaseFailNotification	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Database failure alarm"
+	::=  { ipcsalarmtraps  12 }	
+
+	ipcsIncidenceNotification	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Incidence notification alarm"
+	::=  { ipcsalarmtraps  14 }			
+
+	ipcsHAAMSFailure	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"HA AMS Failure Alarm"
+	::=  { ipcsalarmtraps  15 }			
+	
+	ipcsStdSessionLicenseUsageExceed	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"STD Session License Usage Exceed"
+	::=  { ipcsalarmtraps  16 }			
+
+	ipcsAdvSessionLicenseUsageExceed	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"ADV Session License Usage Exceed"
+	::=  { ipcsalarmtraps  17 }			
+
+	ipcsCesProxySessionLicenseUsageExceed	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"CESProxy Session License Usage Exceed"
+	::=  { ipcsalarmtraps  18 }
+
+	ipcsTranscodeSessionLicenseUsageExceed	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"CESProxy Session License Usage Exceed"
+	::=  { ipcsalarmtraps  19 }
+
+	ipcsVideoSessionLicenseUsageExceed	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"CESProxy Session License Usage Exceed"
+	::=  { ipcsalarmtraps  20 }
+
+	ipcsMaxStdConcurrentSessionLimitExceed	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Maximum STD Session Alarm"
+	::=  { ipcsalarmtraps  21 }
+
+	ipcsMaxAdvConcurrentSessionLimitExceed	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Maximum ADV Session Alarm"
+	::=  { ipcsalarmtraps  22 }
+
+	ipcsMaxCESProxyConcurrentSessionLimitExceed	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Maximum CES Session Alarm"
+	::=  { ipcsalarmtraps  23 }
+
+	ipcsMaxTransConcurrentSessionLimitExceed	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Maximum TRANS Session Alarm"
+	::=  { ipcsalarmtraps  24 }
+
+	ipcsMaxVIDConcurrentSessionLimitExceed	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Maximum VID Session Alarm"
+	::=  { ipcsalarmtraps  25 }	
+
+	ipcsSingleSourceDoS	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Single Source DOS Detected"
+	::=  { ipcsalarmtraps  26 }
+
+	ipcsSingleSourceCallWalkDoS	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Call walk DOS Detected"
+	::=  { ipcsalarmtraps  27 }
+
+	ipcsPhoneDoS	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Phone DOS Detected"
+	::=  { ipcsalarmtraps  28 }
+
+	ipcsPhoneStealthDoS	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Phone Stealth DOS Detected"
+	::=  { ipcsalarmtraps  29 }
+
+	ipcsServerDoS	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Server DOS Detected"
+	::=  { ipcsalarmtraps  30 }
+
+	ipcsPhoneDDoS	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Phone DDOS Detected"
+	::=  { ipcsalarmtraps  31 }
+
+	ipcsPhoneStealthDDoS	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Phone Stealth DDOS Detected"
+	::=  { ipcsalarmtraps  32 }
+
+	ipcsDomainDoS	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Domain DOS Detected"
+	::=  { ipcsalarmtraps  33 }
+
+	ipcsBlackipcsListCallBlocked	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Black Listed Caller"
+	::=  { ipcsalarmtraps  34 }
+
+	ipcsTuringTestFailed	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Turing Test Failed"
+	::=  { ipcsalarmtraps  35 }
+
+	ipcsDroppedScrubMsg	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Scrubber Anamoly or SDP Parser Error"
+	::=  { ipcsalarmtraps  36 }
+
+	ipcsRejectedScrubMsg	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Alarm for Scrubber Anamoly - Scrub message rejected"
+	::=  { ipcsalarmtraps  37 }
+
+	ipcsFingerprintFailed	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Alarm for Fingure Print Incidence"
+	::=  { ipcsalarmtraps  38 }
+
+	ipcsACKMsgOutofDialogue	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Alarm for ACKMsg not allowed Out-Of-Dialog"
+	::=  { ipcsalarmtraps  39 }
+	
+	ipcsBYEMsgOutofDialogue	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Alarm for BYEMsg not allowed Out-Of-Dialog"
+	::=  { ipcsalarmtraps  40 }
+
+	ipcsCANCELMsgOutofDialogue	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Alarm for CANCELMsg not allowed Out-Of-Dialog"
+	::=  { ipcsalarmtraps  41 }
+
+	ipcsNOTIFYMsgOutofDialogue	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Alarm for NOTIFYMsg not allowed Out-Of-Dialog"
+	::=  { ipcsalarmtraps  42 }
+
+	ipcsPRACKMsgOutofDialogue	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Alarm for PRACKMsg not allowed Out-Of-Dialog"
+	::=  { ipcsalarmtraps  43 }
+
+	ipcsREINVITEMsgOutofDialogue	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Alarm for REINVITEMsg not allowed Out-Of-Dialog"
+	::=  { ipcsalarmtraps  44 }
+
+	ipcsREFERMsgOutofDialogue	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Alarm for REFERMsg not allowed Out-Of-Dialog"
+	::=  { ipcsalarmtraps  45 }
+	
+	ipcs1XXMsgOutofTransaction	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Alarm for 1XXMsg not allowed Out-Of-Transaction"
+	::=  { ipcsalarmtraps  46 }
+
+	ipcs2XXMsgOutofTransaction	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Alarm for 2XXMsg not allowed Out-Of-Transaction"
+	::=  { ipcsalarmtraps  47 }
+
+	ipcs3XXMsgOutofTransaction	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Alarm for 3XXMsg not allowed Out-Of-Transaction"
+	::=  { ipcsalarmtraps  48 }
+
+	ipcs4XXMsgOutofTransaction	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Alarm for 4XXMsg not allowed Out-Of-Transaction"
+	::=  { ipcsalarmtraps  49 }
+
+	ipcs5XXMsgOutofTransaction	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Alarm for 5XXMsg not allowed Out-Of-Transaction"
+	::=  { ipcsalarmtraps  50 }
+
+	ipcs6XXMsgOutofTransaction	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Alarm for 6XXMsg not allowed Out-Of-Transaction"
+	::=  { ipcsalarmtraps  51 }
+
+	ipcsAuthRealmMismatch	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Alarm for Realm Mismatch"
+	::=  { ipcsalarmtraps  52 }
+
+	ipcsHaloFingerPrintFailed	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"No Signature Header from Halo or Signature Length Invalid or Signature Match Failure"
+	::=  { ipcsalarmtraps  53 }
+
+	ipcsCallDenied	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Alarm for Call denied"
+	::=  { ipcsalarmtraps  54 }
+
+	ipcsRegistrationDenied	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Alarm for Registration denied"
+	::=  { ipcsalarmtraps  55 }
+
+	ipcsSubscriptionDenied	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Alarm for Subscription denied"
+	::=  { ipcsalarmtraps  56 }
+
+	ipcsRedirectionDenied	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Alarm for Redirection denied"
+	::=  { ipcsalarmtraps  57 }
+
+	ipcsMessageDropped	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Alarm for Message Dropped"
+	::=  { ipcsalarmtraps  58 }
+
+	ipcsRoutingFailure	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Alarm for Routing Failure"
+	::=  { ipcsalarmtraps  59 }
+
+	ipcsServerHeartbeat	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Alarm for Server Heartbeat Failed"
+	::=  { ipcsalarmtraps  60 }
+
+	ipcsRadiusAuthFailed	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Alarm for Radius Authentication Failed"
+	::=  { ipcsalarmtraps  61 }
+
+	ipcsPrimaryRadiusServerUnreachable	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Alarm for Primary Radius server unreachable"
+	::=  { ipcsalarmtraps  62 }
+
+	ipcsSecondaryRadiusServerUnreachable	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Alarm for Secondary Radius server unreachable"
+	::=  { ipcsalarmtraps  63 }
+
+	ipcsTlsNoClientCertPresent	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Alarm for process_tls_handshake_connect failed"
+	::=  { ipcsalarmtraps  64 }
+
+	ipcsTlsClientCertInCrl	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Alarm for process_tls_handshake_connect failed"
+	::=  { ipcsalarmtraps  65 }
+
+	ipcsTlsCertificate	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Error with TLS Certificate"
+	::=  { ipcsalarmtraps  66 }
+
+	ipcsCodecViolation	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Alarm for Codec Violation"
+	::=  { ipcsalarmtraps  67 }
+
+	ipcsPacketSizeViolation	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Alarm for Packet Size Violation"
+	::=  { ipcsalarmtraps  68 }
+
+	ipcsSSRCViolation	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Alarm for SSRC Violation"
+	::=  { ipcsalarmtraps  69 }
+
+	ipcsSeqNoViolation	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Alarm for Seq Number Violation"
+	::=  { ipcsalarmtraps  70 }
+
+	ipcsTimestampViolation	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Alarm for Timestamp Violation"
+	::=  { ipcsalarmtraps  71 }
+
+	ipcsMediaInActivityFromBothSides	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Alarm for Media InActivity Detected from both parties"
+	::=  { ipcsalarmtraps  72 }
+
+	ipcsUnsupportedMedia	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Alarm for Media Not Acceptable"
+	::=  { ipcsalarmtraps  73 }
+
+	ipcsRTPDoSAttack	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Alarm for RTP DoS Attack"
+	::=  { ipcsalarmtraps  74 }
+
+	ipcsRTPDDoSAttack	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Alarm for RTP Distributed DoS Attack"
+	::=  { ipcsalarmtraps  75 }
+
+	ipcsRTPInjectionAttack	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Alarm for RTP Injection Attack"
+	::=  { ipcsalarmtraps  76 }
+
+	ipcsMediaPortUnavailable	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Alarm for No free media ports available"
+	::=  { ipcsalarmtraps  77 }
+
+	ipcsHAGracefulFailover	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Alarm for Primary gone down voluntarily"
+	::=  { ipcsalarmtraps  78 }
+
+	ipcsHAKaFail	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Alarm for Keepalives between HA pair failed"
+	::=  { ipcsalarmtraps  79 }
+
+	ipcsHATakeoverDone	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Alarm for HA takeover completed"
+	::=  { ipcsalarmtraps  80 }
+
+	ipcsHAOctCoreCrashed	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Alarm for Simple exec on octeon cpu crashed"
+	::=  { ipcsalarmtraps  81 }
+
+	ipcsHASecondaryDown	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Alarm for Secondary Down, HA Will not be available until secondary is Up"
+	::=  { ipcsalarmtraps  82 }
+
+	ipcsHAOcteonCommuninicationFailed	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Alarm for Communication to Octeon Failed"
+	::=  { ipcsalarmtraps  83 }
+
+	sbcLicenseExceeded	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Counted licenses exceeded maximum allocated values"
+	::=  { ipcsalarmtraps  84 }
+
+	sbcTurnStunMediaRelayCreationFailed	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Media Relay Flow Creation Failed"
+	::=  { ipcsalarmtraps  85 }
+
+	sbcTurnStunMediaRelayDeletionFailed	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Media Relay Flow Deletion Failed"
+	::=  { ipcsalarmtraps  86 }
+
+	sbcTurnStunServerError	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"TurnStun Server Error"
+	::=  { ipcsalarmtraps  87 }
+
+	sbcCesProxy1xMUserLoginFailed	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"1xM user: Login Failed"
+	::=  { ipcsalarmtraps  88 }
+
+	ipcsDetectedScrubMsg	NOTIFICATION-TYPE
+	OBJECTS			{ ipcsalarmsMessage }
+	STATUS		current
+	DESCRIPTION	"Alarm for Scrubber Anomaly - Detected scrub message"
+	::=  { ipcsalarmtraps  89 }
+			
+	ipcsalarmsTable	OBJECT-TYPE
+		SYNTAX		SEQUENCE  OF  IpcsalarmsEntry
+		MAX-ACCESS	not-accessible
+		STATUS		current
+		DESCRIPTION	"Description"
+		::=  { ipcsalarmsinfo  1 }
+		
+	ipcsalarmsEntry	OBJECT-TYPE
+		SYNTAX		IpcsalarmsEntry
+		MAX-ACCESS	not-accessible
+		STATUS		current
+		DESCRIPTION	"Row Description"
+		INDEX		{  ipcsalarmsId  }
+		::=  { ipcsalarmsTable 1 }
+
+	IpcsalarmsEntry  ::=  SEQUENCE {
+		ipcsalarmsMibName  DisplayString,
+		ipcsalarmsId  Integer32,
+		ipcsalarmsMessage  DisplayString,
+		ipcsalarmsSeverity DisplayString,
+		ipcsalarmsSequenceNumber  Counter64,
+		ipcsalarmsTimestamp  DateAndTime,
+		ipcsalarmsSystemType  DisplayString,
+		ipcsalarmsRowStatus  RowStatus
+		}
+
+
+	ipcsalarmsMibName	OBJECT-TYPE	
+		SYNTAX			DisplayString
+		MAX-ACCESS		read-write
+		STATUS			current
+		DESCRIPTION		"Column Description"
+		::=  {  ipcsalarmsEntry  1  }
+
+
+	ipcsalarmsId	OBJECT-TYPE	
+		SYNTAX			Integer32
+		MAX-ACCESS		not-accessible
+		STATUS			current
+		DESCRIPTION		"Column Description"
+		::=  {  ipcsalarmsEntry  2  }
+
+
+	ipcsalarmsMessage	OBJECT-TYPE	
+		SYNTAX			DisplayString
+		MAX-ACCESS		read-write
+		STATUS			current
+		DESCRIPTION		"Column Description"
+		::=  {  ipcsalarmsEntry  3  }
+
+	ipcsalarmsSeverity	OBJECT-TYPE	
+		SYNTAX			DisplayString
+		MAX-ACCESS		read-write
+		STATUS			current
+		DESCRIPTION		"Column Description"
+		::=  {  ipcsalarmsEntry  4  }
+		
+	ipcsalarmsSequenceNumber	OBJECT-TYPE	
+		SYNTAX			Counter64
+		MAX-ACCESS		read-only
+		STATUS			current
+		DESCRIPTION		"Column Description"
+		::=  {  ipcsalarmsEntry  5  }
+
+
+	ipcsalarmsTimestamp	OBJECT-TYPE	
+		SYNTAX			DateAndTime
+		MAX-ACCESS		read-only
+		STATUS			current
+		DESCRIPTION		"Column Description"
+		::=  {  ipcsalarmsEntry  6  }
+
+
+	ipcsalarmsSystemType	OBJECT-TYPE	
+		SYNTAX			DisplayString
+		MAX-ACCESS		read-only
+		STATUS			current
+		DESCRIPTION		"Column Description"
+		::=  {  ipcsalarmsEntry  7  }
+
+
+	ipcsalarmsRowStatus	OBJECT-TYPE	
+		SYNTAX			RowStatus
+		MAX-ACCESS		read-create
+		STATUS			current
+		DESCRIPTION		"Description"
+		::=  {  ipcsalarmsEntry  8  }
+		
+	ipcssubscriberTable	OBJECT-TYPE
+		SYNTAX		SEQUENCE  OF  IpcssubscriberflowEntry
+		MAX-ACCESS	not-accessible
+		STATUS		current
+		DESCRIPTION	"Description"
+		::=  { ipcssubscriberinfo  1 }
+
+	IpcssubscriberflowEntry	OBJECT-TYPE
+		SYNTAX		IpcssubscriberflowEntry
+		MAX-ACCESS	not-accessible
+		STATUS		current
+		DESCRIPTION	"Row Description"
+		::=  { ipcssubscriberTable 1 }
+		
+	IpcssubscriberflowEntry  ::=  SEQUENCE {
+		ipcssubrowId	Integer32,
+		ipcssubscriberflowName  DisplayString,
+		ipcssubscriberstatsName  DisplayString,
+		ipcssubscriberstatsValue  Integer32
+		}
+
+	ipcssubrowId	OBJECT-TYPE	
+		SYNTAX			Integer32
+		MAX-ACCESS		not-accessible
+		STATUS			current
+		DESCRIPTION		"Column Description"
+		::=  {  IpcssubscriberflowEntry  1  }		
+
+	ipcssubscriberflowName	OBJECT-TYPE	
+		SYNTAX			DisplayString
+		MAX-ACCESS		read-write
+		STATUS			current
+		DESCRIPTION		"Column Description"
+		::=  {  IpcssubscriberflowEntry  2  }
+
+	ipcssubscriberstatsName	OBJECT-TYPE	
+		SYNTAX			DisplayString
+		MAX-ACCESS		read-write
+		STATUS			current
+		DESCRIPTION		"Column Description"
+		::=  {  IpcssubscriberflowEntry  3  }
+		
+	ipcssubscriberstatsValue	OBJECT-TYPE	
+		SYNTAX			Integer32
+		MAX-ACCESS		read-write
+		STATUS			current
+		DESCRIPTION		"Column Description"
+		::=  {  IpcssubscriberflowEntry  4  }
+
+	ipcsserverflowTable	OBJECT-TYPE
+		SYNTAX		SEQUENCE  OF  IpcsserverflowEntry
+		MAX-ACCESS	not-accessible
+		STATUS		current
+		DESCRIPTION	"Description"
+		::=  { ipcsserverflowinfo  1 }
+
+	IpcsserverflowEntry	OBJECT-TYPE
+		SYNTAX		IpcsserverflowEntry
+		MAX-ACCESS	not-accessible
+		STATUS		current
+		DESCRIPTION	"Row Description"
+		::=  { ipcsserverflowTable 1 }
+		
+	IpcsserverflowEntry  ::=  SEQUENCE {
+		ipcsserrowId	Integer32,
+		ipcsserverflowName  DisplayString,
+		ipcsserverflowstatsName  DisplayString,
+		ipcsserverflowstatsValue  Integer32
+		}
+
+	ipcsserrowId	OBJECT-TYPE	
+		SYNTAX			Integer32
+		MAX-ACCESS		not-accessible
+		STATUS			current
+		DESCRIPTION		"Column Description"
+		::=  {  IpcsserverflowEntry  1  }		
+
+	ipcsserverflowName	OBJECT-TYPE	
+		SYNTAX			DisplayString
+		MAX-ACCESS		read-write
+		STATUS			current
+		DESCRIPTION		"Column Description"
+		::=  {  IpcsserverflowEntry  2  }
+
+	ipcsserverflowstatsName	OBJECT-TYPE	
+		SYNTAX			DisplayString
+		MAX-ACCESS		read-write
+		STATUS			current
+		DESCRIPTION		"Column Description"
+		::=  {  IpcsserverflowEntry  3  }
+		
+	ipcsserverflowstatsValue	OBJECT-TYPE	
+		SYNTAX			Integer32
+		MAX-ACCESS		read-write
+		STATUS			current
+		DESCRIPTION		"Column Description"
+		::=  {  IpcsserverflowEntry  4  }
+
+	ipcspolicyflowTable	OBJECT-TYPE
+		SYNTAX		SEQUENCE  OF  IpcpolicyflowEntry
+		MAX-ACCESS	not-accessible
+		STATUS		current
+		DESCRIPTION	"Description"
+		::=  { ipcspolicyflowinfo  1 }
+
+	IpcpolicyflowEntry	OBJECT-TYPE
+		SYNTAX		IpcpolicyflowEntry
+		MAX-ACCESS	not-accessible
+		STATUS		current
+		DESCRIPTION	"Row Description"
+		::=  { ipcspolicyflowTable 1 }
+		
+	IpcpolicyflowEntry  ::=  SEQUENCE {
+		ipcspolicyrowId	Integer32,
+		ipcspolicyflowName  DisplayString,
+		ipcspolicyflowstatsName  DisplayString,
+		ipcspolicyflowstatsValue  Integer32
+		}
+
+	ipcspolicyrowId	OBJECT-TYPE	
+		SYNTAX			Integer32
+		MAX-ACCESS		not-accessible
+		STATUS			current
+		DESCRIPTION		"Column Description"
+		::=  {  IpcpolicyflowEntry  1  }		
+
+	ipcspolicyflowName	OBJECT-TYPE	
+		SYNTAX			DisplayString
+		MAX-ACCESS		read-write
+		STATUS			current
+		DESCRIPTION		"Column Description"
+		::=  {  IpcpolicyflowEntry  2  }
+
+	ipcspolicyflowstatsName	OBJECT-TYPE	
+		SYNTAX			DisplayString
+		MAX-ACCESS		read-write
+		STATUS			current
+		DESCRIPTION		"Column Description"
+		::=  {  IpcpolicyflowEntry  3  }
+		
+	ipcspolicyflowstatsValue	OBJECT-TYPE	
+		SYNTAX			Integer32
+		MAX-ACCESS		read-write
+		STATUS			current
+		DESCRIPTION		"Column Description"
+		::=  {  IpcpolicyflowEntry  4  }
+
+	ipcssrcuriflowTable	OBJECT-TYPE
+		SYNTAX		SEQUENCE  OF  IpcssrcuriflowEntry
+		MAX-ACCESS	not-accessible
+		STATUS		current
+		DESCRIPTION	"Description"
+		::=  { ipcssrcuriflowinfo  1 }
+
+	IpcssrcuriflowEntry	OBJECT-TYPE
+		SYNTAX		IpcssrcuriflowEntry
+		MAX-ACCESS	not-accessible
+		STATUS		current
+		DESCRIPTION	"Row Description"
+		::=  { ipcssrcuriflowTable 1 }
+		
+	IpcssrcuriflowEntry  ::=  SEQUENCE {
+		ipcssrcurirowId	Integer32,
+		ipcssrcuriflowName  DisplayString,
+		ipcssrcuriflowstatsName  DisplayString,
+		ipcssrcuriflowstatsValue  Integer32
+		}
+
+	ipcssrcurirowId	OBJECT-TYPE	
+		SYNTAX			Integer32
+		MAX-ACCESS		not-accessible
+		STATUS			current
+		DESCRIPTION		"Column Description"
+		::=  {  IpcssrcuriflowEntry  1  }		
+
+	ipcssrcuriflowName	OBJECT-TYPE	
+		SYNTAX			DisplayString
+		MAX-ACCESS		read-write
+		STATUS			current
+		DESCRIPTION		"Column Description"
+		::=  {  IpcssrcuriflowEntry  2  }
+
+	ipcssrcuriflowstatsName	OBJECT-TYPE	
+		SYNTAX			DisplayString
+		MAX-ACCESS		read-write
+		STATUS			current
+		DESCRIPTION		"Column Description"
+		::=  {  IpcssrcuriflowEntry  3  }
+		
+	ipcssrcuriflowstatsValue	OBJECT-TYPE	
+		SYNTAX			Integer32
+		MAX-ACCESS		read-write
+		STATUS			current
+		DESCRIPTION		"Column Description"
+		::=  {  IpcssrcuriflowEntry  4  }
+
+	ipcsdsturiflowTable	OBJECT-TYPE
+		SYNTAX		SEQUENCE  OF  IpcsdsturiflowEntry
+		MAX-ACCESS	not-accessible
+		STATUS		current
+		DESCRIPTION	"Description"
+		::=  { ipcsdsturiflowinfo  1 }
+
+	IpcsdsturiflowEntry	OBJECT-TYPE
+		SYNTAX		IpcsdsturiflowEntry
+		MAX-ACCESS	not-accessible
+		STATUS		current
+		DESCRIPTION	"Row Description"
+		::=  { ipcsdsturiflowTable 1 }
+		
+	IpcsdsturiflowEntry  ::=  SEQUENCE {
+		ipcsdsturirowId	Integer32,
+		ipcsdsturiflowName  DisplayString,
+		ipcsdsturiflowstatsName  DisplayString,
+		ipcsdsturiflowstatsValue  Integer32
+		}
+
+	ipcsdsturirowId	OBJECT-TYPE	
+		SYNTAX			Integer32
+		MAX-ACCESS		not-accessible
+		STATUS			current
+		DESCRIPTION		"Column Description"
+		::=  {  IpcsdsturiflowEntry  1  }		
+
+	ipcsdsturiflowName	OBJECT-TYPE	
+		SYNTAX			DisplayString
+		MAX-ACCESS		read-write
+		STATUS			current
+		DESCRIPTION		"Column Description"
+		::=  {  IpcsdsturiflowEntry  2  }
+
+	ipcsdsturiflowstatsName	OBJECT-TYPE	
+		SYNTAX			DisplayString
+		MAX-ACCESS		read-write
+		STATUS			current
+		DESCRIPTION		"Column Description"
+		::=  {  IpcsdsturiflowEntry  3  }
+		
+	ipcsdsturiflowstatsValue	OBJECT-TYPE	
+		SYNTAX			Integer32
+		MAX-ACCESS		read-write
+		STATUS			current
+		DESCRIPTION		"Column Description"
+		::=  {  IpcsdsturiflowEntry  4  }
+		
+
+	ipcsincidencesTable	OBJECT-TYPE
+		SYNTAX		SEQUENCE  OF  IpcsincidencesEntry
+		MAX-ACCESS	not-accessible
+		STATUS		current
+		DESCRIPTION	"Description"
+		::=  { ipcsincidencesinfo  1 }
+
+	ipcsincidencesEntry	OBJECT-TYPE
+		SYNTAX		IpcsincidencesEntry
+		MAX-ACCESS	not-accessible
+		STATUS		current
+		DESCRIPTION	"Row Description"
+		INDEX		{  ipcsincidenceId  }
+		::=  { ipcsincidencesTable 1 }
+
+	IpcsincidencesEntry  ::=  SEQUENCE {
+		ipcsincidenceName  OCTET STRING,
+		ipcsincidenceId  Integer32,
+		ipcsincidenceCategory  OCTET STRING,
+		ipcsincidenceCause  OCTET STRING,
+		ipcsincidenceTimeStamp  DateAndTime,
+		ipcsincidenceIpcsId  Integer32,
+		ipcsincidencesRowStatus  RowStatus
+		}
+
+
+	ipcsincidenceName	OBJECT-TYPE	
+		SYNTAX			OCTET STRING
+		MAX-ACCESS		read-write
+		STATUS			current
+		DESCRIPTION		"Column Description"
+		::=  {  ipcsincidencesEntry  1  }
+
+
+	ipcsincidenceId	OBJECT-TYPE	
+		SYNTAX			Integer32
+		MAX-ACCESS		not-accessible
+		STATUS			current
+		DESCRIPTION		"Column Description"
+		::=  {  ipcsincidencesEntry  2  }
+
+
+	ipcsincidenceCategory	OBJECT-TYPE	
+		SYNTAX			OCTET STRING
+		MAX-ACCESS		read-only
+		STATUS			current
+		DESCRIPTION		"Column Description"
+		::=  {  ipcsincidencesEntry  3  }
+
+
+	ipcsincidenceCause	OBJECT-TYPE	
+		SYNTAX			OCTET STRING
+		MAX-ACCESS		read-only
+		STATUS			current
+		DESCRIPTION		"Column Description"
+		::=  {  ipcsincidencesEntry  4  }
+
+
+	ipcsincidenceTimeStamp	OBJECT-TYPE	
+		SYNTAX			DateAndTime
+		MAX-ACCESS		read-only
+		STATUS			current
+		DESCRIPTION		"Column Description"
+		::=  {  ipcsincidencesEntry  5  }
+
+
+	ipcsincidenceIpcsId	OBJECT-TYPE	
+		SYNTAX			Integer32
+		MAX-ACCESS		read-only
+		STATUS			current
+		DESCRIPTION		"Column Description"
+		::=  {  ipcsincidencesEntry  6  }
+
+
+	ipcsincidencesRowStatus	OBJECT-TYPE	
+		SYNTAX			RowStatus
+		MAX-ACCESS		read-create
+		STATUS			current
+		DESCRIPTION		"Description"
+		::=  {  ipcsincidencesEntry  7  }
+
+	ipcsstatssipcalls	OBJECT IDENTIFIER
+		::=  {  ipcsstatssip  1  }
+
+	ipcssipcTotalActiveRegistrations	OBJECT-TYPE	
+		SYNTAX			Gauge32
+		MAX-ACCESS		read-only
+		STATUS			current
+		DESCRIPTION		"Number of SIP active registrations."
+		::=  {  ipcsstatssipcalls  9  }
+
+	ipcssipcTotalActiveCalls	OBJECT-TYPE	
+		SYNTAX			Gauge32
+		MAX-ACCESS		read-only
+		STATUS			current
+		DESCRIPTION		"Number of SIP active calls."
+		::=  {  ipcsstatssipcalls  10  }
+
+	ipcssipcTotalActiveTCPRegistrations	OBJECT-TYPE	
+		SYNTAX			Gauge32
+		MAX-ACCESS		read-only
+		STATUS			current
+		DESCRIPTION		"Number of SIP active TCP registrations."
+		::=  {  ipcsstatssipcalls  11  }
+
+	ipcssipcTotalActiveUDPRegistrations	OBJECT-TYPE	
+		SYNTAX			Gauge32
+		MAX-ACCESS		read-only
+		STATUS			current
+		DESCRIPTION		"Number of SIP active UDP registrations."
+		::=  {  ipcsstatssipcalls  12  }
+
+	ipcssipcTotalActiveTLSRegistrations	OBJECT-TYPE	
+		SYNTAX			Gauge32
+		MAX-ACCESS		read-only
+		STATUS			current
+		DESCRIPTION		"Number of SIP active TLS registrations."
+		::=  {  ipcsstatssipcalls  13  }
+
+	ipcssipcTotalActiveSRTPCalls	OBJECT-TYPE	
+		SYNTAX			Gauge32
+		MAX-ACCESS		read-only
+		STATUS			current
+		DESCRIPTION		"Number of SIP active SRTP calls."
+		::=  {  ipcsstatssipcalls  14  }
+		
+	ipcssipcActiveSubscription OBJECT-TYPE	
+		SYNTAX			Gauge32
+		MAX-ACCESS		read-only
+		STATUS			current
+		DESCRIPTION		"Number of SIP active Subscriptions."
+		::=  {  ipcsstatssipcalls  26  }
+	
+	ipcssipcActiveVideoCalls OBJECT-TYPE	
+		SYNTAX			Gauge32
+		MAX-ACCESS		read-only
+		STATUS			current
+		DESCRIPTION		"Number of SIP active Video calls."
+		::=  {  ipcsstatssipcalls  27  }
+	
+	ipcssipcActiveTransferSession OBJECT-TYPE	
+		SYNTAX			Gauge32
+		MAX-ACCESS		read-only
+		STATUS			current
+		DESCRIPTION		"Number of SIP active Transfer calls."
+		::=  {  ipcsstatssipcalls  28  }
+	
+	ipcssipcActiveSharedControlSessions	OBJECT-TYPE	
+		SYNTAX			Gauge32
+		MAX-ACCESS		read-only
+		STATUS			current
+		DESCRIPTION		"Number of SIP active Shared Control sessions."
+		::=  {  ipcsstatssipcalls  29  }
+		
+	sbcTotal1xMCesUserLoginFailed	OBJECT-TYPE	
+		SYNTAX			Gauge32
+		MAX-ACCESS		read-write
+		STATUS			current
+		DESCRIPTION		"Number of Failed user login."
+		::=  {  ipcsstatsces  1  }
+
+	sbcTotal1xMCesUserLoginSucceeded	OBJECT-TYPE	
+		SYNTAX			Gauge32
+		MAX-ACCESS		read-write
+		STATUS			current
+		DESCRIPTION		"Number of Successful user login."
+		::=  {  ipcsstatsces  2  }	
+
+	ipcsTotalActiveTranscodingSessions	OBJECT-TYPE	
+		SYNTAX			Gauge32
+		MAX-ACCESS		read-only
+		STATUS			current
+		DESCRIPTION		"Number of Active Transcoding sessions."
+		::=  {  ipcsstatstranscoding  1  }
+
+	ipcsTotalTranscodingSessions	OBJECT-TYPE	
+		SYNTAX			Gauge32
+		MAX-ACCESS		read-write
+		STATUS			current
+		DESCRIPTION		"Number of Total Transcoding sessions."
+		::=  {  ipcsstatstranscoding  2  }
+		
+	ipcsTotalTranscodingSessionsFailed	OBJECT-TYPE	
+		SYNTAX			Gauge32
+		MAX-ACCESS		read-write
+		STATUS			current
+		DESCRIPTION		"Number of Failed Transcoding sessions."
+		::=  {  ipcsstatstranscoding  3  }
+
+	ipcsTotalTranscodingSessionModifications	OBJECT-TYPE	
+		SYNTAX			Gauge32
+		MAX-ACCESS		read-write
+		STATUS			current
+		DESCRIPTION		"Number of Transcoding sessions modifications."
+		::=  {  ipcsstatstranscoding  4  }
+		
+	ipcsTotalTranscodingSessionModificationsFailed	OBJECT-TYPE	
+		SYNTAX			Gauge32
+		MAX-ACCESS		read-write
+		STATUS			current
+		DESCRIPTION		"Number of Failed Transcoding sessions modifications."
+		::=  {  ipcsstatstranscoding  5  }
+		
+		
+	ipcswebrtcStunBindingSuccess	OBJECT-TYPE	
+		SYNTAX			Gauge32
+		MAX-ACCESS		read-only
+		STATUS			current
+		DESCRIPTION		"Number of Successful STUN bindings."
+		::=  {  ipcsstatswebrtc  1  }
+
+	ipcswebrtcStunBindingFailure	OBJECT-TYPE	
+		SYNTAX			Gauge32
+		MAX-ACCESS		read-only
+		STATUS			current
+		DESCRIPTION		"Number of Failed STUN bindings."
+		::=  {  ipcsstatswebrtc  2  }
+
+	ipcswebrtcAllocateSuccess	OBJECT-TYPE	
+		SYNTAX			Gauge32
+		MAX-ACCESS		read-only
+		STATUS			current
+		DESCRIPTION		"Number of Successful TURN allocations."
+		::=  {  ipcsstatswebrtc  3  }
+
+	ipcswebrtcAllocateFailure	OBJECT-TYPE	
+		SYNTAX			Gauge32
+		MAX-ACCESS		read-only
+		STATUS			current
+		DESCRIPTION		"Number of Failed TURN allocations."
+		::=  {  ipcsstatswebrtc  4  }
+
+	ipcswebrtcRefreshSuccess	OBJECT-TYPE	
+		SYNTAX			Gauge32
+		MAX-ACCESS		read-only
+		STATUS			current
+		DESCRIPTION		"Number of Successful TURN allocation refreshes."
+		::=  {  ipcsstatswebrtc  5  }
+
+	ipcswebrtcRefreshFailure	OBJECT-TYPE	
+		SYNTAX			Gauge32
+		MAX-ACCESS		read-only
+		STATUS			current
+		DESCRIPTION		"Number of Failed TURN allocation refreshes."
+		::=  {  ipcsstatswebrtc  6  }
+	
+	
+	ipcswebrtcChannelBindSuccess	OBJECT-TYPE	
+		SYNTAX			Gauge32
+		MAX-ACCESS		read-only
+		STATUS			current
+		DESCRIPTION		"Number of Successful Channel bindings."
+		::=  {  ipcsstatswebrtc  7  }
+
+	ipcswebrtcChannelBindFailure	OBJECT-TYPE	
+		SYNTAX			Gauge32
+		MAX-ACCESS		read-only
+		STATUS			current
+		DESCRIPTION		"Number of Failed Channel bindings."
+		::=  {  ipcsstatswebrtc  8  }
+		
+	ipcsSubscriberFlowStatsReset	OBJECT-TYPE
+		SYNTAX			OCTET STRING
+		MAX-ACCESS		read-write
+		STATUS			current
+		DESCRIPTION		"Reset Subscriber Flow stats"
+		::=  {  ipcsresetuistats  1  }
+
+	ipcsServerFlowStatsReset	OBJECT-TYPE
+		SYNTAX			OCTET STRING
+		MAX-ACCESS		read-write
+		STATUS			current
+		DESCRIPTION		"Reset server flow stats"
+		::=  {  ipcsresetuistats  2  }
+	ipcsPolicyStatsReset	OBJECT-TYPE
+		SYNTAX			OCTET STRING
+		MAX-ACCESS		read-write
+		STATUS			current
+		DESCRIPTION		"Reset server flow stats"
+		::=  {  ipcsresetuistats  3  }
+		
+	ipcsSourceUriStatsReset	OBJECT-TYPE
+		SYNTAX			OCTET STRING
+		MAX-ACCESS		read-write
+		STATUS			current
+		DESCRIPTION		"Reset server flow stats"
+		::=  {  ipcsresetuistats  4  }
+		
+	ipcsDestinationUriStatsReset	OBJECT-TYPE
+		SYNTAX			OCTET STRING
+		MAX-ACCESS		read-write
+		STATUS			current
+		DESCRIPTION		"Reset server flow stats"
+		::=  {  ipcsresetuistats  5  }
+
+	ipcsLicenseStandardSessionReservedCount	OBJECT-TYPE	
+		SYNTAX			Gauge32
+		MAX-ACCESS		read-only
+		STATUS			current
+		DESCRIPTION		"Number of Licenses reserved for Standard Sessions."
+		::=  {  ipcslicenseinfo  1  }
+		
+	ipcsLicenseStandardSessionInUseCount OBJECT-TYPE	
+		SYNTAX			Gauge32
+		MAX-ACCESS		read-only
+		STATUS			current
+		DESCRIPTION		"Number of Licenses currenty in use for Standard Sessions."
+		::=  {  ipcslicenseinfo  2  }
+		
+	ipcsLicenseAdvancedSessionReservedCount	OBJECT-TYPE	
+		SYNTAX			Gauge32
+		MAX-ACCESS		read-only
+		STATUS			current
+		DESCRIPTION		"Number of Licenses reserved for Advanced Sessions."
+		::=  {  ipcslicenseinfo  3  }
+		
+	ipcsLicenseAdvancedSessionInUseCount OBJECT-TYPE	
+		SYNTAX			Gauge32
+		MAX-ACCESS		read-only
+		STATUS			current
+		DESCRIPTION		"Number of Licenses currenty in use for Advanced Sessions."
+		::=  {  ipcslicenseinfo  4  }
+		
+	ipcsLicenseScopiaVideoSessionReservedCount	OBJECT-TYPE	
+		SYNTAX			Gauge32
+		MAX-ACCESS		read-only
+		STATUS			current
+		DESCRIPTION		"Number of Licenses reserved for Scopia Video Sessions."
+		::=  {  ipcslicenseinfo  5  }
+		
+	ipcsLicenseScopiaVideoSessionInUseCount OBJECT-TYPE	
+		SYNTAX			Gauge32
+		MAX-ACCESS		read-only
+		STATUS			current
+		DESCRIPTION		"Number of Licenses currenty in use for Scopia Video Sessions."
+		::=  {  ipcslicenseinfo  6  }
+		
+	ipcsLicenseCesSessionReservedCount	OBJECT-TYPE	
+		SYNTAX			Gauge32
+		MAX-ACCESS		read-only
+		STATUS			current
+		DESCRIPTION		"Number of Licenses reserved for CES Sessions."
+		::=  {  ipcslicenseinfo  7  }
+		
+	ipcsLicenseCesSessionInUseCount OBJECT-TYPE	
+		SYNTAX			Gauge32
+		MAX-ACCESS		read-only
+		STATUS			current
+		DESCRIPTION		"Number of Licenses currenty in use for CES Sessions."
+		::=  {  ipcslicenseinfo  8  }
+		
+	ipcsLicenseTranscodingSessionReservedCount	OBJECT-TYPE	
+		SYNTAX			Gauge32
+		MAX-ACCESS		read-only
+		STATUS			current
+		DESCRIPTION		"Number of Licenses reserved for Transcoding Sessions."
+		::=  {  ipcslicenseinfo  9  }
+		
+	ipcsLicenseTranscodingSessionInUseCount OBJECT-TYPE	
+		SYNTAX			Gauge32
+		MAX-ACCESS		read-only
+		STATUS			current
+		DESCRIPTION		"Number of Licenses currenty in use for Transcoding Sessions."
+		::=  {  ipcslicenseinfo  10  }
+
+	ipcsVersion	OBJECT-TYPE	
+		SYNTAX			DisplayString
+		MAX-ACCESS		read-only
+		STATUS			current
+		DESCRIPTION		"SBC Version."
+		::=  {  ipcssysteminfo  1  }
+
+	sbcApplianceType	OBJECT-TYPE	
+		SYNTAX			DisplayString
+		MAX-ACCESS		read-only
+		STATUS			current
+		DESCRIPTION		"SBC Version."
+		::=  {  ipcssysteminfo  2  }
+
+	sbcDeloymentMode	OBJECT-TYPE	
+		SYNTAX			DisplayString
+		MAX-ACCESS		read-only
+		STATUS			current
+		DESCRIPTION		"SBC Version."
+		::=  {  ipcssysteminfo  3  }
+
+	processorVendor	OBJECT-TYPE	
+		SYNTAX			DisplayString
+		MAX-ACCESS		read-only
+		STATUS			current
+		DESCRIPTION		"SBC Version."
+		::=  {  ipcssysteminfo  4  }
+
+	processorVersion	OBJECT-TYPE	
+		SYNTAX			DisplayString
+		MAX-ACCESS		read-only
+		STATUS			current
+		DESCRIPTION		"SBC Version."
+		::=  {  ipcssysteminfo  5  }
+
+	baseboardProductName	OBJECT-TYPE	
+		SYNTAX			DisplayString
+		MAX-ACCESS		read-only
+		STATUS			current
+		DESCRIPTION		"SBC Version."
+		::=  {  ipcssysteminfo  6  }		
+
+	baseboardManufacturer	OBJECT-TYPE	
+		SYNTAX			DisplayString
+		MAX-ACCESS		read-only
+		STATUS			current
+		DESCRIPTION		"SBC Version."
+		::=  {  ipcssysteminfo  7  }				
+		
+END

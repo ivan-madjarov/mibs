@@ -1,0 +1,713 @@
+-- ****************************************************************************
+-- ****************************************************************************
+--             Copyright(c) 2004 Mediatrix Telecom, Inc.
+--  NOTICE:
+--   This document contains information that is confidential and proprietary
+--   to Mediatrix Telecom, Inc.
+--   Mediatrix Telecom, Inc. reserves all rights to this document as well as
+--   to the Intellectual Property of the document and the technology and
+--   know-how that it includes and represents.
+--   This publication cannot be reproduced, neither in whole nor in part in
+--   any form whatsoever without written prior approval by
+--   Mediatrix Telecom, Inc.
+--   Mediatrix Telecom, Inc. reserves the right to revise this publication
+--   and make changes at any time and without the obligation to notify any
+--   person and/or entity of such revisions and/or changes.
+-- ****************************************************************************
+-- ****************************************************************************
+  
+SEC10-MX-CONF-MIB
+DEFINITIONS ::= BEGIN
+
+IMPORTS
+        MODULE-IDENTITY,
+        OBJECT-TYPE,
+        Unsigned32
+    FROM SNMPv2-SMI
+        MODULE-COMPLIANCE,
+        OBJECT-GROUP
+    FROM SNMPv2-CONF
+        MxEnableState,
+        MxActivationState,
+        MxIpHostName,
+        MxIpPort,
+        MxAdvancedIpPort,
+        MxIpSubnetMask,
+        MxDigitMap
+    FROM MX-TC
+        MxUInt64,
+        MxFloat32,
+        MxIpHostNamePort,
+        MxIpAddr,
+        MxIpAddrPort,
+        MxIpAddrMask,
+        MxUri,
+        MxUrl
+    FROM MX-TC2
+        mediatrixServices       
+    FROM MX-SMI2;
+
+confMIB MODULE-IDENTITY                                                        
+    LAST-UPDATED   "0510310000Z"                                               
+    ORGANIZATION " Mediatrix Telecom, Inc. "                                   
+    CONTACT-INFO " Mediatrix Telecom, Inc.                                     
+                   4229, Garlock Street                                        
+                   Sherbrooke (Quebec)                                         
+                   Canada                                                      
+                   Phone: (819) 829-8749                                       
+                   "                                                           
+    DESCRIPTION  " Configuration Manager                                       
+                                                                               
+                   The Configuration Manager allows configuration scripts      
+                   transfers and backup/restore of the unit's configuration.   
+                   "                                                           
+    -- *************************************************************************
+                                                                               
+    -- Revision history                                                        
+                                                                               
+    -- *************************************************************************
+    REVISION       "0510310000Z"                                               
+    DESCRIPTION  " Initial Revision "                                          
+    REVISION       "0606060000Z"                                               
+    DESCRIPTION  " Updated ImagePrivacyAlgo and ImageSecretKey documentation " 
+    ::= { mediatrixServices 800 }                                              
+
+confMIBObjects OBJECT IDENTIFIER ::= { confMIB 1 }
+
+-- *****************************************************************************
+                                                                               
+-- Group:  Configuration Scripts                                               
+                                                                               
+-- *****************************************************************************
+                                                                               
+scriptsGroup OBJECT IDENTIFIER                                                 
+    ::= { confMIBObjects 100 }                                                 
+                                                                               
+                                                                               
+    -- Scalar:  Generic Configuration Script Filename                          
+                                                                               
+    scriptGenericFileName OBJECT-TYPE                                          
+        SYNTAX        OCTET STRING ( SIZE(0..255) )                            
+        MAX-ACCESS    read-write                                               
+        STATUS        current                                                  
+        DESCRIPTION " Generic Configuration Script Filename                    
+                                                                               
+                      Name of the generic configuration script. Using a generic
+                      configuration script but no specific configuration script
+                      or vice-versa is allowed. Using both generic and specific
+                      configuration scripts is also allowed.                   
+                      "                                                        
+        DEFVAL        { "" }                                                   
+        ::= { scriptsGroup 100 }                                               
+                                                                               
+    -- Scalar:  Specific Configuration Script Filename                         
+                                                                               
+    scriptSpecificFileName OBJECT-TYPE                                         
+        SYNTAX        OCTET STRING ( SIZE(0..255) )                            
+        MAX-ACCESS    read-write                                               
+        STATUS        current                                                  
+        DESCRIPTION " Specific Configuration Script Filename                   
+                                                                               
+                      Name of the specific configuration script. Using a       
+                      specific configuration script but no generic             
+                      configuration script or vice-versa is allowed. Using both
+                      generic and specific configuration scripts is also       
+                      allowed. When using a specific configuration script and a
+                      generic configuration script, commands from the specific 
+                      configuration script override commands from the generic  
+                      configuration script.                                    
+                      "                                                        
+        DEFVAL        { "" }                                                   
+        ::= { scriptsGroup 200 }                                               
+                                                                               
+    -- Scalar:  Location (Path)                                                
+                                                                               
+    scriptsLocation OBJECT-TYPE                                                
+        SYNTAX        OCTET STRING ( SIZE(0..255) )                            
+        MAX-ACCESS    read-write                                               
+        STATUS        current                                                  
+        DESCRIPTION " Location (Path)                                          
+                                                                               
+                      Path to the location of the configuration files. The path
+                      is relative to the root of the configuration scripts     
+                      server referenced by the variable ScriptsTransfer/       
+                      ScriptsTransferSrvHostname. Use '/' to separate          
+                      subdirectories. When the Transfer Protocol is 'File',    
+                      this may be prefixed by one of the following to indicate 
+                      storage media:                                           
+                                                                               
+                        * 'Persistent:' for onboard persistent storage - this  
+                          is the default.                                      
+                        * 'Volatile:' for onboard non-persistent storage.      
+                        * 'External:' for external USB media, if present.      
+                                                                               
+                                                                               
+                      "                                                        
+        DEFVAL        { "" }                                                   
+        ::= { scriptsGroup 300 }                                               
+                                                                               
+    -- *************************************************************************
+                                                                               
+    -- Group:  Configuration Scripts Transfer                                  
+                                                                               
+    -- *************************************************************************
+                                                                               
+    scriptsTransferGroup OBJECT IDENTIFIER                                     
+        ::= { scriptsGroup 400 }                                               
+                                                                               
+                                                                               
+        -- Scalar:  Transfer Protocol                                          
+                                                                               
+        scriptsTransferProtocol OBJECT-TYPE                                    
+            SYNTAX        INTEGER { http(100) , https(200) , tftp(300) , ftp   
+                          (400) , file(500) }                                  
+            MAX-ACCESS    read-write                                           
+            STATUS        current                                              
+            DESCRIPTION " Transfer Protocol                                    
+                                                                               
+                          Protocol used to transfer the configuration script   
+                          files.                                               
+                                                                               
+                            * HTTP: Hypertext Transfer Protocol.               
+                            * HTTPS: Hypertext Transfer Protocol over Transport
+                              Layer Security.                                  
+                            * TFTP: Trivial File Transfer Protocol.            
+                            * FTP: File Transfer Protocol.                     
+                            * File: Complete path to a configuration script in 
+                              a storage device.                                
+                                                                               
+                                                                               
+                          "                                                    
+            DEFVAL        { https }                                            
+            ::= { scriptsTransferGroup 100 }                                   
+                                                                               
+        -- Scalar:  User Name                                                  
+                                                                               
+        scriptsTransferUsername OBJECT-TYPE                                    
+            SYNTAX        OCTET STRING ( SIZE(0..63) )                         
+            MAX-ACCESS    read-write                                           
+            STATUS        current                                              
+            DESCRIPTION " User Name                                            
+                                                                               
+                          User name used to transfer the configuration script, 
+                          if the protocol selected by the variable             
+                          ScriptsTransferProtocol requires it.                 
+                          "                                                    
+            DEFVAL        { "" }                                               
+            ::= { scriptsTransferGroup 200 }                                   
+                                                                               
+        -- Scalar:  Password                                                   
+                                                                               
+        scriptsTransferPassword OBJECT-TYPE                                    
+            SYNTAX        OCTET STRING ( SIZE(0..63) )                         
+            MAX-ACCESS    read-write                                           
+            STATUS        current                                              
+            DESCRIPTION " Password                                             
+                                                                               
+                          Password used to transfer the configuration script,  
+                          if the protocol selected by the variable             
+                          ScriptsTransferProtocol requires it.                 
+                          "                                                    
+            DEFVAL        { "" }                                               
+            ::= { scriptsTransferGroup 300 }                                   
+                                                                               
+        -- Scalar:  Server Hostname and port                                   
+                                                                               
+        scriptsTransferSrvHostname OBJECT-TYPE                                 
+            SYNTAX        MxIpHostNamePort                                     
+            MAX-ACCESS    read-write                                           
+            STATUS        current                                              
+            DESCRIPTION " Server Hostname and port                             
+                                                                               
+                          Configuration scripts server hostname and port. Use  
+                          the special port value zero to indicate the protocol 
+                          default.                                             
+                          "                                                    
+            DEFVAL        { 0.0.0.0:0 }                                        
+            ::= { scriptsTransferGroup 400 }                                   
+                                                                               
+    -- End of group:  Configuration Scripts Transfer                           
+                                                                               
+    -- *************************************************************************
+                                                                               
+    -- Group:  Automatic Transfer                                              
+                                                                               
+    -- *************************************************************************
+                                                                               
+    automaticScriptsTransferGroup OBJECT IDENTIFIER                            
+        ::= { scriptsGroup 500 }                                               
+                                                                               
+                                                                               
+        -- Scalar:  Transfer On Restart                                        
+                                                                               
+        scriptsTransferOnRestartEnable OBJECT-TYPE                             
+            SYNTAX        MxEnableState                                        
+            MAX-ACCESS    read-write                                           
+            STATUS        current                                              
+            DESCRIPTION " Transfer On Restart                                  
+                                                                               
+                          Enables the automatic configuration scripts transfer 
+                          upon restart.                                        
+                                                                               
+                            * Enable: Configuration scripts are automatically  
+                              transferred upon restart.                        
+                            * Disable: Configuration scripts are not           
+                              automatically transferred upon restart.          
+                                                                               
+                                                                               
+                          "                                                    
+            DEFVAL        { disable }                                          
+            ::= { automaticScriptsTransferGroup 100 }                          
+                                                                               
+        -- Scalar:  Periodic Transfer                                          
+                                                                               
+        scriptsTransferPeriodicEnable OBJECT-TYPE                              
+            SYNTAX        MxEnableState                                        
+            MAX-ACCESS    read-write                                           
+            STATUS        current                                              
+            DESCRIPTION " Periodic Transfer                                    
+                                                                               
+                          Enables the automatic periodic configuration scripts 
+                          transfer. This requires that the device time is      
+                          correctly set, which can be done with the HOC        
+                          service.                                             
+                                                                               
+                            * Enable: Configuration scripts are automatically  
+                              transferred periodically.                        
+                            * Disable: Configuration scripts transfer is not   
+                              periodic.                                        
+                                                                               
+                                                                               
+                          "                                                    
+            DEFVAL        { disable }                                          
+            ::= { automaticScriptsTransferGroup 200 }                          
+                                                                               
+        -- Scalar:  Time Unit                                                  
+                                                                               
+        scriptsTransferPeriodicTimeUnit OBJECT-TYPE                            
+            SYNTAX        INTEGER { minutes(100) , hours(200) , days(300) }    
+            MAX-ACCESS    read-write                                           
+            STATUS        current                                              
+            DESCRIPTION " Time Unit                                            
+                                                                               
+                          Time unit for the variable ScriptsTransferPeriod.    
+                                                                               
+                            * Minutes: Automatic configuration scripts transfer
+                              is performed every x minutes.                    
+                            * Hours: Automatic configuration scripts transfer  
+                              is performed every x hours.                      
+                            * Days: Automatic configuration scripts transfer is
+                              performed every x days at the time specified by  
+                              the ScriptsTransferTimeOfDay variable.           
+                                                                               
+                                                                               
+                          "                                                    
+            DEFVAL        { hours }                                            
+            ::= { automaticScriptsTransferGroup 300 }                          
+                                                                               
+        -- Scalar:  Time Interval                                              
+                                                                               
+        scriptsTransferInterval OBJECT-TYPE                                    
+            SYNTAX        Unsigned32 ( 1..60 )                                 
+            MAX-ACCESS    read-write                                           
+            STATUS        current                                              
+            DESCRIPTION " Time Interval                                        
+                                                                               
+                          Time interval between automatic configuration scripts
+                          transfer. The time unit is selected by the           
+                          ScriptsTransferPeriodicTimeUnit variable.            
+                          "                                                    
+            DEFVAL        { 1 }                                                
+            ::= { automaticScriptsTransferGroup 400 }                          
+                                                                               
+        -- Scalar:  Daily Transfer Time                                        
+                                                                               
+        scriptsTransferTimeOfDay OBJECT-TYPE                                   
+            SYNTAX        Integer32 ( -1..23 )                                 
+            MAX-ACCESS    read-write                                           
+            STATUS        current                                              
+            DESCRIPTION " Daily Transfer Time                                  
+                                                                               
+                          Time when the automatic configuration scripts        
+                          transfer occurs. The time unit selected by the       
+                          ScriptsTransferPeriodicTimeUnit variable must be     
+                          Days. -1 means random.                               
+                          "                                                    
+            DEFVAL        { -1 }                                               
+            ::= { automaticScriptsTransferGroup 500 }                          
+                                                                               
+    -- End of group:  Automatic Transfer                                       
+                                                                               
+    -- Scalar:  Decryption Key                                                 
+                                                                               
+    scriptsSecretKey OBJECT-TYPE                                               
+        SYNTAX        OCTET STRING ( SIZE(0..255) )                            
+        MAX-ACCESS    read-write                                               
+        STATUS        current                                                  
+        DESCRIPTION " Decryption Key                                           
+                                                                               
+                      Key used to decrypt configuration scripts when they are  
+                      encrypted. Encryption is auto-detected.                  
+                      "                                                        
+        DEFVAL        { "" }                                                   
+        ::= { scriptsGroup 600 }                                               
+                                                                               
+    -- *************************************************************************
+                                                                               
+    -- Group:  Configuration Script Statistics                                 
+                                                                               
+    -- *************************************************************************
+                                                                               
+    scriptsStatsGroup OBJECT IDENTIFIER                                        
+        ::= { scriptsGroup 10000 }                                             
+                                                                               
+                                                                               
+        -- Scalar:  Last Transfer Result                                       
+                                                                               
+        scriptsStatsLastTransferResult OBJECT-TYPE                             
+            SYNTAX        INTEGER { none(100) , success(200) , executionFailed 
+                          (300) , transferFailed(400) }                        
+            MAX-ACCESS    read-only                                            
+            STATUS        current                                              
+            DESCRIPTION " Last Transfer Result                                 
+                                                                               
+                          Result of the last configuration scripts transfer    
+                          command.                                             
+                                                                               
+                            * None: No configuration scripts transfer performed
+                              since the last reset to default settings.        
+                            * Success: The last configuration scripts transfer 
+                              succeeded and the transferred scripts were ran   
+                              successfully.                                    
+                            * ExecutionFailed: The last configuration scripts  
+                              transfer succeeded but the transferred scripts   
+                              failed to run.                                   
+                            * TransferFailed: The last configuration scripts   
+                              transfer failed.                                 
+                                                                               
+                                                                               
+                          "                                                    
+            ::= { scriptsStatsGroup 800 }                                      
+                                                                               
+        -- Scalar:  Last Successful Transfer Date and Time                     
+                                                                               
+        scriptsStatsLastTransferDateTime OBJECT-TYPE                           
+            SYNTAX        OCTET STRING ( SIZE(0..255) )                        
+            MAX-ACCESS    read-only                                            
+            STATUS        current                                              
+            DESCRIPTION " Last Successful Transfer Date and Time               
+                                                                               
+                          Date and time of the last successful configuration   
+                          script transfer command since the last reset to      
+                          default settings.                                    
+                          "                                                    
+            ::= { scriptsStatsGroup 900 }                                      
+                                                                               
+    -- End of group:  Configuration Script Statistics                          
+                                                                               
+-- End of group:  Configuration Scripts                                        
+
+-- ****************************************************************************
+                                                                               
+-- Group:  Configuration Backup File                                           
+                                                                               
+-- ****************************************************************************
+                                                                               
+imageGroup OBJECT IDENTIFIER                                                   
+    ::= { confMIBObjects 200 }                                                 
+                                                                               
+                                                                               
+    -- Scalar:  File Name                                                      
+                                                                               
+    imageFileName OBJECT-TYPE                                                  
+        SYNTAX        OCTET STRING ( SIZE(0..255) )                            
+        MAX-ACCESS    read-write                                               
+        STATUS        current                                                  
+        DESCRIPTION " File Name                                                
+                                                                               
+                      Name of the file used to backup (save) and restore       
+                      (load) the unit's configuration.                         
+                      "                                                        
+        DEFVAL        { "" }                                                   
+        ::= { imageGroup 100 }                                                 
+                                                                               
+    -- Scalar:  File Location (Path)                                           
+                                                                               
+    imageLocation OBJECT-TYPE                                                  
+        SYNTAX        OCTET STRING ( SIZE(0..255) )                            
+        MAX-ACCESS    read-write                                               
+        STATUS        current                                                  
+        DESCRIPTION " File Location (Path)                                     
+                                                                               
+                      Path to the location of the configuration image file.    
+                      The path is relative to the root of the transfer server. 
+                      Use '/' to separate subdirectories. When the Transfer    
+                      Protocol is 'File', this may be prefixed by one of the   
+                      following to indicate storage media:                     
+                                                                               
+                        * 'Persistent:' for onboard persistent storage - this  
+                          is the default.                                      
+                        * 'Volatile:' for onboard non-persistent storage.      
+                        * 'External:' for external USB media, if present.      
+                                                                               
+                                                                               
+                      "                                                        
+        DEFVAL        { "" }                                                   
+        ::= { imageGroup 200 }                                                 
+                                                                               
+    -- ************************************************************************
+                                                                               
+    -- Group:  Configuration Image Transfer                                    
+                                                                               
+    -- ************************************************************************
+                                                                               
+    imageTransferGroup OBJECT IDENTIFIER                                       
+        ::= { imageGroup 300 }                                                 
+                                                                               
+                                                                               
+        -- Scalar:  Image Transfer Protocol                                    
+                                                                               
+        imageTransferProtocol OBJECT-TYPE                                      
+            SYNTAX        INTEGER { http(100) , https(200) , tftp(300) , ftp   
+                          (400) , file(500) }                                  
+            MAX-ACCESS    read-write                                           
+            STATUS        current                                              
+            DESCRIPTION " Image Transfer Protocol                              
+                                                                               
+                          Protocol used to upload a configuration image during 
+                          backup and transfer during restore.                  
+                                                                               
+                            * HTTP: Hypertext Transfer Protocol.               
+                            * HTTPS: Hypertext Transfer Protocol over Transport
+                              Layer Security.                                  
+                            * TFTP: Trivial File Transfer Protocol.            
+                            * FTP: File Transfer Protocol.                     
+                            * File: Complete path to a configuration image in a
+                              storage device.                                  
+                                                                               
+                                                                               
+                          "                                                    
+            DEFVAL        { https }                                            
+            ::= { imageTransferGroup 100 }                                     
+                                                                               
+        -- Scalar:  User Name                                                  
+                                                                               
+        imageTransferUsername OBJECT-TYPE                                      
+            SYNTAX        OCTET STRING ( SIZE(0..63) )                         
+            MAX-ACCESS    read-write                                           
+            STATUS        current                                              
+            DESCRIPTION " User Name                                            
+                                                                               
+                          User name used to transfer the configuration image,  
+                          if the protocol selected by the variable             
+                          ImageTransferProtocol requires it.                   
+                          "                                                    
+            DEFVAL        { "" }                                               
+            ::= { imageTransferGroup 200 }                                     
+                                                                               
+        -- Scalar:  Password                                                   
+                                                                               
+        imageTransferPassword OBJECT-TYPE                                      
+            SYNTAX        OCTET STRING ( SIZE(0..63) )                         
+            MAX-ACCESS    read-write                                           
+            STATUS        current                                              
+            DESCRIPTION " Password                                             
+                                                                               
+                          Password used to transfer the configuration image, if
+                          the protocol selected by the variable                
+                          ImageTransferProtocol requires it.                   
+                          "                                                    
+            DEFVAL        { "" }                                               
+            ::= { imageTransferGroup 300 }                                     
+                                                                               
+        -- Scalar:  Server Hostname and port                                   
+                                                                               
+        imageTransferSrvHostname OBJECT-TYPE                                   
+            SYNTAX        MxIpHostNamePort                                     
+            MAX-ACCESS    read-write                                           
+            STATUS        current                                              
+            DESCRIPTION " Server Hostname and port                             
+                                                                               
+                          Configuration backup/restore server hostname and     
+                          port. Use the special value zero to indicate the     
+                          protocol default.                                    
+                          "                                                    
+            DEFVAL        { 0.0.0.0:0 }                                        
+            ::= { imageTransferGroup 400 }                                     
+                                                                               
+    -- End of group:  Configuration Image Transfer                             
+                                                                               
+    -- ************************************************************************
+                                                                               
+    -- Group:  Privacy                                                         
+                                                                               
+    -- ************************************************************************
+                                                                               
+    imagePrivacyGroup OBJECT IDENTIFIER                                        
+        ::= { imageGroup 400 }                                                 
+                                                                               
+                                                                               
+        -- Scalar:  Privacy Enable                                             
+                                                                               
+        imagePrivacyAlgo OBJECT-TYPE                                           
+            SYNTAX        INTEGER { none(100) , defaultAlgo(200) }             
+            MAX-ACCESS    read-write                                           
+            STATUS        current                                              
+            DESCRIPTION " Privacy Enable                                       
+                                                                               
+                          Defines the encryption method to use for backup      
+                          operations. This variable is not used for restore    
+                          operations.                                          
+                                                                               
+                            * None: Backup images are not encrypted.           
+                            * DefaultAlgo: Backup images are encrypted with the
+                              default algorithm.                               
+                                                                               
+                                                                               
+                          "                                                    
+            DEFVAL        { none }                                             
+            ::= { imagePrivacyGroup 100 }                                      
+                                                                               
+        -- Scalar:  Decryption Key                                             
+                                                                               
+        imageSecretKey OBJECT-TYPE                                             
+            SYNTAX        OCTET STRING ( SIZE(0..255) )                        
+            MAX-ACCESS    read-write                                           
+            STATUS        current                                              
+            DESCRIPTION " Decryption Key                                       
+                                                                               
+                          Key used for backup operations to encrypt backup     
+                          images when the variable ImagePrivacyAlgo is not set 
+                          to 'None'.                                           
+                                                                               
+                          The key is also used when performing an image        
+                          restore. In that case, the encryption algorithm is   
+                          auto-detected therefore ImagePrivacyAlgo is ignored. 
+                                                                               
+                                                                               
+                          "                                                    
+            DEFVAL        { "" }                                               
+            ::= { imagePrivacyGroup 200 }                                      
+                                                                               
+    -- End of group:  Privacy                                                  
+                                                                               
+    -- Scalar:  Last Backup Result                                             
+                                                                               
+    imageBackupStatus OBJECT-TYPE                                              
+        SYNTAX        INTEGER { none(100) , success(200) , failed(300) }       
+        MAX-ACCESS    read-only                                                
+        STATUS        current                                                  
+        DESCRIPTION " Last Backup Result                                       
+                                                                               
+                      Result of the last configuration backup command.         
+                                                                               
+                        * None: No configuration backup operation has been     
+                          performed since the last reset to default settings.  
+                        * Success: Last configuration backup operation         
+                          succeeded.                                           
+                        * Failed: Last configuration backup operation failed.  
+                                                                               
+                                                                               
+                      "                                                        
+        ::= { imageGroup 600 }                                                 
+                                                                               
+    -- Scalar:  Last Restore Result                                            
+                                                                               
+    imageRestoreStatus OBJECT-TYPE                                             
+        SYNTAX        INTEGER { none(100) , success(200) , applyFailed(300) ,  
+                      loadFailed(400) }                                        
+        MAX-ACCESS    read-only                                                
+        STATUS        current                                                  
+        DESCRIPTION " Last Restore Result                                      
+                                                                               
+                      Result of the last configuration restore command.        
+                                                                               
+                        * None: No configuration restore has been performed    
+                          since the last reset to default settings.            
+                        * Success: The last configuration restore succeeded.   
+                        * ApplyFailed: The configuration load succeeded but    
+                          restoring failed during the last configuration       
+                          restore command execution.                           
+                        * LoadFailed: The configuration load failed during the 
+                          last configuration restore command.                  
+                                                                               
+                                                                               
+                      "                                                        
+        ::= { imageGroup 800 }                                                 
+                                                                               
+-- End of group:  Configuration Backup File                                    
+
+-- *****************************************************************************
+                                                                               
+-- Group:  Notification Messages Configuration                                 
+                                                                               
+-- *****************************************************************************
+                                                                               
+notificationsGroup OBJECT IDENTIFIER                                           
+    ::= { confMIBObjects 60010 }                                               
+                                                                               
+                                                                               
+    -- Scalar:  Minimal Severity of Notification                               
+                                                                               
+    minSeverity OBJECT-TYPE                                                    
+        SYNTAX        INTEGER { disable(0) , debug(100) , info(200) , warning  
+                      (300) , error(400) , critical (500) }                    
+        MAX-ACCESS    read-write                                               
+        STATUS        current                                                  
+        DESCRIPTION " Minimal Severity of Notification                         
+                                                                               
+                      Sets the minimal severity to issue a notification message
+                      incoming from this service.                              
+                                                                               
+                        * Disable: No notification is issued.                  
+                        * Debug: All notification messages are issued.         
+                        * Info: Notification messages with severity            
+                          'Informational' and higher are issued.               
+                        * Warning: Notification messages with severity         
+                          'Warning' and higher are issued.                     
+                        * Error: Notification messages with severity 'Error'   
+                          and higher are issued.                               
+                        * Critical: Notification messages with severity        
+                          'Critical' are issued.                               
+                                                                               
+                                                                               
+                      "                                                        
+        DEFVAL        { warning }                                              
+        ::= { notificationsGroup 100 }                                         
+                                                                               
+-- End of group:  Notification Messages Configuration                          
+
+-- ****************************************************************************
+                                                                              
+-- Group:  Configuration Settings                                             
+                                                                              
+-- ****************************************************************************
+                                                                              
+configurationGroup OBJECT IDENTIFIER                                          
+    ::= { confMIBObjects 60020 }                                              
+                                                                              
+                                                                              
+    -- Scalar:  Need Restart                                                  
+                                                                              
+    needRestartInfo OBJECT-TYPE                                               
+        SYNTAX        INTEGER { no(0) , yes(100) }                            
+        MAX-ACCESS    read-only                                               
+        STATUS        current                                                 
+        DESCRIPTION " Need Restart                                            
+                                                                              
+                      Indicates if the service needs to be restarted for its  
+                      configuration to fully take effect.                     
+                                                                              
+                        * Yes: Service needs to be restarted.                 
+                        * No: Service does not need to be restarted.          
+                                                                              
+                      Services can be restarted by using the command          
+                      Scm.ServiceCommands.Restart.                            
+                                                                              
+                                                                              
+                      "                                                       
+        ::= { configurationGroup 100 }                                        
+                                                                              
+-- End of group:  Configuration Settings                                      
+
+END

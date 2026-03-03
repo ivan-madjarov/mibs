@@ -1,0 +1,228 @@
+TREND-IWSS-MIB DEFINITIONS ::= BEGIN
+
+-- A Comment!
+
+-- IMPORTS: Include definitions from other mibs here, which is always
+-- the first item in a MIB file.
+IMPORTS
+	MODULE-IDENTITY, enterprises		FROM SNMPv2-SMI
+	OBJECT-TYPE, Integer32			FROM SNMPv2-SMI
+	--TRAP-TYPE					FROM RFC-1215
+	DisplayString				FROM SNMPv2-TC;
+
+trend MODULE-IDENTITY
+    LAST-UPDATED "200201300000Z"
+    ORGANIZATION "www.trendmicro.com"
+    CONTACT-INFO    
+	 "postal:   TrendMicro Inc.
+                    10101 N. Denza
+                    cupertino CA  95124
+
+          email:    jessica_chang@trendmicro.com"
+    DESCRIPTION
+	"Top-level infrastructure of Trend Micro Security product MIB tree "
+    REVISION     "200201300000Z"
+    DESCRIPTION
+	"First draft"
+    ::= { enterprises 6101}
+
+
+-- Define typical mib nodes, like where the objects are going to lie.
+-- trend		  	OBJECT IDENTIFIER ::= {	enterprises 6101 }
+antivirus		OBJECT IDENTIFIER ::= {	trend 1 }
+securityProducts	OBJECT IDENTIFIER ::= { antivirus 8 }
+iwss		   	OBJECT IDENTIFIER ::= { securityProducts 8 }	
+iwssNotifications	OBJECT IDENTIFIER ::= { iwss 1 }
+iwssTrap		OBJECT IDENTIFIER ::= { iwss 2 }
+
+-- define objects in IWSS
+
+-- productInfo
+-- oid : .1.3.6.1.4.1.6101.1.8.1
+productInfoTable OBJECT-TYPE
+	SYNTAX SEQUENCE OF ProductInfoEntry
+	MAX-ACCESS	not-accessible
+	STATUS		current
+	DESCRIPTION
+		"This table contain the iwss product information"
+	::= {securityProducts 1 }
+-- oid : .1.3.6.1.4.1.6101.1.8.1.1
+productInfoEntry OBJECT-TYPE
+	SYNTAX		ProductInfoEntry
+	MAX-ACCESS	not-accessible
+	STATUS 		current
+	DESCRIPTION
+		"A row describing a given product"
+    	INDEX   { productIndex }
+    	::= { productInfoTable 1 }
+
+ProductInfoEntry ::=
+	SEQUENCE {
+	productIndex	Integer32,
+	productName	OCTET STRING,
+	buildNumber	OCTET STRING,
+	vPatternNumber	OCTET STRING,
+	vEngineNumber   OCTET STRING
+	}
+
+-- Oid : .1.3.6.1.4.1.6101.1.8.1.1.1		
+productIndex OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "The index of the gateway product."
+    ::= { productInfoEntry 1 }
+-- Oid : .1.3.6.1.4.1.6101.1.8.1.1.2
+productName OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-create
+    STATUS      current
+    DESCRIPTION "product name"
+    ::= { productInfoEntry 2 }
+-- Oid : .1.3.6.1.4.1.6101.1.8.1.1.3
+buildNumber OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-create
+    STATUS      current
+    DESCRIPTION "Product build number"
+    ::= { productInfoEntry 3 }
+-- Oid : .1.3.6.1.4.1.6101.1.8.1.1.4
+vPatternNumber OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-create
+    STATUS      current
+    DESCRIPTION "Product virus pattern version"
+    ::= { productInfoEntry 4 }
+-- Oid : .1.3.6.1.4.1.6101.1.8.1.1.5
+vEngineNumber OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-create
+    STATUS      current
+    DESCRIPTION "Product scan engine version"
+    ::= { productInfoEntry 5 }
+
+--
+--  IWSS Event Traps
+--
+-- Oid : .1.3.6.1.4.1.6101.1.8.8.2.1
+--iwsshttpHeartBeat TRAP-TYPE
+--    ENTERPRISE	iwssTrap
+--    DESCRIPTION "iwss http service down, agent will send out a SNMP trap."
+--::= 1
+
+-- Oid : .1.3.6.1.4.1.6101.1.8.8.2.1
+iwsshttpHeartBeat NOTIFICATION-TYPE
+    --SYNTAX      SnmpAdminString
+    --MAX-ACCESS  accessible-for-notify
+    STATUS      current
+    DESCRIPTION "iwss http service down, agent will send out a SNMP trap."
+::= { iwssTrap 1 }
+
+-- Oid : .1.3.6.1.4.1.6101.1.8.8.2.2
+iwssftpHeartBeat NOTIFICATION-TYPE
+    --SYNTAX      SnmpAdminString
+    --MAX-ACCESS  accessible-for-notify
+    STATUS      current
+    DESCRIPTION "iwss ftp service down, agent will send out a SNMP trap"
+::= { iwssTrap 2 }
+
+-- Oid : .1.3.6.1.4.1.6101.1.8.8.2.3
+virusEvent NOTIFICATION-TYPE
+    --SYNTAX      SnmpAdminString
+    --MAX-ACCESS  accessible-for-notify
+    STATUS      current
+    DESCRIPTION "viruse events found, agent will send out a SNMP trap."
+::= { iwssTrap 3 }
+
+-- Oid : .1.3.6.1.4.1.6101.1.8.8.2.4
+securityEvent NOTIFICATION-TYPE
+    --SYNTAX      SnmpAdminString
+    --MAX-ACCESS  accessible-for-notify
+    STATUS      current
+    DESCRIPTION "When other security events happended (url blocking...), agent will send out a SNMP trap"
+::= { iwssTrap 4 }
+
+-- Oid : .1.3.6.1.4.1.6101.1.8.8.2.5
+downloadEvent NOTIFICATION-TYPE
+    --SYNTAX      SnmpAdminString
+    --MAX-ACCESS  accessible-for-notify
+    STATUS      current
+    DESCRIPTION "When scan components (pattern, engine) updated, agent will send out a SNMP trap"
+::= { iwssTrap 5 }
+
+-- Oid : .1.3.6.1.4.1.6101.1.8.8.2.6
+webconsoleHeartBeat NOTIFICATION-TYPE
+    --SYNTAX      SnmpAdminString
+    --MAX-ACCESS  accessible-for-notify
+    STATUS      current
+    DESCRIPTION "When service monitor detected that the Web console does not respond, agent will send out a SNMP trap"
+::= { iwssTrap 6 }
+
+-- Oid : .1.3.6.1.4.1.6101.1.8.8.2.7
+perfMetricsEvent NOTIFICATION-TYPE
+    --SYNTAX      SnmpAdminString
+    --MAX-ACCESS  accessible-for-notify
+    STATUS      current
+    DESCRIPTION "For certain system performance data, agent will send out a SNMP trap"
+::= { iwssTrap 7 }
+
+-- Oid : .1.3.6.1.4.1.6101.1.8.8.2.8
+metricExceedEvent NOTIFICATION-TYPE
+    --SYNTAX      SnmpAdminString
+    --MAX-ACCESS  accessible-for-notify
+    STATUS      current
+    DESCRIPTION "When performance metrics exceeded the configured thresholds, agent will send out a SNMP trap"
+::= { iwssTrap 8 }
+
+
+-- Oid : .1.3.6.1.4.1.6101.1.8.8.2.9
+linkDownEvent NOTIFICATION-TYPE
+    --SYNTAX      SnmpAdminString
+    --MAX-ACCESS  accessible-for-notify
+    STATUS      current
+    DESCRIPTION "When IWSVA data interface link down, agent will send out a SNMP trap"
+::= { iwssTrap 9 }
+
+-- Oid : .1.3.6.1.4.1.6101.1.8.8.2.10
+linkUpEvent NOTIFICATION-TYPE
+    --SYNTAX      SnmpAdminString
+    --MAX-ACCESS  accessible-for-notify
+    STATUS      current
+    DESCRIPTION "When IWSVA data interface link up, agent will send out a SNMP trap"
+::= { iwssTrap 10 }
+
+-- Oid : .1.3.6.1.4.1.6101.1.8.8.2.11
+haSwitchEvent NOTIFICATION-TYPE
+    --SYNTAX      SnmpAdminString
+    --MAX-ACCESS  accessible-for-notify
+    STATUS      current
+    DESCRIPTION "When IWSVA HA switch-over happened, agent will send out a SNMP trap"
+::= { iwssTrap 11 }
+
+-- Oid : .1.3.6.1.4.1.6101.1.8.8.2.12
+haChildFailEvent NOTIFICATION-TYPE
+    --SYNTAX      SnmpAdminString
+    --MAX-ACCESS  accessible-for-notify
+    STATUS      current
+    DESCRIPTION "When IWSVA HA found child node failed, agent will send out a SNMP trap"
+::= { iwssTrap 12 }
+
+-- Oid : .1.3.6.1.4.1.6101.1.8.8.2.13
+haChildRecoverEvent NOTIFICATION-TYPE
+    --SYNTAX      SnmpAdminString
+    --MAX-ACCESS  accessible-for-notify
+    STATUS      current
+    DESCRIPTION "When IWSVA HA found child node recovered, agent will send out a SNMP trap"
+::= { iwssTrap 13 }
+
+-- Oid : .1.3.6.1.4.1.6101.1.8.8.2.14
+haSyncFailEvent NOTIFICATION-TYPE
+    --SYNTAX      SnmpAdminString
+    --MAX-ACCESS  accessible-for-notify
+    STATUS      current
+    DESCRIPTION "When IWSVA HA found synchronization failed, agent will send out a SNMP trap"
+::= { iwssTrap 14 }
+
+
+-- END:  Don't forget this!
+END

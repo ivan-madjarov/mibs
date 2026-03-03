@@ -1,0 +1,219 @@
+-- ****************************************************************************
+-- ****************************************************************************
+--
+--             Copyright(c) 2001-2002 Mediatrix Telecom, Inc. 
+--
+--  NOTICE:
+--   This document contains information that is confidential and proprietary
+--   to Mediatrix Telecom, Inc. 
+--
+--   Mediatrix Telecom, Inc. reserves all rights to this document as well as
+--   to the Intellectual Property of the document and the technology and
+--   know-how that it includes and represents. 
+--
+--   This publication cannot be reproduced, neither in whole nor in part in
+--   any form whatsoever without written prior approval by
+--   Mediatrix Telecom, Inc. 
+--
+--   Mediatrix Telecom, Inc. reserves the right to revise this publication
+--   and make changes at any time and without the obligation to notify any
+--   person and/or entity of such revisions and/or changes. 
+--
+-- ****************************************************************************
+-- ****************************************************************************
+
+MGCP46-MX-SYSLOG-MIB
+DEFINITIONS ::= BEGIN
+
+IMPORTS
+        MODULE-IDENTITY,
+        OBJECT-TYPE
+    FROM SNMPv2-SMI
+        OBJECT-GROUP,
+        MODULE-COMPLIANCE
+    FROM SNMPv2-CONF
+        MxIpHostName,
+        MxIpConfigSource,
+        MxIpPort,
+        MxIpSelectConfigSource,
+        MxIpDhcpSiteSpecificCode
+    FROM MX-TC
+        ipAddressStatus,
+        ipAddressConfig,
+        mediatrixConfig
+    FROM MX-SMI;
+
+syslogMIB MODULE-IDENTITY
+    LAST-UPDATED "0208230000Z"
+    ORGANIZATION "Mediatrix Telecom, Inc."
+    CONTACT-INFO "Mediatrix Telecom, Inc. 
+                  4229, Garlock Street
+                  Sherbrooke (Quebec)
+                  Canada
+                  Phone: (819) 829-8749
+                  "
+    DESCRIPTION "This MIB describes the parameters used by the syslog
+                 messaging system."
+    -- ************************************************************************
+    -- Revision history
+    -- ************************************************************************
+    REVISION    "0208230000Z"
+    DESCRIPTION "August 23, 2002
+                    DEFVAL of syslogMsgMaxSeverity is set to informational
+                    instead of disabled. This allows to know when the unit
+                    is booted up.
+                 August 06, 2001
+                    Creation"
+    ::= { mediatrixConfig 17 }
+
+syslogMIBObjects  OBJECT IDENTIFIER ::= { syslogMIB 1 }
+syslogConformance OBJECT IDENTIFIER ::= { syslogMIB 2 }
+
+-- Add the syslog general parameters
+
+    syslogMsgMaxSeverity OBJECT-TYPE
+        SYNTAX      INTEGER { 
+                              disabled(0),
+                              critical(1),
+                              error(2),
+                              warning(3),
+                              informational(4),
+                              debug(5) 
+                            }
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "This value indicates which syslog message will be processed.
+                     Any syslog message with a severity value greater than this 
+                     value will be ignored by the agent."
+        DEFVAL { informational }
+        ::= { syslogMIBObjects 5 }
+
+    -- ************************************************************************
+    -- CallAgent IP address: Placed in the mediatrixMgmt.ipAddressStatus and
+    --                       in mediatrixConfig.ipAddressConfig.
+    -- ************************************************************************
+
+-- Add the syslog ip addresses specifics parameters
+
+    ipAddressStatusSyslog OBJECT IDENTIFIER ::= { ipAddressStatus 20 }
+    ipAddressConfigSyslog OBJECT IDENTIFIER ::= { ipAddressConfig 20 }
+
+-- Add the syslog Call Agent status information
+
+    syslogConfigSource OBJECT-TYPE
+        SYNTAX      MxIpConfigSource
+        MAX-ACCESS  read-only
+        STATUS      current
+        DESCRIPTION "Indicates the source used for the provisioning of 
+                     the syslog MIB objects."
+        DEFVAL { dhcp }
+        ::=  {  ipAddressStatusSyslog  1  } 
+
+    syslogHost OBJECT-TYPE
+        SYNTAX      MxIpHostName
+        MAX-ACCESS  read-only
+        STATUS      current
+        DESCRIPTION "Syslog server IP address or domain name."
+        DEFVAL      { "192.168.0.10" }
+        ::=  {    ipAddressStatusSyslog  2  }
+
+    syslogPort OBJECT-TYPE
+        SYNTAX      MxIpPort
+        MAX-ACCESS  read-only
+        STATUS      current
+        DESCRIPTION "Syslog server IP port number."
+        DEFVAL { 514 }
+        ::=  {    ipAddressStatusSyslog  3  }
+
+-- Add the syslog Call Agent configuration information
+
+    syslogSelectConfigSource OBJECT-TYPE
+        SYNTAX      MxIpSelectConfigSource
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Indicates the source to be used for the provisioning of 
+                     the syslog MIB objects."
+        DEFVAL      { dhcp }
+        ::=  {  ipAddressConfigSyslog  1  } 
+
+    ipAddressConfigSyslogStatic OBJECT IDENTIFIER ::= { ipAddressConfigSyslog 10 }
+    
+    -- Add the static parameters
+    
+    syslogStaticHost OBJECT-TYPE
+        SYNTAX      MxIpHostName
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Static Syslog server IP address or domain name."
+        DEFVAL      { "192.168.0.10" }
+        ::=  {    ipAddressConfigSyslogStatic  1  }
+
+    syslogStaticPort OBJECT-TYPE
+        SYNTAX      MxIpPort
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Static Syslog server IP port number."
+        DEFVAL      { 514 }
+        ::=  {    ipAddressConfigSyslogStatic  2  }
+
+    ipAddressConfigSyslogDhcp OBJECT IDENTIFIER ::= { ipAddressConfigSyslog 30 }
+    
+    -- Add the dhcp parameters
+    syslogDhcpSiteSpecificCode OBJECT-TYPE
+        SYNTAX      MxIpDhcpSiteSpecificCode
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "DHCP Syslog server site specific code.
+        			 If set to 0, use vendor-specific code #110"
+        DEFVAL      { 0 }
+        ::=  {    ipAddressConfigSyslogDhcp  1    }
+
+    -- ************************************************************************
+    -- Conformance information
+    -- ************************************************************************
+    syslogCompliances OBJECT IDENTIFIER ::= { syslogConformance 1 }
+
+    syslogBasicComplVer1 MODULE-COMPLIANCE
+        STATUS      current
+        DESCRIPTION
+            "Minimal parameters definitions to support the syslog messaging system."
+        MODULE -- This Module
+            MANDATORY-GROUPS { 
+                                syslogBasicGroupVer1,
+                                syslogServerGroupVer1
+                             }
+        ::= { syslogCompliances 1 }
+
+     -- ************************************************************************
+    -- MIB variable grouping
+    -- ************************************************************************
+    syslogGroups OBJECT IDENTIFIER ::= { syslogConformance 2 }
+
+    syslogBasicGroupVer1 OBJECT-GROUP
+        OBJECTS {
+                    syslogMsgMaxSeverity
+                }
+        STATUS current
+        DESCRIPTION
+            "This group holds the minimal set of objects that enables the user to send 
+             syslog messages."
+        ::= { syslogGroups 1 } 
+
+    syslogServerGroupVer1 OBJECT-GROUP
+        OBJECTS {
+                    syslogConfigSource,
+                    syslogHost,
+                    syslogPort,
+                    syslogSelectConfigSource,
+                    syslogStaticHost,
+                    syslogStaticPort,
+                    syslogDhcpSiteSpecificCode
+                }
+        STATUS current
+        DESCRIPTION
+            "This group holds the minimal set of objects that define 
+             syslog server."
+        ::= { syslogGroups 2 }
+
+
+END

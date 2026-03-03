@@ -1,0 +1,289 @@
+-- ****************************************************************************
+-- ****************************************************************************
+--
+--             Copyright(c) 2004-2005 Mediatrix Telecom, Inc.
+--
+--  NOTICE:
+--   This document contains information that is confidential and proprietary
+--   to Mediatrix Telecom, Inc.
+--
+--   Mediatrix Telecom, Inc. reserves all rights to this document as well as
+--   to the Intellectual Property of the document and the technology and
+--   know-how that it includes and represents.
+--
+--   This publication cannot be reproduced, neither in whole nor in part in
+--   any form whatsoever without written prior approval by
+--   Mediatrix Telecom, Inc.
+--
+--   Mediatrix Telecom, Inc. reserves the right to revise this publication
+--   and make changes at any time and without the obligation to notify any
+--   person and/or entity of such revisions and/or changes.
+--
+-- ****************************************************************************
+-- ****************************************************************************
+
+H32340-MX-MGCPNCS-EXPERIMENTAL-MIB
+DEFINITIONS ::= BEGIN
+
+IMPORTS
+        MODULE-IDENTITY,
+        OBJECT-IDENTITY,
+        OBJECT-TYPE,
+        Unsigned32
+    FROM SNMPv2-SMI
+        OBJECT-GROUP,
+        MODULE-COMPLIANCE
+    FROM SNMPv2-CONF
+        ifIndex
+    FROM RFC1213-MIB
+        MxEnableState
+    FROM MX-TC
+        mediatrixExperimental
+    FROM MX-SMI;
+
+mgcpncsExperimentalMIB MODULE-IDENTITY
+    LAST-UPDATED "200504180000Z"
+    ORGANIZATION "Mediatrix Telecom, Inc."
+    CONTACT-INFO "Mediatrix Telecom, Inc.
+                  4229, Garlock Street
+                  Sherbrooke (Quebec)
+                  Canada
+                  Phone: (819) 829-8749
+                  "
+    DESCRIPTION "This MIB contains MGCP/NCS experimental and interoperability 
+                 configuration objects."
+
+    -- ************************************************************************
+    -- Revision history
+    -- ************************************************************************
+    REVISION    "200504180000Z"
+    DESCRIPTION "Addidtion of mgcpncsMultipleFaxToneDetection and 
+                 mgcpncsConnectRtpSockets"
+    REVISION    "200503070000Z"
+    DESCRIPTION "Addition of the mgcpncsValidateOfferAnswerModel variable"
+    REVISION    "200411080000Z"
+    DESCRIPTION "Creation"
+    ::= { mediatrixExperimental 100 }
+
+mgcpncsExperimentalMIBObjects   OBJECT IDENTIFIER ::= { mgcpncsExperimentalMIB 1 }
+mgcpncsExperimentalConformance  OBJECT IDENTIFIER ::= { mgcpncsExperimentalMIB 2 }
+
+    -- ************************************************************************
+    -- Interopability Group
+    -- ************************************************************************
+    mgcpncsInterop OBJECT IDENTIFIER ::= { mgcpncsExperimentalMIBObjects 5 }
+
+        mgcpncsAnswerStreamFormat OBJECT-TYPE
+            SYNTAX      INTEGER {
+                                 zeroAnswerStream(1),
+                                 removeAnswerStream(10)
+                                }
+            MAX-ACCESS  read-write
+            STATUS      current
+            DESCRIPTION "The answer to an offered session description is based on
+                        the offered session description.
+
+                        RFC 3264 stipulates that to reject an offered stream,
+                        the port number in the corresponding stream in the 
+                        answer MUST be set to zero.
+
+                        However, some gateways prefer to remove the unwanted 
+                        stream from the answer.
+
+                        zeroAnswerStream:
+                            The port number is set to zero if the corresponding
+                            stream in the answer is unwanted.  This behaviour 
+                            follows the RFC 3264 best practice.
+
+                        removeAnswerStream:
+                            The unwanted stream is removed from the answer and
+                            returned to the offerer. This behaviour is kept
+                            for backward compatibility issue."
+            DEFVAL { zeroAnswerStream }
+            ::=  { mgcpncsInterop 5 }
+
+        mgcpncsOriginLineSessionIDAndVersionMaxLength OBJECT-TYPE
+            SYNTAX      INTEGER {
+                                 none(1),
+                                 max-32bits(10),
+                                 max-64bits(20)
+                                }
+            MAX-ACCESS  read-write
+            STATUS      current
+            DESCRIPTION "The maximum length of the session ID and the session 
+                         version number in the origin line (o=) of the SDP.
+
+                         none:
+                            The session ID and the session version number are 
+                            represented by the 0 value.
+
+                         max-32bits:
+                            The session ID and the session version number are 
+                            represented with a 32-bit integer. They have a 
+                            maximum length of 10 digits.
+
+                         max-64bits:
+                            The session ID and the session version number are 
+                            represented with a 64-bit integer. They have a 
+                            maximum length of 20 digits."
+            DEFVAL      { none }
+            ::= { mgcpncsInterop  10 }
+
+        mgcpncsG729AnnexBNegotiation OBJECT-TYPE
+            SYNTAX      MxEnableState
+            MAX-ACCESS  read-write
+            STATUS      current
+            DESCRIPTION "Indicates if the G.729 Annex B is negotiated through
+                         the session description protocol.
+
+                         RFC 3555 (MIME Type Registration of RTP Payload 
+                         Formats), July 2003 explains how the Annex B can be 
+                         negotiated by using the session description protocol.
+
+                         The Annex B indicates that Annex B, voice activity 
+                         detection, is used or preferred. Permissible values 
+                         are 'yes' and 'no' (without the quotes); 'yes' is 
+                         implied if this parameter is omitted.
+
+                         m=audio 5004 RTP/AVP 0 18 13
+                         a=fmtp:18 annexb=yes
+
+                         disable:
+                            The G.729 Annex B is NOT negotiated through the 
+                            session description protocol.
+
+                            In that case, the G.729 Annex B is based on the 
+                            MIB variable voiceIfG729VoiceActivityDetectionEnable.
+                            When this variable is set to 'enable', the G.729 
+                            codec negotiated as payload number 18 (G729) 
+                            supports the Annex B implicitly.
+
+                            However, when the voiceIfG729VoiceActivityDetectionEnable
+                            variable is set to 'disable', the G.729 codec 
+                            negotiated as payload number 18 (G729) does NOT 
+                            support the Annex B implicitly.
+
+                         enable:
+                            The G.729 Annex B is negotiated through the 
+                            session description protocol.
+
+                            In that case, the G.729 Annex B is advertised in
+                            the offer. The value depends on the MIB variable
+                            voiceIfG729VoiceActivityDetectionEnable. If this
+                            variable is set to 'enable', then the Annex B is
+                            set to 'yes'; otherwise, the value 'no' is
+                            advertised.
+
+                            The answerer MAY not be able to support the Annex B.
+                            In that case, the answer to the Annex B can be set
+                            to 'no'.  This forces the offerer not to use the
+                            Annex B in G.729.  However, the opposite is not 
+                            possible.  The answerer can NOT force the offerer to
+                            use the Annex B if this one does not bear such
+                            capability."
+            DEFVAL      { disable }
+            ::= { mgcpncsInterop  15 }
+
+        mgcpncsValidateOfferAnswerModel OBJECT-TYPE
+            SYNTAX      MxEnableState
+            MAX-ACCESS  read-write
+            STATUS      current
+            DESCRIPTION "Enables or disables the Offer/Answer model validation 
+                        of an answer to an offered stream.
+
+                        RFC 3264 stipulates that the answer to an offered 
+                        stream MUST contain at least one codec from amongst 
+                        those listed in the offer (section 6.1).
+
+                        However, some gateways prefer to use a different codec.
+                        They answer with new codecs and they omit to include an 
+                        offered codec in their answer.
+
+                        disable:
+                            The Offer/Answer model IS NOT validated.
+
+                            In that case, the Offer/Answer model is not used in 
+                            the process of validating the answer. This means 
+                            that an answer does not need to contain at least one
+                            codec from amongst those listed in the offer to be 
+                            valid.
+
+                         enable:
+                            The Offer/Answer model IS validated.
+
+                            In this case, the Offer/Answer model is used in the
+                            process of validating the answer. This means that
+                            any answer to an offer MUST contain at least one
+                            codec from amongst those listed in the offer to be
+                            valid."
+            DEFVAL { enable }
+            ::=  { mgcpncsInterop 20 }
+
+    mgcpncsMultipleFaxToneDetection OBJECT-TYPE
+        SYNTAX      MxEnableState
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Controls whether the unit reports more than one occurrence 
+                     of the fax tone during the negotiation phase.  This when
+                     event notification requests can be received after the fax 
+                     tone.
+
+                     disable : when establishing a fax call, the unit only 
+                               reports the first occurrence of the fax tone 
+                               event.
+
+                     enable  : the unit will report every occurrence of the fax 
+                               tone event."
+        DEFVAL { disable }
+        ::=  { mgcpncsInterop 100 }
+
+    mgcpncsConnectRtpSockets OBJECT-TYPE
+        SYNTAX      MxEnableState
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Determines whether the endpoints will listen to RTP sources
+                     other than the one to which they are sending packets.
+
+                     disable : use unconnected sockets.  Endpoints will play any 
+                               RTP packets addressed to them.
+
+                     enable  : use connected sockets.  Endpoints will only play 
+                               packets coming from the address to which they are
+                               sending."
+        DEFVAL { disable }
+        ::=  { mgcpncsInterop 150 }
+
+    -- ************************************************************************
+    -- Conformance information
+    -- ************************************************************************
+    mgcpncsExperimentalCompliances OBJECT IDENTIFIER ::= { mgcpncsExperimentalConformance 1 }
+
+    mgcpncsExperimentalBasicComplVer1 MODULE-COMPLIANCE
+        STATUS      current
+        DESCRIPTION "Minimal definitions for the MGCP/NCS experimental group."
+        MODULE -- This Module
+            MANDATORY-GROUPS {
+                                mgcpncsExperimentalGroupVer1
+                             }
+        ::= { mgcpncsExperimentalCompliances 5 }
+
+    -- ************************************************************************
+    -- MIB variable grouping
+    -- ************************************************************************
+    mgcpncsExperimentalGroups OBJECT IDENTIFIER ::= { mgcpncsExperimentalConformance 2 }
+
+    mgcpncsExperimentalGroupVer1 OBJECT-GROUP
+        OBJECTS {
+                    mgcpncsAnswerStreamFormat,
+                    mgcpncsOriginLineSessionIDAndVersionMaxLength,
+                    mgcpncsG729AnnexBNegotiation,
+                    mgcpncsValidateOfferAnswerModel,
+                    mgcpncsMultipleFaxToneDetection,
+                    mgcpncsConnectRtpSockets
+                }
+        STATUS      current
+        DESCRIPTION "This group holds the objects that define the MGCP/NCS
+                     experimental group."
+        ::= { mgcpncsExperimentalGroups 5 }
+
+END

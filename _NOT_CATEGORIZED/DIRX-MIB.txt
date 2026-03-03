@@ -1,0 +1,381 @@
+----------------------------------------------------------
+-- Systems Management Agent (SMA) SDK module DIRX-MIB
+----------------------------------------------------------
+
+DIRX-MIB DEFINITIONS ::= BEGIN
+
+  IMPORTS
+         enterprises, MODULE-IDENTITY, OBJECT-TYPE, NOTIFICATION-TYPE, Counter64, Integer32, Unsigned32, TimeTicks
+                FROM SNMPv2-SMI
+         OBJECT-GROUP
+                FROM SNMPv2-CONF
+         DisplayString
+               FROM SNMPv2-TC;
+
+dirxMIB MODULE-IDENTITY
+    LAST-UPDATED "200806140000Z" 
+    ORGANIZATION "Atos IT Solutions and Services GmbH"
+    CONTACT-INFO
+        " Atos IT Solutions and Services GmbH
+          Munich Germany"
+    DESCRIPTION
+	" DIRX-LDAP-MIB. This MIB will be used to implement the modules of the DirX-LDAP MIBs."
+    REVISION "200801060000Z"      
+    DESCRIPTION
+       "Clarifications and bug fixes based on implementation experience."             
+    ::= { dirxDirectory 1 }
+
+
+siemens                OBJECT IDENTIFIER ::= { enterprises 4329 }
+products               OBJECT IDENTIFIER ::= { siemens 1 }
+directory              OBJECT IDENTIFIER ::= { products 7 }
+dirxDirectory          OBJECT IDENTIFIER ::= { directory 1 }
+dirxService            OBJECT IDENTIFIER ::= { dirxMIB 3 }
+dirxLdap               OBJECT IDENTIFIER ::= { dirxMIB 4 }
+dirxDsa                OBJECT IDENTIFIER ::= { dirxMIB 5 }
+serviceNotifications   OBJECT IDENTIFIER ::= { dirxService 1 }
+ldapNotifications      OBJECT IDENTIFIER ::= { dirxLdap 1 }
+dsaNotifications       OBJECT IDENTIFIER ::= { dirxDsa 1 }
+notificationObjects    OBJECT IDENTIFIER ::= { dirxDirectory 7 }
+    
+
+-- #################################
+-- Objects in the notification group
+-- #################################
+  
+dirxInfo OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  accessible-for-notify
+    STATUS      current
+    DESCRIPTION
+        "A simple string object, to act as a payload for the dirxNotifications."
+::= { notificationObjects 1 }
+
+-- ########################################
+-- Alerts describing the entire DIRX system
+
+dirxServiceStarted NOTIFICATION-TYPE
+    OBJECTS     { dirxInfo }
+    STATUS      current
+    DESCRIPTION
+        "A DirX notification, sent when DirX is started."
+::= { serviceNotifications 1 } 
+
+dirxServiceStopped NOTIFICATION-TYPE
+    OBJECTS     { dirxInfo }
+    STATUS      current
+    DESCRIPTION
+        "A DirX notification, sent when DirX is regularily stopped."
+::= { serviceNotifications 2 } 
+
+dirxServiceStartFailure NOTIFICATION-TYPE
+    OBJECTS     { dirxInfo }
+    STATUS      current
+    DESCRIPTION
+        "A DirX notification, sent when DirX cannot be started."
+::= { serviceNotifications 3 } 
+
+dirxProcessExit NOTIFICATION-TYPE
+    OBJECTS     { dirxInfo }
+    STATUS      current
+    DESCRIPTION
+        "A DirX notification, sent when a DirX server process exits unexpectedly. No automatic restart."
+::= { serviceNotifications 4 } 
+
+dirxProcessCrash NOTIFICATION-TYPE
+    OBJECTS     { dirxInfo }
+    STATUS      current
+    DESCRIPTION
+        "A DirX notification, sent when a DirX server process crashes and was restarted automatically."
+::= { serviceNotifications 5 } 
+
+dirxProcessStop NOTIFICATION-TYPE
+    OBJECTS     { dirxInfo }
+    STATUS      current
+    DESCRIPTION
+        "A DirX notification, sent when a DIRX server process is stopped regularly."
+::= { serviceNotifications 6 } 
+
+dirxThreadLimitReached NOTIFICATION-TYPE
+    OBJECTS     { dirxInfo }
+    STATUS      current
+    DESCRIPTION
+        "A DirX notification, sent when the configured thread limitation is reached."
+::= { serviceNotifications 7 } 
+
+dirxThreadCreateFailure NOTIFICATION-TYPE
+    OBJECTS     { dirxInfo }
+    STATUS      current
+    DESCRIPTION
+        "A DirX notification, sent when the creation of a new thread fails."
+::= { serviceNotifications 8 } 
+
+dirxDescriptorsExhausted NOTIFICATION-TYPE
+    OBJECTS     { dirxInfo }
+    STATUS      current
+    DESCRIPTION
+        "A DirX notification, sent when a call fails because of file descriptor shortage."
+::= { serviceNotifications 9 } 
+
+dirxCtxLimitExceeded NOTIFICATION-TYPE
+    OBJECTS     { dirxInfo }
+    STATUS      current
+    DESCRIPTION
+        "A DirX notification, sent when a single CTX-memory context exceeds the configured limit."
+::= { serviceNotifications 10 } 
+
+dirxCtxULimitExceeded NOTIFICATION-TYPE
+    OBJECTS     { dirxInfo }
+    STATUS      current
+    DESCRIPTION
+        "A DirX notification, sent when the entire CTX-memory exceeds the configured limit."
+::= { serviceNotifications 11 } 
+
+dirxPduDecodeError NOTIFICATION-TYPE
+    OBJECTS     { dirxInfo }
+    STATUS      current
+    DESCRIPTION
+        "A DirX notification, sent when a received PDU cannot be decoded."
+::= { serviceNotifications 12 } 
+
+ 
+-- #########################################################
+-- Alerts describing specific events in the DirX-LDAP Server
+
+dirxLDAPstartNotification NOTIFICATION-TYPE
+    OBJECTS     { dirxInfo }
+    STATUS      current
+    DESCRIPTION
+        "A DirX notification, sent when the DirX LDAP server starts up."
+::= { ldapNotifications 1 } 
+
+dirxThreadPoolExhausted NOTIFICATION-TYPE
+    OBJECTS     { dirxInfo }
+    STATUS      current
+    DESCRIPTION
+        "A DirX notification, sent when all pool threads are busy."
+::= { ldapNotifications 2 } 
+
+dirxOpStackLimitReached NOTIFICATION-TYPE
+    OBJECTS     { dirxInfo }
+    STATUS      current
+    DESCRIPTION
+        "A DirX notification, sent when server starts rejecting new operations because of too many queued ops."
+::= { ldapNotifications 3 } 
+
+dirxMaxOpDurationExceeded NOTIFICATION-TYPE
+    OBJECTS     { dirxInfo }
+    STATUS      current
+    DESCRIPTION
+        "A DirX notification, sent when the duration of an operation exceeds a critical limit."
+::= { ldapNotifications 4 } 
+
+dirxSendStall NOTIFICATION-TYPE
+    OBJECTS     { dirxInfo }
+    STATUS      current
+    DESCRIPTION
+        "A DirX notification, sent when an operation was cancelled because client did not collect the data within reasonable time."
+::= { ldapNotifications 5 } 
+
+dirxReceiveStall NOTIFICATION-TYPE
+    OBJECTS     { dirxInfo }
+    STATUS      current
+    DESCRIPTION
+        "A DirX notification, sent when an operation was cancelled because client did not send the data within reasonable time."
+::= { ldapNotifications 6 } 
+
+dirxOpTimeWatch NOTIFICATION-TYPE
+    OBJECTS     { dirxInfo }
+    STATUS      current
+    DESCRIPTION
+        "A DirX notification, sent when an operation is detected to be running longer than a configured limit (and still running)."
+::= { ldapNotifications 7 } 
+
+dirxCertExpiry NOTIFICATION-TYPE
+    OBJECTS     { dirxInfo }
+    STATUS      current
+    DESCRIPTION
+        "A DirX notification, sent when the DirX Ldapserver detects that its own SSL keymaterial is due to expire."
+::= { ldapNotifications 8 } 
+
+dirxSslCtxUpdate NOTIFICATION-TYPE
+    OBJECTS     { dirxInfo }
+    STATUS      current
+    DESCRIPTION
+        "A DirX notification, sent when the DirX Ldapserver performs a CRL update due to an LDAP Extended Operation trigger."
+::= { ldapNotifications 9 } 
+
+    
+-- ########################################################
+-- Alerts describing specific events in the DirX-DSA Server
+
+dirxDSAstartNotification NOTIFICATION-TYPE
+    OBJECTS     { dirxInfo }
+    STATUS      current
+    DESCRIPTION
+        "A DirX notification, sent when the DirX DSA starts up."
+::= { dsaNotifications 1 } 
+    
+dirxSwitchPerformed NOTIFICATION-TYPE
+    OBJECTS     { dirxInfo }
+    STATUS      current
+    DESCRIPTION
+        "A DirX notification, sent when a DSA switch was performed."
+::= { dsaNotifications 2 } 
+
+dirxEmergencySwitchPerformed NOTIFICATION-TYPE
+    OBJECTS     { dirxInfo }
+    STATUS      current
+    DESCRIPTION
+        "A DirX notification, sent when a DSA emergency switch was performed."
+::= { dsaNotifications 3 } 
+
+dirxDispFlowCounterCritical NOTIFICATION-TYPE
+    OBJECTS     { dirxInfo }
+    STATUS      current
+    DESCRIPTION
+        "A DirX notification, sent when the DISP flow counters have reached a critical limit."
+::= { dsaNotifications 4 } 
+
+dirxTotalLdifWriteStart NOTIFICATION-TYPE
+    OBJECTS     { dirxInfo }
+    STATUS      current
+    DESCRIPTION
+        "A DirX notification, sent when a total LDIF dump has started."
+::= { dsaNotifications 5 } 
+
+dirxTotalLdifWriteFinished NOTIFICATION-TYPE
+    OBJECTS     { dirxInfo }
+    STATUS      current
+    DESCRIPTION
+        "A DirX notification, sent when a total LDIF dump has finished."
+::= { dsaNotifications 6 } 
+
+dirxLdifWritten NOTIFICATION-TYPE
+    OBJECTS     { dirxInfo }
+    STATUS      current
+    DESCRIPTION
+        "A DirX notification, sent when a new LDIF change-file is written."
+::= { dsaNotifications 7 } 
+
+dirxUnauthorizedAdminAccess NOTIFICATION-TYPE
+    OBJECTS     { dirxInfo }
+    STATUS      current
+    DESCRIPTION
+        "A DirX notification, sent when a Non-DirXAdmin User attempts to bind with dirxadm."
+::= { dsaNotifications 8 } 
+
+dirxAccountLocked NOTIFICATION-TYPE
+    OBJECTS     { dirxInfo }
+    STATUS      current
+    DESCRIPTION
+        "A DirX notification, sent when an Account is locked due to Password Policy."
+::= { dsaNotifications 9 } 
+
+dirxOperationMemoryExceedsLimit NOTIFICATION-TYPE
+    OBJECTS     { dirxInfo }
+    STATUS      current
+    DESCRIPTION
+        "A DirX notification, sent when an operation's memory consumption exceeds a configurable limit."
+::= { dsaNotifications 10 } 
+
+dirxDispAgreementDisabled NOTIFICATION-TYPE
+    OBJECTS     { dirxInfo }
+    STATUS      current
+    DESCRIPTION
+        "A DirX notification, sent when a DISP agreement was disabled by the DSA due to a failure."
+::= { dsaNotifications 11 } 
+
+dirxDispAgreementTerminated NOTIFICATION-TYPE
+    OBJECTS     { dirxInfo }
+    STATUS      current
+    DESCRIPTION
+        "A DirX notification, sent when a DISP agreement was terminated by the DSA due to a failure."
+::= { dsaNotifications 12 } 
+
+dirxDsaOpThreadLimitReached NOTIFICATION-TYPE
+    OBJECTS     { dirxInfo }
+    STATUS      current
+    DESCRIPTION
+        "A DirX notification, sent when the configured thread limitation in the DSA is reached."
+::= { dsaNotifications 13 } 
+
+dirxDsaBindProblem NOTIFICATION-TYPE
+    OBJECTS     { dirxInfo }
+    STATUS      current
+    DESCRIPTION
+        "A DirX notification, sent when a DSA to DSA bind operation failed."
+::= { dsaNotifications 14 } 
+
+dirxDBAMReadError NOTIFICATION-TYPE
+    OBJECTS     { dirxInfo }
+    STATUS      current
+    DESCRIPTION
+        "A DirX notification, sent when a DBAM read error occurred."
+::= { dsaNotifications 15 } 
+
+dirxDBAMWriteError NOTIFICATION-TYPE
+    OBJECTS     { dirxInfo }
+    STATUS      current
+    DESCRIPTION
+        "A DirX notification, sent when a DBAM write error occurred."
+::= { dsaNotifications 16 } 
+
+dirxDBAMDeviceNearLimit NOTIFICATION-TYPE
+    OBJECTS     { dirxInfo }
+    STATUS      current
+    DESCRIPTION
+        "A DirX notification, sent when the utilization of a DBAM logical device is near its size limit."
+::= { dsaNotifications 17 } 
+
+dirxDBAMDeviceNoFreeBlock NOTIFICATION-TYPE
+    OBJECTS     { dirxInfo }
+    STATUS      current
+    DESCRIPTION
+        "A DirX notification, sent when no free block of a DBAM logical device could be allocated."
+::= { dsaNotifications 18 } 
+
+dirxDBAMAvidxNearClusterLimit NOTIFICATION-TYPE
+    OBJECTS     { dirxInfo }
+    STATUS      current
+    DESCRIPTION
+        "A DirX notification, sent when the number of free cluster in the AVIDX device is low."
+::= { dsaNotifications 19 } 
+
+dirxDBAMDeviceNoFreeCluster NOTIFICATION-TYPE
+    OBJECTS     { dirxInfo }
+    STATUS      current
+    DESCRIPTION
+        "A DirX notification, sent when no free cluster in the AVIDX device could be allocated."
+::= { dsaNotifications 20 } 
+
+dirxDBAMPreloadNotLoaded NOTIFICATION-TYPE
+    OBJECTS     { dirxInfo }
+    STATUS      current
+    DESCRIPTION
+        "A DirX notification, sent when DBAM Preload didn't load the database."
+::= { dsaNotifications 21 } 
+
+dirxDispAgreementSync NOTIFICATION-TYPE
+    OBJECTS     { dirxInfo }
+    STATUS      current
+    DESCRIPTION
+        "A DirX notification, sent whenever a DISP agreement changes to synchronized mode."
+::= { dsaNotifications 22 } 
+
+dirxDispAgreementAsync NOTIFICATION-TYPE
+    OBJECTS     { dirxInfo }
+    STATUS      current
+    DESCRIPTION
+        "A DirX notification, sent whenever a DISP agreement changes to unsynchronized mode."
+::= { dsaNotifications 23 } 
+
+
+dirxDBAMDeviceFragmentation NOTIFICATION-TYPE
+    OBJECTS     { dirxInfo }
+    STATUS      current
+    DESCRIPTION
+        "A DirX notification, sent when fragmentation of a DBAM device is high."
+::= { dsaNotifications 24 } 
+END
+

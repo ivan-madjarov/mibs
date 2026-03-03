@@ -1,0 +1,885 @@
+LSI-SAS6160-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+
+    MODULE-IDENTITY, OBJECT-IDENTITY, OBJECT-TYPE, NOTIFICATION-TYPE, Unsigned32
+        FROM SNMPv2-SMI
+
+	DisplayString, DateAndTime
+      FROM SNMPv2-TC
+
+    system
+        FROM RFC1213-MIB
+
+    lsiTcModule, SasAddress
+        FROM LSI-TEXTUAL-CONVENTION-MIB
+
+--     lsiSwitchProducts
+--         FROM LSI-SW-REG-MIB
+		;
+
+
+
+
+-- Creates the lsi node
+--  (1.3.6.1.4.1.3582)
+
+lsiSwitchRegModule MODULE-IDENTITY
+    LAST-UPDATED "201005120000Z"
+    ORGANIZATION "LSI, Corp."
+    CONTACT-INFO "Customer Technical Support
+                  LSI Corporation
+                  Web: www.lsi.com"
+
+    DESCRIPTION "This MIB defines the high level nodes for LSI switch MIBs.
+                 It maintains the high level portion of the LSI switch OID
+                 tree, and is imported by all LSI switch MIBs.
+
+                 Copyright (c) 2010 LSI Corporation."
+
+    REVISION    "201005120000Z" -- 12 MAY 2010
+    DESCRIPTION "Initial revision"
+
+    ::= {enterprises 3582}
+
+-- The lsiSwitchFamily node
+--  (1.3.6.1.4.1.3582.200)
+lsiSwitchFamily OBJECT-IDENTITY
+    STATUS current
+    DESCRIPTION "All production versions of switch product MIBs are organized
+                 under this node.  This list includes SAS switches, traps, and
+                 other switch products.  Other MIBs, such as LSI SAS adapter
+                 and MegaRAID are organized under different nodes (i.e. 4
+                 and 5)."
+    ::= {lsiSwitchRegModule 200}
+
+-- The lsiSwRegistrations node
+--  (1.3.6.1.4.1.3582.200.2)
+lsiSwRegistrations OBJECT-IDENTITY
+    STATUS current
+    DESCRIPTION "All switch products are organized under this node."
+    ::= {lsiSwitchFamily 2}
+
+-- The lsiSwitchProducts node
+--  (1.3.6.1.4.1.3582.200.2.1)
+lsiSwitchProducts OBJECT-IDENTITY
+    STATUS current
+    DESCRIPTION "All current switch products are organized under this node."
+    ::= {lsiSwRegistrations 1}
+
+-- Creates the SAS switch node
+--  (1.3.6.1.4.1.3582.200.2.1)
+
+-- lsiSas6160 MODULE-IDENTITY
+--     LAST-UPDATED "201103250000Z"
+--     ORGANIZATION "LSI, Corp."
+--     CONTACT-INFO "Customer Technical Support
+--                   LSI Corporation
+--                   Web: www.lsi.com"
+-- 
+--     DESCRIPTION "This MIB defines the MIB for the LSI SAS6160 family of SAS
+--                  switches.
+-- 
+--                  Copyright (c) 2010-2011 LSI Corporation."
+-- 
+--     REVISION    "201103250000Z" -- 25 MAR 2011
+--     DESCRIPTION "Obsoleted object lsiSwSfoTtlFoTries."
+--     REVISION    "201005120000Z" -- 12 MAY 2010
+--     DESCRIPTION "Initial revision"
+-- 
+--     ::= {lsiSwitchProducts 1}
+
+lsiSas6160           OBJECT IDENTIFIER ::= { lsiSwitchProducts 1 }
+
+-- The lsiSwSystem node
+--  (1.3.6.1.4.1.3582.200.2.1.1.1)
+lsiSwSystem OBJECT-IDENTITY
+    STATUS current
+    DESCRIPTION "Describes the switch system, including information about the
+                 firmware and boot details."
+    ::= {lsiSas6160 1}
+
+--  ::= {lsiSwSystem 1}     this OID is reserved
+
+-- The lsiSwSysName object
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.2)
+lsiSwSysName OBJECT-TYPE
+    SYNTAX DisplayString (SIZE (0..28))
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Contains the name of the SAS switch as reported in SMP REPORT
+                 MANUFACTURER."
+    ::= {lsiSwSystem 2}
+
+-- The lsiSwSysCurrentTime object
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.3)
+lsiSwSysCurrentTime OBJECT-TYPE
+    SYNTAX DateAndTime
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Contains the current date and time as read from the switch's
+                 real time clock (RTC)."
+    ::= {lsiSwSystem 3}
+
+-- The lsiSwSysBootTime object
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.4)
+lsiSwSysBootTime OBJECT-TYPE
+    SYNTAX DateAndTime
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Contains the date and time that the SAS switch last booted as
+                 read from the switch's real time clock (RTC) at boot time."
+    ::= {lsiSwSystem 4}
+
+-- The lsiSwSysFirmwareInfo node
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.5)
+lsiSwSysFirmwareInfo OBJECT-IDENTITY
+    STATUS current
+    DESCRIPTION "Contains information about all firmware images on the switch."
+    ::= {lsiSwSystem 5}
+
+-- The lsiSwSysFwCurrentVer object
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.5.1.0)
+lsiSwSysFwCurrentVer OBJECT-TYPE
+    SYNTAX DisplayString (SIZE (0..28))
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Displays the current firmware version."
+    ::= {lsiSwSysFirmwareInfo 1}
+
+-- The lsiSwSysFwLastUpdated object
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.5.2.0)
+lsiSwSysFwLastUpdated OBJECT-TYPE
+    SYNTAX DateAndTime
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Displays the last time when the firmware has been updated."
+    ::= {lsiSwSysFirmwareInfo 2}
+
+-- The lsiSwSysFwImageInfo object
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.5.3)
+lsiSwSysFwImageInfo OBJECT-TYPE
+    SYNTAX SEQUENCE OF LsiSwSysFwImageInfoEntry
+    MAX-ACCESS not-accessible
+    STATUS current
+    DESCRIPTION "Table contaning information about the bootloader, primary 
+                 and backup firmware images."
+    ::= {lsiSwSysFirmwareInfo 3}
+
+-- The lsiSwSysFwImageInfoEntry object
+-- (1.3.6.1.4.1.3582.200.2.1.1.1.5.3.1)
+lsiSwSysFwImageInfoEntry OBJECT-TYPE
+    SYNTAX LsiSwSysFwImageInfoEntry
+    MAX-ACCESS not-accessible
+    STATUS current
+    DESCRIPTION "An entry in lsiSwSysFwImageInfo table."
+    INDEX {lsiSwSysFwImage}
+    ::= {lsiSwSysFwImageInfo 1}
+
+
+LsiSwSysFwImageInfoEntry ::=
+   SEQUENCE {
+      lsiSwSysFwImage      INTEGER,
+      lsiSwSysFwVersion    DisplayString,
+      lsiSwSysFwValid      INTEGER,
+      lsiSwSysFwActive     INTEGER
+   }
+
+-- The lsiSwSysFwImage object
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.5.3.1.1)
+lsiSwSysFwImage OBJECT-TYPE
+    SYNTAX INTEGER { bootloader(1),
+                     primary(2),
+                     backup(3) }
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Table index indicating firmware region."
+    ::= {lsiSwSysFwImageInfoEntry 1}
+
+-- The lsiSwSysFwVersion object
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.5.3.1.2)
+lsiSwSysFwVersion OBJECT-TYPE
+    SYNTAX DisplayString (SIZE (0..28))
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Firmware version."
+    ::= {lsiSwSysFwImageInfoEntry 2}
+
+-- The lsiSwSysFwValid object
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.5.3.1.3)
+lsiSwSysFwValid OBJECT-TYPE
+    SYNTAX INTEGER  { false(0),
+                      true(1) }
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Verify if the firmware checksum is valid."
+    ::= {lsiSwSysFwImageInfoEntry 3}
+
+-- The lsiSwSysFwActive object
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.5.3.1.4)
+lsiSwSysFwActive OBJECT-TYPE
+    SYNTAX INTEGER  { false(0),
+                      true(1) }
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Verify if the firmware is currently active."
+    ::= {lsiSwSysFwImageInfoEntry 4}
+
+
+-- The lsiSwHardwareConfig node
+--  (1.3.6.1.4.1.3582.200.2.1.1.2)
+lsiSwHardwareConfig OBJECT-IDENTITY
+    STATUS current
+    DESCRIPTION "Describes the hardware configuration for this specific switch
+                 model."
+    ::= {lsiSas6160 2}
+
+-- The lsiSwHwcNumPhys object
+--  (1.3.6.1.4.1.3582.200.2.1.1.2.1)
+lsiSwHwcNumPhys OBJECT-TYPE
+    SYNTAX INTEGER (0..255)
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Returns the number of external, physical phys on this switch."
+    ::= {lsiSwHardwareConfig 1}
+
+-- The lsiSwHwcNumConnectors object
+--  (1.3.6.1.4.1.3582.200.2.1.1.2.2)
+lsiSwHwcNumConnectors OBJECT-TYPE
+    SYNTAX INTEGER (0..255)
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Returns the number of external connectors on this switch.
+                 Since a connector can be composed of more than one phy, this
+                 value will typically be different than lsiSwHwcNumPhys."
+    ::= {lsiSwHardwareConfig 2}
+
+
+-- The lsiSwConfig node
+--  (1.3.6.1.4.1.3582.200.2.1.1.3)
+lsiSwConfig OBJECT-IDENTITY
+    STATUS current
+    DESCRIPTION "Describes the configuration of this switch.  This describes
+                 manufacturing or soft settings in the switch, as opposed to
+                 the lsiSwHardwareConfig node, which describes the hardware
+                 configuration."
+    ::= {lsiSas6160 3}
+
+-- The lsiSwStaticConfig node
+--  (1.3.6.1.4.1.3582.200.2.1.1.3.1)
+lsiSwStaticConfig OBJECT-IDENTITY
+    STATUS current
+    DESCRIPTION "Describes settings (typically manufacturing settings) that
+                 cannot be changed."
+    ::= {lsiSwConfig 1}
+
+-- The lsiSwScbBase node
+--  (1.3.6.1.4.1.3582.200.2.1.1.3.1.1)
+lsiSwScbBase OBJECT-IDENTITY
+    STATUS current
+    DESCRIPTION "Basic switch settings."
+    ::= {lsiSwStaticConfig 1}
+
+-- The lsiSwScbSasAddress object
+--  (1.3.6.1.4.1.3582.200.2.1.1.3.1.1.1)
+lsiSwScbSasAddress OBJECT-TYPE
+    SYNTAX SasAddress
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Returns the SAS address of this switch.  This SAS address is a
+                 globally unique number assigned to this switch, that can be
+                 used to identify it in a SAS domain."
+    ::= {lsiSwScbBase 1}
+
+-- The lsiSwScbVendor object
+--  (1.3.6.1.4.1.3582.200.2.1.1.3.1.1.2)
+lsiSwScbVendor OBJECT-TYPE
+    SYNTAX DisplayString (SIZE(0..8))
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Returns the VENDOR ID string as reported in SMP REPORT
+                 MANUFACTURER."
+    ::= {lsiSwScbBase 2}
+
+-- The lsiSwScbProduct object
+--  (1.3.6.1.4.1.3582.200.2.1.1.3.1.1.3)
+lsiSwScbProduct OBJECT-TYPE
+    SYNTAX DisplayString (SIZE(0..16))
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Returns the PRODUCT ID string as reported in SMP REPORT
+                 MANUFACTURER."
+    ::= {lsiSwScbBase 3}
+
+-- The lsiSwScbRevision object
+--  (1.3.6.1.4.1.3582.200.2.1.1.3.1.1.4)
+lsiSwScbRevision OBJECT-TYPE
+    SYNTAX DisplayString (SIZE(0..4))
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Returns the PRODUCT REVISION LEVEL string that is reported in
+                 SMP REPORT MANUFACTURER."
+    ::= {lsiSwScbBase 4}
+
+
+-- The lsiSwStatus node
+--  (1.3.6.1.4.1.3582.200.2.1.1.5)
+lsiSwStatus OBJECT-IDENTITY
+    STATUS current
+    DESCRIPTION "The current status of the switch firmware."
+    ::= {lsiSas6160 5}
+
+-- The lsiSwStatFailover node
+--  (1.3.6.1.4.1.3582.200.2.1.1.5.1)
+lsiSwStatFailover OBJECT-IDENTITY
+    STATUS current
+    DESCRIPTION "Contains the current status of the switch's expander failover
+                 capability."
+    ::= {lsiSwStatus 1}
+
+-- The lsiSfoCurrentState object
+--  (1.3.6.1.4.1.3582.200.2.1.1.5.1.1)
+lsiSfoCurrentState OBJECT-TYPE
+    SYNTAX INTEGER { operational(0),
+                     degraded(1),
+                     failed(2) }
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Reports the current state of the switch.  See the following
+                 table for addition detail:
+                    o operational(0) - The healthy state of the switch.
+                    o degraded(1) - Means that the switch has one expander that
+                    has failed.
+                    o failed(2) - Means that the switch is no longer working
+                    correctly."
+    ::= {lsiSwStatFailover 1}
+
+-- The lsiSfoLastFoRsn object
+--  (1.3.6.1.4.1.3582.200.2.1.1.5.1.2)
+lsiSfoLastFoRsn OBJECT-TYPE
+    SYNTAX INTEGER { noFailover(1),
+                     heartbeatExpiration(3),
+                     partnerReset(4),
+                     initPartnerNotReady(5),
+                     initPartnerNotInit(6),
+                     initPartnerNoPhyEnable(7),
+                     initPartnerNoVerInfo(8),
+                     initPartnerVerMismatch(9),
+                     initPartnerExcluded(10),
+                     ielBroadcast(11),
+                     semaphoreFailed(12) }
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Reports the reason for the last expander failover operation.
+                 In many cases, the switch will recover from this failover and
+                 lsiSfoCurrentState will report operational(1).  The following
+                 outlines the reasons for these failover operations:
+                    o noFailover(1) - There has not been a failover operation
+                        since the last reset.
+                    o heartbeatExpiration(3) - The switch has missed a series of
+                        heartbeats, and the heartbeat timer has expired.
+                    o partnerReset(4) - The partner expnader reset on its own.
+                    o initPartnerNotReady(5) - The partner expander did not
+                        reach the ready state during initialization.
+                    o initPartnerNotInit(6) - The partner expander did not
+                        reach the initializing state during initialization.
+                    o initPartnerNoPhyEnable(7) - During initialization, the
+                        partner failed to enable its phys.
+                    o initPartnerNoVerInfo(8) - The partner did not send its
+                        version information during initialization.
+                    o initPartnerVerMismatch(9) - The partner failed to
+                        synchronize its version information during
+                        initialization.
+                    o initPartnerExcluded(10) - The partner was held in
+                        failover because it is marked as permanently failed in
+                        the failover config page.
+                    o ielBroadcast(11) - A broadcast has been received on the
+                        IELs, which indicates that they have changed state.
+                    o semaphoreFailed(12) - The expander failed to secure the
+                        shared memory semaphore."
+    ::= {lsiSwStatFailover 2}
+
+-- The lsiSwSfoTtlFoTries object
+--  (1.3.6.1.4.1.3582.200.2.1.1.5.1.3)
+lsiSwSfoTtlFoTries OBJECT-TYPE
+    SYNTAX INTEGER (0..2147483647)
+    MAX-ACCESS read-only
+    STATUS obsolete
+    DESCRIPTION "This object is no longer used."
+    ::= {lsiSwStatFailover 3}
+
+-- The lsiSwStatInitialization node
+--  (1.3.6.1.4.1.3582.200.2.1.1.5.2)
+lsiSwStatInitialization OBJECT-IDENTITY
+    STATUS current
+    DESCRIPTION "Contains the status of the firmware's last initialization."
+    ::= {lsiSwStatus 2}
+
+-- The lsiSinitStatus object
+--  (1.3.6.1.4.1.3582.200.2.1.1.5.2.1)
+lsiSinitStatus OBJECT-TYPE
+    SYNTAX INTEGER { reset(0),
+                     initializing(1),
+                     ready(2),
+                     operational(3),
+                     fault(4),
+                     reducedResponse(5),
+                     invalid(15) }
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Reports the status of the firmware's last initialization.
+                 This may be updated as changes happen in the firmware
+                 state.  See the following table for more information:
+                    o reset(0) - The switch is in reset.
+                    o initializing(1) - The switch is initializing its firmware
+                        and hardware.
+                    o ready(2) - The switch is done initializing and ready to
+                        transition to the operational state.
+                    o operational(3) - The switch is operational and healthy.
+                    o fault(4) - The switch is in the fault state.
+                    o reducedResponse(5) - The switch has a problem that has
+                        reduced the services that it provides.  This is
+                        typically a degraded state.
+                    o invalid(15) - This state is invalid."
+    ::= {lsiSwStatInitialization 1}
+
+
+-- Traps definitions
+
+-- The lsiSwEvents node
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.10)
+lsiSwEvents OBJECT-IDENTITY
+    STATUS current
+    DESCRIPTION "Contains all switch enterprise traps."
+    ::= {lsiSwSystem 10}
+
+-- The lsiSwEvtList node
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.10.0)
+lsiSwEvtList OBJECT-IDENTITY
+    STATUS current
+    DESCRIPTION "Node containing all switch traps."
+    ::= {lsiSwEvents 0}
+
+-- The lsiSwEvtControl node
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.10.1)
+lsiSwEvtControl OBJECT-IDENTITY
+    STATUS current
+    DESCRIPTION "Node containing trap controls."
+    ::= {lsiSwEvents 1}
+
+-- The lsiSwEvtDescriptors node
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.10.2)
+lsiSwEvtDescriptors OBJECT-IDENTITY
+    STATUS current
+    DESCRIPTION "Textual conventions for additional event details."
+    ::= {lsiSwEvents 2}
+
+-- The lsiSwEvtDescSeverity object
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.10.2.1)
+lsiSwEvtDescSeverity OBJECT-TYPE
+    SYNTAX INTEGER { unknown(0),
+                     info(1),
+                     warning(2),
+                     critical(3) }
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Trap severity text description."
+    ::= {lsiSwEvtDescriptors 1}
+
+
+-- The lsiSwEvtParams node
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.10.3)
+lsiSwEvtParams OBJECT-IDENTITY
+    STATUS current
+    DESCRIPTION "Node for enterprise parameters."
+    ::= {lsiSwEvents 3}
+
+
+-- The lsiSwExpResetEvt trap
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.10.0.10)
+lsiSwExpResetEvt NOTIFICATION-TYPE
+   OBJECTS { lsiSwEvtDescSeverity,
+             lsiSwExpResetReason  }
+   STATUS current
+   DESCRIPTION "Fires when the partner expander is reset.  
+                Because the switch only supports 
+                SNMP from the master, this event only fires when 
+                the master resets the slave expander.  Includes 
+                a parameter that indicates why the partner was 
+                determined to be failed."
+   ::= {lsiSwEvtList 10}
+
+-- The lsiSwExpResetEvtParams node
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.10.3.10)
+lsiSwExpResetEvtParams OBJECT-IDENTITY
+    STATUS current
+    DESCRIPTION "Expander reset event parameters."
+    ::= {lsiSwEvtParams 10}
+
+-- The lsiSwExpResetReason object
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.10.3.10.1)
+lsiSwExpResetReason OBJECT-TYPE
+    SYNTAX INTEGER { unknown(0),
+                     firmwareUpdate(1),
+                     oemReset(2),
+                     failover(3),
+                     sesScheduledPowerCycle(4),
+                     cliReset(5) }
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Reason for partner expander reset"
+    ::= {lsiSwExpResetEvtParams 1}
+
+
+-- The lsiSwExpPermFailedEvt trap
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.10.0.11)
+lsiSwExpPermFailedEvt NOTIFICATION-TYPE
+   OBJECTS { lsiSwEvtDescSeverity }
+   STATUS current
+   DESCRIPTION "Fires when the partner expander is held in reset, 
+                i.e. the permanently failed state. Because the switch only 
+                supports SNMP from the master, this event only fires when 
+                the master holds the slave expander in permanently failed."
+   ::= {lsiSwEvtList 11}
+
+
+
+-- The lsiSwPortFailedEvt trap
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.10.0.20)
+lsiSwPortFailedEvt NOTIFICATION-TYPE
+   OBJECTS { lsiSwEvtDescSeverity,
+             lsiSwFailedPortNumber,
+             lsiSwFailedPrevPortStatus,
+             lsiSwFailedCurrentPortStatus  }
+   STATUS current
+   DESCRIPTION "Fires when the switch detects a change in the port configuration. 
+                This will be when a port state changes, when a connector is split 
+                or combined, or when a connected SAS address changes. This will 
+                fire every time a cable is unplugged or plugged in.  However, it 
+                will not fire in response to an event that generates 
+                lsiSwPortFailedEvt.  This event includes the port number, new port 
+                status, and attached SAS address as parameters."
+   ::= {lsiSwEvtList 20}
+
+-- The lsiSwPortFailedParams node
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.10.3.20)
+lsiSwPortFailedParams OBJECT-IDENTITY
+    STATUS current
+    DESCRIPTION "Node that holds port failed event parameters."
+    ::= {lsiSwEvtParams 20}
+
+-- The lsiSwFailedPortNumber object
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.10.3.20.1)
+lsiSwFailedPortNumber OBJECT-TYPE
+    SYNTAX INTEGER (0..255)
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Port number"
+    ::= {lsiSwPortFailedParams 1}
+
+-- The lsiSwFailedPrevPortStatus object
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.10.3.20.2)
+lsiSwFailedPrevPortStatus OBJECT-TYPE
+    SYNTAX DisplayString (SIZE(0..255))
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Previous Port status"
+    ::= {lsiSwPortFailedParams 2}
+
+-- The lsiSwFailedCurrentPortStatus object
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.10.3.20.3)
+lsiSwFailedCurrentPortStatus OBJECT-TYPE
+    SYNTAX DisplayString (SIZE(0..255))
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Current Port status"
+    ::= {lsiSwPortFailedParams 3}
+
+
+
+-- The lsiSwPortChangedEvt trap
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.10.0.21)
+lsiSwPortChangedEvt NOTIFICATION-TYPE
+   OBJECTS { lsiSwEvtDescSeverity,
+             lsiSwChangedPortNumber,
+             lsiSwChangedPrevPortStatus,
+             lsiSwChangedCurrentPortStatus  }
+   STATUS current
+   DESCRIPTION "Fires when the switch detects a change in the port configuration. 
+                This will be when a port state changes, when a connector is split 
+                or combined, or when a connected SAS address changes. This will 
+                fire every time a cable is unplugged or plugged in.  However, it 
+                will not fire in response to an event that generates 
+                lsiSwPortFailedEvt.  This event includes the port number, new port 
+                status, and attached SAS address as parameters."
+   ::= {lsiSwEvtList 21}
+
+-- The lsiSwPortChangedEvtParams node
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.10.3.21)
+lsiSwPortChangedEvtParams OBJECT-IDENTITY
+    STATUS current
+    DESCRIPTION "Port changed event parameters."
+    ::= {lsiSwEvtParams 21}
+
+-- The lsiSwChangedPortNumber object
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.10.3.21.1)
+lsiSwChangedPortNumber OBJECT-TYPE
+    SYNTAX INTEGER (0..255)
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Port number"
+    ::= {lsiSwPortChangedEvtParams 1}
+
+-- The lsiSwChangedPrevPortStatus object
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.10.3.21.2)
+lsiSwChangedPrevPortStatus OBJECT-TYPE
+    SYNTAX DisplayString (SIZE(0..255))
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Previous Port status"
+    ::= {lsiSwPortChangedEvtParams 2}
+
+-- The lsiSwChangedCurrentPortStatus object
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.10.3.21.3)
+lsiSwChangedCurrentPortStatus OBJECT-TYPE
+    SYNTAX DisplayString (SIZE(0..255))
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Current Port status"
+    ::= {lsiSwPortChangedEvtParams 3}
+
+
+
+-- The lsiSwChsCoolingEvt trap
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.10.0.100)
+lsiSwChsCoolingEvt NOTIFICATION-TYPE
+   OBJECTS { lsiSwEvtDescSeverity,
+             lsiSwChsCoolingElId,
+             lsiSwChsCoolingPrevStatus,
+             lsiSwChsCoolingCurrentStatus,
+             lsiSwChsCoolingCurrentRPM  }
+   STATUS current
+   DESCRIPTION "Fires when the switch detects that the chassis cooling element 
+                has crossed a threshold."
+   ::= {lsiSwEvtList 100}
+
+-- The lsiSwChsCoolingEvtParams node
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.10.3.100)
+lsiSwChsCoolingEvtParams OBJECT-IDENTITY
+    STATUS current
+    DESCRIPTION "Chassis cooling element event parameters."
+    ::= {lsiSwEvtParams 100}
+
+-- The lsiSwChsCoolingElId object
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.10.3.100.1)
+lsiSwChsCoolingElId OBJECT-TYPE
+    SYNTAX INTEGER (0..255)
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Cooling element ID"
+    ::= {lsiSwChsCoolingEvtParams 1}
+
+-- The lsiSwChsCoolingPrevStatus object
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.10.3.100.2)
+lsiSwChsCoolingPrevStatus OBJECT-TYPE
+    SYNTAX DisplayString (SIZE(0..255))
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Cooling element previous status"
+    ::= {lsiSwChsCoolingEvtParams 2}
+
+-- The lsiSwChsCoolingCurrentStatus object
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.10.3.100.3)
+lsiSwChsCoolingCurrentStatus OBJECT-TYPE
+    SYNTAX DisplayString (SIZE(0..255))
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Cooling element current status"
+    ::= {lsiSwChsCoolingEvtParams 3}
+
+-- The lsiSwChsCoolingCurrentRPM object
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.10.3.100.4)
+lsiSwChsCoolingCurrentRPM OBJECT-TYPE
+    SYNTAX INTEGER (0..255)
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Cooling element RPM"
+    ::= {lsiSwChsCoolingEvtParams 4}
+
+
+
+-- The lsiSwChsConnectorElEvt trap
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.10.0.110)
+lsiSwChsConnectorElEvt NOTIFICATION-TYPE
+   OBJECTS { lsiSwEvtDescSeverity,
+             lsiSwChsConnectorElId,
+             lsiSwChsConnectorPrevStatus,
+             lsiSwChsConnectorCurrentStatus,
+             lsiSwChsConnectorNumber  }
+   STATUS current
+   DESCRIPTION "Fires when a connector element has changed.  Includes the 
+                connector number as a parameter.  This event is triggered 
+                as part of the SES monitoring."
+   ::= {lsiSwEvtList 110}
+
+-- The lsiSwChsConnectorElParams node
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.10.3.110)
+lsiSwChsConnectorElParams OBJECT-IDENTITY
+    STATUS current
+    DESCRIPTION "Chassis connector element event parameters."
+    ::= {lsiSwEvtParams 110}
+
+-- The lsiSwChsConnectorElId object
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.10.3.110.1)
+lsiSwChsConnectorElId OBJECT-TYPE
+    SYNTAX INTEGER (0..255)
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Connector element ID"
+    ::= {lsiSwChsConnectorElParams 1}
+
+-- The lsiSwChsConnectorPrevStatus object
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.10.3.110.2)
+lsiSwChsConnectorPrevStatus OBJECT-TYPE
+    SYNTAX DisplayString (SIZE(0..255))
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Connector element previous status"
+    ::= {lsiSwChsConnectorElParams 2}
+
+-- The lsiSwChsConnectorCurrentStatus object
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.10.3.110.3)
+lsiSwChsConnectorCurrentStatus OBJECT-TYPE
+    SYNTAX DisplayString (SIZE(0..255))
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Connector element current status"
+    ::= {lsiSwChsConnectorElParams 3}
+
+-- The lsiSwChsConnectorNumber object
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.10.3.110.4)
+lsiSwChsConnectorNumber OBJECT-TYPE
+    SYNTAX INTEGER (0..255)
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Connector number"
+    ::= {lsiSwChsConnectorElParams 4}
+
+
+
+-- The lsiSwChsVoltageSnsEvt trap
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.10.0.140)
+lsiSwChsVoltageSnsEvt NOTIFICATION-TYPE
+   OBJECTS { lsiSwEvtDescSeverity,
+             lsiSwChsVoltageSnsId,
+             lsiSwChsVoltageSnsPrevStatus,
+             lsiSwChsVoltageSnsCurrentStatus,
+             lsiSwChsVoltage  }
+   STATUS current
+   DESCRIPTION "Fires when the switch detects that the chassis voltage sensor 
+                has crossed a threshold."
+   ::= {lsiSwEvtList 140}
+
+-- The lsiSwChsVoltageSnsParams node
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.10.3.140)
+lsiSwChsVoltageSnsParams OBJECT-IDENTITY
+    STATUS current
+    DESCRIPTION "Chassis voltage sensor event parameters."
+    ::= {lsiSwEvtParams 140}
+
+-- The lsiSwChsVoltageSnsId object
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.10.3.140.1)
+lsiSwChsVoltageSnsId OBJECT-TYPE
+    SYNTAX INTEGER (0..255)
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Voltage sensor ID"
+    ::= {lsiSwChsVoltageSnsParams 1}
+
+-- The lsiSwChsVoltageSnsPrevStatus object
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.10.3.140.2)
+lsiSwChsVoltageSnsPrevStatus OBJECT-TYPE
+    SYNTAX DisplayString (SIZE(0..255))
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Voltage sensor previous status"
+    ::= {lsiSwChsVoltageSnsParams 2}
+
+-- The lsiSwChsVoltageSnsCurrentStatus object
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.10.3.140.3)
+lsiSwChsVoltageSnsCurrentStatus OBJECT-TYPE
+    SYNTAX DisplayString (SIZE(0..255))
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Voltage sensor current status"
+    ::= {lsiSwChsVoltageSnsParams 3}
+
+-- The lsiSwChsVoltage object
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.10.3.140.4)
+lsiSwChsVoltage OBJECT-TYPE
+    SYNTAX INTEGER (0..255)
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Current voltage"
+    ::= {lsiSwChsVoltageSnsParams 4}
+
+
+
+-- The lsiSwChsTemperatureSnsEvt trap
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.10.0.150)
+lsiSwChsTemperatureSnsEvt NOTIFICATION-TYPE
+   OBJECTS { lsiSwEvtDescSeverity,
+             lsiSwChsTemperatureSnsId,
+             lsiSwChsTemperatureSnsPrevStatus,
+             lsiSwChsTemperatureSnsCurrentStatus,
+             lsiSwChsTemperatureSnsTemperature  }
+   STATUS current
+   DESCRIPTION "Fires when the switch detects that the chassis temperature sensor has 
+                crossed a threshold. The event includes the new temperature (in degrees 
+                Celsius) as a parameter."
+   ::= {lsiSwEvtList 150}
+
+-- The lsiSwChsTemperatureSnsParams node
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.10.3.150)
+lsiSwChsTemperatureSnsParams OBJECT-IDENTITY
+    STATUS current
+    DESCRIPTION "Chassis temperature sensor event parameters."
+    ::= {lsiSwEvtParams 150}
+
+-- The lsiSwChsTemperatureSnsId object
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.10.3.150.1)
+lsiSwChsTemperatureSnsId OBJECT-TYPE
+    SYNTAX INTEGER (0..255)
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Temperature sensor ID"
+    ::= {lsiSwChsTemperatureSnsParams 1}
+
+-- The lsiSwChsTemperatureSnsPrevStatus object
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.10.3.150.2)
+lsiSwChsTemperatureSnsPrevStatus OBJECT-TYPE
+    SYNTAX DisplayString (SIZE(0..255))
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Temperature sensor previous status"
+    ::= {lsiSwChsTemperatureSnsParams 2}
+
+-- The lsiSwChsTemperatureSnsCurrentStatus object
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.10.3.150.3)
+lsiSwChsTemperatureSnsCurrentStatus OBJECT-TYPE
+    SYNTAX DisplayString (SIZE(0..255))
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Temperature sensor current status"
+    ::= {lsiSwChsTemperatureSnsParams 3}
+
+-- The lsiSwChsTemperatureSnsTemperature object
+--  (1.3.6.1.4.1.3582.200.2.1.1.1.10.3.150.4)
+lsiSwChsTemperatureSnsTemperature OBJECT-TYPE
+    SYNTAX INTEGER (-100..200)
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Current temperature"
+    ::= {lsiSwChsTemperatureSnsParams 4}
+
+END

@@ -1,0 +1,16 @@
+HP-ICF-VRRP-MIB,1.3.6.1.4.1.11.2.14.11.5.1.31,hpicfVrrpMIB,""200507140000Z"   -- JULY 14, 2005",READ-ONLY,"Hewlett Packard Company 8000 Foothills Blvd. Roseville, CA 95747"
+HP-ICF-VRRP-MIB,1.3.6.1.4.1.11.2.14.11.5.1.31.1,hpicfVrrpOperations,"OBJECT IDENTIFIER",READ-ONLY,
+HP-ICF-VRRP-MIB,1.3.6.1.4.1.11.2.14.11.5.1.31.1.1,hpicfVrrpAdminStatus,INTEGER,READ-WRITE,"When set to TRUE, this enables VRRP globally on the router. If set to FALSE, this would disable VRRP. Default is FALSE."
+HP-ICF-VRRP-MIB,1.3.6.1.4.1.11.2.14.11.5.1.31.1.2,hpicfVrrpOperTable,"SEQUENCE OF HPICFVRRPOPERENTRY",NOT-ACCESSIBLE,"HP extensions to the vrrpOperTable (RFC 2787)."
+HP-ICF-VRRP-MIB,1.3.6.1.4.1.11.2.14.11.5.1.31.1.2.1,hpicfVrrpOperEntry,SEQUENCE,NOT-ACCESSIBLE,"HP extensions for an entry in the vrrpOperTable."
+HP-ICF-VRRP-MIB,1.3.6.1.4.1.11.2.14.11.5.1.31.1.2.1.1,hpicfVrrpVrMode,INTEGER,READ-CREATE,"This object denotes whether this VR has been designated as an owner or as a backup. On VR creation, this field is set to uninitialized. The user cannot set the value of this object to uninitialized."
+HP-ICF-VRRP-MIB,1.3.6.1.4.1.11.2.14.11.5.1.31.1.2.1.2,hpicfVrrpVrMasterPreempt,INTEGER,READ-CREATE,"This object, when set to TRUE, would enable the Master Preemption mode wherein a virtual router even though an owner will not preempt a lower priority Backup."
+HP-ICF-VRRP-MIB,1.3.6.1.4.1.11.2.14.11.5.1.31.1.2.1.3,hpicfVrrpVrTransferControl,INTEGER,READ-CREATE,"This object, when set to TRUE, would serve as trigger to enable a virtual router owner to take control of its IP address. When this value is read it always returns FALSE."
+HP-ICF-VRRP-MIB,1.3.6.1.4.1.11.2.14.11.5.1.31.1.3,hpicfVrrpAssoIpAddrTable,"SEQUENCE OF HPICFVRRPASSOIPADDRENTRY",NOT-ACCESSIBLE,"HP extensions to the vrrpAssoIpAddrTable (RFC 2787)."
+HP-ICF-VRRP-MIB,1.3.6.1.4.1.11.2.14.11.5.1.31.1.3.1,hpicfVrrpAssoIpAddrEntry,SEQUENCE,NOT-ACCESSIBLE,"HP extensions for an entry in the vrrpAssoIpAddrTable."
+HP-ICF-VRRP-MIB,1.3.6.1.4.1.11.2.14.11.5.1.31.1.3.1.1,hpicfVrrpAssoIpMask,IPADDRESS,READ-CREATE,"The subnet mask to be used in conjunction with the 'vrrpAssoIpAddr' object to uniquely identify a subnet."
+HP-ICF-VRRP-MIB,1.3.6.1.4.1.11.2.14.11.5.1.31.2,hpicfVrrpConformance,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-VRRP-MIB,1.3.6.1.4.1.11.2.14.11.5.1.31.2.1,hpicfVrrpMIBCompliances,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-VRRP-MIB,1.3.6.1.4.1.11.2.14.11.5.1.31.2.1.1,hpicfVrrpMIBCompliance,MODULE-COMPLIANCE,READ-CREATE,"The compliance statement for HP routers running VRRP (RFC 3768) and implementing the HP-ICF-VRRP-MIB."
+HP-ICF-VRRP-MIB,1.3.6.1.4.1.11.2.14.11.5.1.31.2.2,hpicfVrrpMIBGroups,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-VRRP-MIB,1.3.6.1.4.1.11.2.14.11.5.1.31.2.2.1,hpicfVrrpOperGroup,OBJECT-GROUP,READ-CREATE,"A collection of HP proprietary objects to support VRRP configuration on HP routers."

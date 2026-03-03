@@ -1,0 +1,531 @@
+-- ****************************************************************************
+-- ****************************************************************************
+--             Copyright(c) 2004 Mediatrix Telecom, Inc.
+--  NOTICE:
+--   This document contains information that is confidential and proprietary
+--   to Mediatrix Telecom, Inc.
+--   Mediatrix Telecom, Inc. reserves all rights to this document as well as
+--   to the Intellectual Property of the document and the technology and
+--   know-how that it includes and represents.
+--   This publication cannot be reproduced, neither in whole nor in part in
+--   any form whatsoever without written prior approval by
+--   Mediatrix Telecom, Inc.
+--   Mediatrix Telecom, Inc. reserves the right to revise this publication
+--   and make changes at any time and without the obligation to notify any
+--   person and/or entity of such revisions and/or changes.
+-- ****************************************************************************
+-- ****************************************************************************
+  
+SEC10-MX-SIPALG-MIB
+DEFINITIONS ::= BEGIN
+
+IMPORTS
+        MODULE-IDENTITY,
+        OBJECT-TYPE,
+        Unsigned32
+    FROM SNMPv2-SMI
+        MODULE-COMPLIANCE,
+        OBJECT-GROUP
+    FROM SNMPv2-CONF
+        MxEnableState,
+        MxActivationState,
+        MxIpHostName,
+        MxIpPort,
+        MxAdvancedIpPort,
+        MxIpSubnetMask,
+        MxDigitMap
+    FROM MX-TC
+        MxUInt64,
+        MxFloat32,
+        MxIpHostNamePort,
+        MxIpAddr,
+        MxIpAddrPort,
+        MxIpAddrMask,
+        MxUri,
+        MxUrl
+    FROM MX-TC2
+        mediatrixServices       
+    FROM MX-SMI2;
+
+sipAlgMIB MODULE-IDENTITY                                                   
+    LAST-UPDATED    "0509210000Z"                                           
+    ORGANIZATION  " Mediatrix Telecom, Inc. "                               
+    CONTACT-INFO  " Mediatrix Telecom, Inc.                                 
+                    4229, Garlock Street                                    
+                    Sherbrooke (Quebec)                                     
+                    Canada                                                  
+                    Phone: (819) 829-8749                                   
+                    "                                                       
+    DESCRIPTION   " SIP Application Level Gateway                           
+                                                                            
+                    This service allows SIP communication across a firewall.
+                    "                                                       
+    -- **********************************************************************
+                                                                            
+    -- Revision history                                                     
+                                                                            
+    -- **********************************************************************
+    REVISION        "0509210000Z"                                           
+    DESCRIPTION   " Initial Revision "                                      
+    ::= { mediatrixServices 2100 }                                          
+
+sipAlgMIBObjects OBJECT IDENTIFIER ::= { sipAlgMIB 1 }
+
+-- Scalar:  Listening Network Interface                                        
+                                                                               
+listeningNetworkInterface OBJECT-TYPE                                          
+    SYNTAX        OCTET STRING                                                 
+    MAX-ACCESS    read-write                                                   
+    STATUS        current                                                      
+    DESCRIPTION " Listening Network Interface                                  
+                                                                               
+                  The network interface on which the SIP ALG receives and sends
+                  SIP messages.                                                
+                  "                                                            
+    DEFVAL        { "Lan1" }                                                   
+    ::= { sipAlgMIBObjects 100 }                                               
+
+-- Scalar:  IP Port                                                
+                                                                   
+listenPort OBJECT-TYPE                                             
+    SYNTAX         MxIpPort                                        
+    MAX-ACCESS     read-write                                      
+    STATUS         current                                         
+    DESCRIPTION  " IP Port                                         
+                                                                   
+                   IP port on which SIP traffic should be received.
+                   "                                               
+    DEFVAL         { 5060 }                                        
+    ::= { sipAlgMIBObjects 200 }                                   
+
+-- Scalar:  Inactivity Timeout                                                 
+                                                                               
+inactivityTimeOutPeriodSec OBJECT-TYPE                                         
+    SYNTAX        Unsigned32 ( 30..3600 )                                      
+    MAX-ACCESS    read-write                                                   
+    STATUS        current                                                      
+    DESCRIPTION " Inactivity Timeout                                           
+                                                                               
+                  Period, in seconds, of inactivity on bindings after which    
+                  inactivity is declared.                                      
+                  "                                                            
+    DEFVAL        { 30 }                                                       
+    ::= { sipAlgMIBObjects 300 }                                               
+
+-- *****************************************************************************
+                                                                               
+-- Group:  Proxy                                                               
+                                                                               
+-- *****************************************************************************
+                                                                               
+proxyGroup OBJECT IDENTIFIER                                                   
+    ::= { sipAlgMIBObjects 400 }                                               
+                                                                               
+                                                                               
+    -- Scalar:  First Route Host                                               
+                                                                               
+    firstRouteHost OBJECT-TYPE                                                 
+        SYNTAX        MxIpHostNamePort                                         
+        MAX-ACCESS    read-write                                               
+        STATUS        current                                                  
+        DESCRIPTION " First Route Host                                         
+                                                                               
+                      FQDN and port of the first route. This route is added as 
+                      a route header to all SIP messages leaving the SIP ALG.  
+                                                                               
+                      The first route parameter therefore allows the SIP ALG to
+                      forward SIP messages to a SIP server, which would        
+                      otherwise have been the first route of SIP messages      
+                      leaving private UACs considering the SIP ALG would not   
+                      have been their outbound proxy.                          
+                                                                               
+                      To disable the first route, set it to an empty string.   
+                                                                               
+                      When enabled, the first route for all SIP requests       
+                      contains the provided information, suffixed with the     
+                      loose routing parameter 'lr'.                            
+                                                                               
+                      Note: a domain name bound to a SRV record can be provided
+                      by entering the name followed or not by the port number  
+                      zero. A name followed by a port different than zero would
+                      not involve a SRV query but rather a simple DNS          
+                      resolution for the name provided.                        
+                                                                               
+                                                                               
+                      "                                                        
+        ::= { proxyGroup 100 }                                                 
+                                                                               
+-- End of group:  Proxy                                                        
+
+-- *****************************************************************************
+                                                                               
+-- Table:  Port Reservation                                                    
+                                                                               
+-- *****************************************************************************
+                                                                               
+portReservationTable OBJECT-TYPE                                               
+    SYNTAX        SEQUENCE OF PortReservationEntry                             
+    MAX-ACCESS    not-accessible                                               
+    STATUS        current                                                      
+    DESCRIPTION " Port Reservation                                             
+                                                                               
+                  This table includes the reserved port range per specified    
+                  network interface.                                           
+                  "                                                            
+    ::= { sipAlgMIBObjects 1000 }                                              
+                                                                               
+                                                                               
+    portReservationEntry OBJECT-TYPE                                           
+        SYNTAX         PortReservationEntry                                    
+        MAX-ACCESS     not-accessible                                          
+        STATUS         current                                                 
+        DESCRIPTION  " A row in the Port Reservation. "                        
+        INDEX          {                                                       
+                           interfaceName                                       
+                       }                                                       
+                                                                               
+        ::= { portReservationTable 1 }                                         
+                                                                               
+    PortReservationEntry ::= SEQUENCE                                          
+    {                                                                          
+        interfaceName   OCTET STRING,                                          
+        rangeLowerBound MxIpPort,                                              
+        rangeUpperBound MxIpPort                                               
+    }                                                                          
+                                                                               
+    -- Index:  Network Interface                                               
+                                                                               
+    portReservationInterfaceName OBJECT-TYPE                                   
+        SYNTAX         OCTET STRING                                            
+        MAX-ACCESS     read-only                                               
+        STATUS         current                                                 
+        DESCRIPTION  " Network Interface                                       
+                                                                               
+                       Network interface name.                                 
+                       "                                                       
+        ::= { portReservationEntry 100 }                                       
+                                                                               
+    -- Columnar:  Lower Port                                                   
+                                                                               
+    portReservationRangeLowerBound OBJECT-TYPE                                 
+        SYNTAX         MxIpPort ( 1024..65535 )                                
+        MAX-ACCESS     read-write                                              
+        STATUS         current                                                 
+        DESCRIPTION  " Lower Port                                              
+                                                                               
+                       Lower bound of the reserved port range.                 
+                       "                                                       
+        DEFVAL         { 7000 }                                                
+        ::= { portReservationEntry 200 }                                       
+                                                                               
+    -- Columnar:  Upper Port                                                   
+                                                                               
+    portReservationRangeUpperBound OBJECT-TYPE                                 
+        SYNTAX         MxIpPort ( 1024..65535 )                                
+        MAX-ACCESS     read-write                                              
+        STATUS         current                                                 
+        DESCRIPTION  " Upper Port                                              
+                                                                               
+                       Upper bound of the reserved port range.                 
+                       "                                                       
+        DEFVAL         { 7500 }                                                
+        ::= { portReservationEntry 300 }                                       
+                                                                               
+                                                                               
+-- End of table:  Port Reservation                                             
+
+-- Scalar:  Number of sessions                               
+                                                             
+sessionCountInfo OBJECT-TYPE                                 
+    SYNTAX         Unsigned32                                
+    MAX-ACCESS     read-only                                 
+    STATUS         current                                   
+    DESCRIPTION  " Number of sessions                        
+                                                             
+                   Current number of concurrent SIP sessions.
+                   "                                         
+    ::= { sipAlgMIBObjects 3000 }                            
+
+-- Scalar:  Maximum number of concurrent SIP sessions                          
+                                                                               
+maxConcurrentSipSessions OBJECT-TYPE                                           
+    SYNTAX        Integer32 ( -1..1024 )                                       
+    MAX-ACCESS    read-write                                                   
+    STATUS        current                                                      
+    DESCRIPTION " Maximum number of concurrent SIP sessions                    
+                                                                               
+                  Maximum number of concurrent SIP sessions allowed.           
+                                                                               
+                  If the specified value is lower than the current SIP session 
+                  count, it will be impossible to make or receive a call until 
+                  the current session count reaches a value lower than the     
+                  maximum specified.                                           
+                                                                               
+                  A value of 0 does not allow the creation of SIP sessions,    
+                  thus disabling the possibility to make or receive calls.     
+                                                                               
+                  A value of -1 sets the number of concurrent SIP sessions to  
+                  the maximum value specified for the system.                  
+                                                                               
+                                                                               
+                  "                                                            
+    DEFVAL        { 25 }                                                       
+    ::= { sipAlgMIBObjects 3100 }                                              
+
+-- *****************************************************************************
+                                                                               
+-- Group:  Statistics                                                          
+                                                                               
+-- *****************************************************************************
+                                                                               
+statisticsGroup OBJECT IDENTIFIER                                              
+    ::= { sipAlgMIBObjects 10000 }                                             
+                                                                               
+                                                                               
+    -- Scalar:  Unknown Destination                                            
+                                                                               
+    unknownRequestDestinationCount OBJECT-TYPE                                 
+        SYNTAX        MxUInt64                                                 
+        MAX-ACCESS    read-only                                                
+        STATUS        current                                                  
+        DESCRIPTION " Unknown Destination                                      
+                                                                               
+                      Number of times that a final response was returned       
+                      because the corresponding request destination was        
+                      unknown.                                                 
+                      "                                                        
+        ::= { statisticsGroup 100 }                                            
+                                                                               
+    -- Scalar:  Unknown Direction                                              
+                                                                               
+    unknownPacketDirectionCount OBJECT-TYPE                                    
+        SYNTAX        MxUInt64                                                 
+        MAX-ACCESS    read-only                                                
+        STATUS        current                                                  
+        DESCRIPTION " Unknown Direction                                        
+                                                                               
+                      The number of times that the direction of a SIP message  
+                      could not be determined.                                 
+                      "                                                        
+        ::= { statisticsGroup 200 }                                            
+                                                                               
+    -- Scalar:  SDP errors                                                     
+                                                                               
+    sessionDescriptionErrorCount OBJECT-TYPE                                   
+        SYNTAX        MxUInt64                                                 
+        MAX-ACCESS    read-only                                                
+        STATUS        current                                                  
+        DESCRIPTION " SDP errors                                               
+                                                                               
+                      The number of times that received SIP packets contain a  
+                      SDP syntax error in the c= or m= fields.                 
+                      "                                                        
+        ::= { statisticsGroup 300 }                                            
+                                                                               
+    -- Scalar:  Port Allocation Failure                                        
+                                                                               
+    couldNotGetFreeMediaPortsCount OBJECT-TYPE                                 
+        SYNTAX        MxUInt64                                                 
+        MAX-ACCESS    read-only                                                
+        STATUS        current                                                  
+        DESCRIPTION " Port Allocation Failure                                  
+                                                                               
+                      Number of times that it was impossible to create bindings
+                      for every media found in an SDP payload.                 
+                      "                                                        
+        ::= { statisticsGroup 400 }                                            
+                                                                               
+    -- Scalar:  Maximum Sessions Reached                                       
+                                                                               
+    maximumNbSessionsReachedCount OBJECT-TYPE                                  
+        SYNTAX        MxUInt64                                                 
+        MAX-ACCESS    read-only                                                
+        STATUS        current                                                  
+        DESCRIPTION " Maximum Sessions Reached                                 
+                                                                               
+                      Number of times that a SIP request could not be processed
+                      due to the fact that the maximum simultaneous SIP        
+                      sessions has been reached.                               
+                      "                                                        
+        ::= { statisticsGroup 500 }                                            
+                                                                               
+    -- Scalar:  Highest Concurrent Session                                     
+                                                                               
+    highestConcurrentSessionCount OBJECT-TYPE                                  
+        SYNTAX         Unsigned32                                              
+        MAX-ACCESS     read-only                                               
+        STATUS         current                                                 
+        DESCRIPTION  " Highest Concurrent Session                              
+                                                                               
+                       Maximum number of concurrent SIP sessions at some point.
+                       "                                                       
+        ::= { statisticsGroup 600 }                                            
+                                                                               
+-- End of group:  Statistics                                                   
+
+-- *****************************************************************************
+                                                                               
+-- Group:  Debug Group                                                         
+                                                                               
+-- *****************************************************************************
+                                                                               
+debugGroup OBJECT IDENTIFIER                                                   
+    ::= { sipAlgMIBObjects 40000 }                                             
+                                                                               
+                                                                               
+    -- Scalar:  Enable/Disable Debug Raw Signaling Log                         
+                                                                               
+    debugSignalingLogRawEnable OBJECT-TYPE                                     
+        SYNTAX        MxEnableState                                            
+        MAX-ACCESS    read-write                                               
+        STATUS        current                                                  
+        DESCRIPTION " Enable/Disable Debug Raw Signaling Log                   
+                                                                               
+                      Enables the logging client debugging tool for IP         
+                      telephony signaling.                                     
+                                                                               
+                      The raw signaling consists of all UDP packets received or
+                      sent by the SIP socket.                                  
+                                                                               
+                                                                               
+                      "                                                        
+        DEFVAL        { disable }                                              
+        ::= { debugGroup 100 }                                                 
+                                                                               
+    -- Scalar:  Debug Raw Signaling Log Host                                   
+                                                                               
+    debugSignalingLogRawHost OBJECT-TYPE                                       
+        SYNTAX        MxIpHostNamePort                                         
+        MAX-ACCESS    read-write                                               
+        STATUS        current                                                  
+        DESCRIPTION " Debug Raw Signaling Log Host                             
+                                                                               
+                      Logging client FQDN and port.                            
+                                                                               
+                      The raw signaling consists of all UDP packets received or
+                      sent by the SIP socket.                                  
+                                                                               
+                      The default port is 6001.                                
+                                                                               
+                                                                               
+                      "                                                        
+        DEFVAL        { 192.168.10.10:0 }                                      
+        ::= { debugGroup 200 }                                                 
+                                                                               
+    -- Scalar:  Enable/Disable Debug Packet Signaling Log                      
+                                                                               
+    debugSignalingLogPacketEnable OBJECT-TYPE                                  
+        SYNTAX        MxEnableState                                            
+        MAX-ACCESS    read-write                                               
+        STATUS        current                                                  
+        DESCRIPTION " Enable/Disable Debug Packet Signaling Log                
+                                                                               
+                      Enables the logging client debugging tool for IP         
+                      telephony signaling.                                     
+                                                                               
+                      The packet signaling consists of all SIP packets received
+                      or sent by the SIP stack. Malformed packets that are     
+                      received will not be logged in this mode.                
+                                                                               
+                                                                               
+                      "                                                        
+        DEFVAL        { disable }                                              
+        ::= { debugGroup 300 }                                                 
+                                                                               
+    -- Scalar:  Debug Packet Signaling Log Host                                
+                                                                               
+    debugSignalingLogPacketHost OBJECT-TYPE                                    
+        SYNTAX        MxIpHostNamePort                                         
+        MAX-ACCESS    read-write                                               
+        STATUS        current                                                  
+        DESCRIPTION " Debug Packet Signaling Log Host                          
+                                                                               
+                      Logging client FQDN and port.                            
+                                                                               
+                      The packet signaling consists of all SIP packets received
+                      or sent by the SIP stack. Malformed packets that are     
+                      received will not be logged in this mode.                
+                                                                               
+                      The default port is 6002.                                
+                                                                               
+                                                                               
+                      "                                                        
+        DEFVAL        { 192.168.10.10:0 }                                      
+        ::= { debugGroup 400 }                                                 
+                                                                               
+-- End of group:  Debug Group                                                  
+
+-- *****************************************************************************
+                                                                               
+-- Group:  Notification Messages Configuration                                 
+                                                                               
+-- *****************************************************************************
+                                                                               
+notificationsGroup OBJECT IDENTIFIER                                           
+    ::= { sipAlgMIBObjects 60010 }                                             
+                                                                               
+                                                                               
+    -- Scalar:  Minimal Severity of Notification                               
+                                                                               
+    minSeverity OBJECT-TYPE                                                    
+        SYNTAX        INTEGER { disable(0) , debug(100) , info(200) , warning  
+                      (300) , error(400) , critical (500) }                    
+        MAX-ACCESS    read-write                                               
+        STATUS        current                                                  
+        DESCRIPTION " Minimal Severity of Notification                         
+                                                                               
+                      Sets the minimal severity to issue a notification message
+                      incoming from this service.                              
+                                                                               
+                        * Disable: No notification is issued.                  
+                        * Debug: All notification messages are issued.         
+                        * Info: Notification messages with severity            
+                          'Informational' and higher are issued.               
+                        * Warning: Notification messages with severity         
+                          'Warning' and higher are issued.                     
+                        * Error: Notification messages with severity 'Error'   
+                          and higher are issued.                               
+                        * Critical: Notification messages with severity        
+                          'Critical' are issued.                               
+                                                                               
+                                                                               
+                      "                                                        
+        DEFVAL        { warning }                                              
+        ::= { notificationsGroup 100 }                                         
+                                                                               
+-- End of group:  Notification Messages Configuration                          
+
+-- ****************************************************************************
+                                                                              
+-- Group:  Configuration Settings                                             
+                                                                              
+-- ****************************************************************************
+                                                                              
+configurationGroup OBJECT IDENTIFIER                                          
+    ::= { sipAlgMIBObjects 60020 }                                            
+                                                                              
+                                                                              
+    -- Scalar:  Need Restart                                                  
+                                                                              
+    needRestartInfo OBJECT-TYPE                                               
+        SYNTAX        INTEGER { no(0) , yes(100) }                            
+        MAX-ACCESS    read-only                                               
+        STATUS        current                                                 
+        DESCRIPTION " Need Restart                                            
+                                                                              
+                      Indicates if the service needs to be restarted for its  
+                      configuration to fully take effect.                     
+                                                                              
+                        * Yes: Service needs to be restarted.                 
+                        * No: Service does not need to be restarted.          
+                                                                              
+                      Services can be restarted by using the command          
+                      Scm.ServiceCommands.Restart.                            
+                                                                              
+                                                                              
+                      "                                                       
+        ::= { configurationGroup 100 }                                        
+                                                                              
+-- End of group:  Configuration Settings                                      
+
+END

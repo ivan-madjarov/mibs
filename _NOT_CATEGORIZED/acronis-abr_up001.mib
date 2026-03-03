@@ -1,0 +1,59 @@
+ABR DEFINITIONS ::= BEGIN
+
+IMPORTS
+    NOTIFICATION-GROUP, OBJECT-GROUP
+        FROM SNMPv2-CONF
+    MODULE-IDENTITY, NOTIFICATION-TYPE, OBJECT-IDENTITY, OBJECT-TYPE,
+    enterprises
+        FROM SNMPv2-SMI
+    ;
+    
+acroMIB MODULE-IDENTITY
+    LAST-UPDATED "201007121307Z" -- July 12, 2010
+    ORGANIZATION "Acronis, Inc"
+    CONTACT-INFO "http://www.acronis.com/support"
+    DESCRIPTION "The MIB for Acronis Backup & Recovery"
+    ::= {enterprises 24769 100}
+
+acroNotifications OBJECT IDENTIFIER ::= {acroMIB 100}
+
+acroEvent NOTIFICATION-TYPE
+    OBJECTS { acroEventType, acroEventText }
+    STATUS      current
+    DESCRIPTION
+        "The event is generated when Acronis Backup & Recovery 
+        generates an Information, Warning or Error event."
+    ::= { acroNotifications 100 }
+
+fields OBJECT-IDENTITY
+    STATUS      current
+    DESCRIPTION "Fields for acroEvent"
+    ::= { acroMIB 200 }
+
+acroEventType OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE(5..12))
+    MAX-ACCESS  accessible-for-notify
+    STATUS      current
+    DESCRIPTION "Type of event"
+    ::= { fields 1 }
+
+acroEventText OBJECT-TYPE 
+    SYNTAX      OCTET STRING (SIZE(9..50))
+    MAX-ACCESS  accessible-for-notify
+    STATUS      current
+    DESCRIPTION "The description of the event"
+    ::= { fields 2 }
+
+acroNotifyGroup NOTIFICATION-GROUP
+    NOTIFICATIONS { acroEvent }
+    STATUS      current
+    DESCRIPTION "The notification group"
+    ::= { acroMIB 201 }
+
+acroEventFields OBJECT-GROUP
+    OBJECTS { acroEventType, acroEventText }
+    STATUS current
+    DESCRIPTION "Event fields"
+    ::= { acroMIB 202 }
+
+END

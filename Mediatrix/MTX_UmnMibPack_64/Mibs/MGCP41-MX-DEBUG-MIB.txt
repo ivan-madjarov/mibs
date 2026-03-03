@@ -1,0 +1,89 @@
+-- ****************************************************************************
+-- ****************************************************************************
+--
+--             Copyright(c) 2001 Mediatrix Telecom, Inc. 
+--
+--  NOTICE:
+--   This document contains information that is confidential and proprietary
+--   to Mediatrix Telecom, Inc. 
+--
+--   Mediatrix Telecom, Inc. reserves all rights to this document as well as
+--   to the Intellectual Property of the document and the technology and
+--   know how that it includes and represents. 
+--
+--   This publication cannot be reproduced, neither in whole nor in part in
+--   any form whatsoever without written prior approval by
+--   Mediatrix Telecom, Inc. 
+--
+--   Mediatrix Telecom, Inc. reserves the right to revise this publication
+--   and make changes at any time and without the obligation to notify any
+--   person and/or entity of such revisions and/or changes. 
+--
+-- ****************************************************************************
+-- ****************************************************************************
+
+MGCP41-MX-DEBUG-MIB
+DEFINITIONS ::= BEGIN
+
+IMPORTS
+        MODULE-IDENTITY,
+        OBJECT-TYPE
+    FROM SNMPv2-SMI
+        MxIpHostName,
+        MxIpPort
+    FROM MX-TC
+        mediatrixExperimental
+    FROM MX-SMI;
+
+mxDebugMIB MODULE-IDENTITY
+    LAST-UPDATED "0108030000Z"
+    ORGANIZATION "Mediatrix Telecom, Inc."
+    CONTACT-INFO "Mediatrix Telecom, Inc. 
+                  4229, Garlock Street
+                  Sherbrooke (Quebec)
+                  Canada
+                  Phone: (819) 829-8749
+                  "
+    DESCRIPTION "This MIB contains debug related objects for Mediatrix products."
+
+    -- ************************************************************************
+    -- Revision history
+    -- ************************************************************************
+    REVISION    "0108030000Z"
+    DESCRIPTION "August 03, 2001
+                    Creation"
+    ::= { mediatrixExperimental 5 }
+
+mxDebugMIBObjects  OBJECT IDENTIFIER ::= { mxDebugMIB 1 }
+
+signalingLog             OBJECT IDENTIFIER  ::= { mxDebugMIBObjects  5 }
+
+    signalingLogEnable OBJECT-TYPE
+        SYNTAX      INTEGER {
+                              disable(0),
+                              enable(1)
+                            }
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Enable the logging client debugging tool for IP telephony 
+                     signaling."
+        DEFVAL      { disable }
+        ::=  {  signalingLog  1  }
+
+    signalingLogHost OBJECT-TYPE
+        SYNTAX      MxIpHostName
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Logging client IP address or domain name."
+        DEFVAL { "192.168.0.10" }
+        ::=  {  signalingLog  2 }
+
+    signalingLogPort OBJECT-TYPE
+        SYNTAX      MxIpPort
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Logging client IP port number."
+        DEFVAL      { 6000 }
+        ::=  {  signalingLog  3    }
+
+END

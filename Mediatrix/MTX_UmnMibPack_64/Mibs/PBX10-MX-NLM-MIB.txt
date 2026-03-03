@@ -1,0 +1,215 @@
+-- ****************************************************************************
+-- ****************************************************************************
+--             Copyright(c) 2004 Mediatrix Telecom, Inc.
+--  NOTICE:
+--   This document contains information that is confidential and proprietary
+--   to Mediatrix Telecom, Inc.
+--   Mediatrix Telecom, Inc. reserves all rights to this document as well as
+--   to the Intellectual Property of the document and the technology and
+--   know-how that it includes and represents.
+--   This publication cannot be reproduced, neither in whole nor in part in
+--   any form whatsoever without written prior approval by
+--   Mediatrix Telecom, Inc.
+--   Mediatrix Telecom, Inc. reserves the right to revise this publication
+--   and make changes at any time and without the obligation to notify any
+--   person and/or entity of such revisions and/or changes.
+-- ****************************************************************************
+-- ****************************************************************************
+
+
+PBX10-MX-NLM-MIB
+DEFINITIONS ::= BEGIN
+
+IMPORTS
+        MODULE-IDENTITY,
+        OBJECT-TYPE,
+        Unsigned32,
+        Integer32
+    FROM SNMPv2-SMI
+        MODULE-COMPLIANCE,
+        OBJECT-GROUP
+    FROM SNMPv2-CONF
+        MxEnableState,
+        MxActivationState,
+        MxIpHostName,
+        MxIpPort,
+        MxAdvancedIpPort,
+        MxIpSubnetMask,
+        MxDigitMap
+    FROM MX-TC
+        MxUInt64,
+        MxFloat32,
+        MxIpHostNamePort,
+        MxIpAddr,
+        MxIpAddrPort,
+        MxIpAddrMask,
+        MxUri,
+        MxUrl
+    FROM MX-TC2
+        mediatrixServices
+    FROM MX-SMI2;
+
+nlmMIB MODULE-IDENTITY
+ LAST-UPDATED   "0511080000Z"
+ ORGANIZATION " Mediatrix Telecom, Inc. "
+ CONTACT-INFO " Mediatrix Telecom, Inc.
+                4229, Garlock Street
+                Sherbrooke (Quebec)
+                Canada
+                Phone: (819) 829-8749
+                "
+ DESCRIPTION  " Notifications and Logging Manager
+
+                NLM configures how to handle log entries.
+                "
+ -- ***************************************************************
+ 
+ -- Revision history
+ -- ***************************************************************
+ REVISION       "0511080000Z"
+ DESCRIPTION  " Initial Revision "
+ REVISION       "0801250000Z"
+ DESCRIPTION  " Increase DiagnosticTracesFilter DataRange to 512 "
+ ::= { mediatrixServices 1100 }
+
+nlmMIBObjects OBJECT IDENTIFIER ::= { nlmMIB 1 }
+
+-- ****************************************************************************
+
+-- Group:Syslog
+
+-- ****************************************************************************
+
+syslogGroup OBJECT IDENTIFIER
+ ::= { nlmMIBObjects 100 }
+ -- Scalar:Remote Host
+
+ syslogRemoteHost OBJECT-TYPE
+  SYNTAX        MxIpHostNamePort
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Remote Host
+
+                Host name and port number of the device that archives log
+                entries. Specifying no port (or port 0) sends notification to
+                port 514.
+                "
+  DEFVAL        { "" }
+  ::= { syslogGroup 100 }
+
+-- End of group:Syslog
+
+-- ****************************************************************************
+
+-- Group:Technical Assistance Center
+
+-- ****************************************************************************
+
+tacGroup OBJECT IDENTIFIER
+ ::= { nlmMIBObjects 10000 }
+ -- Scalar:Diagnostic Traces
+
+ diagnosticTracesEnable OBJECT-TYPE
+  SYNTAX        MxEnableState
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Diagnostic Traces
+
+                Enables traces allowing the Technical Assistance Centre to
+                further assist in resolving some issues.
+
+                Enabling this feature issues a lot of messages to the syslog
+                host. These messages may be filtered using the
+                DiagnosticTracesFilter variable.
+
+
+                "
+  DEFVAL        { disable }
+  ::= { tacGroup 100 }
+
+ -- Scalar:Diagnostic Traces Filter
+
+ diagnosticTracesFilter OBJECT-TYPE
+  SYNTAX        OCTET STRING ( SIZE(0..512) )
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Diagnostic Traces Filter
+
+                Filter applied to diagnostic traces. An empty filter means
+                that all diagnostic traces are enabled.
+                "
+  DEFVAL        { "" }
+  ::= { tacGroup 200 }
+
+-- End of group:Technical Assistance Center
+
+-- ****************************************************************************
+
+-- Group:Notification Messages Configuration
+
+-- ****************************************************************************
+
+notificationsGroup OBJECT IDENTIFIER
+ ::= { nlmMIBObjects 60010 }
+ -- Scalar:Minimal Severity of Notification
+
+ minSeverity OBJECT-TYPE
+  SYNTAX        INTEGER { disable(0) , debug(100) , info(200) , warning(300) ,
+                error(400) , critical (500) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Minimal Severity of Notification
+
+                Sets the minimal severity to issue a notification message
+                incoming from this service.
+
+                  * Disable: No notification is issued.
+                  * Debug: All notification messages are issued.
+                  * Info: Notification messages with severity 'Informational'
+                    and higher are issued.
+                  * Warning: Notification messages with severity 'Warning' and
+                    higher are issued.
+                  * Error: Notification messages with severity 'Error' and
+                    higher are issued.
+                  * Critical: Notification messages with severity 'Critical'
+                    are issued.
+
+
+                "
+  DEFVAL        { warning }
+  ::= { notificationsGroup 100 }
+
+-- End of group:Notification Messages Configuration
+
+-- ****************************************************************************
+
+-- Group:Configuration Settings
+
+-- ****************************************************************************
+
+configurationGroup OBJECT IDENTIFIER
+ ::= { nlmMIBObjects 60020 }
+ -- Scalar:Need Restart
+
+ needRestartInfo OBJECT-TYPE
+  SYNTAX        INTEGER { no(0) , yes(100) }
+  MAX-ACCESS    read-only
+  STATUS        current
+  DESCRIPTION " Need Restart
+
+                Indicates if the service needs to be restarted for its
+                configuration to fully take effect.
+
+                  * Yes: Service needs to be restarted.
+                  * No: Service does not need to be restarted.
+
+                Services can be restarted by using the command
+                Scm.ServiceCommands.Restart.
+
+
+                "
+  ::= { configurationGroup 100 }
+
+-- End of group:Configuration Settings
+
+END

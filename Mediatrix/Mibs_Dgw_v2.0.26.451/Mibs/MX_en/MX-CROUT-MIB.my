@@ -1,0 +1,4775 @@
+-- ****************************************************************************
+-- ****************************************************************************
+--             Copyright(c) 2004 Mediatrix Telecom, Inc.
+--  NOTICE:
+--   This document contains information that is confidential and proprietary
+--   to Mediatrix Telecom, Inc.
+--   Mediatrix Telecom, Inc. reserves all rights to this document as well as
+--   to the Intellectual Property of the document and the technology and
+--   know-how that it includes and represents.
+--   This publication cannot be reproduced, neither in whole nor in part in
+--   any form whatsoever without written prior approval by
+--   Mediatrix Telecom, Inc.
+--   Mediatrix Telecom, Inc. reserves the right to revise this publication
+--   and make changes at any time and without the obligation to notify any
+--   person and/or entity of such revisions and/or changes.
+-- ****************************************************************************
+-- ****************************************************************************
+
+
+MX-CROUT-MIB
+DEFINITIONS ::= BEGIN
+
+IMPORTS
+        MODULE-IDENTITY,
+        OBJECT-TYPE,
+        Unsigned32,
+        Integer32
+    FROM SNMPv2-SMI
+        MODULE-COMPLIANCE,
+        OBJECT-GROUP
+    FROM SNMPv2-CONF
+        MxEnableState,
+        MxActivationState,
+        MxIpHostName,
+        MxIpAddress,
+        MxIpPort,
+        MxAdvancedIpPort,
+        MxIpSubnetMask,
+        MxDigitMap
+    FROM MX-TC
+        MxUInt64,
+        MxFloat32,
+        MxIpHostNamePort,
+        MxIpAddr,
+        MxIpAddrPort,
+        MxIpAddrMask,
+        MxUri,
+        MxUrl
+    FROM MX-TC2
+        mediatrixServices
+    FROM MX-SMI2;
+
+cRoutMIB MODULE-IDENTITY
+ LAST-UPDATED   "0603060000Z"
+ ORGANIZATION " Mediatrix Telecom, Inc. "
+ CONTACT-INFO " Mediatrix Telecom, Inc.
+                4229, Garlock Street
+                Sherbrooke (Quebec)
+                Canada
+                Phone: (819) 829-8749
+                "
+ DESCRIPTION  " Call Routing
+
+                The Call Routing service allows to configure the call routing
+                decision.
+                "
+ -- ****************************************************************************
+ 
+ -- Revision history
+ -- ****************************************************************************
+ REVISION       "0603060000Z"
+ DESCRIPTION  " Initial Revision "
+ REVISION       "0706010000Z"
+ DESCRIPTION  " Added a command per routing table to clear its content. The new
+                commands are:
+
+                  * DeleteAllRoutes
+                  * DeleteAllMappingTypes
+                  * DeleteAllMappingExpressions
+                  * DeleteAllHunts
+                  * DeleteAllSignalingProperties
+                  * DeleteAllSipHeadersTranslations
+                  * DeleteAllCallPropertiesTranslations
+
+                "
+ REVISION       "0708200000Z"
+ DESCRIPTION  " Deprecated the following commands:
+
+                  * DeleteAllRoutes
+                  * DeleteAllMappingTypes
+                  * DeleteAllMappingExpressions
+                  * DeleteAllHunts
+                  * DeleteAllSignalingProperties
+                  * DeleteAllSipHeadersTranslations
+                  * DeleteAllCallPropertiesTranslations
+
+                "
+ REVISION       "0804040000Z"
+ DESCRIPTION  " Added a line for the FXS interface name format in various
+                descriptions of source and destination interfaces. Added scalar
+                variable AutoRoutingEnable after the statusGroup. Added a Type
+                column to the RouteStatus table. Added the AutoRoutingTable. "
+ REVISION       "0905120000Z"
+ DESCRIPTION  " Updated RouteStatus.PropertiesCriteria range and description.
+                Updated RouteStatus.ExpressionCriteria description. Updated
+                MappingTypeStatus.Criteria range and description. Updated
+                MappingTypeStatus.Transformation range and description. Updated
+                MappingExpressionStatus.Criteria description. Updated
+                Route.PropertiesCriteria range and description. Updated
+                Route.ExpressionCriteria description. Updated
+                MappingType.Criteria range and description. Updated
+                MappingType.Transformation range and description. Updated
+                MappingExpression.Criteria description. "
+ REVISION       "0907130000Z"
+ DESCRIPTION  " Updated RouteStatus.Mappings description. Updated
+                RouteStatus.PropertiesCriteria range and description. Updated
+                RouteStatus.ExpressionCriteria description. Updated
+                MappingTypeStatus.Criteria range and description. Updated
+                MappingTypeStatus.Transformation range and description. Updated
+                MappingExpressionStatus.Criteria description. Updated
+                MappingExpressionStatus.SubMappings description. Updated
+                SignalingPropertiesStatus.CallPropertiesTranslation
+                description. Updated
+                SignalingPropertiesStatus.SipHeadersTranslation description.
+                Updated Route.Mappings description. Updated
+                Route.PropertiesCriteria range and description. Updated
+                Route.ExpressionCriteria description. Updated
+                MappingType.Criteria range and description. Updated
+                MappingType.Transformation range and description. Updated
+                MappingExpression.Criteria description. Updated
+                MappingExpression.SubMappings description. Updated
+                MappingType.AutoRoutingGateway range. Updated
+                SignalingProperties.CallPropertiesTranslation description.
+                Updated SignalingProperties.SipHeadersTranslation description.
+                Added AutoRouting.SipUsername columnar. Added
+                AutoRoutingCriteriaType, AutoRoutingIncomingMappings,
+                AutoRoutingOutgoingMappings,
+                AutoRoutingIncomingSignalingProperties,
+                AutoRoutingOutgoingSignalingProperties variables. "
+ REVISION       "0911130000Z"
+ DESCRIPTION  " Modified the Route.SourceCriteria description. "
+ REVISION       "1004080000Z"
+ DESCRIPTION  " Updated MappingTypeStatus.Criteria range and description.
+                Updated MappingTypeStatus.Transformation range and description.
+                Updated MappingExpressionStatus.Criteria description. Updated
+                MappingExpressionStatus.Transformation description. Updated
+                MappingType.Criteria range and description. Updated
+                MappingType.Transformation range and description. Updated
+                MappingExpression.Criteria description. Updated
+                MappingExpression.Transformation description. "
+ REVISION       "1005190000Z"
+ DESCRIPTION  " Updated MappingTypeStatus.Criteria range and description.
+                Updated MappingTypeStatus.Transformation range and description.
+                Updated MappingExpressionStatus.Criteria description. Updated
+                MappingExpressionStatus.Transformation description. Updated
+                MappingType.Criteria range and description. Updated
+                MappingType.Transformation range and description. Updated
+                MappingExpression.Criteria description. Updated
+                MappingExpression.Transformation description. "
+ REVISION       "1101050000Z"
+ DESCRIPTION  " Added Hunt.SelectionAlgorithm simultaneous option. Updated
+                description of HuntStatus.Destinations. Updated description of
+                HuntStatus.SelectionAlgorithm. Updated description of
+                HuntStatus.Timeout. Updated description of HuntStatus.Causes.
+                Updated description of Hunt.Destinations. Updated description
+                of Hunt.SelectionAlgorithm. Updated description of
+                Hunt.Timeout. Updated description of Hunt.Causes. "
+ REVISION       "1104080000Z"
+ DESCRIPTION  " Updated MappingExpression.Transformation description. Updated
+                MappingExpressionStatus.Transformation description. Updated
+                SignalingProperties.DestinationHost description. Updated
+                SignalingPropertiesStatus.DestinationHost description. "
+ REVISION       "1108160000Z"
+ DESCRIPTION  " Added CalledBearerChannel and CallingBearerChannel as new enum
+                options in RouteStatus.PropertiesCriteria,
+                Route.PropertiesCriteria, MappingTypeStatus.Criteria,
+                MappingTypeStatus.Transformation, MappingType.Criteria and
+                MappingType.Transformation variables. Added
+                CallingBearerChannel as new enum option in the
+                SipHeadersTranslationStatus.BuiltFrom and
+                SipHeadersTranslation.BuiltFrom variable. Added
+                CalledBearerChannel as new enum option in the
+                CallPropertiesTranslationStatus.CallProperty and
+                CallPropertiesTranslation.CallProperty variable. Modified
+                description of MappingExpressionStatus.Criteria,
+                MappingExpression.Criteria, RouteStatus.ExpressionCriteria and
+                Route.ExpressionCriteria to add CalledBearerChannel and
+                CallingBearerChannel tags. "
+ REVISION       "1110250000Z"
+ DESCRIPTION  " Update InterfaceStatus.Name description. Update
+                RouteStatus.SourceCriteria description. Update
+                RouteStatus.Destination description. Update
+                HuntStatus.Destinations description. Update
+                Route.SourceCriteria description. Update Route.Destination
+                description. Update Hunt.Destinations description. Update
+                AutoRouting.AutoRoutingGateway description. Added
+                AutoRouting.AutoRoutingDestination columnar. "
+ REVISION       "1202140000Z"
+ DESCRIPTION  " Updated SignalingPropertiesStatus.Privacy enum and description.
+                Updated SipHeadersTranslationStatus.SipHeader enum and
+                description. Updated SipHeadersTranslationStatus.BuiltFrom enum
+                and description. Updated
+                CallPropertiesTranslationStatus.BuiltFrom enum and description.
+                Updated SignalingProperties.Privacy enum and description.
+                Updated SipHeadersTranslation.SipHeader enum and description.
+                Updated SipHeadersTranslation.BuiltFrom enum and description.
+                Updated CallPropertiesTranslation.BuiltFrom enum and
+                description. "
+ REVISION       "1203270000Z"
+ DESCRIPTION  " Updated MappingTypeStatus.Transformation range and description.
+                Updated MappingType.Transformation range and description. "
+ REVISION       "1204160000Z"
+ DESCRIPTION  " Changed the DataRange size of the Hunt.Destinations to 512. "
+ REVISION       "1205180000Z"
+ DESCRIPTION  " Added table SipRedirectStatus. Added table SipRedirect. Added
+                command InsertSipRedirect. "
+ REVISION       "1205310000Z"
+ DESCRIPTION  " Updated Route.Destination and RouteStatus.Destination to add
+                SipRedirect type. "
+ ::= { mediatrixServices 1750 }
+
+cRoutMIBObjects OBJECT IDENTIFIER ::= { cRoutMIB 1 }
+
+-- ****************************************************************************
+
+-- Group:Status Group
+
+-- ****************************************************************************
+
+statusGroup OBJECT IDENTIFIER
+ ::= { cRoutMIBObjects 100 }
+ -- Scalar:Configuration Modified Status
+
+ configModifiedStatus OBJECT-TYPE
+  SYNTAX        INTEGER { yes(100) , no(200) }
+  MAX-ACCESS    read-only
+  STATUS        current
+  DESCRIPTION " Configuration Modified Status
+
+                Shows if the call routing configuration has been modified
+                without being applied.
+
+                 1. Yes: The configuration has been modified but it has not
+                    been applied.
+                 2. No: The call routing service uses the configured routing.
+
+                Use the command 'ApplyConfig' to apply the configuration.
+
+
+                "
+  ::= { statusGroup 100 }
+
+ -- ***************************************************************************
+ 
+ -- Table:Interface Status
+
+ -- ***************************************************************************
+ 
+ interfaceStatusTable OBJECT-TYPE
+  SYNTAX        SEQUENCE OF InterfaceStatusEntry
+  MAX-ACCESS    not-accessible
+  STATUS        current
+  DESCRIPTION " Interface Status
+
+                This table shows the SIP and ISDN interfaces currently
+                available.
+                "
+  ::= { statusGroup 200 }
+  interfaceStatusEntry OBJECT-TYPE
+   SYNTAX        InterfaceStatusEntry
+   MAX-ACCESS    not-accessible
+   STATUS        current
+   DESCRIPTION " A row in table Interface Status. "
+   INDEX         {
+                   interfaceStatusIndex
+                 }
+
+   ::= { interfaceStatusTable 1 }
+
+  InterfaceStatusEntry ::= SEQUENCE
+  {
+    interfaceStatusIndex Unsigned32,
+    interfaceStatusName  OCTET STRING
+  }
+
+  -- Index:Row Index
+
+  interfaceStatusIndex OBJECT-TYPE
+   SYNTAX        Unsigned32
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Row Index
+
+                 Unique identifier of the row in the table.
+                 "
+   ::= { interfaceStatusEntry 100 }
+
+  -- Columnar:Name
+
+  interfaceStatusName OBJECT-TYPE
+   SYNTAX        OCTET STRING
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Name
+
+                 Name of the interface.
+
+                 The name may have the following format:
+
+                   * sip-'name': SIP interface with the name 'name'.
+                   * isdn-'name': ISDN interface with the name 'name'.
+                   * r2-'name': R2 interface with the name 'name'.
+                   * e&m-'name': E&M interface with the name 'name'.
+                   * fxs-'name': FXS interface with the name 'name'.
+                   * fxo-'name': FXO interface with the name 'name'.
+
+
+                 "
+   ::= { interfaceStatusEntry 200 }
+
+
+ -- End of table:Interface Status
+
+ -- ***************************************************************************
+ 
+ -- Table:Route Status
+
+ -- ***************************************************************************
+ 
+ routeStatusTable OBJECT-TYPE
+  SYNTAX            SEQUENCE OF RouteStatusEntry
+  MAX-ACCESS        not-accessible
+  STATUS            current
+  DESCRIPTION     " Route Status
+
+                    This table shows the actual route used by the call routing
+                    service.
+                    "
+  ::= { statusGroup 300 }
+  routeStatusEntry OBJECT-TYPE
+   SYNTAX        RouteStatusEntry
+   MAX-ACCESS    not-accessible
+   STATUS        current
+   DESCRIPTION " A row in table Route Status. "
+   INDEX         {
+                   routeStatusIndex
+                 }
+
+   ::= { routeStatusTable 1 }
+
+  RouteStatusEntry ::= SEQUENCE
+  {
+    routeStatusIndex               Unsigned32,
+    routeStatusType                INTEGER,
+    routeStatusSourceCriteria      OCTET STRING,
+    routeStatusPropertiesCriteria  INTEGER,
+    routeStatusExpressionCriteria  OCTET STRING,
+    routeStatusDestination         OCTET STRING,
+    routeStatusMappings            OCTET STRING,
+    routeStatusSignalingProperties OCTET STRING
+  }
+
+  -- Index:Row Index
+
+  routeStatusIndex OBJECT-TYPE
+   SYNTAX        Unsigned32
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Row Index
+
+                 Unique identifier of the row in the table.
+                 "
+   ::= { routeStatusEntry 100 }
+
+  -- Columnar:Type of Route
+
+  routeStatusType OBJECT-TYPE
+   SYNTAX        INTEGER { user(100) , auto(200) }
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Type of Route
+
+                 Displays the associated route type. Route types come in two
+                 flavours based on their origin:
+
+                   * user: The route is manually defined and entered by a
+                     user.
+                   * auto: The route is automatically generated following the
+                     activation of the auto-routing feature (see the
+                     autoRoutingEnable variable).
+
+
+                 "
+   ::= { routeStatusEntry 150 }
+
+  -- Columnar:Source Criteria
+
+  routeStatusSourceCriteria OBJECT-TYPE
+   SYNTAX        OCTET STRING
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Source Criteria
+
+                 Source that the service must compare with the call and match
+                 in order to apply the route.
+
+                 The source can be:
+
+                   * route-'name': The call comes from the route 'name'.
+                   * sip-'name': The call comes from the SIP interface 'name'.
+                   * isdn-'name': The call comes from the ISDN interface
+                     'name'.
+                   * r2-'name': The call comes from the R2 interface 'name'.
+                   * e&m-'name': The call comes from the E&M interface 'name'.
+                   * fxs-'name': The call comes from the FXS interface 'name'.
+                   * fxo-'name': The call comes from the FXO interface 'name'.
+
+
+                 "
+   ::= { routeStatusEntry 200 }
+
+  -- Columnar:Properties Criteria
+
+  routeStatusPropertiesCriteria OBJECT-TYPE
+   SYNTAX        INTEGER { none(100) , calledE164(200) , callingE164(300) ,
+                 calledName(400) , callingName(500) , calledTon(600) ,
+                 callingTon(700) , calledNpi(800) , callingNpi(900) ,
+                 calledHost(1000) , callingHost(1100) , callingPi(1200) ,
+                 callingSi(1300) , callingItc(1400) , calledUri(1500) ,
+                 callingUri(1600) , dateTime(1700) , calledPhoneContext(1800)
+                 , callingPhoneContext(1900) , calledSipUsername(2000) ,
+                 callingSipUsername(2100) , calledBearerChannel(2200) ,
+                 callingBearerChannel(2300) , callingSipPrivacy(2400) }
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Properties Criteria
+
+                 Call property that the service must compare with the call and
+                 match in order to apply the route. The actual call properties
+                 expression to match is defined at
+                 RouteStatus.ExpressionCriteria.
+
+                 The call properties can be:
+
+                   * CalledE164: Routes calls based on the called party E.164
+                     properties.
+                   * CallingE164: Routes calls based on the calling party
+                     E.164 properties.
+                   * CalledName: Routes calls based on the called party name
+                     properties.
+                   * CallingName: Routes calles based on the calling party
+                     name properties.
+                   * CalledTon: Routes calls based on the called party type of
+                     number properties.
+                   * CallingTon: Routes calls based on the calling party type
+                     of number properties.
+                   * CalledNpi: Routes calls based on the called party
+                     numbering plan indicator properties.
+                   * CallingNpi: Routes calls based on the calling party
+                     numbering plan indicator properties.
+                   * CalledHost: Routes calls based on the calling host
+                     properties.
+                   * CallingHost: Routes calls based on the called host
+                     properties.
+                   * CallingPi: Routes calls based on the calling party
+                     presentation indicator.
+                   * CallingSi: Routes calls based on the calling party
+                     screening indicator.
+                   * CallingItc: Routes calls based on the calling party
+                     information transfer capability.
+                   * CalledUri: Routes calls based on the called party SIP
+                     URI.
+                   * CallingUri: Routes calls based on the calling party SIP
+                     URI.
+                   * DateTime: Routes calls based on the date and/or time the
+                     call arrived at the call router.
+                   * CalledPhoneContext: Routes calls based on the called
+                     party phone context.
+                   * CallingPhoneContext: Routes calls based on the calling
+                     party phone context.
+                   * CalledSipUsername: Routes calls based on the called SIP
+                     username.
+                   * CallingSipUsername: Routes calls based on the calling SIP
+                     username.
+                   * CalledBearerChannel: Routes calls based on the called
+                     bearer channel properties.
+                   * CallingBearerChannel: Routes calls based on the calling
+                     bearer channel properties.
+                   * CallingSipPrivacy: Routes calls based on the calling SIP
+                     privacy properties.
+
+                 See RouteStatus.ExpressionCriteria.
+
+
+                 "
+   ::= { routeStatusEntry 300 }
+
+  -- Columnar:Expression Criteria
+
+  routeStatusExpressionCriteria OBJECT-TYPE
+   SYNTAX        OCTET STRING
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Expression Criteria
+
+                 Expression that the service must compare with the call and
+                 match in order to apply the route. The expression is applied
+                 on the call properties defined at
+                 RouteStatus.PropertiesCriteria.
+
+                 The expression syntax is related to the selected properties
+                 criteria or can be a special tag:
+
+                   * CalledE164: Regular expression.
+                   * CallingE164: Regular expression.
+                   * CalledName: Regular expression.
+                   * CallingName: Regular expression.
+                   * CalledTon: 'unknown', 'international', 'national',
+                     'network', 'subscriber' or 'abbreviated'.
+                   * CallingTon: 'unknown', 'international', 'national',
+                     'network', 'subscriber' or 'abbreviated'.
+                   * CalledNpi: 'unknown', 'isdn', 'data', 'telex', 'national'
+                     or 'private'.
+                   * CallingNpi: 'unknown', 'isdn', 'data', 'telex',
+                     'national' or 'private'.
+                   * CalledHost: Regular expression. The call properties
+                     format is 'Fqdn[:port]'. If the '[:port]' is not present,
+                     the table uses the well-known port of the signalling
+                     protocol.
+                   * CallingHost: Regular expression. The call properties
+                     format is 'Fqdn[:port]'. If the '[:port]' is not present,
+                     the table uses the well-known port of the signalling
+                     protocol.
+                   * CallingPi: 'allowed', 'restricted', or 'interworking'.
+                   * CallingSi: 'not-screened', 'passed', 'failed' or
+                     'network'.
+                   * CallingItc: 'speech', 'unrestricted', 'restricted',
+                     '3.1Khz', 'udi-ta' or 'video'.
+                   * CalledUri: Regular expression.
+                   * CallingUri: Regular expression.
+                   * DateTime: Day of week and time period and/or date and
+                     time period.
+                   * CalledPhoneContext: Regular expression.
+                   * CallingPhoneContext: Regular expression.
+                   * CalledSipUsername: Regular expression.
+                   * CallingSipUsername: Regular expression.
+                   * CalledBearerChannel: Regular expression.
+                   * CallingBearerChannel: Regular expression.
+                   * CallingSipPrivacy: 'disabled', 'none' or 'id'.
+
+                 Special tags:
+
+                   * <undefined>: Matches if the property is not defined for
+                     the call.
+                   * <default>: Always matches. Generally used to set a
+                     default route if the previous criteria do not match.
+
+                 Accepted DateTime formats:
+
+                 Date/Time Period format:
+
+                   * 'DD.MM.YYYY/HH:MM:SS-DD.MM.YYYY/HH:MM:SS'
+                   * 'DD.MM.YYYY/HH:MM:SS-HH:MM:SS'
+                   * 'DD.MM.YYYY-DD.MM.YYYY'
+                   * 'DD.MM.YYYY'
+                   * 'HH:MM:SS-HH:MM:SS'
+
+                 Week Day/Time Period format:
+
+                   * 'DDD'
+                   * 'DDD,DDD...'
+                   * 'DDD/HH:MM:SS-HH:MM:SS'
+                   * 'DDD,DDD.../HH:MM:SS-HH:MM:SS'
+
+                 where DDD must be one of: SUN, MON, TUE, WED, THU, FRI, SAT.
+
+                 Many of the formats above can be concatenated to form one
+                 expression. They must be separated by |. Example: 25.12.2006
+                 | SUN
+
+                 See RouteStatus.PropertiesCriteria.
+
+
+                 "
+   ::= { routeStatusEntry 400 }
+
+  -- Columnar:Destination
+
+  routeStatusDestination OBJECT-TYPE
+   SYNTAX        OCTET STRING
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Destination
+
+                 Destination to apply to the call if it matches the criteria.
+
+                 The destination can be:
+
+                   * route-'name': The call destination is set to the route
+                     'name'.
+                   * hunt-'name': The call destination is set to the hunt
+                     'name'.
+                   * sip-'name': The call destination is set to the SIP
+                     interface 'name'.
+                   * isdn-'name': The call destination is set to the ISDN
+                     interface 'name'.
+                   * r2-'name': The call destination is set to the R2
+                     interface 'name'.
+                   * e&m-'name': The call destination is set to the E&M
+                     interface 'name'.
+                   * fxs-'name': The call destination is set to the FXS
+                     interface 'name'.
+                   * fxo-'name': The call destination is set to the FXO
+                     interface 'name'.
+                   * SipRedirect-'name': When the Route source is a SIP
+                     interface, incoming SIP Invites are replied with a 302
+                     'Moved Temporarily' SIP response.
+
+
+                 "
+   ::= { routeStatusEntry 500 }
+
+  -- Columnar:Mapping
+
+  routeStatusMappings OBJECT-TYPE
+   SYNTAX        OCTET STRING
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Mapping
+
+                 Name of the properties manipulation to apply to the call if
+                 the criteria match. The manipulations are executed before
+                 sending the call to the new destination.
+
+                 More than one mapping can be specified. In that case, the
+                 mappings are separated with ',' and are executed in
+                 sequential order.
+
+
+                 "
+   ::= { routeStatusEntry 600 }
+
+  -- Columnar:SignalingProperties
+
+  routeStatusSignalingProperties OBJECT-TYPE
+   SYNTAX        OCTET STRING
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " SignalingProperties
+
+                 Name of the signaling properties to apply to the call.
+                 "
+   ::= { routeStatusEntry 700 }
+
+
+ -- End of table:Route Status
+
+ -- ***************************************************************************
+ 
+ -- Table:Mapping Status
+
+ -- ***************************************************************************
+ 
+ mappingTypeStatusTable OBJECT-TYPE
+  SYNTAX         SEQUENCE OF MappingTypeStatusEntry
+  MAX-ACCESS     not-accessible
+  STATUS         current
+  DESCRIPTION "  Mapping Status
+
+                 This table shows the actual properties manipulation type used
+                 by the call routing services. The properties manipulation
+                 expression related to these types are defined in the
+                 MappingExpressionStatus table.
+                 "
+  ::= { statusGroup 400 }
+  mappingTypeStatusEntry OBJECT-TYPE
+   SYNTAX        MappingTypeStatusEntry
+   MAX-ACCESS    not-accessible
+   STATUS        current
+   DESCRIPTION " A row in table Mapping Status. "
+   INDEX         {
+                   mappingTypeStatusIndex
+                 }
+
+   ::= { mappingTypeStatusTable 1 }
+
+  MappingTypeStatusEntry ::= SEQUENCE
+  {
+    mappingTypeStatusIndex          Unsigned32,
+    mappingTypeStatusName           OCTET STRING,
+    mappingTypeStatusCriteria       INTEGER,
+    mappingTypeStatusTransformation INTEGER
+  }
+
+  -- Index:Row Index
+
+  mappingTypeStatusIndex OBJECT-TYPE
+   SYNTAX        Unsigned32
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Row Index
+
+                 Unique identifier of the row in the table.
+                 "
+   ::= { mappingTypeStatusEntry 100 }
+
+  -- Columnar:Name
+
+  mappingTypeStatusName OBJECT-TYPE
+   SYNTAX        OCTET STRING
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Name
+
+                 Name of the properties manipulation defined by this row.
+
+                 The name of the properties manipulation is unique in the
+                 table.
+
+                 See RouteStatus.Mapping.
+
+
+                 "
+   ::= { mappingTypeStatusEntry 200 }
+
+  -- Columnar:Properties Criteria
+
+  mappingTypeStatusCriteria OBJECT-TYPE
+   SYNTAX        INTEGER { none(100) , e164(200) , calledE164(300) ,
+                 callingE164(400) , name(500) , calledName(600) , callingName
+                 (700) , ton(800) , calledTon(900) , callingTon(1000) , npi
+                 (1100) , calledNpi(1200) , callingNpi(1300) , host(1400) ,
+                 calledHost(1500) , callingHost(1600) , callingPi(1700) ,
+                 callingSi(1800) , callingItc(1900) , uri(2000) , calledUri
+                 (2100) , callingUri(2200) , dateTime(2300) , phoneContext
+                 (2400) , calledPhoneContext(2500) , callingPhoneContext(2600)
+                 , sipUsername(2700) , calledSipUsername(2800) ,
+                 callingSipUsername(2900) , lastDivertingReason(3000) ,
+                 lastDivertingE164(3100) , lastDivertingPartyNumberType(3110)
+                 , lastDivertingPublicTypeOfNumber(3120) ,
+                 lastDivertingPrivateTypeOfNumber(3130) ,
+                 lastDivertingNumberPresentation(3140) ,
+                 originalDivertingReason(3200) , originalDivertingE164(3300) ,
+                 originalDivertingPartyNumberType(3400) ,
+                 originalDivertingPublicTypeOfNumber(3500) ,
+                 originalDivertingPrivateTypeOfNumber(3600) ,
+                 originalDivertingNumberPresentation(3700) ,
+                 calledBearerChannel(3800) , callingBearerChannel(3900) ,
+                 callingSipPrivacy(4000) }
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Properties Criteria
+
+                 Call properties that the service must compare with the call
+                 and match in order to apply the properties manipulation. The
+                 actual call properties expression to match is defined at
+                 MappingExpressionStatus.Criteria.
+
+                 The call properties can be:
+
+                   * E164: Called or calling E.164 properties.
+                   * CalledE164: Called E.164 properties.
+                   * CallingE164: Calling E.164 properties.
+                   * Name: Called or calling name properties.
+                   * CalledName: Called name properties.
+                   * CallingName: Calling name properties.
+                   * Ton: Called or calling type of number properties.
+                   * CalledTon: Called type of number properties.
+                   * CallingTon: Calling type of number properties.
+                   * Npi: Called or calling numbering plan indicator
+                     properties.
+                   * CalledNpi: Called numbering plan indicator properties.
+                   * CallingNpi: Calling numbering plan indicator properties.
+                   * Host: Calling or called host properties.
+                   * CalledHost: Calling host properties.
+                   * CallingHost: Called host properties.
+                   * CallingPi: Calling presentation indicator.
+                   * CallingSi: Calling screening indicator.
+                   * CallingItc: Calling information transfer capability.
+                   * Uri: Calling or called SIP URI properties.
+                   * CalledUri: Called SIP URI properties.
+                   * CallingUri: Calling SIP URI properties.
+                   * DateTime: Routes calls based on the date and/or time the
+                     call arrived at the call router.
+                   * PhoneContext: Called or calling phone context properties.
+                   * CalledPhoneContext: Called phone context properties.
+                   * CallingPhoneContext: Calling phone context properties.
+                   * SipUsername: Called or calling SIP username properties.
+                   * CalledSipUsername: Called SIP username properties.
+                   * CallingSipUsername: Calling SIP username properties.
+                   * LastDivertingReason: Last diverting reason properties.
+                   * LastDivertingE164: Last diverting E.164 properties.
+                   * LastDivertingPartyNumberType: Party number type of the
+                     last diverting number properties.
+                   * LastDivertingPublicTypeOfNumber: Public type of number of
+                     the last diverting number properties.
+                   * LastDivertingPrivateTypeOfNumber: Private type of number
+                     of the last diverting number properties.
+                   * LastDivertingNumberPresentation: Presentation of the last
+                     diverting number properties.
+                   * OriginalDivertingReason: Original diverting reason
+                     properties.
+                   * OriginalDivertingE164: Original diverting E.164
+                     properties.
+                   * OriginalDivertingPartyNumberType: Party number type of
+                     the original diverting number properties.
+                   * OriginalDivertingPublicTypeOfNumber: Public type of
+                     number of the original diverting number properties.
+                   * OriginalDivertingPrivateTypeOfNumber: Private type of
+                     number of the original diverting number properties.
+                   * OriginalDivertingNumberPresentation: Presentation of the
+                     original diverting number properties.
+                   * CalledBearerChannel: Called bearer channel properties.
+                   * CallingBearerChannel: Calling bearer channel properties.
+                   * CallingSipPrivacy: Calling SIP privacy properties.
+
+                 See MappingExpressionStatus.Criteria.
+
+
+                 "
+   ::= { mappingTypeStatusEntry 300 }
+
+  -- Columnar:Properties to Transform
+
+  mappingTypeStatusTransformation OBJECT-TYPE
+   SYNTAX        INTEGER { none(100) , e164(200) , calledE164(300) ,
+                 callingE164(400) , name(500) , calledName(600) , callingName
+                 (700) , ton(800) , calledTon(900) , callingTon(1000) , npi
+                 (1100) , calledNpi(1200) , callingNpi(1300) , host(1400) ,
+                 calledHost(1500) , callingHost(1600) , callingPi(1700) ,
+                 callingSi(1800) , callingItc(1900) , uri(2000) , calledUri
+                 (2100) , callingUri(2200) , phoneContext(2300) ,
+                 calledPhoneContext(2400) , callingPhoneContext(2500) ,
+                 sipUsername(2600) , calledSipUsername(2700) ,
+                 callingSipUsername(2800) , lastDivertingReason(2900) ,
+                 lastDivertingE164(3000) , lastDivertingPartyNumberType(3010)
+                 , lastDivertingPublicTypeOfNumber(3020) ,
+                 lastDivertingPrivateTypeOfNumber(3030) ,
+                 lastDivertingNumberPresentation(3040) ,
+                 originalDivertingReason(3100) , originalDivertingE164(3200) ,
+                 originalDivertingPartyNumberType(3300) ,
+                 originalDivertingPublicTypeOfNumber(3400) ,
+                 originalDivertingPrivateTypeOfNumber(3500) ,
+                 originalDivertingNumberPresentation(3600) ,
+                 calledBearerChannel(3700) , callingBearerChannel(3800) ,
+                 debug(60000) }
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Properties to Transform
+
+                 Call properties to transform. The transformation is defined
+                 at MappingExpressionStatus.Transformation.
+
+                 The call properties can be:
+
+                   * E164: Called or calling E.164 properties.
+                   * CalledE164: Called E.164 properties.
+                   * CallingE164: Calling E.164 properties.
+                   * Name: Called or calling name properties.
+                   * CalledName: Called name properties.
+                   * CallingName: Calling name properties.
+                   * Ton: Called or calling type of number properties.
+                   * CalledTon: Called type of number properties.
+                   * CallingTon: Calling type of number properties.
+                   * Npi: Called or calling numbering plan indicator
+                     properties.
+                   * CalledNpi: Called numbering plan indicator properties.
+                   * CallingNpi: Calling numbering plan indicator properties.
+                   * Host: Calling or called host properties.
+                   * CalledHost: Calling host properties.
+                   * CallingHost: Called host properties.
+                   * CallingPi: Calling presentation indicator.
+                   * CallingSi: Calling screening indicator.
+                   * CallingItc: Calling information transfer capability.
+                   * Uri: Calling or called SIP URI properties.
+                   * CalledUri: Called SIP URI properties.
+                   * CallingUri: Calling SIP URI properties.
+                   * PhoneContext: Calling or called phone context properties.
+                   * CalledPhoneContext: Called phone context properties.
+                   * CallingPhoneContext: Calling phone context properties.
+                   * SipUsername: Calling or called SIP username properties.
+                   * CalledSipUsername: Called phone SIP username properties.
+                   * CallingSipUsername: Calling phone SIP username
+                     properties.
+                   * LastDivertingReason: Last diverting reason properties.
+                   * LastDivertingE164: Last diverting E.164 properties.
+                   * LastDivertingPartyNumberType: Party number type of the
+                     last diverting number properties.
+                   * LastDivertingPublicTypeOfNumber: Public type of number of
+                     the last diverting number properties.
+                   * LastDivertingPrivateTypeOfNumber: Private type of number
+                     of the last diverting number properties.
+                   * LastDivertingNumberPresentation: Presentation of the last
+                     diverting number properties.
+                   * OriginalDivertingReason: Original diverting reason
+                     properties.
+                   * OriginalDivertingE164: Original diverting E.164
+                     properties.
+                   * OriginalDivertingPartyNumberType: Party number type of
+                     the original diverting number properties.
+                   * OriginalDivertingPublicTypeOfNumber: Public type of
+                     number of the original diverting number properties.
+                   * OriginalDivertingPrivateTypeOfNumber: Private type of
+                     number of the original diverting number properties.
+                   * OriginalDivertingNumberPresentation: Presentation of the
+                     original diverting number properties.
+                   * CalledBearerChannel: Called bearer channel properties.
+                   * CallingBearerChannel: Calling bearer channel properties.
+                   * Debug: Reserved for debug configuration.
+
+                 See MappingExpressionStatus.Transformation.
+
+
+                 "
+   ::= { mappingTypeStatusEntry 400 }
+
+
+ -- End of table:Mapping Status
+
+ -- ***************************************************************************
+ 
+ -- Table:Mapping Status
+
+ -- ***************************************************************************
+ 
+ mappingExpressionStatusTable OBJECT-TYPE
+  SYNTAX        SEQUENCE OF MappingExpressionStatusEntry
+  MAX-ACCESS    not-accessible
+  STATUS        current
+  DESCRIPTION " Mapping Status
+
+                This table shows the actual properties manipulation used by
+                the call routing services. The properties manipulation type
+                related to these expressions are defined in the
+                MappingTypeStatus table.
+                "
+  ::= { statusGroup 500 }
+  mappingExpressionStatusEntry OBJECT-TYPE
+   SYNTAX        MappingExpressionStatusEntry
+   MAX-ACCESS    not-accessible
+   STATUS        current
+   DESCRIPTION " A row in table Mapping Status. "
+   INDEX         {
+                   mappingExpressionStatusIndex
+                 }
+
+   ::= { mappingExpressionStatusTable 1 }
+
+  MappingExpressionStatusEntry ::= SEQUENCE
+  {
+    mappingExpressionStatusIndex          Unsigned32,
+    mappingExpressionStatusName           OCTET STRING,
+    mappingExpressionStatusCriteria       OCTET STRING,
+    mappingExpressionStatusTransformation OCTET STRING,
+    mappingExpressionStatusSubMappings    OCTET STRING
+  }
+
+  -- Index:Row Index
+
+  mappingExpressionStatusIndex OBJECT-TYPE
+   SYNTAX        Unsigned32
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Row Index
+
+                 Unique identifier of the row in the table.
+                 "
+   ::= { mappingExpressionStatusEntry 100 }
+
+  -- Columnar:Name
+
+  mappingExpressionStatusName OBJECT-TYPE
+   SYNTAX        OCTET STRING
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Name
+
+                 Name of the properties manipulation defined by this row.
+
+                 More than one row can have the same name. In that case, the
+                 first row matching the call will be used. The rows are used
+                 in ascending order.
+
+                 See RouteStatus.Mapping.
+
+
+                 "
+   ::= { mappingExpressionStatusEntry 200 }
+
+  -- Columnar:Expression Criteria
+
+  mappingExpressionStatusCriteria OBJECT-TYPE
+   SYNTAX        OCTET STRING
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Expression Criteria
+
+                 Expression that the service must compare with the call and
+                 match in order to apply the properties manipulation. The
+                 expression criteria is applied on the call properties defined
+                 at MappingTypeStatus.Criteria.
+
+                 The expression syntax is related to the selected properties
+                 criteria or can be a special tag:
+
+                   * E164: Regular expression.
+                   * CalledE164: Regular expression.
+                   * CallingE164: Regular expression.
+                   * Name: Regular expression.
+                   * CalledName: Regular expression.
+                   * CallingName: Regular expression.
+                   * Ton: 'unknown', 'international', 'national', 'network',
+                     'subscriber' or 'abbreviated'.
+                   * CalledTon: 'unknown', 'international', 'national',
+                     'network', 'subscriber' or 'abbreviated'.
+                   * CallingTon: 'unknown', 'international', 'national',
+                     'network', 'subscriber' or 'abbreviated'.
+                   * Npi: 'unknown', 'isdn', 'data', 'telex', 'national' or
+                     'private'.
+                   * CalledNpi: 'unknown', 'isdn', 'data', 'telex', 'national'
+                     or 'private'.
+                   * CallingNpi: 'unknown', 'isdn', 'data', 'telex',
+                     'national' or 'private'.
+                   * Host: Regular expression. The call properties format is
+                     'Fqdn[:port]'. If the '[:port]' is not present, the table
+                     uses the well-known port of the signalling protocol.
+                   * CalledHost: Regular expression. The call properties
+                     format is 'Fqdn[:port]'. If the '[:port]' is not present,
+                     the table uses the well-known port of the signalling
+                     protocol.
+                   * CallingHost: Regular expression. The call properties
+                     format is 'Fqdn[:port]'. If the '[:port]' is not present,
+                     the table uses the well-known port of the signalling
+                     protocol.
+                   * CallingPi: 'allowed', 'restricted', or 'interworking'.
+                   * CallingSi: 'not-screened', 'passed', 'failed' or
+                     'network'.
+                   * CallingItc: 'speech', 'unrestricted', 'restricted',
+                     '3.1Khz', 'udi-ta' or 'video'.
+                   * Uri: Regular expression.
+                   * CalledUri: Regular expression.
+                   * CallingUri: Regular expression.
+                   * DateTime: Day of week and time period and/or date and
+                     time period.
+                   * PhoneContext: Regular expression.
+                   * CalledPhoneContext: Regular expression.
+                   * CallingPhoneContext: Regular expression.
+                   * SipUsername: Regular expression.
+                   * CalledSipUsername: Regular expression.
+                   * CallingSipUsername: Regular expression.
+                   * LastDivertingReason: 'cfu', 'cfb', 'cfnr' or 'unknown'.
+                   * LastDivertingE164: Regular expression.
+                   * LastDivertingPartyNumberType: 'unknown', 'public' or
+                     'private'.
+                   * LastDivertingPublicTypeOfNumber: 'unknown',
+                     'international', 'national', 'network-specific', 'local'
+                     or 'abbreviated'.
+                   * LastDivertingPrivateTypeOfNumber: 'unknown', 'leg2-reg',
+                     'leg1-reg', 'pisn-specific', 'subscriber' or
+                     'abbreviated'.
+                   * LastDivertingNumberPresentation: 'allowed', 'restricted',
+                     'interworking' or 'restricted-address'.
+                   * OriginalDivertingReason: 'cfu', 'cfb', 'cfnr' or
+                     'unknown'.
+                   * OriginalDivertingE164: Regular expression.
+                   * OriginalDivertingPartyNumberType: 'unknown', 'public' or
+                     'private'.
+                   * OriginalDivertingPublicTypeOfNumber: 'unknown',
+                     'international', 'national', 'network-specific', 'local'
+                     or 'abbreviated'.
+                   * OriginalDivertingPrivateTypeOfNumber: 'unknown',
+                     'leg2-reg', 'leg1-reg', 'pisn-specific', 'subscriber' or
+                     'abbreviated'.
+                   * OriginalDivertingNumberPresentation: 'allowed',
+                     'restricted', 'interworking' or 'restricted-address'.
+                   * CalledBearerChannel: Regular expression.
+                   * CallingBearerChannel: Regular expression.
+                   * CallingSipPrivacy: 'disabled', 'none' or 'id'.
+
+                 Special tags:
+
+                   * <undefined>: Matches if the property is not defined for
+                     the call.
+                   * <default>: Always matches. Generally used to set a
+                     default mapping if the previous criteria do not match.
+
+                 Accepted DateTime formats:
+
+                 Date/Time Period format:
+
+                   * 'DD.MM.YYYY/HH:MM:SS-DD.MM.YYYY/HH:MM:SS'
+                   * 'DD.MM.YYYY/HH:MM:SS-HH:MM:SS'
+                   * 'DD.MM.YYYY-DD.MM.YYYY'
+                   * 'DD.MM.YYYY'
+                   * 'HH:MM:SS-HH:MM:SS'
+
+                 Week Day/Time Period format:
+
+                   * 'DDD'
+                   * 'DDD,DDD...'
+                   * 'DDD/HH:MM:SS-HH:MM:SS'
+                   * 'DDD,DDD.../HH:MM:SS-HH:MM:SS'
+
+                 where DDD must be one of: SUN, MON, TUE, WED, THU, FRI, SAT.
+
+                 Many of the formats above can be concatenated to form one
+                 expression. They must be separated by |. Example: 25.12.2006
+                 | SUN
+
+                 See MappingTypeStatus.Criteria.
+
+
+                 "
+   ::= { mappingExpressionStatusEntry 300 }
+
+  -- Columnar:Transformation
+
+  mappingExpressionStatusTransformation OBJECT-TYPE
+   SYNTAX        OCTET STRING
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Transformation
+
+                 Transformation to apply to the call properties. It is applied
+                 on the call properties defined at
+                 MappingTypeStatus.Transformation.
+
+                 The transformation syntax is related to the selected
+                 properties to tranform:
+
+                   * Ton: 'unknown', 'international', 'national', 'network',
+                     'subscriber' or 'abbreviated'.
+                   * CalledTon: 'unknown', 'international', 'national',
+                     'network', 'subscriber' or 'abbreviated'.
+                   * CallingTon: 'unknown', 'international', 'national',
+                     'network', 'subscriber' or 'abbreviated'.
+                   * Npi: 'unknown', 'isdn', 'data', 'telex', 'national' or
+                     'private'.
+                   * CalledNpi: 'unknown', 'isdn', 'data', 'telex', 'national'
+                     or 'private'.
+                   * CallingNpi: 'unknown', 'isdn', 'data', 'telex',
+                     'national' or 'private'.
+                   * CallingPi: 'allowed', 'restricted', or 'interworking'.
+                   * CallingSi: 'not-screened', 'passed', 'failed' or
+                     'network'.
+                   * CallingItc: 'speech', 'unrestricted', 'restricted',
+                     '3.1Khz', 'udi-ta' or 'video'.
+                   * LastDivertingReason: 'cfu', 'cfb', 'cfnr' or 'unknown'.
+                   * LastDivertingPartyNumberType: 'unknown', 'public' or
+                     'private'.
+                   * LastDivertingPublicTypeOfNumber: 'unknown',
+                     'international', 'national', 'network-specific', 'local'
+                     or 'abbreviated'.
+                   * LastDivertingPrivateTypeOfNumber: 'unknown', 'leg2-reg',
+                     'leg1-reg', 'pisn-specific', 'subscriber' or
+                     'abbreviated'.
+                   * LastDivertingNumberPresentation: 'allowed', 'restricted',
+                     'interworking' or 'restricted-address'.
+                   * OriginalDivertingReason: 'cfu', 'cfb', 'cfnr' or
+                     'unknown'.
+                   * OriginalDivertingPartyNumberType: 'unknown', 'public' or
+                     'private'.
+                   * OriginalDivertingPublicTypeOfNumber: 'unknown',
+                     'international', 'national', 'network-specific', 'local'
+                     or 'abbreviated'.
+                   * OriginalDivertingPrivateTypeOfNumber: 'unknown',
+                     'leg2-reg', 'leg1-reg', 'pisn-specific', 'subscriber' or
+                     'abbreviated'.
+                   * OriginalDivertingNumberPresentation: 'allowed',
+                     'restricted', 'interworking' or 'restricted-address'.
+                   * All others: string where '\0' to '\9' is replaced by the
+                     corresponding group in the regular expresion set in the
+                     expression criteria (see
+                     MappingStatus.ExpressionCriteria). The value can be set
+                     to the macro '<local_ip_port>' to replace the properties
+                     by the local IP address and port of the listening socket
+                     of the SIP gateway used to send the INVITE.
+
+                 See MappingTypeStatus.Transformation.
+
+
+                 "
+   ::= { mappingExpressionStatusEntry 400 }
+
+  -- Columnar:Subsequent Mappings
+
+  mappingExpressionStatusSubMappings OBJECT-TYPE
+   SYNTAX        OCTET STRING
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Subsequent Mappings
+
+                 Name of a subsequent properties manipulation to execute.
+
+                 More than one mapping can be specified. In that case, the
+                 mappings are separated with ',' and are executed in
+                 sequential order.
+
+
+                 "
+   ::= { mappingExpressionStatusEntry 500 }
+
+
+ -- End of table:Mapping Status
+
+ -- ***************************************************************************
+ 
+ -- Table:Hunt Status
+
+ -- ***************************************************************************
+ 
+ huntStatusTable OBJECT-TYPE
+  SYNTAX        SEQUENCE OF HuntStatusEntry
+  MAX-ACCESS    not-accessible
+  STATUS        current
+  DESCRIPTION " Hunt Status
+
+                This table shows the actual hunt used by the call routing
+                services.
+                "
+  ::= { statusGroup 600 }
+  huntStatusEntry OBJECT-TYPE
+   SYNTAX        HuntStatusEntry
+   MAX-ACCESS    not-accessible
+   STATUS        current
+   DESCRIPTION " A row in table Hunt Status. "
+   INDEX         {
+                   huntStatusIndex
+                 }
+
+   ::= { huntStatusTable 1 }
+
+  HuntStatusEntry ::= SEQUENCE
+  {
+    huntStatusIndex              Unsigned32,
+    huntStatusName               OCTET STRING,
+    huntStatusDestinations       OCTET STRING,
+    huntStatusSelectionAlgorithm INTEGER,
+    huntStatusTimeout            Unsigned32,
+    huntStatusCauses             OCTET STRING
+  }
+
+  -- Index:Row Index
+
+  huntStatusIndex OBJECT-TYPE
+   SYNTAX        Unsigned32
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Row Index
+
+                 Unique identifier of the row in the table.
+                 "
+   ::= { huntStatusEntry 100 }
+
+  -- Columnar:Hunt Name
+
+  huntStatusName OBJECT-TYPE
+   SYNTAX        OCTET STRING
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Hunt Name
+
+                 Name of the hunt defined by this row. It must be unique in
+                 the table.
+                 "
+   ::= { huntStatusEntry 200 }
+
+  -- Columnar:Hunt Destinations
+
+  huntStatusDestinations OBJECT-TYPE
+   SYNTAX        OCTET STRING
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Hunt Destinations
+
+                 List of hunt destinations separated by commas.
+
+                 The destination can be:
+
+                   * route-'name': The call destination is the route 'name'.
+                   * hunt-'name': The call destination is the hunt 'name'.
+                   * sip-'name': The call destination is the SIP interface
+                     'name'.
+                   * isdn-'name': The call destination is the ISDN interface
+                     'name'.
+                   * r2-'name': The call destination is the R2 interface
+                     'name'.
+                   * e&m-'name': The call destination is the E&M interface
+                     'name'.
+                   * fxs-'name': The call destination is the FXS interface
+                     'name'.
+                   * fxo-'name': The call destination is the FXO interface
+                     'name'.
+
+                 Note : Only FXS interfaces are supported if the selection
+                 algorithm Simultaneous is used.
+
+                 Example: 'isdn-Slot2/Bri1, route-something'
+
+
+                 "
+   ::= { huntStatusEntry 300 }
+
+  -- Columnar:Selection Algorithm
+
+  huntStatusSelectionAlgorithm OBJECT-TYPE
+   SYNTAX        INTEGER { sequential(100) , cyclic(200) , simultaneous(300) }
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Selection Algorithm
+
+                 Algorithm used to select the destination order.
+
+                 The destination order can be:
+
+                   * Sequential: The hunt tries the destination in the same
+                     order as listed. The first destination hunted is the
+                     first listed.
+                   * Cyclic: The hunt starts from the destination that follows
+                     the destination used for the last hunt. Subsequent calls
+                     try another first destination in a round-robin method.
+                   * Simultaneous: The hunt tries every available destination
+                     at the same time. The first destination to pick up has
+                     the call. Other destinations stop ringing. This method
+                     can only have FXS endpoints as destinations.
+
+                 Example of cylic selection: If the destination is set to
+                 'x,y,z', the destination the hunt tries is in the following
+                 order:
+
+                  1. x,y,z.
+                  2. y,z,x.
+                  3. z,x,y.
+                  4. x,y,z.
+
+
+                 "
+   ::= { huntStatusEntry 400 }
+
+  -- Columnar:Timeout
+
+  huntStatusTimeout OBJECT-TYPE
+   SYNTAX        Unsigned32
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Timeout
+
+                 Maximal time allowed to the destination to handle the call.
+
+                 A value of '0' disables the timeout.
+
+                 This value is expressed in seconds (s).
+
+                 Note : Not applicable if the selection algorithm Simultaneous
+                 is used.
+
+
+                 "
+   ::= { huntStatusEntry 500 }
+
+  -- Columnar:Causes
+
+  huntStatusCauses OBJECT-TYPE
+   SYNTAX        OCTET STRING
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Causes
+
+                 Lists call rejection causes to continue the hunt. The causes
+                 are separated with commas. The available hunt causes are:
+
+                 Normal event:
+
+                   * 1: Unassigned (unallocated) number.
+                   * 2: No route to specified transit network.
+                   * 3: No route to destination.
+                   * 6: Channel unacceptable.
+                   * 7: Call awarded and being delivered in an established
+                     channel.
+                   * 17: User busy.
+                   * 18: No user responding.
+                   * 19: User alerting, no answer.
+                   * 21: Call rejected.
+                   * 22: Number changed.
+                   * 26: Non-selected user clearing.
+                   * 27: Destination out of order.
+                   * 28: Invalid number format (incomplete number).
+                   * 29: Facility rejected.
+                   * 30: Response to STATUS ENQUIRY.
+                   * 31: Normal, unspecified.
+
+                 Resource unavailable:
+
+                   * 34: No circuit/channel available.
+                   * 38: Network out of order.
+                   * 41: Temporary failure.
+                   * 42: Switching equipment congestion.
+                   * 43: Access information discarded.
+                   * 44: Requested circuit/channel not available.
+                   * 47: Resource unavailable, unspecified.
+
+                 Service or option not available:
+
+                   * 57: Bearer capability not authorized.
+                   * 58: Bearer capability not presently available.
+                   * 63: Service or option not available, unspecified.
+
+                 Service or option not implemented:
+
+                   * 65: Bearer capability not implemented.
+                   * 66: Channel type not implemented.
+                   * 69: Requested facility not implemented.
+                   * 70: Only restricted digital information bearer capability
+                     is available.
+                   * 79: Service or option not implemented, unspecified.
+
+                 Invalid message:
+
+                   * 81: Invalid call reference value.
+                   * 82: Identified channel does not exist.
+                   * 83: A suspended call exists, but this call identity does
+                     not.
+                   * 84: Call identity in use.
+                   * 85: No call suspended.
+                   * 86: Call having the requested call identity has been
+                     cleared.
+                   * 88: Incompatible destination.
+                   * 91: Invalid transit network selection.
+                   * 95: Invalid message, unspecified.
+
+                 Protocol error:
+
+                   * 96: Mandatory information element is missing.
+                   * 97: Message type non-existent or not implemented.
+                   * 98: Message not compatible with call state or message
+                     type non-existent or not implemented.
+                   * 99: Information element non-existent or not implemented.
+                   * 100: Invalid information element contents.
+                   * 101: Message not compatible with call state.
+                   * 102: Recovery on time expiry.
+                   * 111: Protocol error, unspecified.
+
+                 Interworking:
+
+                   * 127: Interworking, unspecified.
+
+                 Note : Not applicable if the selection algorithm Simultaneous
+                 is used.
+
+
+                 "
+   ::= { huntStatusEntry 600 }
+
+
+ -- End of table:Hunt Status
+
+ -- ***************************************************************************
+ 
+ -- Table:Signaling Properties Status
+
+ -- ***************************************************************************
+ 
+ signalingPropertiesStatusTable OBJECT-TYPE
+  SYNTAX        SEQUENCE OF SignalingPropertiesStatusEntry
+  MAX-ACCESS    not-accessible
+  STATUS        current
+  DESCRIPTION " Signaling Properties Status
+
+                This table shows the actual signaling properties used by the
+                call routing services.
+                "
+  ::= { statusGroup 700 }
+  signalingPropertiesStatusEntry OBJECT-TYPE
+   SYNTAX        SignalingPropertiesStatusEntry
+   MAX-ACCESS    not-accessible
+   STATUS        current
+   DESCRIPTION " A row in table Signaling Properties Status. "
+   INDEX         {
+                   signalingPropertiesStatusIndex
+                 }
+
+   ::= { signalingPropertiesStatusTable 1 }
+
+  SignalingPropertiesStatusEntry ::= SEQUENCE
+  {
+    signalingPropertiesStatusIndex                     Unsigned32,
+    signalingPropertiesStatusName                      OCTET STRING,
+    signalingPropertiesStatusEarlyConnect              MxEnableState,
+    signalingPropertiesStatusEarlyDisconnect           MxEnableState,
+    signalingPropertiesStatusDestinationHost           OCTET STRING,
+    signalingPropertiesStatusAllow180Sdp               MxEnableState,
+    signalingPropertiesStatusAllow183NoSdp             MxEnableState,
+    signalingPropertiesStatusPrivacy                   INTEGER,
+    signalingPropertiesStatusCallPropertiesTranslation OCTET STRING,
+    signalingPropertiesStatusSipHeadersTranslation     OCTET STRING
+  }
+
+  -- Index:Row Index
+
+  signalingPropertiesStatusIndex OBJECT-TYPE
+   SYNTAX        Unsigned32
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Row Index
+
+                 Unique identifier of the row in the table.
+                 "
+   ::= { signalingPropertiesStatusEntry 100 }
+
+  -- Columnar:SIP Headers Translation
+
+  signalingPropertiesStatusSipHeadersTranslation OBJECT-TYPE
+   SYNTAX        OCTET STRING
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " SIP Headers Translation
+
+                 Name of the SIP headers translation to apply to the call.
+
+                 The translation modifies the SIP headers before the call is
+                 sent to its destination.
+
+                 More than one translation can be specified. In that case, the
+                 translations are separated with ',' and are executed in
+                 sequential order.
+
+
+                 "
+   ::= { signalingPropertiesStatusEntry 1000 }
+
+  -- Columnar:Signaling properties name
+
+  signalingPropertiesStatusName OBJECT-TYPE
+   SYNTAX        OCTET STRING
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Signaling properties name
+
+                 Name of the Signaling properties defined by this row. It must
+                 be unique in the table.
+                 "
+   ::= { signalingPropertiesStatusEntry 200 }
+
+  -- Columnar:EarlyConnect
+
+  signalingPropertiesStatusEarlyConnect OBJECT-TYPE
+   SYNTAX        MxEnableState
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " EarlyConnect
+
+                 Enable/Disable the early connect feature.
+
+                 When early connect is enabled, the SIP call is connected by
+                 sending a 200 OK message instead of a 183 Session Progress
+                 message with early media.
+
+
+                 "
+   ::= { signalingPropertiesStatusEntry 300 }
+
+  -- Columnar:EarlyDisconnect
+
+  signalingPropertiesStatusEarlyDisconnect OBJECT-TYPE
+   SYNTAX        MxEnableState
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " EarlyDisconnect
+
+                 Enable/Disable the early disconnect feature.
+
+                 When early disconnect is enabled, the SIP BYE message is sent
+                 upon ISDN 'Disconnect' signal reception.
+
+                 When early disconnect is disabled, the SIP BYE message is
+                 sent upon ISDN 'Call release' signal reception.
+
+                 If early disconnect is enabled but no ISDN 'Disconnect'
+                 message is received, the SIP BYE message will be sent upon
+                 receiving an ISDN 'Call release' as if the early disconnect
+                 was disabled.
+
+
+                 "
+   ::= { signalingPropertiesStatusEntry 400 }
+
+  -- Columnar:DestinationHost
+
+  signalingPropertiesStatusDestinationHost OBJECT-TYPE
+   SYNTAX        OCTET STRING
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " DestinationHost
+
+                 SIP messages destination.
+
+                 The value can be set to the macro '<local_ip_port>' to
+                 replace the properties by the local IP address and port of
+                 the listening socket of the SIP gateway used to send the
+                 INVITE.
+
+
+                 "
+   ::= { signalingPropertiesStatusEntry 500 }
+
+  -- Columnar:Allow 180 SDP
+
+  signalingPropertiesStatusAllow180Sdp OBJECT-TYPE
+   SYNTAX        MxEnableState
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Allow 180 SDP
+
+                 Enable/Disable the 180 with SDP allowed.
+
+                 When disabled, a SIP 183 with SDP is sent instead of a 180
+                 with SDP.
+
+                 This does not affect the 180 without SDP.
+
+
+                 "
+   ::= { signalingPropertiesStatusEntry 600 }
+
+  -- Columnar:Allow 183 No SDP
+
+  signalingPropertiesStatusAllow183NoSdp OBJECT-TYPE
+   SYNTAX        MxEnableState
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Allow 183 No SDP
+
+                 Enable/Disable the 183 without SDP allowed.
+
+                 When disabled, a 183 without SDP is not sent.
+
+                 This does not affect the 183 with SDP.
+
+
+                 "
+   ::= { signalingPropertiesStatusEntry 700 }
+
+  -- Columnar:Privacy
+
+  signalingPropertiesStatusPrivacy OBJECT-TYPE
+   SYNTAX        INTEGER { disable(100) , none(200) , id(300) , rpid(400) }
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Privacy
+
+                 Shows the privacy level of the call.
+
+                   * Disable : No privacy is used.
+                   * None : Use P-Asserted Identity privacy.
+                   * Id : Use P-Preferred Identity privacy.
+                   * Rpid : Use Remote-Party-ID privacy.
+
+
+                 "
+   ::= { signalingPropertiesStatusEntry 800 }
+
+  -- Columnar:Call Properties Translation
+
+  signalingPropertiesStatusCallPropertiesTranslation OBJECT-TYPE
+   SYNTAX        OCTET STRING
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Call Properties Translation
+
+                 Name of the call properties translation to apply to the call.
+
+                 The translation modifies the call properties before the call
+                 is sent to its destination.
+
+                 More than one translation can be specified. In that case, the
+                 translations are separated with ',' and are executed in
+                 sequential order.
+
+
+                 "
+   ::= { signalingPropertiesStatusEntry 900 }
+
+
+ -- End of table:Signaling Properties Status
+
+ -- ***************************************************************************
+ 
+ -- Table:SIP Headers Translation Status
+
+ -- ***************************************************************************
+ 
+ sipHeadersTranslationStatusTable OBJECT-TYPE
+  SYNTAX        SEQUENCE OF SipHeadersTranslationStatusEntry
+  MAX-ACCESS    not-accessible
+  STATUS        current
+  DESCRIPTION " SIP Headers Translation Status
+
+                This table shows the configured SIP headers translations to be
+                used by the call routing service. The configuration is not
+                used until the command 'ApplyConfig' is executed.
+                "
+  ::= { statusGroup 800 }
+  sipHeadersTranslationStatusEntry OBJECT-TYPE
+   SYNTAX        SipHeadersTranslationStatusEntry
+   MAX-ACCESS    not-accessible
+   STATUS        current
+   DESCRIPTION " A row in table SIP Headers Translation Status. "
+   INDEX         {
+                   sipHeadersTranslationStatusIndex
+                 }
+
+   ::= { sipHeadersTranslationStatusTable 1 }
+
+  SipHeadersTranslationStatusEntry ::= SEQUENCE
+  {
+    sipHeadersTranslationStatusIndex     Unsigned32,
+    sipHeadersTranslationStatusName      OCTET STRING,
+    sipHeadersTranslationStatusSipHeader INTEGER,
+    sipHeadersTranslationStatusBuiltFrom INTEGER,
+    sipHeadersTranslationStatusFixValue  OCTET STRING
+  }
+
+  -- Index:Row Index
+
+  sipHeadersTranslationStatusIndex OBJECT-TYPE
+   SYNTAX        Unsigned32
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Row Index
+
+                 Unique identifier of the row in the table.
+                 "
+   ::= { sipHeadersTranslationStatusEntry 100 }
+
+  -- Columnar:SIP Headers Translation Name
+
+  sipHeadersTranslationStatusName OBJECT-TYPE
+   SYNTAX        OCTET STRING ( SIZE(0..64) )
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " SIP Headers Translation Name
+
+                 Name of the SIP headers translation defined by this row.
+                 "
+   ::= { sipHeadersTranslationStatusEntry 200 }
+
+  -- Columnar:SIP Header
+
+  sipHeadersTranslationStatusSipHeader OBJECT-TYPE
+   SYNTAX        INTEGER { fromHeaderHostPart(100) , fromHeaderUserPart(200) ,
+                 identityHeaderHostPart(300) , identityHeaderUserPart(400) ,
+                 identityHeaderPhoneNumber(500) , identityHeaderFriendlyName
+                 (550) , requestLineHostPart(600) , requestLineUserPart(700) ,
+                 toHeaderHostPart(800) , toHeaderUserPart(900) }
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " SIP Header
+
+                 Sets which SIP header is modified by this translation.
+
+                 The SIP headers can be:
+
+                   * FromHeaderHostPart: Host part of the From header's URI.
+                   * FromHeaderUserPart: User part of the From header's URI.
+                   * IdentityHeaderHostPart: Host part of the Identity
+                     header's URI.
+                   * IdentityHeaderUserPart: User part of the Identity
+                     header's URI.
+                   * IdentityHeaderPhoneNumber: Phone number in the Identity
+                     header's tel URL.
+                   * IdentityHeaderFriendlyName: Friendly name in the Identity
+                     header's URI.
+                   * RequestLineHostPart: Host part of the Request line's URI.
+                   * RequestLineUserPart: User part of the Request line's URI.
+                   * ToHeaderHostPart: Host part of the To header's URI.
+                   * ToHeaderUserPart: User part of the To header's URI.
+
+
+                 "
+   ::= { sipHeadersTranslationStatusEntry 300 }
+
+  -- Columnar:Built From
+
+  sipHeadersTranslationStatusBuiltFrom OBJECT-TYPE
+   SYNTAX        INTEGER { calledE164(100) , destinationHost(200) , domain
+                 (300) , fixValue(400) , hostName(500) , localIp(600) ,
+                 callingBearerChannel(700) , sipEndpointUsername(800) ,
+                 callingName(900) , callingE164(1000) }
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Built From
+
+                 Sets what information is used to build the selected SIP
+                 header.
+
+                 The information can be retrieved from:
+
+                   * CalledE164: Use the called party E.164 property.
+                   * DestinationHost: Use the destination host configured in
+                     the signaling properties of which this translation is
+                     part.
+                   * Domain: Use the domain name configured in the unit.
+                   * FixValue: Use a fix value (see
+                     SipHeadersTranslation.FixValue).
+                   * HostName: Use the host name configured on the unit.
+                   * LocalIp: Use the local IP address.
+                   * CallingBearerChannel: Use the calling bearer channel.
+                   * SipEndpointUsername: Use the SIP username associated with
+                     the endpoint.
+                   * CallingName: Use the calling party name property.
+                   * CallingE164: Use the calling party E.164 property.
+
+
+                 "
+   ::= { sipHeadersTranslationStatusEntry 400 }
+
+  -- Columnar:Fix Value
+
+  sipHeadersTranslationStatusFixValue OBJECT-TYPE
+   SYNTAX        OCTET STRING ( SIZE(0..255) )
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Fix Value
+
+                 Fix value to be inserted in the SIP header when
+                 SipHeadersTranslation.BuiltFrom is set to FixValue.
+                 "
+   DEFVAL        { "" }
+   ::= { sipHeadersTranslationStatusEntry 500 }
+
+
+ -- End of table:SIP Headers Translation Status
+
+ -- ***************************************************************************
+ 
+ -- Table:Call Properties Translation Status
+
+ -- ***************************************************************************
+ 
+ callPropertiesTranslationStatusTable OBJECT-TYPE
+  SYNTAX        SEQUENCE OF CallPropertiesTranslationStatusEntry
+  MAX-ACCESS    not-accessible
+  STATUS        current
+  DESCRIPTION " Call Properties Translation Status
+
+                This table shows the configured call properties translations
+                to be used by the call routing service. The configuration is
+                not used until the command 'ApplyConfig' is executed.
+                "
+  ::= { statusGroup 900 }
+  callPropertiesTranslationStatusEntry OBJECT-TYPE
+   SYNTAX        CallPropertiesTranslationStatusEntry
+   MAX-ACCESS    not-accessible
+   STATUS        current
+   DESCRIPTION " A row in table Call Properties Translation Status. "
+   INDEX         {
+                   callPropertiesTranslationStatusIndex
+                 }
+
+   ::= { callPropertiesTranslationStatusTable 1 }
+
+  CallPropertiesTranslationStatusEntry ::= SEQUENCE
+  {
+    callPropertiesTranslationStatusIndex        Unsigned32,
+    callPropertiesTranslationStatusName         OCTET STRING,
+    callPropertiesTranslationStatusCallProperty INTEGER,
+    callPropertiesTranslationStatusBuiltFrom    INTEGER,
+    callPropertiesTranslationStatusFixValue     OCTET STRING
+  }
+
+  -- Index:Row Index
+
+  callPropertiesTranslationStatusIndex OBJECT-TYPE
+   SYNTAX        Unsigned32
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Row Index
+
+                 Unique identifier of the row in the table.
+                 "
+   ::= { callPropertiesTranslationStatusEntry 100 }
+
+  -- Columnar:Call Properties Translation Name
+
+  callPropertiesTranslationStatusName OBJECT-TYPE
+   SYNTAX        OCTET STRING ( SIZE(0..64) )
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Call Properties Translation Name
+
+                 Name of the call properties translation defined by this row.
+                 "
+   ::= { callPropertiesTranslationStatusEntry 200 }
+
+  -- Columnar:Call Property
+
+  callPropertiesTranslationStatusCallProperty OBJECT-TYPE
+   SYNTAX        INTEGER { calledE164(100) , callingE164(200) , calledName
+                 (300) , callingName(400) , calledUri(500) , callingUri(600) ,
+                 calledBearerChannel(700) }
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Call Property
+
+                 Sets which call property is modified by this translation.
+
+                 The call properties can be:
+
+                   * CalledE164: Called party E.164 property.
+                   * CallingE164: Calling party E.164 property.
+                   * CalledName: Called party name property.
+                   * CallingName: Calling party name property.
+                   * CalledUri: Called URI name property.
+                   * CallingUri: Calling URI name property.
+                   * CalledBearerChannel: Called bearer channel property.
+
+
+                 "
+   ::= { callPropertiesTranslationStatusEntry 300 }
+
+  -- Columnar:Built From
+
+  callPropertiesTranslationStatusBuiltFrom OBJECT-TYPE
+   SYNTAX        INTEGER { domain(100) , fixValue(200) , fromHeaderUri(300) ,
+                 fromHeaderFriendlyName(400) , fromHeaderUserPart(500) ,
+                 identityHeaderUri(600) , identityHeaderUserPart(700) ,
+                 identityHeaderPhoneNumber(800) , identityHeaderFriendlyName
+                 (850) , localIp(900) , requestLineUri(1000) ,
+                 requestLineUserPart(1100) , toHeaderUri(1200) ,
+                 toHeaderFriendlyName(1300) , toHeaderUserPart(1400) }
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Built From
+
+                 Sets what information is used to build the selected call
+                 property.
+
+                 The information can be retrieved from:
+
+                   * Domain: Use the domain name configured in the unit.
+                   * FixValue: Use a fix value (see
+                     CallPropertiesTranslation.FixValue).
+                   * FromHeaderUri: Use the From header's URI.
+                   * FromHeaderFriendlyName: Use the friendly name part of the
+                     From header.
+                   * FromHeaderUserPart: Use the user part of the From
+                     header's URI.
+                   * IdentityHeaderUri: Use the Identity header's URI.
+                   * IdentityHeaderUserPart: Use the user part of the Identity
+                     header's URI.
+                   * IdentityHeaderPhoneNumber: Use the phone number in the
+                     Identity header's tel URL.
+                   * IdentityHeaderFriendlyName: Use the friendly name in the
+                     Identity header's URI.
+                   * LocalIp: Use the local IP address.
+                   * RequestLineUri: Use the Request line's URI.
+                   * RequestLineUserPart: Use the user part of the Request
+                     line's URI.
+                   * ToHeaderUri: Use the To header's URI.
+                   * ToHeaderFriendlyName: Use the friendly name part of the
+                     To header.
+                   * ToHeaderUserPart: Use the user part of the To header's
+                     URI.
+
+
+                 "
+   ::= { callPropertiesTranslationStatusEntry 400 }
+
+  -- Columnar:Fix Value
+
+  callPropertiesTranslationStatusFixValue OBJECT-TYPE
+   SYNTAX        OCTET STRING ( SIZE(0..255) )
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Fix Value
+
+                 Fix value to be inserted in the call property when
+                 CallPropertiesTranslation.BuiltFrom is set to FixValue.
+                 "
+   ::= { callPropertiesTranslationStatusEntry 500 }
+
+
+ -- End of table:Call Properties Translation Status
+
+ -- ***************************************************************************
+ 
+ -- Table:SIP Redirect Status
+
+ -- ***************************************************************************
+ 
+ sipRedirectStatusTable OBJECT-TYPE
+  SYNTAX        SEQUENCE OF SipRedirectStatusEntry
+  MAX-ACCESS    not-accessible
+  STATUS        current
+  DESCRIPTION " SIP Redirect Status
+
+                This table shows the actual Redirect entry used by the call
+                routing service.
+                "
+  ::= { statusGroup 1000 }
+  sipRedirectStatusEntry OBJECT-TYPE
+   SYNTAX        SipRedirectStatusEntry
+   MAX-ACCESS    not-accessible
+   STATUS        current
+   DESCRIPTION " A row in table SIP Redirect Status. "
+   INDEX         {
+                   sipRedirectStatusIndex
+                 }
+
+   ::= { sipRedirectStatusTable 1 }
+
+  SipRedirectStatusEntry ::= SEQUENCE
+  {
+    sipRedirectStatusIndex           Unsigned32,
+    sipRedirectStatusName            OCTET STRING,
+    sipRedirectStatusDestinationHost OCTET STRING
+  }
+
+  -- Index:Row Index
+
+  sipRedirectStatusIndex OBJECT-TYPE
+   SYNTAX        Unsigned32
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Row Index
+
+                 Unique identifier of the row in the table.
+                 "
+   ::= { sipRedirectStatusEntry 100 }
+
+  -- Columnar:Name
+
+  sipRedirectStatusName OBJECT-TYPE
+   SYNTAX        OCTET STRING ( SIZE(0..64) )
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Name
+
+                 Name of the SIP Redirect defined by this row.
+
+                 The name must be unique in the table.
+
+
+                 "
+   ::= { sipRedirectStatusEntry 200 }
+
+  -- Columnar:Destination Host
+
+  sipRedirectStatusDestinationHost OBJECT-TYPE
+   SYNTAX        OCTET STRING
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Destination Host
+
+                 Host address inserted in the Moved Temporarily response.
+                 "
+   DEFVAL        { "" }
+   ::= { sipRedirectStatusEntry 300 }
+
+
+ -- End of table:SIP Redirect Status
+
+-- End of group:Status Group
+
+-- Scalar:Enable Auto-Routing
+
+autoRoutingEnable OBJECT-TYPE
+ SYNTAX        MxEnableState
+ MAX-ACCESS    read-write
+ STATUS        current
+ DESCRIPTION " Enable Auto-Routing
+
+               Enable/Disable the automatic insertion of default routes for
+               selected endpoints.
+
+               When enabled, routes are automatically added to the Route Table
+               in order to connect the endpoints marked as eligible for
+               auto-routing and the designated SIP gateway (see the
+               Autoroutable and the AutoroutingGateway variables). These
+               automatic routes are displayed in the Route Status Table but do
+               not show up in the configuration.
+
+
+               "
+ DEFVAL        { disable }
+ ::= { cRoutMIBObjects 200 }
+
+-- *****************************************************************************
+
+-- Table:Route
+
+-- *****************************************************************************
+
+routeTable OBJECT-TYPE
+ SYNTAX        SEQUENCE OF RouteEntry
+ MAX-ACCESS    not-accessible
+ STATUS        current
+ DESCRIPTION " Route
+
+               This table shows the configured route to be used by the call
+               routing service. The configuration is not used until the command
+               'ApplyConfig' is executed.
+               "
+ ::= { cRoutMIBObjects 300 }
+ routeEntry OBJECT-TYPE
+  SYNTAX        RouteEntry
+  MAX-ACCESS    not-accessible
+  STATUS        current
+  DESCRIPTION " A row in table Route. "
+  INDEX         {
+                  routeIndex
+                }
+
+  ::= { routeTable 1 }
+
+ RouteEntry ::= SEQUENCE
+ {
+   routeIndex               Unsigned32,
+   routeSourceCriteria      OCTET STRING,
+   routePropertiesCriteria  INTEGER,
+   routeExpressionCriteria  OCTET STRING,
+   routeDestination         OCTET STRING,
+   routeMappings            OCTET STRING,
+   routeSignalingProperties OCTET STRING,
+   routeConfigStatus        OCTET STRING,
+   routeUp                  INTEGER,
+   routeDown                INTEGER,
+   routeInsert              INTEGER,
+   routeDelete              INTEGER
+ }
+
+ -- Index:Row Index
+
+ routeIndex OBJECT-TYPE
+  SYNTAX        Unsigned32
+  MAX-ACCESS    read-only
+  STATUS        current
+  DESCRIPTION " Row Index
+
+                Unique identifier of the row in the table.
+                "
+  ::= { routeEntry 100 }
+
+ -- Row command:Insert
+
+ routeInsert OBJECT-TYPE
+  SYNTAX        INTEGER { noOp(0), insert(10) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Insert
+
+                Inserts a new row before this row.
+                "
+  DEFVAL        { noOp }
+  ::= { routeEntry 1000 }
+
+ -- Row command:Delete
+
+ routeDelete OBJECT-TYPE
+  SYNTAX        INTEGER { noOp(0), delete(10) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Delete
+
+                Deletes this row.
+                "
+  DEFVAL        { noOp }
+  ::= { routeEntry 1100 }
+
+ -- Columnar:Source Criteria
+
+ routeSourceCriteria OBJECT-TYPE
+  SYNTAX        OCTET STRING ( SIZE(0..2048) )
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Source Criteria
+
+                One or many sources that the service must compare with the call
+                and match in order to apply the route.
+
+                A source can be:
+
+                  * route-'name': The call comes from the route 'name'.
+                  * sip-'name': The call comes from the SIP interface 'name'.
+                  * isdn-'name': The call comes from the ISDN interface 'name'.
+                  * r2-'name': The call comes from the R2 interface 'name'.
+                  * e&m-'name': The call comes from the E&M interface 'name'.
+                  * fxs-'name': The call comes from the FXS interface 'name'.
+                  * fxo-'name': The call comes from the FXO interface 'name'.
+
+                Multiple sources must be separated by commas.
+
+
+                "
+  DEFVAL        { "" }
+  ::= { routeEntry 200 }
+
+ -- Columnar:Properties Criteria
+
+ routePropertiesCriteria OBJECT-TYPE
+  SYNTAX        INTEGER { none(100) , calledE164(200) , callingE164(300) ,
+                calledName(400) , callingName(500) , calledTon(600) ,
+                callingTon(700) , calledNpi(800) , callingNpi(900) , calledHost
+                (1000) , callingHost(1100) , callingPi(1200) , callingSi(1300)
+                , callingItc(1400) , calledUri(1500) , callingUri(1600) ,
+                dateTime(1700) , calledPhoneContext(1800) , callingPhoneContext
+                (1900) , calledSipUsername(2000) , callingSipUsername(2100) ,
+                calledBearerChannel(2200) , callingBearerChannel(2300) ,
+                callingSipPrivacy(2400) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Properties Criteria
+
+                Call property that the service must compare with the call and
+                match in order to apply the route. The actual call properties
+                expression to match is defined at
+                RouteStatus.ExpressionCriteria.
+
+                The call properties can be:
+
+                  * CalledE164: Routes calls based on the called party E.164
+                    properties.
+                  * CallingE164: Routes calls based on the calling party E.164
+                    properties.
+                  * CalledName: Routes calls based on the called party name
+                    properties.
+                  * CallingName: Routes calles based on the calling party name
+                    properties.
+                  * CalledTon: Routes calls based on the called party type of
+                    number properties.
+                  * CallingTon: Routes calls based on the calling party type of
+                    number properties.
+                  * CalledNpi: Routes calls based on the called party numbering
+                    plan indicator properties.
+                  * CallingNpi: Routes calls based on the calling party
+                    numbering plan indicator properties.
+                  * CalledHost: Routes calls based on the calling host
+                    properties.
+                  * CallingHost: Routes calls based on the called host
+                    properties.
+                  * CallingPi: Routes calls based on the calling party
+                    presentation indicator.
+                  * CallingSi: Routes calls based on the calling party
+                    screening indicator.
+                  * CallingItc: Routes calls based on the calling party
+                    information transfer capability.
+                  * CalledUri: Routes calls based on the called party SIP URI.
+                  * CallingUri: Routes calls based on the calling party SIP
+                    URI.
+                  * DateTime: Routes calls based on the date and/or time the
+                    call arrived at the call router.
+                  * CalledPhoneContext: Routes calls based on the called party
+                    phone context properties.
+                  * CallingPhoneContext: Routes calls based on the calling
+                    party phone context properties.
+                  * CalledSipUsername: Routes calls based on the called party
+                    SIP username properties.
+                  * CallingSipUsername: Routes calls based on the calling party
+                    SIP username properties.
+                  * CalledBeareChannel: Routes calls based on the called bearer
+                    channel properties.
+                  * CallingBeareChannel: Routes calls based on the calling
+                    bearer channel properties.
+                  * CallingSipPrivacy: Routes calls based on the calling SIP
+                    privacy properties.
+
+                See RouteStatus.ExpressionCriteria.
+
+
+                "
+  DEFVAL        { none }
+  ::= { routeEntry 300 }
+
+ -- Columnar:Expression Criteria
+
+ routeExpressionCriteria OBJECT-TYPE
+  SYNTAX        OCTET STRING ( SIZE(0..256) )
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Expression Criteria
+
+                Expression that the service must compare with the call and
+                match in order to apply the route. The expression is applied on
+                the call properties defined at RouteStatus.PropertiesCriteria.
+
+                The expression syntax is related to the selected properties
+                criteria or can be a special tag:
+
+                  * CalledE164: Regular expression.
+                  * CallingE164: Regular expression.
+                  * CalledName: Regular expression.
+                  * CallingName: Regular expression.
+                  * CalledTon: 'unknown', 'international', 'national',
+                    'network', 'subscriber' or 'abbreviated'.
+                  * CallingTon: 'unknown', 'international', 'national',
+                    'network', 'subscriber' or 'abbreviated'.
+                  * CalledNpi: 'unknown', 'isdn', 'data', 'telex', 'national'
+                    or 'private'.
+                  * CallingNpi: 'unknown', 'isdn', 'data', 'telex', 'national'
+                    or 'private'.
+                  * CalledHost: Regular expression. The call properties format
+                    is 'Fqdn[:port]'. If the '[:port]' is not present, the
+                    table uses the well-known port of the signalling protocol.
+                  * CallingHost: Regular expression. The call properties format
+                    is 'Fqdn[:port]'. If the '[:port]' is not present, the
+                    table uses the well-known port of the signalling protocol.
+                  * CallingPi: 'allowed', 'restricted', or 'interworking'.
+                  * CallingSi: 'not-screened', 'passed', 'failed' or 'network'.
+                  * CallingItc: 'speech', 'unrestricted', 'restricted',
+                    '3.1Khz', 'udi-ta' or 'video'.
+                  * CalledUri: Regular expression.
+                  * CallingUri: Regular expression.
+                  * DateTime: Day of week and time period and/or date and time
+                    period.
+                  * CalledPhoneContext: Regular expression.
+                  * CallingPhoneContext: Regular expression.
+                  * CalledSipUsername: Regular expression.
+                  * CallingSipUsername: Regular expression.
+                  * CalledBearerChannel: Regular expression.
+                  * CallingBearerChannel: Regular expression.
+                  * CallingSipPrivacy: 'disabled', 'none' or 'id'.
+
+                Special tags:
+
+                  * <undefined>: Matches if the property is not defined for the
+                    call.
+                  * <default>: Always matches. Generally used to set a default
+                    route if the previous criteria do not match.
+
+                Accepted DateTime formats:
+
+                Date/Time Period format:
+
+                  * 'DD.MM.YYYY/HH:MM:SS-DD.MM.YYYY/HH:MM:SS'
+                  * 'DD.MM.YYYY/HH:MM:SS-HH:MM:SS'
+                  * 'DD.MM.YYYY-DD.MM.YYYY'
+                  * 'DD.MM.YYYY'
+                  * 'HH:MM:SS-HH:MM:SS'
+
+                Week Day/Time Period format:
+
+                  * 'DDD'
+                  * 'DDD,DDD...'
+                  * 'DDD/HH:MM:SS-HH:MM:SS'
+                  * 'DDD,DDD.../HH:MM:SS-HH:MM:SS'
+
+                where DDD must be one of: SUN, MON, TUE, WED, THU, FRI, SAT.
+
+                Many of the formats above can be concatenated to form one
+                expression. They must be separated by |. Example: 25.12.2006 |
+                SUN
+
+                See RouteStatus.PropertiesCriteria.
+
+
+                "
+  DEFVAL        { "" }
+  ::= { routeEntry 400 }
+
+ -- Columnar:Destination
+
+ routeDestination OBJECT-TYPE
+  SYNTAX        OCTET STRING ( SIZE(0..64) )
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Destination
+
+                Destination to apply to the call if it matches the criteria.
+
+                The destination can be:
+
+                  * route-'name': The call destination is set to the route
+                    'name'.
+                  * hunt-'name': The call destination is set to the hunt
+                    'name'.
+                  * sip-'name': The call destination is set to the SIP
+                    interface 'name'.
+                  * isdn-'name': The call destination is set to the ISDN
+                    interface 'name'.
+                  * r2-'name': The call destination is set to the R2 interface
+                    'name'.
+                  * e&m-'name': The call destination is set to the E&M
+                    interface 'name'.
+                  * fxs-'name': The call destination is set to the FXS
+                    interface 'name'.
+                  * fxo-'name': The call destination is set to the FXO
+                    interface 'name'.
+                  * SipRedirect-'name': When the Route source is a SIP
+                    interface, incoming SIP Invites are replied with a 302
+                    'Moved Temporarily' SIP response.
+
+
+                "
+  DEFVAL        { "" }
+  ::= { routeEntry 500 }
+
+ -- Columnar:Properties Manipulations
+
+ routeMappings OBJECT-TYPE
+  SYNTAX        OCTET STRING ( SIZE(0..512) )
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Properties Manipulations
+
+                Name of the properties manipulation to apply to the call if the
+                criteria match. The manipulations are executed before sending
+                the call to the new destination.
+
+                More than one mapping can be specified. In that case, the
+                mappings are separated with ',' and are executed in sequential
+                order.
+
+
+                "
+  DEFVAL        { "" }
+  ::= { routeEntry 600 }
+
+ -- Columnar:Signaling Properties
+
+ routeSignalingProperties OBJECT-TYPE
+  SYNTAX        OCTET STRING ( SIZE(0..512) )
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Signaling Properties
+
+                Name of the signaling properties to apply to the call.
+                "
+  DEFVAL        { "" }
+  ::= { routeEntry 650 }
+
+ -- Columnar:Configuration Status
+
+ routeConfigStatus OBJECT-TYPE
+  SYNTAX        OCTET STRING
+  MAX-ACCESS    read-only
+  STATUS        current
+  DESCRIPTION " Configuration Status
+
+                Configuration status of the row.
+
+                It indicates whether the configuration of the row is valid.
+
+
+                "
+  ::= { routeEntry 700 }
+
+ -- Row command:Up
+
+ routeUp OBJECT-TYPE
+  SYNTAX        INTEGER { noOp(0), up(10) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Up
+
+                Moves the current row upside.
+                "
+  DEFVAL        { noOp }
+  ::= { routeEntry 800 }
+
+ -- Row command:Down
+
+ routeDown OBJECT-TYPE
+  SYNTAX        INTEGER { noOp(0), down(10) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Down
+
+                Moves the current row downside.
+                "
+  DEFVAL        { noOp }
+  ::= { routeEntry 900 }
+
+
+-- End of table:Route
+
+-- *****************************************************************************
+
+-- Table:Properties Manipulation Type
+
+-- *****************************************************************************
+
+mappingTypeTable OBJECT-TYPE
+ SYNTAX        SEQUENCE OF MappingTypeEntry
+ MAX-ACCESS    not-accessible
+ STATUS        current
+ DESCRIPTION " Properties Manipulation Type
+
+               This table shows the configuration properties manipulation type
+               to be used by the call routing service. The table
+               MappingExpression contains the expression related to this type.
+               The configuration is not used until the command 'ApplyConfig' is
+               executed.
+               "
+ ::= { cRoutMIBObjects 500 }
+ mappingTypeEntry OBJECT-TYPE
+  SYNTAX        MappingTypeEntry
+  MAX-ACCESS    not-accessible
+  STATUS        current
+  DESCRIPTION " A row in table Properties Manipulation Type. "
+  INDEX         {
+                  mappingTypeIndex
+                }
+
+  ::= { mappingTypeTable 1 }
+
+ MappingTypeEntry ::= SEQUENCE
+ {
+   mappingTypeIndex          Unsigned32,
+   mappingTypeName           OCTET STRING,
+   mappingTypeCriteria       INTEGER,
+   mappingTypeTransformation INTEGER,
+   mappingTypeConfigStatus   OCTET STRING,
+   mappingTypeUp             INTEGER,
+   mappingTypeDown           INTEGER,
+   mappingTypeInsert         INTEGER,
+   mappingTypeDelete         INTEGER
+ }
+
+ -- Index:Row Index
+
+ mappingTypeIndex OBJECT-TYPE
+  SYNTAX        Unsigned32
+  MAX-ACCESS    read-only
+  STATUS        current
+  DESCRIPTION " Row Index
+
+                Unique identifier of the row in the table.
+                "
+  ::= { mappingTypeEntry 100 }
+
+ -- Columnar:Name
+
+ mappingTypeName OBJECT-TYPE
+  SYNTAX        OCTET STRING ( SIZE(0..64) )
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Name
+
+                Name of the properties manipulation defined by this row.
+
+                The name must be unique in the table.
+
+                See Route.Mapping.
+
+
+                "
+  DEFVAL        { "" }
+  ::= { mappingTypeEntry 200 }
+
+ -- Columnar:Criteria
+
+ mappingTypeCriteria OBJECT-TYPE
+  SYNTAX        INTEGER { none(100) , e164(200) , calledE164(300) , callingE164
+                (400) , name(500) , calledName(600) , callingName(700) , ton
+                (800) , calledTon(900) , callingTon(1000) , npi(1100) ,
+                calledNpi(1200) , callingNpi(1300) , host(1400) , calledHost
+                (1500) , callingHost(1600) , callingPi(1700) , callingSi(1800)
+                , callingItc(1900) , uri(2000) , calledUri(2100) , callingUri
+                (2200) , dateTime(2300) , phoneContext(2400) ,
+                calledPhoneContext(2500) , callingPhoneContext(2600) ,
+                sipUsername(2700) , calledSipUsername(2800) ,
+                callingSipUsername(2900) , lastDivertingReason(3000) ,
+                lastDivertingE164(3100) , lastDivertingPartyNumberType(3110) ,
+                lastDivertingPublicTypeOfNumber(3120) ,
+                lastDivertingPrivateTypeOfNumber(3130) ,
+                lastDivertingNumberPresentation(3140) , originalDivertingReason
+                (3200) , originalDivertingE164(3300) ,
+                originalDivertingPartyNumberType(3400) ,
+                originalDivertingPublicTypeOfNumber(3500) ,
+                originalDivertingPrivateTypeOfNumber(3600) ,
+                originalDivertingNumberPresentation(3700) , calledBearerChannel
+                (3800) , callingBearerChannel(3900) , callingSipPrivacy(4000) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Criteria
+
+                Call properties that the service must compare with the call and
+                match in order to apply the properties manipulation. The actual
+                call properties expression to match is defined at
+                MappingExpression.Criteria
+
+                The expression syntax is related to the selected properties
+                criteria:
+
+                  * E164: Called or calling E.164 properties.
+                  * CalledE164: Called E.164 properties.
+                  * CallingE164: Calling E.164 properties.
+                  * Name: Called or calling name properties.
+                  * CalledName: Called name properties.
+                  * CallingName: Calling name properties.
+                  * Ton: Called or calling type of number properties.
+                  * CalledTon: Called type of number properties.
+                  * CallingTon: Calling type of number properties.
+                  * Npi: Called or calling numbering plan indicator properties.
+                  * CalledNpi: Called numbering plan indicator properties.
+                  * CallingNpi: Calling numbering plan indicator properties.
+                  * Host: Calling or called host properties.
+                  * CalledHost: Calling host properties.
+                  * CallingHost: Called host properties.
+                  * CallingPi: Calling presentation indicator.
+                  * CallingSi: Calling screening indicator.
+                  * CallingItc: Calling information transfer capability.
+                  * Uri: Calling or called SIP URI properties.
+                  * CalledUri: Called SIP URI properties.
+                  * CallingUri: Calling SIP URI properties.
+                  * DateTime: Routes calls based on the date and/or time the
+                    call arrived at the call router.
+                  * PhoneContext: Called or calling phone context properties.
+                  * CalledPhoneContext: Called phone context properties.
+                  * CallingPhoneContext: Calling phone context properties.
+                  * SipUsername: Called or calling SIP username properties.
+                  * CalledSipUsername: Called SIP username properties.
+                  * CallingSipUsername: Calling SIP username properties.
+                  * LastDivertingReason: Last diverting reason properties.
+                  * LastDivertingE164: Last diverting E.164 properties.
+                  * LastDivertingPartyNumberType: Party number type of the last
+                    diverting number properties.
+                  * LastDivertingPublicTypeOfNumber: Public type of number of
+                    the last diverting number properties.
+                  * LastDivertingPrivateTypeOfNumber: Private type of number of
+                    the last diverting number properties.
+                  * LastDivertingNumberPresentation: Presentation of the last
+                    diverting number properties.
+                  * OriginalDivertingReason: Original diverting reason
+                    properties.
+                  * OriginalDivertingE164: Original diverting E.164 properties.
+                  * OriginalDivertingPartyNumberType: Party number type of the
+                    original diverting number properties.
+                  * OriginalDivertingPublicTypeOfNumber: Public type of number
+                    of the original diverting number properties.
+                  * OriginalDivertingPrivateTypeOfNumber: Private type of
+                    number of the original diverting number properties.
+                  * OriginalDivertingNumberPresentation: Presentation of the
+                    original diverting number properties.
+                  * CalledBearerChannel: Called bearer channel properties.
+                  * CallingBearerChannel: Calling bearer channel properties.
+                  * CallingSipPrivacy: Calling SIP privacy properties.
+
+                See MappingStatus.ExpressionCriteria.
+
+
+                "
+  DEFVAL        { none }
+  ::= { mappingTypeEntry 300 }
+
+ -- Columnar:Transformation
+
+ mappingTypeTransformation OBJECT-TYPE
+  SYNTAX        INTEGER { none(100) , e164(200) , calledE164(300) , callingE164
+                (400) , name(500) , calledName(600) , callingName(700) , ton
+                (800) , calledTon(900) , callingTon(1000) , npi(1100) ,
+                calledNpi(1200) , callingNpi(1300) , host(1400) , calledHost
+                (1500) , callingHost(1600) , callingPi(1700) , callingSi(1800)
+                , callingItc(1900) , uri(2000) , calledUri(2100) , callingUri
+                (2200) , phoneContext(2300) , calledPhoneContext(2400) ,
+                callingPhoneContext(2500) , sipUsername(2600) ,
+                calledSipUsername(2700) , callingSipUsername(2800) ,
+                lastDivertingReason(2900) , lastDivertingE164(3000) ,
+                lastDivertingPartyNumberType(3010) ,
+                lastDivertingPublicTypeOfNumber(3020) ,
+                lastDivertingPrivateTypeOfNumber(3030) ,
+                lastDivertingNumberPresentation(3040) , originalDivertingReason
+                (3100) , originalDivertingE164(3200) ,
+                originalDivertingPartyNumberType(3300) ,
+                originalDivertingPublicTypeOfNumber(3400) ,
+                originalDivertingPrivateTypeOfNumber(3500) ,
+                originalDivertingNumberPresentation(3600) , calledBearerChannel
+                (3700) , callingBearerChannel(3800) , debug(60000) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Transformation
+
+                Call properties to transform. The transformation is defined at
+                MappingExpression.Transformation.
+
+                The call properties can be:
+
+                  * E164: Called or calling E.164 properties.
+                  * CalledE164: Called E.164 properties.
+                  * CallingE164: Calling E.164 properties.
+                  * Name: Called or calling name properties.
+                  * CalledName: Called name properties.
+                  * CallingName: Calling name properties.
+                  * Ton: Called or calling type of number properties.
+                  * CalledTon: Called type of number properties.
+                  * CallingTon: Calling type of number properties.
+                  * Npi: Called or calling numbering plan indicator properties.
+                  * CalledNpi: Called numbering plan indicator properties.
+                  * CallingNpi: Calling numbering plan indicator properties.
+                  * Host: Calling or called host properties.
+                  * CalledHost: Calling host properties.
+                  * CallingHost: Called host properties.
+                  * CallingPi: Calling presentation indicator.
+                  * CallingSi: Calling screening indicator.
+                  * CallingItc: Calling information transfer capability.
+                  * Uri: Calling or called SIP URI properties.
+                  * CalledUri: Called SIP URI properties.
+                  * CallingUri: Calling SIP URI properties.
+                  * PhoneContext: Calling or called phone context properties.
+                  * CalledPhoneContext: Called phone context properties.
+                  * CallingPhoneContext: Calling phone context properties.
+                  * SipUsername: Calling or called SIP username properties.
+                  * CalledSipUsername: Called SIP username properties.
+                  * CallingSipUsername: Calling SIP username properties.
+                  * LastDivertingReason: Last diverting reason properties.
+                  * LastDivertingE164: Last diverting E.164 properties.
+                  * LastDivertingPartyNumberType: Party number type of the last
+                    diverting number properties.
+                  * LastDivertingPublicTypeOfNumber: Public type of number of
+                    the last diverting number properties.
+                  * LastDivertingPrivateTypeOfNumber: Private type of number of
+                    the last diverting number properties.
+                  * LastDivertingNumberPresentation: Presentation of the last
+                    diverting number properties.
+                  * OriginalDivertingReason: Original diverting reason
+                    properties.
+                  * OriginalDivertingE164: Original diverting E.164 properties.
+                  * OriginalDivertingPartyNumberType: Party number type of the
+                    original diverting number properties.
+                  * OriginalDivertingPublicTypeOfNumber: Public type of number
+                    of the original diverting number properties.
+                  * OriginalDivertingPrivateTypeOfNumber: Private type of
+                    number of the original diverting number properties.
+                  * OriginalDivertingNumberPresentation: Presentation of the
+                    original diverting number properties.
+                  * CalledBearerChannel: Called bearer channel properties.
+                  * CallingBearerChannel: Calling bearer channel properties.
+                  * Debug: Reserved for debug configuration.
+
+                See MappingStatus.Transformation.
+
+
+                "
+  DEFVAL        { none }
+  ::= { mappingTypeEntry 400 }
+
+ -- Columnar:Configuration Status
+
+ mappingTypeConfigStatus OBJECT-TYPE
+  SYNTAX        OCTET STRING
+  MAX-ACCESS    read-only
+  STATUS        current
+  DESCRIPTION " Configuration Status
+
+                Configuration status of the row.
+
+                It indicates whether the configuration of the row is valid.
+
+
+                "
+  ::= { mappingTypeEntry 500 }
+
+ -- Row command:Up
+
+ mappingTypeUp OBJECT-TYPE
+  SYNTAX        INTEGER { noOp(0), up(10) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Up
+
+                Moves the current row upside.
+                "
+  DEFVAL        { noOp }
+  ::= { mappingTypeEntry 600 }
+
+ -- Row command:Down
+
+ mappingTypeDown OBJECT-TYPE
+  SYNTAX        INTEGER { noOp(0), down(10) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Down
+
+                Moves the current row downside.
+                "
+  DEFVAL        { noOp }
+  ::= { mappingTypeEntry 700 }
+
+ -- Row command:Insert
+
+ mappingTypeInsert OBJECT-TYPE
+  SYNTAX        INTEGER { noOp(0), insert(10) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Insert
+
+                Inserts a new row before this row.
+                "
+  DEFVAL        { noOp }
+  ::= { mappingTypeEntry 800 }
+
+ -- Row command:Delete
+
+ mappingTypeDelete OBJECT-TYPE
+  SYNTAX        INTEGER { noOp(0), delete(10) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Delete
+
+                Deletes this row.
+                "
+  DEFVAL        { noOp }
+  ::= { mappingTypeEntry 900 }
+
+
+-- End of table:Properties Manipulation Type
+
+-- *****************************************************************************
+
+-- Table:Properties Manipulation
+
+-- *****************************************************************************
+
+mappingExpressionTable OBJECT-TYPE
+ SYNTAX        SEQUENCE OF MappingExpressionEntry
+ MAX-ACCESS    not-accessible
+ STATUS        current
+ DESCRIPTION " Properties Manipulation
+
+               This table shows the configuration properties manipulation
+               expression to be used by the call routing service. The table
+               MappingType contains the type related to this expression. The
+               configuration is not used until the command 'ApplyConfig' is
+               executed.
+               "
+ ::= { cRoutMIBObjects 700 }
+ mappingExpressionEntry OBJECT-TYPE
+  SYNTAX        MappingExpressionEntry
+  MAX-ACCESS    not-accessible
+  STATUS        current
+  DESCRIPTION " A row in table Properties Manipulation. "
+  INDEX         {
+                  mappingExpressionIndex
+                }
+
+  ::= { mappingExpressionTable 1 }
+
+ MappingExpressionEntry ::= SEQUENCE
+ {
+   mappingExpressionIndex          Unsigned32,
+   mappingExpressionName           OCTET STRING,
+   mappingExpressionCriteria       OCTET STRING,
+   mappingExpressionTransformation OCTET STRING,
+   mappingExpressionSubMappings    OCTET STRING,
+   mappingExpressionConfigStatus   OCTET STRING,
+   mappingExpressionUp             INTEGER,
+   mappingExpressionDown           INTEGER,
+   mappingExpressionInsert         INTEGER,
+   mappingExpressionDelete         INTEGER
+ }
+
+ -- Index:Row Index
+
+ mappingExpressionIndex OBJECT-TYPE
+  SYNTAX        Unsigned32
+  MAX-ACCESS    read-only
+  STATUS        current
+  DESCRIPTION " Row Index
+
+                Unique identifier of the row in the table.
+                "
+  ::= { mappingExpressionEntry 100 }
+
+ -- Row command:Delete
+
+ mappingExpressionDelete OBJECT-TYPE
+  SYNTAX        INTEGER { noOp(0), delete(10) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Delete
+
+                Deletes this row.
+                "
+  DEFVAL        { noOp }
+  ::= { mappingExpressionEntry 1000 }
+
+ -- Columnar:Name
+
+ mappingExpressionName OBJECT-TYPE
+  SYNTAX        OCTET STRING ( SIZE(0..64) )
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Name
+
+                Name of the properties manipulation defined by this row. It
+                must match the name of a row in MappingType.
+
+                More than one row can have the same name. In that case, the
+                first row matching the call will be used. The row are used in
+                ascending order.
+
+                See MappingType.Name.
+
+
+                "
+  DEFVAL        { "" }
+  ::= { mappingExpressionEntry 200 }
+
+ -- Columnar:Expression Criteria
+
+ mappingExpressionCriteria OBJECT-TYPE
+  SYNTAX        OCTET STRING ( SIZE(0..256) )
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Expression Criteria
+
+                Expression that the service must compare with the call and
+                match in order to apply the properties manipulation. The
+                expression criteria is applied on the call properties defined
+                at MappingType.Criteria.
+
+                The expression syntax is related to the selected properties
+                criteria or can be a special tag:
+
+                  * E164: Regular expression.
+                  * CalledE164: Regular expression.
+                  * CallingE164: Regular expression.
+                  * Name: Regular expression.
+                  * CalledName: Regular expression.
+                  * CallingName: Regular expression.
+                  * Ton: 'unknown', 'international', 'national', 'network',
+                    'subscriber' or 'abbreviated'.
+                  * CalledTon: 'unknown', 'international', 'national',
+                    'network', 'subscriber' or 'abbreviated'.
+                  * CallingTon: 'unknown', 'international', 'national',
+                    'network', 'subscriber' or 'abbreviated'.
+                  * Npi: 'unknown', 'isdn', 'data', 'telex', 'national' or
+                    'private'.
+                  * CalledNpi: 'unknown', 'isdn', 'data', 'telex', 'national'
+                    or 'private'.
+                  * CallingNpi: 'unknown', 'isdn', 'data', 'telex', 'national'
+                    or 'private'.
+                  * Host: Regular expression. The call properties format is
+                    'Fqdn[:port]'. If the '[:port]' is not present, the table
+                    uses the well-known port of the signalling protocol.
+                  * CalledHost: Regular expression. The call properties format
+                    is 'Fqdn[:port]'. If the '[:port]' is not present, the
+                    table uses the well-known port of the signalling protocol.
+                  * CallingHost: Regular expression. The call properties format
+                    is 'Fqdn[:port]'. If the '[:port]' is not present, the
+                    table uses the well-known port of the signalling protocol.
+                  * CallingPi: 'allowed', 'restricted', or 'interworking'.
+                  * CallingSi: 'not-screened', 'passed', 'failed' or 'network'.
+                  * CallingItc: 'speech', 'unrestricted', 'restricted',
+                    '3.1Khz', 'udi-ta' or 'video'.
+                  * DateTime: Day of week and time period and/or date and time
+                    period.
+                  * PhoneContext: Regular expression.
+                  * CalledPhoneContext: Regular expression.
+                  * CallingPhoneContext: Regular expression.
+                  * SipUsername: Regular expression.
+                  * CalledSipUsername: Regular expression.
+                  * CallingSipUsername: Regular expression.
+                  * LastDivertingReason: 'cfu', 'cfb', 'cfnr' or 'unknown'.
+                  * LastDivertingE164: Regular expression.
+                  * LastDivertingPartyNumberType: 'unknown', 'public' or
+                    'private'.
+                  * LastDivertingPublicTypeOfNumber: 'unknown',
+                    'international', 'national', 'network-specific', 'local' or
+                    'abbreviated'.
+                  * LastDivertingPrivateTypeOfNumber: 'unknown', 'leg2-reg',
+                    'leg1-reg', 'pisn-specific', 'subscriber' or 'abbreviated'.
+                  * LastDivertingNumberPresentation: 'allowed', 'restricted',
+                    'interworking' or 'restricted-address'.
+                  * OriginalDivertingReason: 'cfu', 'cfb', 'cfnr' or 'unknown'.
+                  * OriginalDivertingE164: Regular expression.
+                  * OriginalDivertingPartyNumberType: 'unknown', 'public' or
+                    'private'.
+                  * OriginalDivertingPublicTypeOfNumber: 'unknown',
+                    'international', 'national', 'network-specific', 'local' or
+                    'abbreviated'.
+                  * OriginalDivertingPrivateTypeOfNumber: 'unknown',
+                    'leg2-reg', 'leg1-reg', 'pisn-specific', 'subscriber' or
+                    'abbreviated'.
+                  * OriginalDivertingNumberPresentation: 'allowed',
+                    'restricted', 'interworking' or 'restricted-address'.
+                  * CalledBearerChannel: Regular expression.
+                  * CallingBearerChannel: Regular expression.
+                  * CallingSipPrivacy: 'disabled', 'none' or 'id'.
+
+                Special tags:
+
+                  * <undefined>: Matches if the property is not defined for the
+                    call.
+                  * <default>: Always matches. Generally used to set a default
+                    mapping if the previous criteria do not match.
+
+                Accepted DateTime formats:
+
+                Date/Time Period format:
+
+                  * 'DD.MM.YYYY/HH:MM:SS-DD.MM.YYYY/HH:MM:SS'
+                  * 'DD.MM.YYYY/HH:MM:SS-HH:MM:SS'
+                  * 'DD.MM.YYYY-DD.MM.YYYY'
+                  * 'DD.MM.YYYY'
+                  * 'HH:MM:SS-HH:MM:SS'
+
+                Week Day/Time Period format:
+
+                  * 'DDD'
+                  * 'DDD,DDD...'
+                  * 'DDD/HH:MM:SS-HH:MM:SS'
+                  * 'DDD,DDD.../HH:MM:SS-HH:MM:SS'
+
+                where DDD must be one of: SUN, MON, TUE, WED, THU, FRI, SAT.
+
+                Many of the formats above can be concatenated to form one
+                expression. They must be separated by |. Example: 25.12.2006 |
+                SUN
+
+                See MappingStatus.PropertiesCriteria.
+
+
+                "
+  DEFVAL        { "" }
+  ::= { mappingExpressionEntry 300 }
+
+ -- Columnar:Transformation
+
+ mappingExpressionTransformation OBJECT-TYPE
+  SYNTAX        OCTET STRING ( SIZE(0..64) )
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Transformation
+
+                Transformation to apply to the call properties. The
+                transformation is applied on the call properties defined at
+                MappingType.Transformation.
+
+                The transformation syntax is related to the selected properties
+                to tranform:
+
+                  * Ton: 'unknown', 'international', 'national', 'network',
+                    'subscriber' or 'abbreviated'.
+                  * CalledTon: 'unknown', 'international', 'national',
+                    'network', 'subscriber' or 'abbreviated'.
+                  * CallingTon: 'unknown', 'international', 'national',
+                    'network', 'subscriber' or 'abbreviated'.
+                  * Npi: 'unknown', 'isdn', 'data', 'telex', 'national' or
+                    'private'.
+                  * CalledNpi: 'unknown', 'isdn', 'data', 'telex', 'national'
+                    or 'private'.
+                  * CallingNpi: 'unknown', 'isdn', 'data', 'telex', 'national'
+                    or 'private'.
+                  * CallingPi: 'allowed', 'restricted', or 'interworking'.
+                  * CallingSi: 'not-screened', 'passed', 'failed' or 'network'.
+                  * CallingItc: 'speech', 'unrestricted', 'restricted',
+                    '3.1Khz', 'udi-ta' or 'video'.
+                  * LastDivertingReason: 'cfu', 'cfb', 'cfnr' or 'unknown'.
+                  * LastDivertingPartyNumberType: 'unknown', 'public' or
+                    'private'.
+                  * LastDivertingPublicTypeOfNumber: 'unknown',
+                    'international', 'national', 'network-specific', 'local' or
+                    'abbreviated'.
+                  * LastDivertingPrivateTypeOfNumber: 'unknown', 'leg2-reg',
+                    'leg1-reg', 'pisn-specific', 'subscriber' or 'abbreviated'.
+                  * LastDivertingNumberPresentation: 'allowed', 'restricted',
+                    'interworking' or 'restricted-address'.
+                  * OriginalDivertingReason: 'cfu', 'cfb', 'cfnr' or 'unknown'.
+                  * OriginalDivertingPartyNumberType: 'unknown', 'public' or
+                    'private'.
+                  * OriginalDivertingPublicTypeOfNumber: 'unknown',
+                    'international', 'national', 'network-specific', 'local' or
+                    'abbreviated'.
+                  * OriginalDivertingPrivateTypeOfNumber: 'unknown',
+                    'leg2-reg', 'leg1-reg', 'pisn-specific', 'subscriber' or
+                    'abbreviated'.
+                  * OriginalDivertingNumberPresentation: 'allowed',
+                    'restricted', 'interworking' or 'restricted-address'.
+                  * All others: string where '\0' to '\9' is replaced by the
+                    corresponding group in the regular expresion set in the
+                    expression criteria (see MappingStatus.ExpressionCriteria).
+                    The value can be set to the macro '<local_ip_port>' to
+                    replace the properties by the local IP address and port of
+                    the listening socket of the SIP gateway used to send the
+                    INVITE.
+
+                See MappingStatus.PropertiesToTransform.
+
+
+                "
+  DEFVAL        { "" }
+  ::= { mappingExpressionEntry 400 }
+
+ -- Columnar:Subsequent Properties Manipulations
+
+ mappingExpressionSubMappings OBJECT-TYPE
+  SYNTAX        OCTET STRING ( SIZE(0..512) )
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Subsequent Properties Manipulations
+
+                Name of a subsequent properties manipulation to execute.
+
+                More than one mapping can be specified. In that case, the
+                mappings are separated with ',' and are executed in sequential
+                order.
+
+
+                "
+  DEFVAL        { "" }
+  ::= { mappingExpressionEntry 500 }
+
+ -- Columnar:Configuration Status
+
+ mappingExpressionConfigStatus OBJECT-TYPE
+  SYNTAX        OCTET STRING
+  MAX-ACCESS    read-only
+  STATUS        current
+  DESCRIPTION " Configuration Status
+
+                Configuration status of the row.
+
+                It indicates whether the configuration of the row is valid.
+
+
+                "
+  ::= { mappingExpressionEntry 600 }
+
+ -- Row command:Up
+
+ mappingExpressionUp OBJECT-TYPE
+  SYNTAX        INTEGER { noOp(0), up(10) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Up
+
+                Moves the current row upside.
+                "
+  DEFVAL        { noOp }
+  ::= { mappingExpressionEntry 700 }
+
+ -- Row command:Down
+
+ mappingExpressionDown OBJECT-TYPE
+  SYNTAX        INTEGER { noOp(0), down(10) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Down
+
+                Moves the current row downside.
+                "
+  DEFVAL        { noOp }
+  ::= { mappingExpressionEntry 800 }
+
+ -- Row command:Insert
+
+ mappingExpressionInsert OBJECT-TYPE
+  SYNTAX        INTEGER { noOp(0), insert(10) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Insert
+
+                Inserts a new row before this row.
+                "
+  DEFVAL        { noOp }
+  ::= { mappingExpressionEntry 900 }
+
+
+-- End of table:Properties Manipulation
+
+-- *****************************************************************************
+
+-- Table:Hunt
+
+-- *****************************************************************************
+
+huntTable OBJECT-TYPE
+ SYNTAX        SEQUENCE OF HuntEntry
+ MAX-ACCESS    not-accessible
+ STATUS        current
+ DESCRIPTION " Hunt
+
+               This table shows the configured hunt to be used by the call
+               routing service. The configuration is not used until the command
+               'ApplyConfig' is executed.
+               "
+ ::= { cRoutMIBObjects 900 }
+ huntEntry OBJECT-TYPE
+  SYNTAX        HuntEntry
+  MAX-ACCESS    not-accessible
+  STATUS        current
+  DESCRIPTION " A row in table Hunt. "
+  INDEX         {
+                  huntIndex
+                }
+
+  ::= { huntTable 1 }
+
+ HuntEntry ::= SEQUENCE
+ {
+   huntIndex              Unsigned32,
+   huntName               OCTET STRING,
+   huntDestinations       OCTET STRING,
+   huntSelectionAlgorithm INTEGER,
+   huntTimeout            Unsigned32,
+   huntCauses             OCTET STRING,
+   huntConfigStatus       OCTET STRING,
+   huntUp                 INTEGER,
+   huntDown               INTEGER,
+   huntInsert             INTEGER,
+   huntDelete             INTEGER
+ }
+
+ -- Index:Row Index
+
+ huntIndex OBJECT-TYPE
+  SYNTAX        Unsigned32
+  MAX-ACCESS    read-only
+  STATUS        current
+  DESCRIPTION " Row Index
+
+                Unique identifier of the row in the table.
+                "
+  ::= { huntEntry 100 }
+
+ -- Row command:Insert
+
+ huntInsert OBJECT-TYPE
+  SYNTAX        INTEGER { noOp(0), insert(10) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Insert
+
+                Inserts a new row before this row.
+                "
+  DEFVAL        { noOp }
+  ::= { huntEntry 1000 }
+
+ -- Row command:Delete
+
+ huntDelete OBJECT-TYPE
+  SYNTAX        INTEGER { noOp(0), delete(10) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Delete
+
+                Deletes this row.
+                "
+  DEFVAL        { noOp }
+  ::= { huntEntry 1100 }
+
+ -- Columnar:Hunt Name
+
+ huntName OBJECT-TYPE
+  SYNTAX        OCTET STRING ( SIZE(0..64) )
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Hunt Name
+
+                Name of the hunt defined by this row. It must be unique in the
+                table.
+                "
+  DEFVAL        { "" }
+  ::= { huntEntry 200 }
+
+ -- Columnar:Hunt Destinations
+
+ huntDestinations OBJECT-TYPE
+  SYNTAX        OCTET STRING ( SIZE(0..512) )
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Hunt Destinations
+
+                List of hunt destinations separated by commas.
+
+                The destination can be:
+
+                  * route-'name': The call destination is the route 'name'.
+                  * hunt-'name': The call destination is the hunt 'name'.
+                  * sip-'name': The call destination is the SIP interface
+                    'name'.
+                  * isdn-'name': The call destination is the ISDN interface
+                    'name'.
+                  * r2-'name': The call destination is the R2 interface 'name'.
+                  * e&m-'name': The call destination is the E&M interface
+                    'name'.
+                  * fxs-'name': The call destination is the FXS interface
+                    'name'.
+                  * fxo-'name': The call destination is the FXO interface
+                    'name'.
+
+                Note : Only FXS interfaces are supported if the selection
+                algorithm Simultaneous is used.
+
+                Example: 'isdn-Slot2/Bri1, route-something'
+
+
+                "
+  DEFVAL        { "" }
+  ::= { huntEntry 300 }
+
+ -- Columnar:Selection Algorithm
+
+ huntSelectionAlgorithm OBJECT-TYPE
+  SYNTAX        INTEGER { sequential(100) , cyclic(200) , simultaneous(300) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Selection Algorithm
+
+                Algorithm used to select the destination order.
+
+                The destination order can be:
+
+                  * Sequential: The hunt tries the destination in the same
+                    order as listed. The first destination hunted is the first
+                    listed.
+                  * Cyclic: The hunt starts from the destination that follows
+                    the destination used for the last hunt. Subsequent calls
+                    try another first destination in a round-robin method.
+                  * Simultaneous: The hunt tries every available destination at
+                    the same time. The first destination to pick up has the
+                    call. Other destinations stop ringing. This method can only
+                    have FXS endpoints as destinations.
+
+                Example of cylic selection: If the destination is set to
+                'x,y,z', the destination the hunt group tries is in the
+                following order:
+
+                 1. x,y,z.
+                 2. y,z,x.
+                 3. z,x,y.
+                 4. x,y,z.
+
+
+                "
+  DEFVAL        { sequential }
+  ::= { huntEntry 400 }
+
+ -- Columnar:Timeout
+
+ huntTimeout OBJECT-TYPE
+  SYNTAX        Unsigned32 ( 0..100 )
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Timeout
+
+                Maximal time allowed to the destination to handle the call.
+
+                A value of '0' disables the timeout.
+
+                This value is expressed in seconds (s).
+
+                Note : Not applicable if the selection algorithm Simultaneous
+                is used.
+
+
+                "
+  DEFVAL        { 0 }
+  ::= { huntEntry 500 }
+
+ -- Columnar:Causes
+
+ huntCauses OBJECT-TYPE
+  SYNTAX        OCTET STRING ( SIZE(0..255) )
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Causes
+
+                Lists the call rejection causes to continue the hunt. The
+                causes are separated with commas. The available hunt causes
+                are:
+
+                Normal event:
+
+                  * 1: Unassigned (unallocated) number.
+                  * 2: No route to specified transit network.
+                  * 3: No route to destination.
+                  * 6: Channel unacceptable.
+                  * 7: Call awarded and being delivered in an established
+                    channel.
+                  * 16: Normal call clearing.
+                  * 17: User busy.
+                  * 18: No user responding.
+                  * 19: User alerting, no answer.
+                  * 21: Call rejected.
+                  * 22: Number changed.
+                  * 26: Non-selected user clearing.
+                  * 27: Destination out of order.
+                  * 28: Invalid number format (incomplete number).
+                  * 29: Facility rejected.
+                  * 30: Response to STATUS ENQUIRY.
+                  * 31: Normal, unspecified.
+
+                Resource unavailable:
+
+                  * 34: No circuit/channel available.
+                  * 38: Network out of order.
+                  * 41: Temporary failure.
+                  * 42: Switching equipment congestion.
+                  * 43: Access information discarded.
+                  * 44: Requested circuit/channel not available.
+                  * 47: Resource unavailable, unspecified.
+
+                Service or option not available:
+
+                  * 57: Bearer capability not authorized.
+                  * 58: Bearer capability not presently available.
+                  * 63: Service or option not available, unspecified.
+
+                Service or option not implemented:
+
+                  * 65: Bearer capability not implemented.
+                  * 66: Channel type not implemented.
+                  * 69: Requested facility not implemented.
+                  * 70: Only restricted digital information bearer capability
+                    is available.
+                  * 79: Service or option not implemented, unspecified.
+
+                Invalid message:
+
+                  * 81: Invalid call reference value.
+                  * 82: Identified channel does not exist.
+                  * 83: A suspended call exists, but this call identity does
+                    not.
+                  * 84: Call identity in use.
+                  * 85: No call suspended.
+                  * 86: Call having the requested call identity has been
+                    cleared.
+                  * 88: Incompatible destination.
+                  * 91: Invalid transit network selection.
+                  * 95: Invalid message, unspecified.
+
+                Protocol error:
+
+                  * 96: Mandatory information element is missing.
+                  * 97: Message type non-existent or not implemented.
+                  * 98: Message not compatible with call state or message type
+                    non-existent or not implemented.
+                  * 99: Information element non-existent or not implemented.
+                  * 100: Invalid information element contents.
+                  * 101: Message not compatible with call state.
+                  * 102: Recovery on time expiry.
+                  * 111: Protocol error, unspecified.
+
+                Interworking:
+
+                  * 127: Interworking, unspecified.
+
+                Note : Not applicable if the selection algorithm Simultaneous
+                is used.
+
+
+                "
+  DEFVAL        { "31, 34, 38, 41, 42, 43, 44, 47" }
+  ::= { huntEntry 600 }
+
+ -- Columnar:Configuration Status
+
+ huntConfigStatus OBJECT-TYPE
+  SYNTAX        OCTET STRING
+  MAX-ACCESS    read-only
+  STATUS        current
+  DESCRIPTION " Configuration Status
+
+                Configuration status of the row.
+
+                It indicates whether the configuration of the row is valid.
+
+
+                "
+  ::= { huntEntry 700 }
+
+ -- Row command:Up
+
+ huntUp OBJECT-TYPE
+  SYNTAX        INTEGER { noOp(0), up(10) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Up
+
+                Moves the current row upside.
+                "
+  DEFVAL        { noOp }
+  ::= { huntEntry 800 }
+
+ -- Row command:Down
+
+ huntDown OBJECT-TYPE
+  SYNTAX        INTEGER { noOp(0), down(10) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Down
+
+                Moves the current row downside.
+                "
+  DEFVAL        { noOp }
+  ::= { huntEntry 900 }
+
+
+-- End of table:Hunt
+
+-- *****************************************************************************
+
+-- Table:Signaling Properties
+
+-- *****************************************************************************
+
+signalingPropertiesTable OBJECT-TYPE
+ SYNTAX        SEQUENCE OF SignalingPropertiesEntry
+ MAX-ACCESS    not-accessible
+ STATUS        current
+ DESCRIPTION " Signaling Properties
+
+               This table shows the configured signaling properties to be used
+               by the call routing service. The configuration is not used until
+               the command 'ApplyConfig' is executed.
+               "
+ ::= { cRoutMIBObjects 1200 }
+ signalingPropertiesEntry OBJECT-TYPE
+  SYNTAX        SignalingPropertiesEntry
+  MAX-ACCESS    not-accessible
+  STATUS        current
+  DESCRIPTION " A row in table Signaling Properties. "
+  INDEX         {
+                  signalingPropertiesIndex
+                }
+
+  ::= { signalingPropertiesTable 1 }
+
+ SignalingPropertiesEntry ::= SEQUENCE
+ {
+   signalingPropertiesIndex                     Unsigned32,
+   signalingPropertiesName                      OCTET STRING,
+   signalingPropertiesEarlyConnect              MxEnableState,
+   signalingPropertiesEarlyDisconnect           MxEnableState,
+   signalingPropertiesDestinationHost           OCTET STRING,
+   signalingPropertiesAllow180Sdp               MxEnableState,
+   signalingPropertiesAllow183NoSdp             MxEnableState,
+   signalingPropertiesPrivacy                   INTEGER,
+   signalingPropertiesCallPropertiesTranslation OCTET STRING,
+   signalingPropertiesSipHeadersTranslation     OCTET STRING,
+   signalingPropertiesConfigStatus              OCTET STRING,
+   signalingPropertiesUp                        INTEGER,
+   signalingPropertiesDown                      INTEGER,
+   signalingPropertiesInsert                    INTEGER,
+   signalingPropertiesDelete                    INTEGER
+ }
+
+ -- Index:Row Index
+
+ signalingPropertiesIndex OBJECT-TYPE
+  SYNTAX        Unsigned32
+  MAX-ACCESS    read-only
+  STATUS        current
+  DESCRIPTION " Row Index
+
+                Unique identifier of the row in the table.
+                "
+  ::= { signalingPropertiesEntry 100 }
+
+ -- Row command:Delete
+
+ signalingPropertiesDelete OBJECT-TYPE
+  SYNTAX        INTEGER { noOp(0), delete(10) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Delete
+
+                Deletes this row.
+                "
+  DEFVAL        { noOp }
+  ::= { signalingPropertiesEntry 1000 }
+
+ -- Columnar:Signaling properties name
+
+ signalingPropertiesName OBJECT-TYPE
+  SYNTAX        OCTET STRING ( SIZE(0..64) )
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Signaling properties name
+
+                Name of the Signaling properties defined by this row. It must
+                be unique in the table.
+                "
+  DEFVAL        { "" }
+  ::= { signalingPropertiesEntry 200 }
+
+ -- Columnar:EarlyConnect
+
+ signalingPropertiesEarlyConnect OBJECT-TYPE
+  SYNTAX        MxEnableState
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " EarlyConnect
+
+                Enable/Disable the early connect feature.
+
+                When early connect is enabled, the SIP call is connected by
+                sending a 200 OK message instead of a 183 Session Progress
+                message with early media.
+
+
+                "
+  DEFVAL        { disable }
+  ::= { signalingPropertiesEntry 300 }
+
+ -- Columnar:EarlyDisconnect
+
+ signalingPropertiesEarlyDisconnect OBJECT-TYPE
+  SYNTAX        MxEnableState
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " EarlyDisconnect
+
+                Enable/Disable the early disconnect feature.
+
+                When early disconnect is enabled, the SIP BYE message is sent
+                upon ISDN 'Disconnect' signal reception.
+
+                When early disconnect is disabled, the SIP BYE message is sent
+                upon ISDN 'Call release' signal reception.
+
+                If early disconnect is enabled but no ISDN 'Disconnect' message
+                is received, the SIP BYE message will be sent upon receiving an
+                ISDN 'Call release' as if the early disconnect was disabled.
+
+
+                "
+  DEFVAL        { disable }
+  ::= { signalingPropertiesEntry 400 }
+
+ -- Columnar:DestinationHost
+
+ signalingPropertiesDestinationHost OBJECT-TYPE
+  SYNTAX        OCTET STRING ( SIZE(0..255) )
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " DestinationHost
+
+                SIP messages destination.
+
+                The value can be set to the macro '<local_ip_port>' to replace
+                the properties by the local IP address and port of the
+                listening socket of the SIP gateway used to send the INVITE.
+
+
+                "
+  DEFVAL        { "" }
+  ::= { signalingPropertiesEntry 500 }
+
+ -- Columnar:Allow 180 SDP
+
+ signalingPropertiesAllow180Sdp OBJECT-TYPE
+  SYNTAX        MxEnableState
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Allow 180 SDP
+
+                Enable/Disable the 180 with SDP allowed.
+
+                When disabled, a SIP 183 with SDP is sent instead of a 180 with
+                SDP.
+
+                This does not affect the 180 without SDP.
+
+
+                "
+  DEFVAL        { enable }
+  ::= { signalingPropertiesEntry 550 }
+
+ -- Columnar:Allow 183 No SDP
+
+ signalingPropertiesAllow183NoSdp OBJECT-TYPE
+  SYNTAX        MxEnableState
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Allow 183 No SDP
+
+                Enable/Disable the 183 without SDP allowed.
+
+                When disabled, a 183 without SDP is not sent.
+
+                This does not affect the 183 with SDP.
+
+
+                "
+  DEFVAL        { enable }
+  ::= { signalingPropertiesEntry 560 }
+
+ -- Columnar:Privacy
+
+ signalingPropertiesPrivacy OBJECT-TYPE
+  SYNTAX        INTEGER { disable(100) , none(200) , id(300) , rpid(400) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Privacy
+
+                Sets the privacy level of the call.
+
+                  * Disable : No privacy is used.
+                  * None : Use P-Asserted Identity privacy.
+                  * Id : Use P-Preferred Identity privacy.
+                  * Rpid : Use Remote-Party-ID privacy.
+
+
+                "
+  DEFVAL        { disable }
+  ::= { signalingPropertiesEntry 570 }
+
+ -- Columnar:Call Properties Translation
+
+ signalingPropertiesCallPropertiesTranslation OBJECT-TYPE
+  SYNTAX        OCTET STRING ( SIZE(0..512) )
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Call Properties Translation
+
+                Name of the call properties translation to apply to the call.
+
+                The translation modifies the call properties before the call is
+                sent to its destination.
+
+                More than one translation can be specified. In that case, the
+                translations are separated with ',' and are executed in
+                sequential order.
+
+
+                "
+  DEFVAL        { "" }
+  ::= { signalingPropertiesEntry 580 }
+
+ -- Columnar:SIP Headers Translation
+
+ signalingPropertiesSipHeadersTranslation OBJECT-TYPE
+  SYNTAX        OCTET STRING ( SIZE(0..512) )
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " SIP Headers Translation
+
+                Name of the SIP headers translation to apply to the call.
+
+                The translation modifies the SIP headers before the call is
+                sent to its destination.
+
+                More than one translation can be specified. In that case, the
+                translations are separated with ',' and are executed in
+                sequential order.
+
+
+                "
+  DEFVAL        { "" }
+  ::= { signalingPropertiesEntry 590 }
+
+ -- Columnar:Configuration Status
+
+ signalingPropertiesConfigStatus OBJECT-TYPE
+  SYNTAX        OCTET STRING
+  MAX-ACCESS    read-only
+  STATUS        current
+  DESCRIPTION " Configuration Status
+
+                Configuration status of the row.
+
+                It indicates whether the configuration of the row is valid.
+
+
+                "
+  ::= { signalingPropertiesEntry 600 }
+
+ -- Row command:Up
+
+ signalingPropertiesUp OBJECT-TYPE
+  SYNTAX        INTEGER { noOp(0), up(10) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Up
+
+                Moves the current row upside.
+                "
+  DEFVAL        { noOp }
+  ::= { signalingPropertiesEntry 700 }
+
+ -- Row command:Down
+
+ signalingPropertiesDown OBJECT-TYPE
+  SYNTAX        INTEGER { noOp(0), down(10) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Down
+
+                Moves the current row downside.
+                "
+  DEFVAL        { noOp }
+  ::= { signalingPropertiesEntry 800 }
+
+ -- Row command:Insert
+
+ signalingPropertiesInsert OBJECT-TYPE
+  SYNTAX        INTEGER { noOp(0), insert(10) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Insert
+
+                Inserts a new row before this row.
+                "
+  DEFVAL        { noOp }
+  ::= { signalingPropertiesEntry 900 }
+
+
+-- End of table:Signaling Properties
+
+-- *****************************************************************************
+
+-- Table:SIP Headers Translation
+
+-- *****************************************************************************
+
+sipHeadersTranslationTable OBJECT-TYPE
+ SYNTAX        SEQUENCE OF SipHeadersTranslationEntry
+ MAX-ACCESS    not-accessible
+ STATUS        current
+ DESCRIPTION " SIP Headers Translation
+
+               This table shows the configured SIP headers translations to be
+               used by the call routing service. The configuration is not used
+               until the command 'ApplyConfig' is executed.
+               "
+ ::= { cRoutMIBObjects 1400 }
+ sipHeadersTranslationEntry OBJECT-TYPE
+  SYNTAX        SipHeadersTranslationEntry
+  MAX-ACCESS    not-accessible
+  STATUS        current
+  DESCRIPTION " A row in table SIP Headers Translation. "
+  INDEX         {
+                  sipHeadersTranslationIndex
+                }
+
+  ::= { sipHeadersTranslationTable 1 }
+
+ SipHeadersTranslationEntry ::= SEQUENCE
+ {
+   sipHeadersTranslationIndex        Unsigned32,
+   sipHeadersTranslationName         OCTET STRING,
+   sipHeadersTranslationSipHeader    INTEGER,
+   sipHeadersTranslationBuiltFrom    INTEGER,
+   sipHeadersTranslationFixValue     OCTET STRING,
+   sipHeadersTranslationConfigStatus OCTET STRING,
+   sipHeadersTranslationUp           INTEGER,
+   sipHeadersTranslationDown         INTEGER,
+   sipHeadersTranslationInsert       INTEGER,
+   sipHeadersTranslationDelete       INTEGER
+ }
+
+ -- Index:Row Index
+
+ sipHeadersTranslationIndex OBJECT-TYPE
+  SYNTAX        Unsigned32
+  MAX-ACCESS    read-only
+  STATUS        current
+  DESCRIPTION " Row Index
+
+                Unique identifier of the row in the table.
+                "
+  ::= { sipHeadersTranslationEntry 100 }
+
+ -- Row command:Delete
+
+ sipHeadersTranslationDelete OBJECT-TYPE
+  SYNTAX        INTEGER { noOp(0), delete(10) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Delete
+
+                Deletes this row.
+                "
+  DEFVAL        { noOp }
+  ::= { sipHeadersTranslationEntry 1000 }
+
+ -- Columnar:SIP Headers Translation Name
+
+ sipHeadersTranslationName OBJECT-TYPE
+  SYNTAX        OCTET STRING ( SIZE(0..64) )
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " SIP Headers Translation Name
+
+                Name of the SIP headers translation defined by this row.
+                "
+  DEFVAL        { "" }
+  ::= { sipHeadersTranslationEntry 200 }
+
+ -- Columnar:SIP Header
+
+ sipHeadersTranslationSipHeader OBJECT-TYPE
+  SYNTAX        INTEGER { fromHeaderHostPart(100) , fromHeaderUserPart(200) ,
+                identityHeaderHostPart(300) , identityHeaderUserPart(400) ,
+                identityHeaderPhoneNumber(500) , identityHeaderFriendlyName
+                (550) , requestLineHostPart(600) , requestLineUserPart(700) ,
+                toHeaderHostPart(800) , toHeaderUserPart(900) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " SIP Header
+
+                Sets which SIP header is modified by this translation.
+
+                The SIP headers can be:
+
+                  * FromHeaderHostPart: Host part of the From header's URI.
+                  * FromHeaderUserPart: User part of the From header's URI.
+                  * IdentityHeaderHostPart: Host part of the Identity header's
+                    URI.
+                  * IdentityHeaderUserPart: User part of the Identity header's
+                    URI.
+                  * IdentityHeaderPhoneNumber: Phone number in the Identity
+                    header's tel URL.
+                  * IdentityHeaderFriendlyName: Friendly name in the Identity
+                    header's URI.
+                  * RequestLineHostPart: Host part of the Request line's URI.
+                  * RequestLineUserPart: User part of the Request line's URI.
+                  * ToHeaderHostPart: Host part of the To header's URI.
+                  * ToHeaderUserPart: User part of the To header's URI.
+
+
+                "
+  DEFVAL        { fromHeaderHostPart }
+  ::= { sipHeadersTranslationEntry 300 }
+
+ -- Columnar:Built From
+
+ sipHeadersTranslationBuiltFrom OBJECT-TYPE
+  SYNTAX        INTEGER { calledE164(100) , destinationHost(200) , domain(300)
+                , fixValue(400) , hostName(500) , localIp(600) ,
+                callingBearerChannel(700) , sipEndpointUsername(800) ,
+                callingName(900) , callingE164(1000) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Built From
+
+                Sets what information is used to build the selected SIP header.
+
+                The information can be retrieved from:
+
+                  * CalledE164: Use the called party E.164 property.
+                  * DestinationHost: Use the destination host configured in the
+                    signaling properties of which this translation is part.
+                  * Domain: Use the domain name configured in the unit.
+                  * FixValue: Use a fix value (see
+                    SipHeadersTranslation.FixValue).
+                  * HostName: Use the host name configured on the unit.
+                  * LocalIp: Use the local IP address.
+                  * CallingBearerChannel: Use the calling bearer channel.
+                  * SipEndpointUsername: Use the SIP username associated with
+                    the endpoint.
+                  * CallingName: Use the calling party name property.
+                  * CallingE164: Use the calling party E.164 property.
+
+
+                "
+  DEFVAL        { fixValue }
+  ::= { sipHeadersTranslationEntry 400 }
+
+ -- Columnar:Fix Value
+
+ sipHeadersTranslationFixValue OBJECT-TYPE
+  SYNTAX        OCTET STRING ( SIZE(0..255) )
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Fix Value
+
+                Fix value to be inserted in the SIP header when
+                SipHeadersTranslation.BuiltFrom is set to FixValue.
+                "
+  DEFVAL        { "" }
+  ::= { sipHeadersTranslationEntry 500 }
+
+ -- Columnar:Configuration Status
+
+ sipHeadersTranslationConfigStatus OBJECT-TYPE
+  SYNTAX        OCTET STRING
+  MAX-ACCESS    read-only
+  STATUS        current
+  DESCRIPTION " Configuration Status
+
+                Configuration status of the row.
+
+                It indicates whether the configuration of the row is valid.
+
+
+                "
+  ::= { sipHeadersTranslationEntry 600 }
+
+ -- Row command:Up
+
+ sipHeadersTranslationUp OBJECT-TYPE
+  SYNTAX        INTEGER { noOp(0), up(10) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Up
+
+                Moves the current row upside.
+                "
+  DEFVAL        { noOp }
+  ::= { sipHeadersTranslationEntry 700 }
+
+ -- Row command:Down
+
+ sipHeadersTranslationDown OBJECT-TYPE
+  SYNTAX        INTEGER { noOp(0), down(10) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Down
+
+                Moves the current row downside.
+                "
+  DEFVAL        { noOp }
+  ::= { sipHeadersTranslationEntry 800 }
+
+ -- Row command:Insert
+
+ sipHeadersTranslationInsert OBJECT-TYPE
+  SYNTAX        INTEGER { noOp(0), insert(10) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Insert
+
+                Inserts a new row before this row.
+                "
+  DEFVAL        { noOp }
+  ::= { sipHeadersTranslationEntry 900 }
+
+
+-- End of table:SIP Headers Translation
+
+-- *****************************************************************************
+
+-- Table:Call Properties Translation
+
+-- *****************************************************************************
+
+callPropertiesTranslationTable OBJECT-TYPE
+ SYNTAX        SEQUENCE OF CallPropertiesTranslationEntry
+ MAX-ACCESS    not-accessible
+ STATUS        current
+ DESCRIPTION " Call Properties Translation
+
+               This table shows the configured call properties translations to
+               be used by the call routing service. The configuration is not
+               used until the command 'ApplyConfig' is executed.
+               "
+ ::= { cRoutMIBObjects 1600 }
+ callPropertiesTranslationEntry OBJECT-TYPE
+  SYNTAX        CallPropertiesTranslationEntry
+  MAX-ACCESS    not-accessible
+  STATUS        current
+  DESCRIPTION " A row in table Call Properties Translation. "
+  INDEX         {
+                  callPropertiesTranslationIndex
+                }
+
+  ::= { callPropertiesTranslationTable 1 }
+
+ CallPropertiesTranslationEntry ::= SEQUENCE
+ {
+   callPropertiesTranslationIndex        Unsigned32,
+   callPropertiesTranslationName         OCTET STRING,
+   callPropertiesTranslationCallProperty INTEGER,
+   callPropertiesTranslationBuiltFrom    INTEGER,
+   callPropertiesTranslationFixValue     OCTET STRING,
+   callPropertiesTranslationConfigStatus OCTET STRING,
+   callPropertiesTranslationUp           INTEGER,
+   callPropertiesTranslationDown         INTEGER,
+   callPropertiesTranslationInsert       INTEGER,
+   callPropertiesTranslationDelete       INTEGER
+ }
+
+ -- Index:Row Index
+
+ callPropertiesTranslationIndex OBJECT-TYPE
+  SYNTAX        Unsigned32
+  MAX-ACCESS    read-only
+  STATUS        current
+  DESCRIPTION " Row Index
+
+                Unique identifier of the row in the table.
+                "
+  ::= { callPropertiesTranslationEntry 100 }
+
+ -- Row command:Delete
+
+ callPropertiesTranslationDelete OBJECT-TYPE
+  SYNTAX        INTEGER { noOp(0), delete(10) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Delete
+
+                Deletes this row.
+                "
+  DEFVAL        { noOp }
+  ::= { callPropertiesTranslationEntry 1000 }
+
+ -- Columnar:Call Properties Translation Name
+
+ callPropertiesTranslationName OBJECT-TYPE
+  SYNTAX        OCTET STRING ( SIZE(0..64) )
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Call Properties Translation Name
+
+                Name of the call properties translation defined by this row.
+                "
+  DEFVAL        { "" }
+  ::= { callPropertiesTranslationEntry 200 }
+
+ -- Columnar:Call Property
+
+ callPropertiesTranslationCallProperty OBJECT-TYPE
+  SYNTAX        INTEGER { calledE164(100) , callingE164(200) , calledName(300)
+                , callingName(400) , calledUri(500) , callingUri(600) ,
+                calledBearerChannel(700) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Call Property
+
+                Sets which call property is modified by this translation.
+
+                The call properties can be:
+
+                  * CalledE164: Called party E.164 property.
+                  * CallingE164: Calling party E.164 property.
+                  * CalledName: Called party name property.
+                  * CallingName: Calling party name property.
+                  * CalledUri: Called URI name property.
+                  * CallingUri: Calling URI name property.
+                  * CalledBearerChannel: Called bearer channel property.
+
+
+                "
+  DEFVAL        { calledE164 }
+  ::= { callPropertiesTranslationEntry 300 }
+
+ -- Columnar:Built From
+
+ callPropertiesTranslationBuiltFrom OBJECT-TYPE
+  SYNTAX        INTEGER { domain(100) , fixValue(200) , fromHeaderUri(300) ,
+                fromHeaderFriendlyName(400) , fromHeaderUserPart(500) ,
+                identityHeaderUri(600) , identityHeaderUserPart(700) ,
+                identityHeaderPhoneNumber(800) , identityHeaderFriendlyName
+                (850) , localIp(900) , requestLineUri(1000) ,
+                requestLineUserPart(1100) , toHeaderUri(1200) ,
+                toHeaderFriendlyName(1300) , toHeaderUserPart(1400) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Built From
+
+                Sets what information is used to build the selected call
+                property.
+
+                The information can be retrieved from:
+
+                  * Domain: Use the domain name configured in the unit.
+                  * FixValue: Use a fix value (see
+                    CallPropertiesTranslation.FixValue).
+                  * FromHeaderUri: Use the From header's URI.
+                  * FromHeaderFriendlyName: Use the friendly name part of the
+                    From header.
+                  * FromHeaderUserPart: Use the user part of the From header's
+                    URI.
+                  * IdentityHeaderUri: Use the Identity header's URI.
+                  * IdentityHeaderUserPart: Use the user part of the Identity
+                    header's URI.
+                  * IdentityHeaderPhoneNumber: Use the phone number in the
+                    Identity header's tel URL.
+                  * IdentityHeaderFriendlyName: Use the friendly name in the
+                    Identity header's URI.
+                  * LocalIp: Use the local IP address.
+                  * RequestLineUri: Use the Request line's URI.
+                  * RequestLineUserPart: Use the user part of the Request
+                    line's URI.
+                  * ToHeaderUri: Use the To header's URI.
+                  * ToHeaderFriendlyName: Use the friendly name part of the To
+                    header.
+                  * ToHeaderUserPart: Use the user part of the To header's URI.
+
+
+                "
+  DEFVAL        { fixValue }
+  ::= { callPropertiesTranslationEntry 400 }
+
+ -- Columnar:Fix Value
+
+ callPropertiesTranslationFixValue OBJECT-TYPE
+  SYNTAX        OCTET STRING ( SIZE(0..255) )
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Fix Value
+
+                Fix value to be inserted in the call property when
+                CallPropertiesTranslation.BuiltFrom is set to FixValue.
+                "
+  DEFVAL        { "" }
+  ::= { callPropertiesTranslationEntry 500 }
+
+ -- Columnar:Configuration Status
+
+ callPropertiesTranslationConfigStatus OBJECT-TYPE
+  SYNTAX        OCTET STRING
+  MAX-ACCESS    read-only
+  STATUS        current
+  DESCRIPTION " Configuration Status
+
+                Configuration status of the row.
+
+                It indicates whether the configuration of the row is valid.
+
+
+                "
+  ::= { callPropertiesTranslationEntry 600 }
+
+ -- Row command:Up
+
+ callPropertiesTranslationUp OBJECT-TYPE
+  SYNTAX        INTEGER { noOp(0), up(10) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Up
+
+                Moves the current row upside.
+                "
+  DEFVAL        { noOp }
+  ::= { callPropertiesTranslationEntry 700 }
+
+ -- Row command:Down
+
+ callPropertiesTranslationDown OBJECT-TYPE
+  SYNTAX        INTEGER { noOp(0), down(10) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Down
+
+                Moves the current row downside.
+                "
+  DEFVAL        { noOp }
+  ::= { callPropertiesTranslationEntry 800 }
+
+ -- Row command:Insert
+
+ callPropertiesTranslationInsert OBJECT-TYPE
+  SYNTAX        INTEGER { noOp(0), insert(10) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Insert
+
+                Inserts a new row before this row.
+                "
+  DEFVAL        { noOp }
+  ::= { callPropertiesTranslationEntry 900 }
+
+
+-- End of table:Call Properties Translation
+
+-- *****************************************************************************
+
+-- Table:Auto-routing Config
+
+-- *****************************************************************************
+
+autoRoutingTable OBJECT-TYPE
+ SYNTAX        SEQUENCE OF AutoRoutingEntry
+ MAX-ACCESS    not-accessible
+ STATUS        current
+ DESCRIPTION " Auto-routing Config
+
+               This table holds the parameters required for the configuration
+               of the auto-routing feature.
+               "
+ ::= { cRoutMIBObjects 1900 }
+ autoRoutingEntry OBJECT-TYPE
+  SYNTAX        AutoRoutingEntry
+  MAX-ACCESS    not-accessible
+  STATUS        current
+  DESCRIPTION " A row in table Auto-routing Config. "
+  INDEX         {
+                  autoRoutingEpId
+                }
+
+  ::= { autoRoutingTable 1 }
+
+ AutoRoutingEntry ::= SEQUENCE
+ {
+   autoRoutingEpId                   OCTET STRING,
+   autoRoutingAutoroutable           INTEGER,
+   autoRoutingAutoRoutingGateway     OCTET STRING,
+   autoRoutingAutoRoutingDestination OCTET STRING,
+   autoRoutingE164                   OCTET STRING,
+   autoRoutingSipUsername            OCTET STRING,
+   autoRoutingName                   OCTET STRING
+ }
+
+ -- Index:Endpoint Identifier
+
+ autoRoutingEpId OBJECT-TYPE
+  SYNTAX        OCTET STRING
+  MAX-ACCESS    read-only
+  STATUS        current
+  DESCRIPTION " Endpoint Identifier
+
+                Character string that identifies an endpoint in other tables.
+                "
+  ::= { autoRoutingEntry 100 }
+
+ -- Columnar:Auto-Routing Eligibility
+
+ autoRoutingAutoroutable OBJECT-TYPE
+  SYNTAX        INTEGER { enable(100) , disable(200) , hardwareDependent(300) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Auto-Routing Eligibility
+
+                Determines whether or not automatic routes are generated for
+                the endpoint when auto-routing is enabled (see the
+                AutoRoutingEnable variable).
+
+                  * Enable: Automatic routes allowing incoming and outgoing
+                    calls to and from the endpoint are added to the Route Table
+                    when auto-routing is enabled.
+                  * Disable: Automatic route generation is turned off for this
+                    endpoint.
+                  * HardwareDependent: Automatic routes are generated if the
+                    endpoint belongs to an FXS interface.
+
+
+                "
+  DEFVAL        { hardwareDependent }
+  ::= { autoRoutingEntry 200 }
+
+ -- Columnar:Auto-Routing Gateway
+
+ autoRoutingAutoRoutingGateway OBJECT-TYPE
+  SYNTAX        OCTET STRING ( SIZE(0..255) )
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Auto-Routing Gateway
+
+                The name of the SIP gateways to use as the destination of
+                outgoing calls and the source of incoming calls when generating
+                auto-routing rules.
+
+                More than one SIP gateways can be defined. The SIP gateways
+                names are separated by comas. Example: 'gw1,gw2,gw3'.
+
+                When one SIP gateway is defined:
+
+                  * A route is automatically created from the SIP gateway to
+                    the telephony interface.
+                  * A route is automatically created from the telephony
+                    interface to the SIP gateway if the variable
+                    AutoRouting.AutoRoutingDestination is empty. Otherwise, the
+                    destination of the route uses the destination defined in
+                    AutoRouting.AutoRoutingDestination.
+
+                When more than one SIP gateways is defined:
+
+                  * Routes are automatically created from each defined SIP
+                    gateway to the telephony interface.
+                  * A route is automatically created from the telephony
+                    interface to the hunt defined in the variable
+                    AutoRouting.AutoRoutingDestination.
+
+
+                "
+  DEFVAL        { "" }
+  ::= { autoRoutingEntry 300 }
+
+ -- Columnar:Auto-Routing Destination
+
+ autoRoutingAutoRoutingDestination OBJECT-TYPE
+  SYNTAX        OCTET STRING ( SIZE(0..255) )
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Auto-Routing Destination
+
+                The destination to use for the routes from the telephony
+                interface.
+
+                The destination can be:
+
+                  * route-'name': The route destination is set to the route
+                    'name'.
+                  * hunt-'name': The route destination is set to the hunt
+                    'name'.
+                  * sip-'name': The route destination is set to the SIP
+                    interface 'name'.
+                  * isdn-'name': The route destination is set to the ISDN
+                    interface 'name'.
+                  * r2-'name': The route destination is set to the R2 interface
+                    'name'.
+                  * e&m-'name': The route destination is set to the E&M
+                    interface 'name'.
+                  * fxs-'name': The route destination is set to the FXS
+                    interface 'name'.
+                  * fxo-'name': The route destination is set to the FXO
+                    interface 'name'.
+
+                See variable 'AutoRouting.AutoRoutingGateway'.
+
+
+                "
+  DEFVAL        { "" }
+  ::= { autoRoutingEntry 350 }
+
+ -- Columnar:Associated Telephone Number
+
+ autoRoutingE164 OBJECT-TYPE
+  SYNTAX        OCTET STRING ( SIZE(0..255) )
+  MAX-ACCESS    read-only
+  STATUS        current
+  DESCRIPTION " Associated Telephone Number
+
+                The telephone number associated with this endpoint, if any.
+                This simply reflects the Username configured in the UserAgent
+                table of the SIP Endpoint (SipEp) service as long as the name
+                follows the E.164 syntax.
+                "
+  ::= { autoRoutingEntry 400 }
+
+ -- Columnar:SIP Username
+
+ autoRoutingSipUsername OBJECT-TYPE
+  SYNTAX        OCTET STRING ( SIZE(0..255) )
+  MAX-ACCESS    read-only
+  STATUS        current
+  DESCRIPTION " SIP Username
+
+                The SIP username associated with this endpoint, if any. This
+                simply reflects the Username configured in the UserAgent table
+                of the SIP Endpoint (SipEp) service without the username
+                parameter.
+
+                Example: If the SipEp.UserAgent.Username is set to
+                '123456_test;param=value', this field is set to '123456_test'.
+
+
+                "
+  ::= { autoRoutingEntry 450 }
+
+ -- Columnar:Display Name
+
+ autoRoutingName OBJECT-TYPE
+  SYNTAX        OCTET STRING ( SIZE(0..255) )
+  MAX-ACCESS    read-only
+  STATUS        current
+  DESCRIPTION " Display Name
+
+                The FriendlyName associated with this endpoint, if any. This
+                simply reflects the FriendlyName configured in the UserAgent
+                table of the SIP Endpoint (SipEp) service.
+                "
+  ::= { autoRoutingEntry 500 }
+
+
+-- End of table:Auto-routing Config
+
+-- Scalar:Automatic Routing Criteria Type
+
+autoRoutingCriteriaType OBJECT-TYPE
+ SYNTAX        INTEGER { e164(100) , sipUsername(200) }
+ MAX-ACCESS    read-write
+ STATUS        current
+ DESCRIPTION " Automatic Routing Criteria Type
+
+               Determine the type of criteria to use to create an automatic
+               rule from SIP to the telephony endpoints.
+
+                 * E164: The E164 associated with the endpoint is used as
+                   criteria. (See AutoRouting.E164).
+                 * SipUsername: The SIP username associated with the endpoint
+                   is used as criteria. (See AutoRouting.SipUsername).
+
+
+               "
+ DEFVAL        { e164 }
+ ::= { cRoutMIBObjects 2000 }
+
+-- Scalar:Automatic Routing Incoming Properties Mappings
+
+autoRoutingIncomingMappings OBJECT-TYPE
+ SYNTAX        OCTET STRING ( SIZE(0..512) )
+ MAX-ACCESS    read-write
+ STATUS        current
+ DESCRIPTION " Automatic Routing Incoming Properties Mappings
+
+               Name of the properties manipulations associated with the route
+               from the SIP gateway to the endpoint.
+
+               More than one mapping can be specified. In that case, the
+               mappings are separated with ',' and are executed in sequential
+               order.
+
+               See also Route.Mappings
+
+
+               "
+ DEFVAL        { "" }
+ ::= { cRoutMIBObjects 2100 }
+
+-- Scalar:Automatic Routing Outgoing Properties Mappings
+
+autoRoutingOutgoingMappings OBJECT-TYPE
+ SYNTAX        OCTET STRING ( SIZE(0..512) )
+ MAX-ACCESS    read-write
+ STATUS        current
+ DESCRIPTION " Automatic Routing Outgoing Properties Mappings
+
+               Name of the properties manipulations associated with the route
+               from the endpoint to the SIP gateway.
+
+               More than one mapping can be specified. In that case, the
+               mappings are separated with ',' and are executed in sequential
+               order.
+
+               See also Route.Mappings
+
+
+               "
+ DEFVAL        { "" }
+ ::= { cRoutMIBObjects 2200 }
+
+-- Scalar:Automatic Routing Incoming Signaling Properties
+
+autoRoutingIncomingSignalingProperties OBJECT-TYPE
+ SYNTAX        OCTET STRING ( SIZE(0..512) )
+ MAX-ACCESS    read-write
+ STATUS        current
+ DESCRIPTION " Automatic Routing Incoming Signaling Properties
+
+               Name of the signaling properties associated with the route from
+               the SIP gateway to the endpoint.
+
+               See also Route.SignalingProperties
+
+
+               "
+ DEFVAL        { "" }
+ ::= { cRoutMIBObjects 2300 }
+
+-- Scalar:Automatic Outgoing Signaling Properties
+
+autoRoutingOutgoingSignalingProperties OBJECT-TYPE
+ SYNTAX        OCTET STRING ( SIZE(0..512) )
+ MAX-ACCESS    read-write
+ STATUS        current
+ DESCRIPTION " Automatic Outgoing Signaling Properties
+
+               Name of the signaling properties associated with the route from
+               the endpoint to the SIP gateway.
+
+               See also Route.SignalingProperties
+
+
+               "
+ DEFVAL        { "" }
+ ::= { cRoutMIBObjects 2400 }
+
+-- *****************************************************************************
+
+-- Table:SIP Redirect
+
+-- *****************************************************************************
+
+sipRedirectTable OBJECT-TYPE
+ SYNTAX        SEQUENCE OF SipRedirectEntry
+ MAX-ACCESS    not-accessible
+ STATUS        current
+ DESCRIPTION " SIP Redirect
+
+               This table allows configuration of SIP redirections that can be
+               used as Route destinations. When the Route source is a SIP
+               interface, incoming SIP Invites are replied with a 302 'Moved
+               Temporarily' SIP response.
+               "
+ ::= { cRoutMIBObjects 2500 }
+ sipRedirectEntry OBJECT-TYPE
+  SYNTAX        SipRedirectEntry
+  MAX-ACCESS    not-accessible
+  STATUS        current
+  DESCRIPTION " A row in table SIP Redirect. "
+  INDEX         {
+                  sipRedirectIndex
+                }
+
+  ::= { sipRedirectTable 1 }
+
+ SipRedirectEntry ::= SEQUENCE
+ {
+   sipRedirectIndex           Unsigned32,
+   sipRedirectName            OCTET STRING,
+   sipRedirectDestinationHost OCTET STRING,
+   sipRedirectConfigStatus    OCTET STRING,
+   sipRedirectUp              INTEGER,
+   sipRedirectDown            INTEGER,
+   sipRedirectInsert          INTEGER,
+   sipRedirectDelete          INTEGER
+ }
+
+ -- Index:Row Index
+
+ sipRedirectIndex OBJECT-TYPE
+  SYNTAX        Unsigned32
+  MAX-ACCESS    read-only
+  STATUS        current
+  DESCRIPTION " Row Index
+
+                Unique identifier of the row in the table.
+                "
+  ::= { sipRedirectEntry 100 }
+
+ -- Columnar:SIP Redirect Name
+
+ sipRedirectName OBJECT-TYPE
+  SYNTAX        OCTET STRING ( SIZE(0..64) )
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " SIP Redirect Name
+
+                Name of the SIP Redirect defined by this row. It must be unique
+                in the table.
+                "
+  DEFVAL        { "" }
+  ::= { sipRedirectEntry 200 }
+
+ -- Columnar:Destination Host
+
+ sipRedirectDestinationHost OBJECT-TYPE
+  SYNTAX        OCTET STRING ( SIZE(0..255) )
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Destination Host
+
+                Host address to be inserted in the Moved Temporarily response.
+                "
+  DEFVAL        { "" }
+  ::= { sipRedirectEntry 300 }
+
+ -- Columnar:Configuration Status
+
+ sipRedirectConfigStatus OBJECT-TYPE
+  SYNTAX        OCTET STRING
+  MAX-ACCESS    read-only
+  STATUS        current
+  DESCRIPTION " Configuration Status
+
+                Configuration status of the row.
+
+                It indicates whether the configuration of the row is valid.
+
+
+                "
+  ::= { sipRedirectEntry 400 }
+
+ -- Row command:Up
+
+ sipRedirectUp OBJECT-TYPE
+  SYNTAX        INTEGER { noOp(0), up(10) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Up
+
+                Moves the current row upside.
+                "
+  DEFVAL        { noOp }
+  ::= { sipRedirectEntry 500 }
+
+ -- Row command:Down
+
+ sipRedirectDown OBJECT-TYPE
+  SYNTAX        INTEGER { noOp(0), down(10) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Down
+
+                Moves the current row downside.
+                "
+  DEFVAL        { noOp }
+  ::= { sipRedirectEntry 600 }
+
+ -- Row command:Insert
+
+ sipRedirectInsert OBJECT-TYPE
+  SYNTAX        INTEGER { noOp(0), insert(10) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Insert
+
+                Inserts a new row before this row.
+                "
+  DEFVAL        { noOp }
+  ::= { sipRedirectEntry 700 }
+
+ -- Row command:Delete
+
+ sipRedirectDelete OBJECT-TYPE
+  SYNTAX        INTEGER { noOp(0), delete(10) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Delete
+
+                Deletes this row.
+                "
+  DEFVAL        { noOp }
+  ::= { sipRedirectEntry 800 }
+
+
+-- End of table:SIP Redirect
+
+-- ****************************************************************************
+
+-- Group:Notification Messages Configuration
+
+-- ****************************************************************************
+
+notificationsGroup OBJECT IDENTIFIER
+ ::= { cRoutMIBObjects 60010 }
+ -- Scalar:Minimal Severity of Notification
+
+ minSeverity OBJECT-TYPE
+  SYNTAX        INTEGER { disable(0) , debug(100) , info(200) , warning(300) ,
+                error(400) , critical (500) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Minimal Severity of Notification
+
+                Sets the minimal severity to issue a notification message
+                incoming from this service.
+
+                  * Disable: No notification is issued.
+                  * Debug: All notification messages are issued.
+                  * Info: Notification messages with severity 'Informational'
+                    and higher are issued.
+                  * Warning: Notification messages with severity 'Warning' and
+                    higher are issued.
+                  * Error: Notification messages with severity 'Error' and
+                    higher are issued.
+                  * Critical: Notification messages with severity 'Critical'
+                    are issued.
+
+
+                "
+  DEFVAL        { warning }
+  ::= { notificationsGroup 100 }
+
+-- End of group:Notification Messages Configuration
+
+-- ****************************************************************************
+
+-- Group:Configuration Settings
+
+-- ****************************************************************************
+
+configurationGroup OBJECT IDENTIFIER
+ ::= { cRoutMIBObjects 60020 }
+ -- Scalar:Need Restart
+
+ needRestartInfo OBJECT-TYPE
+  SYNTAX        INTEGER { no(0) , yes(100) }
+  MAX-ACCESS    read-only
+  STATUS        current
+  DESCRIPTION " Need Restart
+
+                Indicates if the service needs to be restarted for its
+                configuration to fully take effect.
+
+                  * Yes: Service needs to be restarted.
+                  * No: Service does not need to be restarted.
+
+                Services can be restarted by using the command
+                Scm.ServiceCommands.Restart.
+
+
+                "
+  ::= { configurationGroup 100 }
+
+-- End of group:Configuration Settings
+
+END

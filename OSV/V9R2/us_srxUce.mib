@@ -1,0 +1,236 @@
+US-SRX-UCE-MIB DEFINITIONS ::= BEGIN
+
+-- ==================================================================
+--  Copyright © Unify GmbH & Co. KG
+--
+--  All Rights Reserved.
+--
+--  Reproduction of this document is authorized on condition that
+--  this copyright notice is included.
+--
+--  This MIB document embodies proprietary intellectual property. 
+--  of Unify GmbH & Co. KG, which retains all title and
+--  ownership in this MIB, including any revisions.
+--
+--  This module will be extended, as required.
+--
+--  Unify GmbH & Co. KG reserves the right to make 
+--  changes in specification and other information contained in this 
+--  document without prior notice. The reader should consult 
+--  Unify GmbH & Co. KG to determine whether any such
+--  changes have been made.
+--
+--  Copyright © Unify GmbH & Co. KG
+-- ==================================================================
+
+-- ***********************************************************************
+-- Revision History
+--
+--  04/10/08      C. Chatzidimitriou    FRN3208. Cleanup of MIBS 
+--  06/12/2008    C. Chatzidimitriou    Updated MIB to be fully compatible with SNMPv2 
+--  10/22/2013    G.Kouris              Incorporate new Brand Name
+--
+-- ***********************************************************************
+IMPORTS
+    MODULE-IDENTITY, OBJECT-TYPE, Counter32
+        FROM SNMPv2-SMI
+    surpassRtp
+	FROM SURPASS-RTP-MIB
+    hiq8000Admin
+        FROM SURPASS-RTP-ADMIN-MIB;
+
+--########################################################
+-- SRX Universal Call Engine  MIB MODULE                 #
+--########################################################
+
+usSrxUce MODULE-IDENTITY
+    LAST-UPDATED "201610251624Z"
+    ORGANIZATION "Unify Software and Solutions GmbH & Co. KG"
+    CONTACT-INFO "http://www.unify.com/us/Home/Internet/web/us/Home/contact-us.aspx"
+    DESCRIPTION
+        " SRX Universal Call Engine MIB module. " 
+        
+    REVISION "201310211225Z"    
+    DESCRIPTION
+            "Updated the MIB with the new Brand Name"
+
+    ::= { hiq8000Admin 1 }
+
+--####################
+-- OBJECT IDENTIFIER #
+--####################
+
+usSrxUceObjects              OBJECT IDENTIFIER      ::= { usSrxUce 1 } 
+
+usSrxUcePerformData          OBJECT IDENTIFIER      ::= { usSrxUceObjects 1 }
+
+usSrxUcePerfGeneral          OBJECT IDENTIFIER      ::= {usSrxUcePerformData 1 } 
+
+usSrxUcePerfSipCalls         OBJECT IDENTIFIER      ::= {usSrxUcePerformData 2 }
+
+-- *****************************************************************
+-- UCE Performance  Data
+-- Every statistics counter will be shared by all instances of the
+-- UCE process.
+-- *****************************************************************
+--
+-- UCE statistics counters of Completed and Aborted Calls 
+
+usSrxUceIncomingHalfCallsCounter     OBJECT-TYPE
+    SYNTAX      Counter32
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        " This object refers to the total number of incoming half  
+          calls. "
+    ::= { usSrxUcePerfGeneral 1  }
+
+usSrxUceForwardReleaseCounter     OBJECT-TYPE
+    SYNTAX      Counter32
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        " This object refers to the total number of forward Release  
+          calls. "
+    ::= { usSrxUcePerfGeneral 2  }
+
+usSrxUceOutgoingHalfCallsCounter     OBJECT-TYPE
+    SYNTAX      Counter32
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        " This object refers to the total number of outgoing half  
+          calls. "
+    ::= { usSrxUcePerfGeneral 3  }
+
+usSrxUceCallsReachAddrCompleteCounter     OBJECT-TYPE
+    SYNTAX      Counter32
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        " This object refers to the total number of calls reaching 
+          address completion. "
+    ::= { usSrxUcePerfGeneral 4  }
+
+usSrxUceCallsReachAnswerCounter     OBJECT-TYPE
+    SYNTAX      Counter32
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        " This object refers to the total number of calls reaching  
+          answering. "
+    ::= { usSrxUcePerfGeneral 5  }
+
+usSrxUceBackwardReleaseCounter     OBJECT-TYPE
+    SYNTAX      Counter32
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        " This object refers to the total number of backward release  
+          calls. "
+    ::= { usSrxUcePerfGeneral 6  }
+
+usSrxUceTotalReleaseCounter     OBJECT-TYPE
+    SYNTAX      Counter32
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        " This object refers to the total number of total release
+          calls."
+    ::= { usSrxUcePerfGeneral 7 }
+
+usSrxUceAbortForUnavailableResourcesCounter     OBJECT-TYPE
+    SYNTAX      Counter32
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        " This object refers to the total number of abort calls
+          caused by unavailable resources."
+    ::= { usSrxUcePerfGeneral 8 }
+
+usSrxUceAbortForNoRouteAvailableCounter     OBJECT-TYPE
+    SYNTAX      Counter32
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+         " This object refers to the total number of abort calls
+           caused by no route available ."
+    ::= { usSrxUcePerfGeneral 9 }
+
+usSrxUceAbortForNoTrunkAvailableCounter     OBJECT-TYPE
+    SYNTAX      Counter32
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        " This object refers to the total number of abort calls
+          caused by no trunk available."
+    ::= { usSrxUcePerfGeneral 10 }
+
+usSrxUceAbortForGatewayResourceUnavailableCounter     OBJECT-TYPE
+    SYNTAX      Counter32
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        " This object refers to the total number of abort calls
+          caused by gateway resources unavailable."
+    ::= { usSrxUcePerfGeneral 11 }
+
+usSrxUceAbortForCodecUnavailableCounter     OBJECT-TYPE
+    SYNTAX      Counter32
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        " This object refers to the total number of abort calls
+          caused by codec unavailable."
+    ::= { usSrxUcePerfGeneral 12 }
+
+usSrxUceAbortForAuthFailCounter     OBJECT-TYPE
+    SYNTAX      Counter32
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        " This object refers to the total number of abort calls
+          caused by authorization failure."
+    ::= { usSrxUcePerfGeneral 13 }
+
+usSrxUceAbortForMiscErrorCounter     OBJECT-TYPE
+    SYNTAX      Counter32
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        " This object refers to the total number of abort calls
+          because of other misc error."
+    ::= { usSrxUcePerfGeneral 14 }
+
+usSrxUceTermToTreatmentCounter     OBJECT-TYPE
+    SYNTAX      Counter32
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        " This object refers to the total number of terminated
+          calls to treatment. "
+    ::= { usSrxUcePerfGeneral 15 }
+
+-- *****************************************************************
+-- UCE Performance  Data
+-- Sip to other Signal Managers interworking calls statistics data
+-- *****************************************************************
+
+usSrxUceSipToMgcpCounter     OBJECT-TYPE
+    SYNTAX      Counter32
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        " This object refers to the total number of Sip to Mgcp calls."
+    ::= { usSrxUcePerfSipCalls 1 }
+
+
+usSrxUceSipToSipCounter     OBJECT-TYPE
+    SYNTAX      Counter32
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        " This object refers to the total number of Sip to Sip calls."
+    ::= { usSrxUcePerfSipCalls 2 }
+
+END

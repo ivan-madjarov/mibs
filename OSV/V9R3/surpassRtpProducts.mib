@@ -1,0 +1,77 @@
+--
+-- ==================================================================
+--  Copyright © Unify GmbH & Co. KG
+--
+--  All Rights Reserved.
+--
+--  Reproduction of this document is authorized on condition that
+--  this copyright notice is included.
+--
+--  This MIB document embodies proprietary intellectual property. 
+--  of Unify GmbH & Co. KG, which retains all title and
+--  ownership in this MIB, including any revisions.
+--
+--  This module will be extended, as required.
+--
+--  Unify GmbH & Co. KG reserves the right to make 
+--  changes in specification and other information contained in this 
+--  document without prior notice. The reader should consult 
+--  Unify GmbH & Co. KG to determine whether any such
+--  changes have been made.
+--
+--  Copyright © Unify GmbH & Co. KG
+-- ==================================================================
+--
+-- ==================================================================
+-- Revision History
+--  02/28/2005    Emilio Negron      Added new sysObjectIDs for the
+--                                   Communication, Presence, and
+--                                   Comm + Presence combo servers.
+--  06/12/08     C. Chatzidimitriou  updated MIB to be fully compatible with SNMPv2
+--  10/22/2013   G.Kouris            Incorporate new Brand Name
+-- ==================================================================
+
+-- **************************************************************************
+
+SURPASS-RTP-PRODUCTS-MIB DEFINITIONS ::= BEGIN
+
+-- **************************************************************************
+IMPORTS
+    MODULE-IDENTITY,OBJECT-IDENTITY
+       FROM SNMPv2-SMI
+    surpassRtp                           
+       FROM SURPASS-RTP-MIB;   
+       
+-- **************************************************************************
+
+--
+--  Surpass RTP related HiQ MOs
+--
+
+    surpassRtpProducts MODULE-IDENTITY
+        LAST-UPDATED "201610251624Z"
+        ORGANIZATION "Unify Software and Solutions GmbH & Co. KG"
+        CONTACT-INFO "http://www.unify.com/us/Home/Internet/web/us/Home/contact-us.aspx"
+        DESCRIPTION
+            "The MIB module describes the top level sysObjectID 
+             registry for Unify Surpass RTP-based products."
+             
+        REVISION "201509141224Z"    
+        DESCRIPTION
+            "Updated the MIB with the new Brand Name"
+
+        ::= { surpassRtp 1 }
+
+	hiq8000 OBJECT-IDENTITY
+        STATUS current
+        DESCRIPTION
+            "The sysObjectID for the hiQ8000 product."
+        ::= { surpassRtpProducts 1 }
+
+	hiPath OBJECT-IDENTITY
+        STATUS current
+        DESCRIPTION
+            "The sysObjectID for the hiPath product."
+        ::= { surpassRtpProducts 2 }
+
+END

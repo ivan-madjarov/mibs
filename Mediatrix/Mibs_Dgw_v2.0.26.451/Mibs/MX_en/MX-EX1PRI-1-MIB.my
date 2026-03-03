@@ -1,0 +1,760 @@
+-- ****************************************************************************
+-- ****************************************************************************
+--             Copyright(c) 2004 Mediatrix Telecom, Inc.
+--  NOTICE:
+--   This document contains information that is confidential and proprietary
+--   to Mediatrix Telecom, Inc.
+--   Mediatrix Telecom, Inc. reserves all rights to this document as well as
+--   to the Intellectual Property of the document and the technology and
+--   know-how that it includes and represents.
+--   This publication cannot be reproduced, neither in whole nor in part in
+--   any form whatsoever without written prior approval by
+--   Mediatrix Telecom, Inc.
+--   Mediatrix Telecom, Inc. reserves the right to revise this publication
+--   and make changes at any time and without the obligation to notify any
+--   person and/or entity of such revisions and/or changes.
+-- ****************************************************************************
+-- ****************************************************************************
+
+
+MX-EX1PRI-1-MIB
+DEFINITIONS ::= BEGIN
+
+IMPORTS
+        MODULE-IDENTITY,
+        OBJECT-TYPE,
+        Unsigned32,
+        Integer32
+    FROM SNMPv2-SMI
+        MODULE-COMPLIANCE,
+        OBJECT-GROUP
+    FROM SNMPv2-CONF
+        MxEnableState,
+        MxActivationState,
+        MxIpHostName,
+        MxIpAddress,
+        MxIpPort,
+        MxAdvancedIpPort,
+        MxIpSubnetMask,
+        MxDigitMap
+    FROM MX-TC
+        MxUInt64,
+        MxFloat32,
+        MxIpHostNamePort,
+        MxIpAddr,
+        MxIpAddrPort,
+        MxIpAddrMask,
+        MxUri,
+        MxUrl
+    FROM MX-TC2
+        mediatrixHardware
+    FROM MX-SMI2;
+
+ex1Pri-1MIB MODULE-IDENTITY
+ LAST-UPDATED   "0605160000Z"
+ ORGANIZATION " Mediatrix Telecom, Inc. "
+ CONTACT-INFO " Mediatrix Telecom, Inc.
+                4229, Garlock Street
+                Sherbrooke (Quebec)
+                Canada
+                Phone: (819) 829-8749
+                "
+ DESCRIPTION  " 1 Port PRI digital card
+
+
+                "
+ -- ****************************************************************************
+ 
+ -- Revision history
+ -- ****************************************************************************
+ REVISION       "0605160000Z"
+ DESCRIPTION  " Initial Revision "
+ REVISION       "0606210000Z"
+ DESCRIPTION  " Status clock reference should use enums "
+ REVISION       "0707310000Z"
+ DESCRIPTION  " Added CardsStatus.LineType, Cards.LineType and
+                HiddenAllowedPriLineTypes "
+ REVISION       "0708220000Z"
+ DESCRIPTION  " Added CardsStatus.Signaling, Cards.Signaling. Change ISDN
+                occurence for digital "
+ REVISION       "0711070000Z"
+ DESCRIPTION  " Change CAS occurence for R2 occurence "
+ REVISION       "0801150000Z"
+ DESCRIPTION  " Change the Cards.LineType and Cards.Signaling documentation. "
+ REVISION       "1108240000Z"
+ DESCRIPTION  " Added the hidden command SetFalc56Reg. "
+ REVISION       "1109130000Z"
+ DESCRIPTION  " Added Debug table for traces and diagnostics. "
+ REVISION       "1109290000Z"
+ DESCRIPTION  " Added Eam to Cards.Signaling and CardsStatus.Signaling. "
+ REVISION       "1202020000Z"
+ DESCRIPTION  " Added statistics groups for device driver stats. "
+ REVISION       "1205170000Z"
+ DESCRIPTION  " Deprecated NotificationsGroup and ConfigurationGroup. "
+ ::= { mediatrixHardware 42001 }
+
+ex1Pri-1MIBObjects OBJECT IDENTIFIER ::= { ex1Pri-1MIB 1 }
+
+-- *****************************************************************************
+
+-- Table:Cards Status
+
+-- *****************************************************************************
+
+cardsStatusTable OBJECT-TYPE
+ SYNTAX         SEQUENCE OF CardsStatusEntry
+ MAX-ACCESS     not-accessible
+ STATUS         current
+ DESCRIPTION  " Cards Status
+
+                This table displays the status of each digital card.
+                "
+ ::= { ex1Pri-1MIBObjects 100 }
+ cardsStatusEntry OBJECT-TYPE
+  SYNTAX        CardsStatusEntry
+  MAX-ACCESS    not-accessible
+  STATUS        current
+  DESCRIPTION " A row in table Cards Status. "
+  INDEX         {
+                  cardsStatusLocation
+                }
+
+  ::= { cardsStatusTable 1 }
+
+ CardsStatusEntry ::= SEQUENCE
+ {
+   cardsStatusLocation       OCTET STRING,
+   cardsStatusClockReference INTEGER,
+   cardsStatusLineType       INTEGER,
+   cardsStatusSignaling      INTEGER
+ }
+
+ -- Index:Location
+
+ cardsStatusLocation OBJECT-TYPE
+  SYNTAX        OCTET STRING
+  MAX-ACCESS    read-only
+  STATUS        current
+  DESCRIPTION " Location
+
+                Indicates the location of the card.
+                "
+  ::= { cardsStatusEntry 100 }
+
+ -- Columnar:Current Synchonization Reference
+
+ cardsStatusClockReference OBJECT-TYPE
+  SYNTAX        INTEGER { none(100) , other(200) }
+  MAX-ACCESS    read-only
+  STATUS        current
+  DESCRIPTION " Current Synchonization Reference
+
+                Indicates the synchronisation source currrently in use for this
+                digital card.
+                "
+  ::= { cardsStatusEntry 200 }
+
+ -- Columnar:Line Type
+
+ cardsStatusLineType OBJECT-TYPE
+  SYNTAX        INTEGER { e1(100) , t1(200) }
+  MAX-ACCESS    read-only
+  STATUS        current
+  DESCRIPTION " Line Type
+
+                Defines the line type.
+                "
+  ::= { cardsStatusEntry 300 }
+
+ -- Columnar:Signaling
+
+ cardsStatusSignaling OBJECT-TYPE
+  SYNTAX        INTEGER { isdn(100) , r2(200) , eam(300) }
+  MAX-ACCESS    read-only
+  STATUS        current
+  DESCRIPTION " Signaling
+
+                Defines the signaling protocol used by this card.
+                "
+  ::= { cardsStatusEntry 400 }
+
+
+-- End of table:Cards Status
+
+-- *****************************************************************************
+
+-- Table:Cards Configuration
+
+-- *****************************************************************************
+
+cardsTable OBJECT-TYPE
+ SYNTAX        SEQUENCE OF CardsEntry
+ MAX-ACCESS    not-accessible
+ STATUS        current
+ DESCRIPTION " Cards Configuration
+
+               This table allows to configure the settings of each digital
+               card.
+               "
+ ::= { ex1Pri-1MIBObjects 200 }
+ cardsEntry OBJECT-TYPE
+  SYNTAX        CardsEntry
+  MAX-ACCESS    not-accessible
+  STATUS        current
+  DESCRIPTION " A row in table Cards Configuration. "
+  INDEX         {
+                  cardsLocation
+                }
+
+  ::= { cardsTable 1 }
+
+ CardsEntry ::= SEQUENCE
+ {
+   cardsLocation       OCTET STRING,
+   cardsClockReference INTEGER,
+   cardsLineType       INTEGER,
+   cardsSignaling      INTEGER
+ }
+
+ -- Index:Location
+
+ cardsLocation OBJECT-TYPE
+  SYNTAX        OCTET STRING
+  MAX-ACCESS    read-only
+  STATUS        current
+  DESCRIPTION " Location
+
+                Indicates the location of the card.
+                "
+  ::= { cardsEntry 100 }
+
+ -- Columnar:Clock Reference
+
+ cardsClockReference OBJECT-TYPE
+  SYNTAX        INTEGER { none(100) , other(200) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Clock Reference
+
+                Indicates the preferred synchronisation source to use for the
+                internal clock of this digital card.
+
+                  * None: The internal clock synchronizes with the first
+                    available source.
+                  * Other: The internal clock synchronizes with another card
+                    present on the mainboard.
+
+                If the selected source does not provide a signal, the internal
+                clock synchronizes with the first available source.
+                "
+  DEFVAL        { none }
+  ::= { cardsEntry 200 }
+
+ -- Columnar:Line Type
+
+ cardsLineType OBJECT-TYPE
+  SYNTAX        INTEGER { e1(100) , t1(200) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Line Type
+
+                Defines the line type.
+
+                  * T1: DS1 T-Carrier Signaling
+                  * E1: E1 E-Carrier Signaling
+
+                Note : The value T1 is not valid when the variable
+                Cards.Signaling is set to R2.
+
+
+                "
+  DEFVAL        { e1 }
+  ::= { cardsEntry 300 }
+
+ -- Columnar:Signaling
+
+ cardsSignaling OBJECT-TYPE
+  SYNTAX        INTEGER { isdn(100) , r2(200) , eam(300) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Signaling
+
+                Defines the signaling protocol used by this card.
+
+                  * Isdn: Integrated Services Digital Network
+                  * R2: E1-R2 CAS signaling protocol.
+                  * Eam: E&M CAS signaling protocol.
+
+                Note : The value R2 is not valid when the variable
+                Cards.LineType is set to T1.
+
+
+                "
+  DEFVAL        { isdn }
+  ::= { cardsEntry 400 }
+
+
+-- End of table:Cards Configuration
+
+-- ****************************************************************************
+
+-- Group:Statistics Group
+
+-- ****************************************************************************
+
+statisticsGroup OBJECT IDENTIFIER
+ ::= { ex1Pri-1MIBObjects 56000 }
+ -- ***************************************************************************
+ 
+ -- Table:
+
+ -- ***************************************************************************
+ 
+ statsInfoTable OBJECT-TYPE
+  SYNTAX                  SEQUENCE OF StatsInfoEntry
+  MAX-ACCESS              not-accessible
+  STATUS                  current
+  DESCRIPTION          "
+
+                          Statistics table of each digital card.
+                          "
+  ::= { statisticsGroup 100 }
+  statsInfoEntry OBJECT-TYPE
+   SYNTAX        StatsInfoEntry
+   MAX-ACCESS    not-accessible
+   STATUS        current
+   DESCRIPTION " A row in table . "
+   INDEX         {
+                   statsInfoLocation
+                 }
+
+   ::= { statsInfoTable 1 }
+
+  StatsInfoEntry ::= SEQUENCE
+  {
+    statsInfoLocation                      OCTET STRING,
+    statsInfoFramesTransmitted             Unsigned32,
+    statsInfoFramesReceived                Unsigned32,
+    statsInfoOctetsTransmitted             Unsigned32,
+    statsInfoOctetsReceived                Unsigned32,
+    statsInfoFcsErrors                     Unsigned32,
+    statsInfoFramesDropped                 Unsigned32,
+    statsInfoOctetsDropped                 Unsigned32,
+    statsInfoNegativeFrameSlipsTransmitted Unsigned32,
+    statsInfoNegativeFrameSlipsReceived    Unsigned32,
+    statsInfoPositiveFrameSlipsTransmitted Unsigned32,
+    statsInfoPositiveFrameSlipsReceived    Unsigned32,
+    statsInfoFramingErrors                 Unsigned32,
+    statsInfoCodeViolations                Unsigned32,
+    statsInfoCRCErrors                     Unsigned32,
+    statsInfoEBitErrors                    Unsigned32,
+    statsInfoBlockErrors                   Unsigned32,
+    statsInfoResetStats                    INTEGER
+  }
+
+  -- Index:Location
+
+  statsInfoLocation OBJECT-TYPE
+   SYNTAX        OCTET STRING
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Location
+
+                 Indicates the location of the card.
+                 "
+   ::= { statsInfoEntry 100 }
+
+  -- Columnar:Negative Frame Slips Received
+
+  statsInfoNegativeFrameSlipsReceived OBJECT-TYPE
+   SYNTAX        Unsigned32
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Negative Frame Slips Received
+
+                 A frame is skipped when the frequency of the received route
+                 clock is greater than the frequency of the receive system
+                 interface working clock based on 2.048 MHz (on E1) or 1.544
+                 MHz (on T1).
+
+                 This value is available on E1 and T1.
+
+
+                 "
+   ::= { statsInfoEntry 1000 }
+
+  -- Row command:Reset Stats
+
+  statsInfoResetStats OBJECT-TYPE
+   SYNTAX        INTEGER { noOp(0), resetStats(10) }
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Reset Stats
+
+                 Resets all statistics for the specified interface.
+                 "
+   DEFVAL        { noOp }
+   ::= { statsInfoEntry 10000 }
+
+  -- Columnar:Positive Frame Slips Transmitted
+
+  statsInfoPositiveFrameSlipsTransmitted OBJECT-TYPE
+   SYNTAX        Unsigned32
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Positive Frame Slips Transmitted
+
+                 A frame is repeated when the frequency of the transmit clock
+                 is less than the frequency of the transmit system interface
+                 working clock based on 2.048 MHz (on E1) or 1.544 MHz (on
+                 T1).
+
+                 This value is available on E1 and T1.
+
+
+                 "
+   ::= { statsInfoEntry 1100 }
+
+  -- Columnar:Positive Frame Slips Received
+
+  statsInfoPositiveFrameSlipsReceived OBJECT-TYPE
+   SYNTAX        Unsigned32
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Positive Frame Slips Received
+
+                 A frame is repeated when the frequency of the receive route
+                 clock is less than the frequency of the receive system
+                 interface working clock based on 2.048 MHz (on E1) or 1.544
+                 MHz (on T1).
+
+                 This value is available on E1 and T1.
+
+
+                 "
+   ::= { statsInfoEntry 1200 }
+
+  -- Columnar:Framing Error
+
+  statsInfoFramingErrors OBJECT-TYPE
+   SYNTAX        Unsigned32
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Framing Error
+
+                 The framing error count indicates that a FAS (Frame Alignment
+                 Signal) word has been received with an error.
+
+                 The FAS-bits are present in every even frame of timeslot 0 on
+                 E1.
+
+                 The FAS-bits are present in ESF format on T1.
+
+                 This value is available on E1 and T1.
+
+
+                 "
+   ::= { statsInfoEntry 1300 }
+
+  -- Columnar:Code Violations
+
+  statsInfoCodeViolations OBJECT-TYPE
+   SYNTAX        Unsigned32
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Code Violations
+
+                 The code violations count indicates that an encoding error on
+                 the PCM line has been detected.
+
+                 This value is available on E1 and T1.
+
+
+                 "
+   ::= { statsInfoEntry 1400 }
+
+  -- Columnar:CRC Errors
+
+  statsInfoCRCErrors OBJECT-TYPE
+   SYNTAX        Unsigned32
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " CRC Errors
+
+                 The CRC errors count is incremented when a multiframe has
+                 been received with a CRC error.
+
+                 The CRC error count is available in CRC multiframe mode only
+                 on E1.
+
+                 The CRC error count is in ESF format on T1.
+
+
+                 "
+   ::= { statsInfoEntry 1500 }
+
+  -- Columnar:E-Bit Error
+
+  statsInfoEBitErrors OBJECT-TYPE
+   SYNTAX        Unsigned32
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " E-Bit Error
+
+                 The E-Bit error count gives information about the outgoing
+                 transmit PCM line if the E-bits are used by the remote end
+                 for submultiframe error indication. Incrementing is only
+                 possible in the multiframe synchronous state.
+
+                 Due to signaling requirements, the E-bits of frame 13 and
+                 frame 15 of the CRC multiframe can be used to indicate an
+                 error in a received submultiframes:
+
+                 Submultiframe I status E-bit located in frame 13
+                 Submultiframe II status E-bit located in frame 15 no CRC
+                 error : E = 1 CRC error : E = 0
+
+                 This value is only available in E1.
+
+
+                 "
+   ::= { statsInfoEntry 1600 }
+
+  -- Columnar:Block Error
+
+  statsInfoBlockErrors OBJECT-TYPE
+   SYNTAX        Unsigned32
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Block Error
+
+                 The Block Error count is incremented once per multiframe if a
+                 multirame has been received with a CRC error or a bad frame
+                 alignment has been detected.
+
+                 This value is only available for ESF format on T1 only.
+
+
+                 "
+   ::= { statsInfoEntry 1700 }
+
+  -- Columnar:Frames Transmitted
+
+  statsInfoFramesTransmitted OBJECT-TYPE
+   SYNTAX        Unsigned32
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Frames Transmitted
+
+                 Number of HDLC frames transmitted.
+
+                 Note: The term frames does not refer to the structure defined
+                 in I.431.
+
+
+                 "
+   ::= { statsInfoEntry 200 }
+
+  -- Columnar:Frames Received
+
+  statsInfoFramesReceived OBJECT-TYPE
+   SYNTAX        Unsigned32
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Frames Received
+
+                 Number of HDLC frames received.
+
+                 Note: The term frames does not refer to the structure defined
+                 in I.431.
+
+
+                 "
+   ::= { statsInfoEntry 300 }
+
+  -- Columnar:Octets Transmitted
+
+  statsInfoOctetsTransmitted OBJECT-TYPE
+   SYNTAX        Unsigned32
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Octets Transmitted
+
+                 Number of octets transmitted. This value is obtained by
+                 cumulating the octets transmitted in the HDLC frames.
+
+                 Note: The term frames does not refer to the structure defined
+                 in I.431.
+
+
+                 "
+   ::= { statsInfoEntry 400 }
+
+  -- Columnar:Octets Received
+
+  statsInfoOctetsReceived OBJECT-TYPE
+   SYNTAX        Unsigned32
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Octets Received
+
+                 Number of octets received. This value is obtained by
+                 cumulating the octets received in the HDLC frames.
+
+                 Note: The term frames does not refer to the structure defined
+                 in I.431.
+
+
+                 "
+   ::= { statsInfoEntry 500 }
+
+  -- Columnar:FCS Errors
+
+  statsInfoFcsErrors OBJECT-TYPE
+   SYNTAX        Unsigned32
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " FCS Errors
+
+                 Frame check sequence (FCS) errors indicate that frames of
+                 data are being corrupted during transmission. FCS error count
+                 is the number of frames that were received with a bad
+                 checksum (CRC value) in the HDLC frame. These frames are
+                 dropped and not propagated in the upper layers.
+
+                 This value is available on E1 and T1.
+
+
+                 "
+   ::= { statsInfoEntry 600 }
+
+  -- Columnar:Frames Dropped
+
+  statsInfoFramesDropped OBJECT-TYPE
+   SYNTAX        Unsigned32
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Frames Dropped
+
+                 Number of frames dropped. This value is obtained by
+                 cumulating the number of frames dropped when transferring the
+                 data from the framer chip to the device internal buffer.
+
+                 This value is available on E1 and T1.
+
+
+                 "
+   ::= { statsInfoEntry 700 }
+
+  -- Columnar:Octets Dropped
+
+  statsInfoOctetsDropped OBJECT-TYPE
+   SYNTAX        Unsigned32
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Octets Dropped
+
+                 Number of octets dropped. This value is obtained by
+                 cumulating the number of octets dropped when transferring the
+                 data from the framer chip to the device internal buffer.
+
+                 This value is available on E1 and T1.
+
+
+                 "
+   ::= { statsInfoEntry 800 }
+
+  -- Columnar:Negative Frame Slips Transmitted
+
+  statsInfoNegativeFrameSlipsTransmitted OBJECT-TYPE
+   SYNTAX        Unsigned32
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Negative Frame Slips Transmitted
+
+                 A frame is skipped when the frequency of the transmit clock
+                 is greater than the frequency of the transmit system
+                 interface working clock based on 2.048 MHz (on E1) or 1.544
+                 MHz (on T1).
+
+                 This value is available on E1 and T1.
+
+
+                 "
+   ::= { statsInfoEntry 900 }
+
+
+ -- End of table:
+
+-- End of group:Statistics Group
+
+-- ****************************************************************************
+
+-- Group:Notification Messages Configuration
+
+-- ****************************************************************************
+
+notificationsGroup OBJECT IDENTIFIER
+ ::= { ex1Pri-1MIBObjects 60010 }
+ -- Scalar:Minimal Severity of Notification
+
+ minSeverity OBJECT-TYPE
+  SYNTAX        INTEGER { disable(0) , debug(100) , info(200) , warning(300) ,
+                error(400) , critical (500) }
+  MAX-ACCESS    read-write
+  STATUS        deprecated
+  DESCRIPTION " Minimal Severity of Notification
+
+                Sets the minimal severity to issue a notification message
+                incoming from this service.
+
+                  * Disable: No notification is issued.
+                  * Debug: All notification messages are issued.
+                  * Info: Notification messages with severity 'Informational'
+                    and higher are issued.
+                  * Warning: Notification messages with severity 'Warning' and
+                    higher are issued.
+                  * Error: Notification messages with severity 'Error' and
+                    higher are issued.
+                  * Critical: Notification messages with severity 'Critical'
+                    are issued.
+
+
+                "
+  DEFVAL        { warning }
+  ::= { notificationsGroup 100 }
+
+-- End of group:Notification Messages Configuration
+
+-- ****************************************************************************
+
+-- Group:Configuration Settings
+
+-- ****************************************************************************
+
+configurationGroup OBJECT IDENTIFIER
+ ::= { ex1Pri-1MIBObjects 60020 }
+ -- Scalar:Need Restart
+
+ needRestartInfo OBJECT-TYPE
+  SYNTAX        INTEGER { no(0) , yes(100) }
+  MAX-ACCESS    read-only
+  STATUS        deprecated
+  DESCRIPTION " Need Restart
+
+                Indicates if the service needs to be restarted for its
+                configuration to fully take effect.
+
+                  * Yes: Service needs to be restarted.
+                  * No: Service does not need to be restarted.
+
+                Services can be restarted by using the command
+                Scm.ServiceCommands.Restart.
+
+
+                "
+  ::= { configurationGroup 100 }
+
+-- End of group:Configuration Settings
+
+END

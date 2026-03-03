@@ -1,0 +1,1599 @@
+HIMED-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+    NOTIFICATION-TYPE, MODULE-IDENTITY, OBJECT-TYPE, Integer32, enterprises 
+    FROM SNMPv2-SMI
+
+    OBJECT-GROUP, NOTIFICATION-GROUP 
+    FROM SNMPv2-CONF;
+
+-- Define parent object identifiers (if not defined in own MIB file(s))
+siemens                 OBJECT IDENTIFIER ::= {enterprises 4329}
+communicationproducts   OBJECT IDENTIFIER ::= {siemens 11}
+
+himed MODULE-IDENTITY
+    LAST-UPDATED "201208091228Z"
+    ORGANIZATION "Siemens AG I IA CE"
+    CONTACT-INFO "Guido Conrad
+                  Siemens AG
+                  I IA CE 
+                  Wuerzburgerstr. 121
+                  90766 Fuerth
+                  GERMANY
+                  E-mail: guido.conrad@siemens.com"
+    DESCRIPTION "MIB module describing object identifiers for HiMed"
+    -- Define object identifier
+    REVISION    "201208091228Z"
+        DESCRIPTION "orginal with fixed syntax"
+    REVISION    "200908141228Z"
+        DESCRIPTION "orginal malformed syntax"
+    ::= {communicationproducts 1}
+
+-- Define tree structure
+himedCockpit                    OBJECT IDENTIFIER ::= {himed 1}
+himedIac                        OBJECT IDENTIFIER ::= {himed 2}
+himedCashbox                    OBJECT IDENTIFIER ::= {himed 3}
+himedServer                     OBJECT IDENTIFIER ::= {himed 4}
+himedMedisetip                  OBJECT IDENTIFIER ::= {himed 5}
+
+events                          OBJECT IDENTIFIER ::= {himed 10}
+
+generalObjects                  OBJECT IDENTIFIER ::= {himed 11}
+
+-- object identifier himedServer
+serverPbx                       OBJECT IDENTIFIER ::= {himedServer 1}
+serverHostlink                  OBJECT IDENTIFIER ::= {himedServer 2}
+serverCashbox                   OBJECT IDENTIFIER ::= {himedServer 3}
+serverCsrv                      OBJECT IDENTIFIER ::= {himedServer 4}
+serverSipKonzentrator           OBJECT IDENTIFIER ::= {himedServer 5}
+serverNightrun                  OBJECT IDENTIFIER ::= {himedServer 6}
+serverDbBackup                  OBJECT IDENTIFIER ::= {himedServer 7}
+serverTv                        OBJECT IDENTIFIER ::= {himedServer 8}
+serverDsrv                      OBJECT IDENTIFIER ::= {himedServer 9}
+
+
+-- object identifier events
+eventsGeneric                   OBJECT IDENTIFIER ::= {events 1}
+eventsSpecific                  OBJECT IDENTIFIER ::= {events 2}
+
+eventsNetwork                   OBJECT IDENTIFIER ::= {eventsGeneric 1}
+eventsHardware                  OBJECT IDENTIFIER ::= {eventsGeneric 2}
+eventsSoftware                  OBJECT IDENTIFIER ::= {eventsGeneric 3}
+eventsConfiguration             OBJECT IDENTIFIER ::= {eventsGeneric 4}
+
+eventsCockpit                   OBJECT IDENTIFIER ::= {eventsSpecific 1}
+eventsIac                       OBJECT IDENTIFIER ::= {eventsSpecific 2}
+eventsCashbox                   OBJECT IDENTIFIER ::= {eventsSpecific 3}
+eventsServer                    OBJECT IDENTIFIER ::= {eventsSpecific 4}
+eventsMedisetIP                 OBJECT IDENTIFIER ::= {eventsSpecific 5}
+eventsMedisetIP2                OBJECT IDENTIFIER ::= {eventsSpecific 6}
+eventsCockpitLegacy             OBJECT IDENTIFIER ::= {eventsSpecific 7}
+
+eventsServerPbx                 OBJECT IDENTIFIER ::= {eventsServer 1}
+eventsServerHostlink            OBJECT IDENTIFIER ::= {eventsServer 2}
+
+
+
+-- objects generalObjects
+
+ObjectResourceTxt OBJECT-TYPE 
+    SYNTAX  OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "A resource text."
+    ::= {generalObjects 1}
+    
+objectOldAddress OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current    
+    DESCRIPTION
+        "The old address."
+    ::= {generalObjects 2}
+    
+objectNewAddress OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current    
+    DESCRIPTION
+        "The new address."
+    ::= {generalObjects 3}    
+    
+objectSeconds OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current    
+    DESCRIPTION
+        "A period of time in seconds."
+    ::= {generalObjects 4}    
+
+-- objects himedCockpit 
+cockpitNetwork OBJECT IDENTIFIER ::= {himedCockpit 1}
+
+rebootCpNoNetworkInCustomerMode OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Reboot cockpit cause no Network found in Customer Mode;"
+    ::= {cockpitNetwork 1}
+    
+missingMulticastPacketIAC OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Missing cyclic multicast packets from IAC;"
+    ::= {cockpitNetwork 2}
+    
+noConnectionIAC OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "No connection to IAC"    
+    ::= {cockpitNetwork 3}
+    
+rsyncFailedForFiveAttempts OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Rsync failed for 5 succesional attempts;"
+    ::= {cockpitNetwork 4}
+    
+terminalserverNotReachable OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Terminalserver not reachable;"    
+    ::= {cockpitNetwork 5}
+    
+sipError OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "SIP error occured, check SIP gateway and settings;"
+    ::= {cockpitNetwork 6}
+    
+downloadTvApplicationFailed OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Download of TV application failed;"
+    ::= {cockpitNetwork 7}
+    
+IPchanged OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "IP address changed;"
+    ::= {cockpitNetwork 8}
+    
+    
+errorUpdateP1 OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Error during cockpit update (P1);"    
+    ::= {cockpitNetwork 800}
+    
+    
+errorUpdateP1Md5Sum OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Error during cockpit update (P1): MD5 sum was false;"
+    ::= {cockpitNetwork 801}
+    
+errorUpdateP2 OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Error during cockpit update (P2);"    
+    ::= {cockpitNetwork 900}
+    
+errorUpdateP2Md5Sum OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Error during cockpit update (P2): MD5 sum was false;"
+    ::= {cockpitNetwork 901}
+    
+errorUpdateP3 OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Error during cockpit update (P3);"    
+    ::= {cockpitNetwork 1000}
+    
+errorUpdateP3Md5Sum OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Error during cockpit update (P3): MD5 sum was false;"
+    ::= {cockpitNetwork 1001}
+    
+errorUpdateP4 OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Error during cockpit update (P4);"    
+    ::= {cockpitNetwork 1100}
+        
+errorUpdateP4Md5Sum OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Error during cockpit update (P4): MD5 sum was false"
+    ::= {cockpitNetwork 1101}
+    
+cockpitHardware OBJECT IDENTIFIER ::= {himedCockpit 2}
+
+medisetUsbFailure OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "MediSet USB Failure;"    
+    ::= {cockpitHardware 1}
+
+criticalPoePower OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "POE with critical power detected"
+    ::= {cockpitHardware 2}
+
+cockpitSoftware OBJECT IDENTIFIER  ::= {himedCockpit 3}
+
+newBuildReboot OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "New build available, rebooting now;"
+    ::= {cockpitSoftware 1}
+    
+wrongCompactFlash OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Wrong compact flash;"
+    ::= {cockpitSoftware 2}
+
+newKernelNotFound OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "New Kernel/Initrd to be started not found;"
+    ::= {cockpitSoftware 3}
+    
+wrongCfSize OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Wrong CF size;"
+    ::= {cockpitSoftware 4}
+        
+partitionRepairFailed OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Repair of partitions failed;"
+    ::= {cockpitSoftware 5}    
+    
+oldVersionOnIac OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "The version on the IAC is too old;"
+    ::= {cockpitSoftware 6}
+
+tvApplicationTooOld OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "TV application is too old;"
+    ::= {cockpitSoftware 7}
+    
+tvBaseBoardTooOld OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "TV base board is too old, firmware update neccessary;"
+    ::= {cockpitSoftware 8}    
+    
+cockpitConfiguration OBJECT IDENTIFIER     ::= {himedCockpit 4}
+
+invalidApplicationType OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Invalid Application Type;"
+    ::= {cockpitConfiguration 1}
+    
+noIacAddress OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "No IAC address available;"
+    ::= {cockpitConfiguration 2}
+    
+configuredAnalogMedisetProblem OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "The configured analog mediset has a problem or is missing;"
+    ::= {cockpitConfiguration 3}
+    
+noExternalTVTunerConfigured OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "No external TV Tuner configured or connected;"
+    ::= {cockpitConfiguration 4}
+    
+noExternalNursecalladapterConfigured OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "No external Nursecalladapter configured;"
+    ::= {cockpitConfiguration 5}
+    
+--objects himedIac
+iacNetwork OBJECT IDENTIFIER ::= {himedIac 1}
+
+nameserverDoesntRespond OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Nameserver doesn't respond or responding too slow."
+    ::= {iacNetwork 1}    
+    
+iacSoftware OBJECT IDENTIFIER ::= {himedIac 2}
+
+squidIsntRunning OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Squid isn't running, please restart manually."
+    ::= {iacSoftware 1}
+
+webserverIsntRunning OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Webserver isn't running, please restart manually."
+    ::= {iacSoftware 2}
+    
+    
+-- objects himedCashbox
+cashboxStacker OBJECT IDENTIFIER ::= {himedCashbox 1}
+
+cashboxStackerNearlyFull OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Banknote validator is nearly full;."
+    ::= {cashboxStacker 1}
+    
+cashboxStackerFull OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Banknote validator is full;."
+    ::= {cashboxStacker 2}
+    
+cashboxBanknoteValidator OBJECT IDENTIFIER ::= {himedCashbox 2}
+
+cashboxBanknoteValidatorJammed OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Banknote validator is jammed."
+    ::= {cashboxBanknoteValidator 1}
+    
+cashboxBanknoteValidatorSensorError OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Sensorerror at banknote validator."
+    ::= {cashboxBanknoteValidator 2}
+    
+cashboxBanknoteValidatorAttemptedAttack OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Someone attempted to cheat the Banknotevalidator."
+    ::= {cashboxBanknoteValidator 3}
+    
+cashboxBanknoteValidatorConnectionLost OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Connection to the banknote validator was lost."
+    ::= {cashboxBanknoteValidator 4}
+    
+cashboxBanknoteValidatorFailure OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "The banknote validator signals failure."
+    ::= {cashboxBanknoteValidator 5}
+    
+cashboxBanknoteValidatorCOMTimeout OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "The banknote validator signals COM Timeout."
+    ::= {cashboxBanknoteValidator 6}
+    
+cashboxChipcard OBJECT IDENTIFIER ::= {himedCashbox 3}
+
+cashboxChipcardRemoved OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Chipcard removed after jam."
+    ::= {cashboxChipcard 1}
+
+cashboxChipcardJammed OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Chipcard jammed during card vend."
+    ::= {cashboxChipcard 2}
+
+cashboxChipcardCaptured OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Chipcard captured."
+    ::= {cashboxChipcard 3}
+    
+cashboxChipcardDispenser OBJECT IDENTIFIER ::= {himedCashbox 4}
+
+cashboxChipcardDispenserEmpty OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Chipcard dispenser is empty."
+    ::= {cashboxChipcardDispenser 1}
+    
+cashboxChipcardDispenserNearlyEmpty OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Chipcard dispenser is nearly empty."
+    ::= {cashboxChipcardDispenser 2}
+
+cashboxChipcardDispenserSignalsProblem OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Chipcard dispenser signals problem."
+    ::= {cashboxChipcardDispenser 3}
+    
+cashboxChipcardDispenserJammed OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Chipcard dispenser is jammed."
+    ::= {cashboxChipcardDispenser 4}
+    
+cashboxChipcardDispenserCouldNotBeRead OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Chipcard in the chipcard dispenser could not be read."
+    ::= {cashboxChipcardDispenser 5}
+
+cashboxChipcardDispenserCaptured OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Chipcard in the chipcard dispenser must be sorted out."
+    ::= {cashboxChipcardDispenser 6}
+    
+cashboxChipcardReader OBJECT IDENTIFIER ::= {himedCashbox 5}
+
+cashboxChipcardReaderJammed OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "The chipcard reader was jammed."
+    ::= {cashboxChipcardReader 1}
+    
+cashboxChipcardContainer OBJECT IDENTIFIER ::= {himedCashbox 6}
+
+cashboxChipcardContainerNearlyFull OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "The chipcardcontainer is nearly full."
+    ::= {cashboxChipcardContainer 1}
+        
+cashboxHopper OBJECT IDENTIFIER ::= {himedCashbox 7}
+
+cashboxHopperNearlyEmpty OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "The hopper is nearly empty."
+    ::= {cashboxHopper 1}
+    
+cashboxHopperEmpty OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "The hopper is empty."
+    ::= {cashboxHopper 2}
+
+cashboxHopperError OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "The hopper signals an error."
+    ::= {cashboxHopper 3}
+    
+cashboxPowersupplyAndUps OBJECT IDENTIFIER ::= {himedCashbox 8}
+
+cashboxPowerSupplyLost OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Powersupply lost. UPS is used as Powersupply."
+    ::= {cashboxPowersupplyAndUps 1}
+    
+cashboxPowerSupplyIsBack OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Powersupply is back."
+    ::= {cashboxPowersupplyAndUps 2}
+    
+cashboxPowerSupplyLowUpsBattery OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Low battery at UPS."
+    ::= {cashboxPowersupplyAndUps 3}
+    
+cashboxPrinter OBJECT IDENTIFIER ::= {himedCashbox 9}
+
+cashboxPrinterPapershortage OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "The printer has a paper shortage."
+    ::= {cashboxPrinter 1}
+
+cashboxPrinterNoPaper OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "The printer is out of paper."
+    ::= {cashboxPrinter 2}
+    
+cashboxPrinterPaperJammed OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Paper jammed in printer."
+    ::= {cashboxPrinter 3}
+
+cashboxPrinterErrorPrinterCutter OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Error at printercutter."
+    ::= {cashboxPrinter 4}    
+
+cashboxPrinterErrorPrinterHead OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Printerhead error."
+    ::= {cashboxPrinter 5}    
+
+cashboxPrinterLostConnection OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Connection to printer lost."
+    ::= {cashboxPrinter 6}    
+
+cashboxPrinterTimeoutError OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Timeout error by printer."
+    ::= {cashboxPrinter 7}    
+    
+cashboxPrinterTimeoutErrorEndOfPrint OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Timeout error during end of print."
+    ::= {cashboxPrinter 8}    
+
+cashboxPrinterErrorCreatingPrintJob OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Error creating printjob."
+    ::= {cashboxPrinter 9}    
+    
+cashboxPrinterErrorSlow OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Detecting slow printer."
+    ::= {cashboxPrinter 10}    
+    
+cashboxSoftware OBJECT IDENTIFIER ::= {himedCashbox 10}
+
+cashboxSoftwareStartLoadware OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Start cashbox loadware."
+    ::= {cashboxSoftware 1}
+
+cashboxSoftwareUnplannedReset OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Unplanned reset."
+    ::= {cashboxSoftware 2}
+    
+cashboxSoftwareInitBitmapError OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "InitBitmap error."
+    ::= {cashboxSoftware 3}
+    
+cashboxNetwork OBJECT IDENTIFIER ::= {himedCashbox 11}
+
+cashboxNetworkNoConnectionToHiMedServer OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Cashbox could not reach HiMedServer."
+    ::= {cashboxNetwork 1}
+    
+cashboxNetworkPRCEXEC OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Error in Database processing telegram from this cashbox."
+    ::= {cashboxNetwork 2}
+    
+cashboxNetworkERRSERVICE OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Requested Service is not available in HiMed Server."
+    ::= {cashboxNetwork 3}
+    
+cashboxNetworkERRPIN OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "PIN on Chipcard not valid."
+    ::= {cashboxNetwork 4}
+    
+cashboxNetworkERRUNKNOWNIP OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "IP of cashbox not in HiMed Database configured"
+    ::= {cashboxNetwork 5}
+    
+cashboxGeneral OBJECT IDENTIFIER ::= {himedCashbox 12}
+
+cashboxAlertLineSignalingAlert OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Cashbox is signaling alert."
+    ::= {cashboxGeneral 1}    
+    
+cashboxPosError OBJECT IDENTIFIER ::= {himedCashbox 13}
+
+cashboxPosErrorGeneral OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "A POS-Error occured."
+    ::= {cashboxPosError 1}
+
+cashboxCKIError OBJECT IDENTIFIER ::= {himedCashbox 14}
+
+cashboxCKIErrorGeneral OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "A CKI-Error occured."
+    ::= {cashboxCKIError 1}
+
+    
+-- objects himedServer
+pbxNetwork OBJECT IDENTIFIER ::= {serverPbx 1}
+
+pbxNetworkNoHicomConnection OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "There is no connection to this PBX! Please check the line."
+    ::= {pbxNetwork 1}
+
+pbxNetworkNoChargesReached OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Time in seconds since the last charges have been reached from this PBX."
+    ::= {pbxNetwork 2}
+    
+pbxNetworkConnectionError OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "A connection error occured (socket-error)! The connection to this PBX was closed!"
+    ::= {pbxNetwork 3}
+    
+pbxNetworkConnectionEstablished OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Connection to PABX established!"
+    ::= {pbxNetwork 4}
+    
+pbxSoftware OBJECT IDENTIFIER ::= {serverPbx 2}
+
+pbxSoftwareNoAmoExecutedSince OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Time in seconds since last AMO's have been executed on this HICOM."
+    ::= {pbxSoftware 1}
+
+pbxSoftwareMessageQueueNotCreated OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "The message-queue could not be created."
+    ::= {pbxSoftware 2}
+    
+pbxSoftwareProtocolFileNotCreated OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "The protocol-file could not be created."
+    ::= {pbxSoftware 3}
+    
+pbxSoftwareWrongHicomApplicationStarted OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "A wrong HICOM-application has been started."
+    ::= {pbxSoftware 4}
+
+pbxSoftwareCannotCreateChildProcess OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Cannot create child processes (AMO,FAM, etc.)."
+    ::= {pbxSoftware 5}    
+    
+pbxConfiguration OBJECT IDENTIFIER ::= {serverPbx 3}
+
+pbxConfigurationHicomParameterInvalid OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "One or more parameters of this HICOM are not valid. Please check them! The HICOM is inactive."
+    ::= {pbxConfiguration 1}    
+
+pbxConfigurationErrorAwtlnParameter OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Error in AWTLN parameter! Either there were more than one HICOM or no HICOM configured with AWTLN. Please check these parameters!"
+    ::= {pbxConfiguration 2}
+
+ 
+hostlinkGeneral OBJECT IDENTIFIER ::= {serverHostlink 1}
+
+hostlinkGeneralInternalError OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Internal error in HiMed."
+    ::= {hostlinkGeneral 1}
+
+hostlinkGeneralErrorHostData OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Error in host's data."
+    ::= {hostlinkGeneral 2}
+
+    
+hostlinkSubscriber OBJECT IDENTIFIER ::= {serverHostlink 2}
+
+hostlinkSubscriberNotUnique OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Subscriber is not unique."
+    ::= {hostlinkSubscriber 1}
+
+hostlinkSubscriberNotFound OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Subscriber not found."
+    ::= {hostlinkSubscriber 2}
+    
+hostlinkItem OBJECT IDENTIFIER    ::= {serverHostlink 3}
+
+hostlinkItemNotAssigned OBJECT-TYPE 
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Item is not assigned."
+    ::= {hostlinkItem 1}
+    
+hostlinkItemNotFound OBJECT-TYPE 
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Item not found."
+    ::= {hostlinkItem 2}
+    
+hostlinkItemWrong OBJECT-TYPE 
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Item is wrong."
+    ::= {hostlinkItem 3}
+    
+hostlinkMedium OBJECT IDENTIFIER     ::= {serverHostlink 5}
+
+hostlinkMediumNotAvailable OBJECT-TYPE 
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Medium is not available."
+    ::= {hostlinkMedium 1}
+
+hostlinkMediumNotAssigned OBJECT-TYPE 
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Medium not assigned."
+    ::= {hostlinkMedium 2}
+    
+-- objects serverCashbox {himedServer 3}
+
+serverCashboxCannotBeReachedViaLan OBJECT-TYPE 
+	SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Cashbox cannot be reached via LAN."
+    ::= {serverCashbox 1}
+
+serverCashboxExecuteError OBJECT-TYPE 
+	SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Execute error."
+    ::= {serverCashbox 2}
+    
+serverCashboxPinError OBJECT-TYPE 
+	SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "PIN error."
+    ::= {serverCashbox 3}
+
+serverCashboxServiceError OBJECT-TYPE 
+	SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Service error."
+    ::= {serverCashbox 4}
+    
+serverCashboxProtocolError OBJECT-TYPE 
+	SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Protocol error."
+    ::= {serverCashbox 5}
+    
+serverCashboxUndefinedError OBJECT-TYPE 
+	SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Undefined error."
+    ::= {serverCashbox 6}
+
+serverCashboxGenericError OBJECT-TYPE 
+	SYNTAX OCTET STRING
+	MAX-ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"Generic error."
+	::= {serverCashbox 7}
+		        
+-- objects serverCsrv {himedServer 4}
+
+serverCsrvDeviceChangedIpAddress OBJECT-TYPE 
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "CSRV changed IP address."
+    ::= {serverCsrv 1}
+
+serverCsrvDeviceChangedMacAddress OBJECT-TYPE 
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "CSRV changed MAC address."
+    ::= {serverCsrv 2}
+    
+-- objects serverSipKonzentrator {himedServer 5}
+
+serverSipKonzentratorCannotExecuteSetVerursacher OBJECT-TYPE --typo?
+    SYNTAX Integer32  
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Cannot execute procedure SetVerursacher."
+    ::= {serverSipKonzentrator 1}
+    
+serverSipKonzentratorNoLicenceForSipkonz OBJECT-TYPE 
+    SYNTAX Integer32  
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "No license for SIPKONZ."
+    ::= {serverSipKonzentrator 2}
+
+    
+serverSipKonzentratorCannotAttachtoBtsProcess OBJECT-TYPE 
+    SYNTAX Integer32  
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Cannot attach to bts process."
+    ::= {serverSipKonzentrator 3}
+    
+serverSipKonzentratorCouldNotRestartSipkonzProcess OBJECT-TYPE 
+    SYNTAX Integer32  
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Could not restart sipkonz process."
+    ::= {serverSipKonzentrator 4}
+
+serverSipKonzentratorInvalidCurrency OBJECT-TYPE 
+    SYNTAX Integer32  
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Invalid currency."
+    ::= {serverSipKonzentrator 5}
+
+serverSipKonzentratorGenericError OBJECT-TYPE 
+	SYNTAX OCTET STRING  
+	MAX-ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"Generic error"
+	::= {serverSipKonzentrator 6}
+    
+-- objects serverNightrun {himedServer 6}
+
+serverNightrunCannotDeleteChargeDataRecords OBJECT-TYPE 
+    SYNTAX Integer32  
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Cannot delete charge data records (teldat)."
+    ::= {serverNightrun 1}
+    
+serverNightrunErrorWhileProcessing OBJECT-TYPE 
+	SYNTAX OCTET STRING  
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Error while processing section."
+    ::= {serverNightrun 2}    
+
+serverNightrunGenericError OBJECT-TYPE 
+	SYNTAX OCTET STRING  
+	MAX-ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"Generic Error"
+	::= {serverNightrun 3}
+    
+-- objects serverDbBackup {himedServer 7}
+    
+serverDbBackupMediumWriteProtected OBJECT-TYPE 
+    SYNTAX Integer32  
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Medium is write protected."
+    ::= {serverDbBackup 1}    
+    
+serverDbBackupNoMediumFound OBJECT-TYPE 
+    SYNTAX Integer32  
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "No medium found."
+    ::= {serverDbBackup 2}    
+    
+serverDbBackupNoTapeRewind OBJECT-TYPE 
+    SYNTAX Integer32  
+    MAX-ACCESS read-only
+    STATUS obsolete
+    DESCRIPTION
+        "No Tape rewind."
+    ::= {serverDbBackup 3}
+    
+serverDbBackupErrorAutomaticBackup OBJECT-TYPE 
+    SYNTAX Integer32  
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Error while executing automatic backup, please inform your System-Administrator."
+    ::= {serverDbBackup 4}
+    
+-- objects serverTv {himedServer 8}
+
+serverTvCannotOpenTvServerDevice OBJECT-TYPE 
+    SYNTAX OCTET STRING  
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Cannot open TV-Server device."
+    ::= {serverTv 1}
+    
+serverTvIoErrorWhileWritingToTvServer OBJECT-TYPE 
+    SYNTAX OCTET STRING  
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "I/O Error while writing to TV-Server."
+    ::= {serverTv 2}
+    
+serverTvUnknownErrorWhileWritingToTvServer OBJECT-TYPE 
+    SYNTAX OCTET STRING  
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Unknown error while writing data to TV-Server."
+    ::= {serverTv 3}
+    
+serverTvInvalidTvAddress OBJECT-TYPE 
+    SYNTAX OCTET STRING  
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Invalid TV address."
+    ::= {serverTv 4}
+    
+serverTvDownloadOfTvSoftwareFailed OBJECT-TYPE 
+    SYNTAX OCTET STRING  
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Download of TV-Software failed."
+    ::= {serverTv 5}
+    
+serverTvInvalidConfiguration OBJECT-TYPE 
+    SYNTAX OCTET STRING  
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Unsupported or invalid configuration."
+    ::= {serverTv 6}
+
+serverTvGenericError OBJECT-TYPE 
+	SYNTAX OCTET STRING  
+	MAX-ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"Generic Error"
+	::= {serverTv 7}
+    
+-- objects serverDsrv {himedServer 9}
+
+serverDsrvDisabled OBJECT-TYPE 
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Dsrv is disabled."
+    ::= {serverDsrv 1}
+
+serverDsrvDeadCsrv OBJECT-TYPE 
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Csrv seems to be dead."
+    ::= {serverDsrv 2}
+
+--objects himedMedisetip
+medisetipGeneral OBJECT IDENTIFIER ::= {himedMedisetip 1}
+
+medisetipGeneralMissingCyclicMulicast OBJECT-TYPE 
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Missing cyclic multicast."
+    ::= {medisetipGeneral 1}
+    
+medisetipGeneralNoConnectionToIac OBJECT-TYPE 
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "No connection to HiMedServer."
+    ::= {medisetipGeneral 2}
+    
+medisetipGeneralRSyncFailed OBJECT-TYPE 
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "RSync failed."
+    ::= {medisetipGeneral 3}
+    
+medisetipGeneralSipError OBJECT-TYPE 
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Sip error occured."
+    ::= {medisetipGeneral 4}
+    
+medisetipRebootNewBuild OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "Rebooting because new build is available"
+    ::= {medisetipGeneral 5}
+
+medisetipGeneralLLDPFailed OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+      "LLDP communication failed."
+    ::= {medisetipGeneral 6}
+    
+-- Events himedCockpit
+cockpitNetworkNotification NOTIFICATION-TYPE
+    OBJECTS {cockpitNetwork}
+    STATUS current
+    DESCRIPTION
+        "Cockpit PRO Network state notification."
+    ::={eventsCockpit 1}
+    
+cockpitHardwareNotification NOTIFICATION-TYPE
+    OBJECTS {cockpitHardware}
+    STATUS current
+    DESCRIPTION
+        "Cockpit PRO hardware notification."
+    ::={eventsCockpit 2}
+    
+cockpitSoftwareNotification NOTIFICATION-TYPE
+    OBJECTS {cockpitSoftware}
+    STATUS current
+    DESCRIPTION
+        "Cockpit PRO software notification."
+    ::={eventsCockpit 3}
+    
+cockpitConfigurationNotification NOTIFICATION-TYPE
+    OBJECTS {cockpitConfiguration}
+    STATUS current
+    DESCRIPTION
+        "Cockpit PRO configuration notification."
+    ::={eventsCockpit 4}
+
+-- Events himedCockpitLegacy
+cockpitLegacyNetworkNotification NOTIFICATION-TYPE
+    OBJECTS {cockpitNetwork}
+    STATUS current
+    DESCRIPTION
+        "Cockpit IP Network state notification."
+    ::={eventsCockpitLegacy 1}
+    
+cockpitLegacyHardwareNotification NOTIFICATION-TYPE
+    OBJECTS {cockpitHardware}
+    STATUS current
+    DESCRIPTION
+        "Cockpit IP hardware notification."
+    ::={eventsCockpitLegacy 2}
+    
+cockpitLegacySoftwareNotification NOTIFICATION-TYPE
+    OBJECTS {cockpitSoftware}
+    STATUS current
+    DESCRIPTION
+        "Cockpit IP software notification."
+    ::={eventsCockpitLegacy 3}
+    
+cockpitLegacyConfigurationNotification NOTIFICATION-TYPE
+    OBJECTS {cockpitConfiguration}
+    STATUS current
+    DESCRIPTION
+        "Cockpit IP configuration notification."
+    ::={eventsCockpitLegacy 4}
+    
+
+-- events himedIac
+
+
+-- Events himedCashbox
+cashboxStackerNotification NOTIFICATION-TYPE
+    OBJECTS {cashboxStacker}
+    STATUS current
+    DESCRIPTION
+        "Banknote stacker state notification."
+    ::={eventsCashbox 1}
+
+cashboxBanknoteValidatorNotification NOTIFICATION-TYPE
+    OBJECTS {cashboxBanknoteValidator}
+    STATUS current
+    DESCRIPTION
+        "Banknote validator notification."
+    ::= {eventsCashbox 2}
+    
+cashboxChipcardNotification NOTIFICATION-TYPE
+    OBJECTS {cashboxChipcard}
+    STATUS current
+    DESCRIPTION
+        "Chipcard notification."
+    ::= {eventsCashbox 3}
+    
+cashboxChipcardDispenserNotification NOTIFICATION-TYPE
+    OBJECTS {cashboxChipcardDispenser}
+    STATUS current
+    DESCRIPTION
+        "Chipcard dispenser notification."
+    ::= {eventsCashbox 4}
+    
+cashboxChipcardReaderNotification NOTIFICATION-TYPE
+    OBJECTS {cashboxChipcardReader}
+    STATUS current
+    DESCRIPTION
+        "Chipcard reader notification."
+    ::= {eventsCashbox 5}
+    
+cashboxChipcardContainerNotification NOTIFICATION-TYPE
+    OBJECTS {cashboxChipcardContainer}
+    STATUS current
+    DESCRIPTION
+        "Chipcard container notification."
+    ::= {eventsCashbox 6}
+    
+cashboxHopperNotification NOTIFICATION-TYPE
+    OBJECTS {cashboxHopper}
+    STATUS current
+    DESCRIPTION
+        "Cashbox hopper notification."
+    ::= {eventsCashbox 7}
+    
+cashboxPowersupplyAndUpsNotification NOTIFICATION-TYPE
+    OBJECTS {cashboxPowersupplyAndUps}
+    STATUS current
+    DESCRIPTION
+        "Cashbox power supply and UPS notification."
+    ::= {eventsCashbox 8}
+    
+cashboxPrinterNotification NOTIFICATION-TYPE
+    OBJECTS {cashboxPrinter}
+    STATUS current
+    DESCRIPTION
+        "Cashbox printer notification."
+    ::= {eventsCashbox 9}
+    
+cashboxSoftwareNotification NOTIFICATION-TYPE
+    OBJECTS {cashboxSoftware}
+    STATUS current
+    DESCRIPTION
+        "Cashbox software notification."
+    ::= {eventsCashbox 10}
+    
+cashboxNetworkNotification NOTIFICATION-TYPE
+    OBJECTS {cashboxNetwork}
+    STATUS current
+    DESCRIPTION
+        "Cashbox network notification."
+    ::= {eventsCashbox 11}
+    
+cashboxGeneralNotification NOTIFICATION-TYPE
+    OBJECTS {cashboxGeneral}
+    STATUS current
+    DESCRIPTION
+        "General cashbox notification."
+    ::= {eventsCashbox 12}
+    
+cashboxPosErrorNotification NOTIFICATION-TYPE
+    OBJECTS {cashboxPosError}
+    STATUS current
+    DESCRIPTION
+        "Cashbox POS-Error notification."
+    ::= {eventsCashbox 13}
+
+cashboxCKINotification NOTIFICATION-TYPE
+    OBJECTS {cashboxCKIError}
+    STATUS current
+    DESCRIPTION
+        "Cashbox CKI-Error notification."
+    ::= {eventsCashbox 14}
+
+-- events iac
+iacNetworkNotification NOTIFICATION-TYPE
+    OBJECTS {iacNetwork}
+    STATUS current
+    DESCRIPTION
+        "IAC Network notification."
+    ::= {eventsIac  1}
+    
+iacSoftwareNotification NOTIFICATION-TYPE
+    OBJECTS {iacSoftware}
+    STATUS current
+    DESCRIPTION
+        "IAC Software notification."
+    ::= {eventsIac  2}
+    
+    
+-- events server
+
+serverPbxNetworkNotification NOTIFICATION-TYPE
+    OBJECTS {pbxNetwork}
+    STATUS current
+    DESCRIPTION
+        "Server pbx network notification."
+    ::= {eventsServerPbx 1}
+    
+--this notification is only used for the state where a period of time is needed
+serverPbxNetworkSecondsNotification NOTIFICATION-TYPE
+    OBJECTS {pbxNetwork, objectSeconds}
+    STATUS current
+    DESCRIPTION
+        "Server pbx network notification with specified period of time."
+    ::= {eventsServerPbx 2}
+
+    
+serverPbxSoftwareNotification NOTIFICATION-TYPE
+    OBJECTS {pbxSoftware}
+    STATUS current
+    DESCRIPTION
+        "Server pbx software notification."
+    ::= {eventsServerPbx 3}
+
+    
+serverPbxSoftwareSecondsNotification NOTIFICATION-TYPE
+    OBJECTS {pbxSoftware, objectSeconds}
+    STATUS current
+    DESCRIPTION
+        "Server pbx software notification with specified period of time."
+    ::= {eventsServerPbx 4}
+    
+serverPbxConfigurationNotification NOTIFICATION-TYPE
+    OBJECTS {pbxConfiguration}
+    STATUS current
+    DESCRIPTION
+        "Server pbx configuration notification."
+    ::= {eventsServerPbx 5}
+
+serverHostlinkGeneralNotification NOTIFICATION-TYPE
+    OBJECTS {hostlinkGeneral}
+    STATUS current
+    DESCRIPTION
+        "Server hostlink general notification."
+    ::= {eventsServerHostlink 1}    
+
+serverHostlinkSubscriberNotification NOTIFICATION-TYPE
+    OBJECTS {hostlinkSubscriber}
+    STATUS current
+    DESCRIPTION
+        "Server hostlink subscriber notification."
+    ::= {eventsServerHostlink 2}    
+    
+serverHostlinkItemNotification NOTIFICATION-TYPE
+    OBJECTS {hostlinkItem}
+    STATUS current
+    DESCRIPTION
+        "Server hostlink item notification."
+    ::= {eventsServerHostlink 3}
+    
+serverHostlinkMediumNotification NOTIFICATION-TYPE
+    OBJECTS {hostlinkMedium}
+    STATUS current
+    DESCRIPTION
+        "Server hostlink medium notification."
+    ::= {eventsServerHostlink 5}
+    
+serverCashboxNotification NOTIFICATION-TYPE
+    OBJECTS {serverCashbox}
+    STATUS current
+    DESCRIPTION
+        "Server cashbox notification."
+    ::= {eventsServer 3}
+    
+serverCsrvNotification NOTIFICATION-TYPE
+    OBJECTS {serverCsrv}
+    STATUS current
+    DESCRIPTION
+        "Server csrv  notification."
+    ::= {eventsServer 4}
+    
+serverSipKonzentratorNotification NOTIFICATION-TYPE
+    OBJECTS {serverSipKonzentrator}
+    STATUS current
+    DESCRIPTION
+        "Server SIP konzentrator notification."
+    ::= {eventsServer 5}
+    
+serverNightrunNotification NOTIFICATION-TYPE
+    OBJECTS {serverNightrun}
+    STATUS current
+    DESCRIPTION
+        "Server nightrun notification."
+    ::= {eventsServer 6}
+    
+serverDbBackupNotification NOTIFICATION-TYPE
+    OBJECTS {serverDbBackup}
+    STATUS current
+    DESCRIPTION
+        "Server DB backup notification."
+    ::= {eventsServer 7}
+    
+serverTvNotification NOTIFICATION-TYPE
+    OBJECTS {serverTv}
+    STATUS current
+    DESCRIPTION
+        "Server TV notification."
+    ::= {eventsServer 8}
+    
+serverDsrvNotification NOTIFICATION-TYPE
+    OBJECTS {serverDsrv}
+    STATUS current
+    DESCRIPTION
+        "Server hostlink dsrv notification."
+    ::= {eventsServer 9}
+
+-- events mediset ip
+medisetIPGeneralNotification NOTIFICATION-TYPE    
+    OBJECTS {medisetipGeneral}
+    STATUS current
+    DESCRIPTION
+        "General medisetip1 notification."    
+    ::= {eventsMedisetIP 1}
+
+    -- events mediset ip
+medisetIP2GeneralNotification NOTIFICATION-TYPE    
+    OBJECTS {medisetipGeneral}
+    STATUS current
+    DESCRIPTION
+        "General medisetip2 notification."    
+    ::= {eventsMedisetIP2 1}
+
+END

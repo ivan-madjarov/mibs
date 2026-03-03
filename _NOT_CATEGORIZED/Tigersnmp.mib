@@ -1,0 +1,84 @@
+-- TIGER-MIB { iso org(3) dod(6) internet(1) private(4) 1 }
+--
+-- Tiger Communications plc 
+--  Trap definitions for Tiger Interfaces
+--  27-Jan-2012
+--
+
+TIGER-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS 
+	enterprises
+		FROM RFC1155-SMI
+	OBJECT-TYPE
+		FROM RFC-1212
+	TRAP-TYPE
+		FROM RFC-1215;
+
+-- Tiger Communications plc MIB extensions
+tiger         OBJECT IDENTIFIER ::= { enterprises 26407 }
+
+tiginterface		OBJECT IDENTIFIER ::= { tiger 1 }
+
+interfaceid	OBJECT-TYPE
+	SYNTAX  OCTET STRING
+	ACCESS  read-only
+        STATUS  mandatory
+        DESCRIPTION
+		"The interface that created the message"
+
+	::= { tiginterface 1 }
+
+interfacedescription	OBJECT-TYPE
+	SYNTAX	OCTET STRING
+	ACCESS  read-only
+        STATUS  mandatory
+        DESCRIPTION
+	       "Interface description"
+	::= { tiginterface 2 }
+
+eventdatetime	OBJECT-TYPE
+	SYNTAX	OCTET STRING
+	ACCESS  read-only
+        STATUS  mandatory
+        DESCRIPTION
+	       "The Event Date/Time"
+	::= { tiginterface 3 }
+
+eventdescription	OBJECT-TYPE
+	SYNTAX	OCTET STRING
+	ACCESS  read-only
+        STATUS  mandatory
+        DESCRIPTION
+	       "The Event Description"
+	::= { tiginterface 4 }
+	
+linkup	TRAP-TYPE
+	ENTERPRISE tiginterface
+	VARIABLES { interfaceid,interfacedescription,eventdatetime,eventdescription }
+	DESCRIPTION
+		"A link is up"
+	::= 1
+	
+linkdown	TRAP-TYPE
+	ENTERPRISE tiginterface
+	VARIABLES { interfaceid,interfacedescription,eventdatetime,eventdescription }
+	DESCRIPTION
+		"A link is down"
+	::= 2
+		
+fdmtestalarm	TRAP-TYPE
+	ENTERPRISE tiginterface
+	VARIABLES { interfaceid,interfacedescription,eventdatetime,eventdescription }
+	DESCRIPTION
+		"An FDM Test Alarm"
+	::= 3
+	
+fdmalarm	TRAP-TYPE
+	ENTERPRISE tiginterface
+	VARIABLES { interfaceid,interfacedescription,eventdatetime,eventdescription }
+	DESCRIPTION
+		"An FDM Alarm"
+	::= 4
+	
+END

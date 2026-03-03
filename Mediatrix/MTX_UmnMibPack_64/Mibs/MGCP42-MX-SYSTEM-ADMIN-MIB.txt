@@ -1,0 +1,175 @@
+-- ****************************************************************************
+-- ****************************************************************************
+--
+--             Copyright(c) 2001 Mediatrix Telecom, Inc. 
+--
+--  NOTICE:
+--   This document contains information that is confidential and proprietary
+--   to Mediatrix Telecom, Inc. 
+--
+--   Mediatrix Telecom, Inc. reserves all rights to this document as well as
+--   to the Intellectual Property of the document and the technology and
+--   know-how that it includes and represents. 
+--
+--   This publication cannot be reproduced, neither in whole nor in part in
+--   any form whatsoever without written prior approval by
+--   Mediatrix Telecom, Inc. 
+--
+--   Mediatrix Telecom, Inc. reserves the right to revise this publication
+--   and make changes at any time and without the obligation to notify any
+--   person and/or entity of such revisions and/or changes. 
+--
+-- ****************************************************************************
+-- ****************************************************************************
+
+MGCP42-MX-SYSTEM-ADMIN-MIB
+DEFINITIONS ::= BEGIN
+
+IMPORTS
+        MODULE-IDENTITY,
+        OBJECT-TYPE,
+        Integer32,
+        Unsigned32
+    FROM SNMPv2-SMI
+        MODULE-COMPLIANCE,
+        OBJECT-GROUP
+    FROM SNMPv2-CONF
+       mediatrixAdmin
+    FROM MX-SMI;
+
+sysAdminMIB MODULE-IDENTITY
+    LAST-UPDATED "0110260000Z"
+    ORGANIZATION "Mediatrix Telecom, Inc."
+    CONTACT-INFO "Mediatrix Telecom, Inc.
+                  4229, Garlock Street
+                  Sherbrooke (Quebec)
+                  Canada
+                  Phone: (819) 829-8749
+                  "
+    DESCRIPTION  "This MIB provides General system management information."
+    -- ************************************************************************
+    -- Revision history
+    -- ************************************************************************
+    REVISION    "0110260000Z"
+    DESCRIPTION "October 26, 2001
+                    Modified the description for the sysAdminCommand.
+                 August 29, 2001
+                    Creation"
+    ::= { mediatrixAdmin 1 }
+
+sysAdminMIBObjects     OBJECT IDENTIFIER ::= { sysAdminMIB 1 }
+sysAdminConformance    OBJECT IDENTIFIER ::= { sysAdminMIB 2 }
+        
+    sysAdminCommand OBJECT-TYPE
+        SYNTAX      INTEGER {
+                             noOp(0),
+                             checkRam(1),
+                             checkRom(2),
+                             downloadSoftware(3),
+                             resetStats(4)
+                            }
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "System command that can be performed. 
+                     
+                     The main managed object must be in maintenance mode 
+                     (adminstate is LOCKED) to perform a check RAM or a
+                     check ROM.
+                        
+                     The downloadSoftware will conduct a software download
+                     under certain conditions:
+                     
+                     groupAdminState  result
+                     ---------------  -------------------------------
+                     Locked           start software download immediatly
+                     ShuttingDown     wait for the state to be locked
+                                      then start software download
+                     Unlock           command is discarded"
+        DEFVAL      { noOp }
+        ::=  {  sysAdminMIBObjects  1  }
+
+    sysAdminLastCheckRam OBJECT-TYPE
+        SYNTAX      INTEGER {
+                             notTested(0),
+                             fail(1),
+                             success(2)
+                            }
+        MAX-ACCESS  read-only
+        STATUS      current
+        DESCRIPTION "Last RAM check status."
+        DEFVAL      { notTested }
+        ::= { sysAdminMIBObjects 11 }
+
+    sysAdminLastCheckRom OBJECT-TYPE
+        SYNTAX      INTEGER {
+                             fail(1),
+                             success(2)
+                            }
+        MAX-ACCESS  read-only
+        STATUS      current
+        DESCRIPTION "Last ROM check status."
+        DEFVAL      { success }
+        ::= { sysAdminMIBObjects 12 }
+    
+    sysAdminLastDownloadSoftware OBJECT-TYPE
+        SYNTAX      INTEGER {
+                             fail(1),
+                             success(2)
+                            }
+        MAX-ACCESS  read-only
+        STATUS      current
+        DESCRIPTION "Status of the last download software command."
+        DEFVAL      { success }
+        ::= { sysAdminMIBObjects 14 }
+
+    sysAdminDownloadConfigFileStatus OBJECT-TYPE
+        SYNTAX      INTEGER {
+                             idle(0),
+                             fail(1),
+                             success(2),
+                             inProgress(3),
+                             listening(4)
+                            }
+        MAX-ACCESS  read-only
+        STATUS      current
+        DESCRIPTION "Status of the last config file download."
+        DEFVAL      { idle }
+        ::= { sysAdminMIBObjects 30 }
+
+
+
+    -- ************************************************************************
+    -- Conformance information
+    -- ************************************************************************
+    sysAdminCompliances OBJECT IDENTIFIER ::= { sysAdminConformance 1 }
+
+    sysAdminComplVer1 MODULE-COMPLIANCE
+        STATUS      current
+        DESCRIPTION     
+            ""
+        MODULE -- This Module
+            MANDATORY-GROUPS { 
+                                sysAdminGroupVer1
+                             }
+        ::= { sysAdminCompliances 1 }
+
+    -- ************************************************************************
+    -- MIB variable grouping
+    -- ************************************************************************
+    sysAdminGroups OBJECT IDENTIFIER ::= { sysAdminConformance 2 }
+
+    sysAdminGroupVer1 OBJECT-GROUP
+        OBJECTS {
+                 sysAdminDownloadConfigFileStatus,
+                 sysAdminCommand,
+                 sysAdminLastCheckRam,
+                 sysAdminLastCheckRom,
+                 sysAdminLastDownloadSoftware
+                }
+        STATUS current
+        DESCRIPTION
+            "This group holds the objects that contain system Administration Information."
+        ::= { sysAdminGroups 1 }
+
+
+END

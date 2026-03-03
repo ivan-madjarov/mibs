@@ -1,0 +1,1629 @@
+US-SRX-SIP-MIB DEFINITIONS ::= BEGIN
+
+-- ==================================================================
+--  Copyright © Unify GmbH & Co. KG
+--
+--  All Rights Reserved.
+--
+--  Reproduction of this document is authorized on condition that
+--  this copyright notice is included.
+--
+--  This MIB document embodies proprietary intellectual property. 
+--  of Unify GmbH & Co. KG, which retains all title and
+--  ownership in this MIB, including any revisions.
+--
+--  This module will be extended, as required.
+--
+--  Unify GmbH & Co. KG reserves the right to make 
+--  changes in specification and other information contained in this 
+--  document without prior notice. The reader should consult 
+--  Unify GmbH & Co. KG to determine whether any such
+--  changes have been made.
+--
+--  Copyright © Unify GmbH & Co. KG
+-- ==================================================================
+
+--  Revision History
+--
+--  09/15/08            G.Kouris        FRN3211 - Added SIP Performance counters
+--  08/16/11		E.Dellis	CQ00178208 - Remove BGCF counters
+--  10/22/2013          G.Kouris        Incorporate new Brand Name
+--
+-- #########################################################################
+
+IMPORTS
+    MODULE-IDENTITY, OBJECT-TYPE, Integer32
+        FROM SNMPv2-SMI
+    DisplayString, RowStatus
+        FROM SNMPv2-TC
+    Boolean, TimeStampSeconds 
+        FROM FTS-RTP-MIB
+    InetAddressType, InetAddress
+        FROM INET-ADDRESS-MIB		
+    surpassRtp
+	FROM SURPASS-RTP-MIB
+    hiq8000Admin
+        FROM SURPASS-RTP-ADMIN-MIB
+    SrxRowCountType
+        FROM HIQ-ADMIN-MIB;
+
+-- ########################################################
+
+
+-- ########################################################
+
+usSrxSip MODULE-IDENTITY
+    LAST-UPDATED "201509141224Z"
+    ORGANIZATION "Unify Software and Solutions GmbH & Co. KG"
+    CONTACT-INFO "http://www.unify.com/us/Home/Internet/web/us/Home/contact-us.aspx"
+    DESCRIPTION
+        "SRX SIP MIB module which manages the SIP Signal Manager"
+        
+    REVISION "201310221220Z"    
+    DESCRIPTION
+            "Updated the MIB with the new Brand Name"
+
+    ::= { hiq8000Admin 2 }
+
+-- ########################################################
+
+-- usSrxSipTable. This table is used for configuring the SIP Signalling Manager.
+-- ########################################################
+
+
+usSrxSipObjects               OBJECT IDENTIFIER     ::= { usSrxSip 1 }
+
+usSrxSipConfigStatisticsData  OBJECT IDENTIFIER     ::= { usSrxSipObjects 1 }
+
+usSrxSipReasonMgmt            OBJECT IDENTIFIER     ::= { usSrxSipObjects 2 } 
+
+usSrxSipEP                    OBJECT IDENTIFIER     ::= { usSrxSipObjects 3 }
+
+--##################################################
+--  Sip Performance statistics enhancement
+--##################################################
+
+usSrxSipPerfInviteMsgsSentByClient OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the count of Invite 
+	messages sent from Client."
+    ::= { usSrxSipConfigStatisticsData 1 }
+
+usSrxSipPerf100TryingMsgsRcvdByClient OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the 100 Trying messages Received
+        by the SIP Client." 
+    ::= { usSrxSipConfigStatisticsData 2 }
+
+
+usSrxSipPerf180RingingMsgsRcvdByClient OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the 180 Ringing messages Received
+        by the SIP Client." 
+    ::= { usSrxSipConfigStatisticsData 3 }
+
+usSrxSipPerf200OKForInviteMsgsRcvdByClient OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the 200 OK for Invite messages Received
+        by the SIP Client." 
+    ::= { usSrxSipConfigStatisticsData 4 }
+
+usSrxSipPerf301MsgsRcvdByClient OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the 301 (Moved Permanently) messages Received
+        by the SIP Client." 
+    ::= { usSrxSipConfigStatisticsData 5 }
+
+usSrxSipPerf302MsgsRcvdByClient OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the 302 (Moved Temporarily) messages Received
+        by the SIP Client." 
+    ::= { usSrxSipConfigStatisticsData 6 }
+
+usSrxSipPerfAckForInviteMsgsSentByClient OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the Ack for Invite messages sent
+        by the SIP Client." 
+    ::= { usSrxSipConfigStatisticsData 7 }
+
+usSrxSipPerfAckForErrorMsgsSentByClient OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the Ack For Error messages sent
+        by the SIP Client." 
+    ::= { usSrxSipConfigStatisticsData 8 }
+
+
+usSrxSipPerfErrorMsgsRcvdByClient OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the Error messages Received
+        by the SIP Client." 
+    ::= { usSrxSipConfigStatisticsData 9 }
+
+
+usSrxSipPerfByeMsgsSentByClient OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the Bye messages Sent
+        by the SIP Client." 
+    ::= { usSrxSipConfigStatisticsData 10 }
+
+
+usSrxSipPerf200OKForByeMsgsRcvdByClient OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the 200 OK for Bye messages Received
+        by the SIP Client." 
+    ::= { usSrxSipConfigStatisticsData 11 }
+
+
+usSrxSipPerfCancelMsgsSentByClient OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the Cancel messages Sent
+        by the SIP Client." 
+    ::= { usSrxSipConfigStatisticsData 12 }
+
+usSrxSipPerf200OKforCancelMsgsRecvdByClient OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the 200 OK for Cancel messages 
+	Received by the SIP Client." 
+    ::= { usSrxSipConfigStatisticsData 13 }
+
+usSrxSipPerf487MsgsRcvdByClient OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the 487 (Request Terminated) 
+	messages Received by the SIP Client." 
+    ::= { usSrxSipConfigStatisticsData 14 }
+
+usSrxSipPerfAckForCancelMsgsSentByClient OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the Ack For Cancel messages Sent
+        by the SIP Client." 
+    ::= { usSrxSipConfigStatisticsData 15 }
+
+usSrxSipPerf200OKforRegisterMsgsSentByServer OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the 200 OK for Register messages Sent
+        by the SIP Server." 
+    ::= { usSrxSipConfigStatisticsData 16 }
+
+usSrxSipPerfRegisterMsgsReceivedByServer OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the Register messages Received
+        by the SIP Server." 
+    ::= { usSrxSipConfigStatisticsData 17 }
+
+
+usSrxSipPerf100TryingMsgsSentByServer OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the 100 Trying messages 
+	Sent by the SIP Server." 
+    ::= { usSrxSipConfigStatisticsData 18 }
+
+
+usSrxSipPerfInviteMsgsRecdByServer OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the Invite messages Received
+        by the SIP Server." 
+    ::= { usSrxSipConfigStatisticsData 19 }
+
+usSrxSipPerf180RingingMsgsSentByServer OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the 180 Ringing messages Sent
+        by the SIP Server." 
+    ::= { usSrxSipConfigStatisticsData 20 }
+
+
+usSrxSipPerf200OKforInviteMsgsSentByServer OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the 200 OK for Invite messages Sent
+        by the SIP Server." 
+    ::= { usSrxSipConfigStatisticsData 21 }
+
+usSrxSipPerfAckforInviteMsgsRecdByServer OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the for Ack 
+	for INVITE messages Received by the hiQ." 
+    ::= { usSrxSipConfigStatisticsData 22 }
+
+usSrxSipPerfErrorMsgsSentByServer OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the Error messages Sent
+        by the SIP Server." 
+    ::= { usSrxSipConfigStatisticsData 23 }
+
+
+usSrxSipPerfAckForErrorMsgsRecdByServer OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the Ack for Error messages Received
+        by the SIP Server." 
+    ::= { usSrxSipConfigStatisticsData 24 }
+
+
+usSrxSipPerf200OKforByeMsgsSentByServer OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the 200 OK for Bye messages Sent
+        by the SIP Server." 
+    ::= { usSrxSipConfigStatisticsData 25 }
+
+
+usSrxSipPerfByeMsgsRecdByServer OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+        "This value identifies the Bye messages Received
+        by the SIP Server." 
+    ::= { usSrxSipConfigStatisticsData 26 }
+
+
+usSrxSipPerf200OKforCancelMsgsSentByServer OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the 200 OK for Cancel messages Sent
+        by the SIP Server." 
+    ::= { usSrxSipConfigStatisticsData 27 }
+
+
+usSrxSipPerfCancelMsgsRecdByServer OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the Cancel messages Received
+        by the SIP Server." 
+    ::= { usSrxSipConfigStatisticsData 28 }
+
+usSrxSipPerf487MsgsSentByServer OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the 487 (Connection Terminated) messages Sent
+        by the SIP Server." 
+    ::= { usSrxSipConfigStatisticsData 29 }
+
+
+usSrxSipPerfAckforCancelMsgsRecdByServer OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the ACK for Cancel messages Received
+        by the SIP Server." 
+    ::= { usSrxSipConfigStatisticsData 30 }
+
+
+-- New counters for FRN0785: SIP Proxy Enhancement
+usSrxSipPerfUACSntRefer OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the REFER messages Sent
+        by the SIP Client."
+    ::= { usSrxSipConfigStatisticsData 31 }
+
+usSrxSipPerfUACRcv202Accepted OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the 202 ACCEPTED messages Received
+        by the SIP Client."
+    ::= { usSrxSipConfigStatisticsData 32 }
+
+usSrxSipPerfUACRcv4xx6xxRefer OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the 4xx-6xx for REFER messages Received
+        by the SIP Client."
+    ::= { usSrxSipConfigStatisticsData 33 }
+
+usSrxSipPerfUACSntNotify OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the NOTIFY messages Sent
+        by the SIP Client."
+    ::= { usSrxSipConfigStatisticsData 34 }
+
+usSrxSipPerfUACRcv200OKNotify OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the 200OK for NOTIFY messages Received
+        by the SIP Client."
+    ::= { usSrxSipConfigStatisticsData 35 }
+
+usSrxSipPerfUACRcv4xx6xxNotify OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the 4xx-6xx for NOTIFY messages Received
+        by the SIP Client."
+    ::= { usSrxSipConfigStatisticsData 36 }
+
+usSrxSipPerfUACSntSubscribe OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the SUBSCRIBE messages Sent
+        by the SIP Client."
+    ::= { usSrxSipConfigStatisticsData 37 }
+
+usSrxSipPerfUACRcv200OKSubs OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the 200OK for SUBSCRIBE messages Received
+        by the SIP Client."
+    ::= { usSrxSipConfigStatisticsData 38 }
+
+usSrxSipPerfUACRcv4xx6xxSubs OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the 4xx-6xx for SUBSCRIBE messages Received
+        by the SIP Client."
+    ::= { usSrxSipConfigStatisticsData 39 }
+
+usSrxSipPerfUACSntInfo OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the INFO messages Sent
+        by the SIP Client."
+    ::= { usSrxSipConfigStatisticsData 40 }
+
+usSrxSipPerfUACRcv200OKInfo OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the 200OK for INFO messages Received
+        by the SIP Client."
+    ::= { usSrxSipConfigStatisticsData 41 }
+
+usSrxSipPerfUACRcv300Multiple OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the 300 MULTIPLE CHOICES messages Received
+        by the SIP Client."
+    ::= { usSrxSipConfigStatisticsData 42 }
+
+usSrxSipPerfUASRcvRefer OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the REFER messages Received
+        by the SIP Server."
+    ::= { usSrxSipConfigStatisticsData 43 }
+
+usSrxSipPerfUASSnt202Accepted OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the 202 ACCEPTED messages Sent
+        by the SIP Server."
+    ::= { usSrxSipConfigStatisticsData 44 }
+
+usSrxSipPerfUASSnt4xx6xxRefer OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the 4xx-6xx for REFER messages Sent
+        by the SIP Server."
+    ::= { usSrxSipConfigStatisticsData 45 }
+
+usSrxSipPerfUASRcvNotify OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the NOTIFY messages Received
+        by the SIP Server."
+    ::= { usSrxSipConfigStatisticsData 46 }
+
+usSrxSipPerfUASSnt200OKNotify OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the 200OK for NOTIFY messages Sent
+        by the SIP Server."
+    ::= { usSrxSipConfigStatisticsData 47 }
+
+usSrxSipPerfUASSnt4xx6xxNotify OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the 4xx-6xx for NOTIFY messages Sent
+        by the SIP Server."
+    ::= { usSrxSipConfigStatisticsData 48 }
+
+usSrxSipPerfUASRcvSubscribe OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the SUBSCRIBE messages Received
+        by the SIP Server."
+    ::= { usSrxSipConfigStatisticsData 49 }
+
+usSrxSipPerfUASSnt200OKSubs OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the 200OK for SUBSCRIBE messages Sent
+        by the SIP Server."
+    ::= { usSrxSipConfigStatisticsData 50 }
+
+usSrxSipPerfUASSnt4xx6xxSubs OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the 4xx-6xx for SUBSCRIBE messages Sent
+        by the SIP Server."
+    ::= { usSrxSipConfigStatisticsData 51 }
+
+usSrxSipPerfUASRcvInfo OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the INFO messages Received
+        by the SIP Server."
+    ::= { usSrxSipConfigStatisticsData 52 }
+
+usSrxSipPerfUASSnt200OKInfo OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the 200OK for INFO messages Sent
+        by the SIP Server."
+    ::= { usSrxSipConfigStatisticsData 53 }
+
+-- New Counters for FRN2192
+usSrxSipPerf183MsgRcvByClient OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the total 183 messages received."
+    ::= { usSrxSipConfigStatisticsData 54 }
+
+usSrxSipPerf1xxMsgRcvByClient OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the rest of supported 1xx messages received."
+    ::= { usSrxSipConfigStatisticsData 55 }
+
+usSrxSipPerf2xxMsgRcvByClient OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the rest of supported 2xx messages received."
+    ::= { usSrxSipConfigStatisticsData 56 }
+
+usSrxSipPerf3xxMsgRcvByClient OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the rest of supported 3xx messages received."
+    ::= { usSrxSipConfigStatisticsData 57 }
+
+usSrxSipPerf4xxMsgRcvByClient OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the rest of supported 4xx messages received."
+    ::= { usSrxSipConfigStatisticsData 58 }
+
+usSrxSipPerf5xxMsgRcvByClient OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the rest of supported 5xx messages received."
+    ::= { usSrxSipConfigStatisticsData 59 }
+
+usSrxSipPerf6xxMsgRcvByClient OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the rest of supported 6xx  messages received."
+    ::= { usSrxSipConfigStatisticsData 60 }
+
+usSrxSipPerf183MsgSentByServer OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the total 183 messages sent."
+    ::= { usSrxSipConfigStatisticsData 61 }
+
+usSrxSipPerf1xxMsgSentByServer OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the rest of supported 1xx messages sent."
+    ::= { usSrxSipConfigStatisticsData 62 }
+
+usSrxSipPerf2xxMsgSentByServer OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the rest of supported 2xx messages sent."
+    ::= { usSrxSipConfigStatisticsData 63 }
+
+usSrxSipPerf3xxMsgSentByServer OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the rest of supported 3xx messages sent."
+    ::= { usSrxSipConfigStatisticsData 64 }
+
+usSrxSipPerf4xxMsgSentByServer OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the rest of supported 4xx messages sent."
+    ::= { usSrxSipConfigStatisticsData 65 }
+
+usSrxSipPerf5xxMsgSentByServer OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the rest of supported 5xx messages sent."
+    ::= { usSrxSipConfigStatisticsData 66 }
+
+usSrxSipPerf6xxMsgSentByServer OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the rest of supported 6xx  messages sent."
+    ::= { usSrxSipConfigStatisticsData 67 }
+
+usSrxSipPerfNoSupportRcvByClient OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the number of unsupported messages received."
+    ::= { usSrxSipConfigStatisticsData 68 }
+
+usSrxSipPrackMsgRcvByClient OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the PRACK messages received."
+    ::= { usSrxSipConfigStatisticsData 69 }
+
+usSrxSipUpdateMsgRcvByClient OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the Update messages received."
+    ::= { usSrxSipConfigStatisticsData 70 }
+
+usSrxSipPrackMsgSentByServer OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the PRACK messages sent."
+    ::= { usSrxSipConfigStatisticsData 71 }
+
+usSrxSipUpdateMsgSentByServer OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the Update messages sent."
+    ::= { usSrxSipConfigStatisticsData 72 }
+
+usSrxSip200OKForPrackRcvByServ OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the 200OKs received for PRACK messages."
+    ::= { usSrxSipConfigStatisticsData 73 }
+
+usSrxSip200OKForUpdateRcvByServ OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the 200OKs received for Update messages."
+    ::= { usSrxSipConfigStatisticsData 74 }
+
+usSrxSip200OKForPrackSentByCli OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the 200OKs sent for PRACK messages."
+    ::= { usSrxSipConfigStatisticsData 75 }
+
+usSrxSip200OKForUpdateSentByCli OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the 200OKs sent for Update messages."
+    ::= { usSrxSipConfigStatisticsData 76 }
+
+usSrxSipAckFor3xxSentByClient OBJECT-TYPE	
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the Acks sent in response to 3xx messages."
+    ::= { usSrxSipConfigStatisticsData 77 }
+
+
+--*********************************************************************
+-- SIP Endpoint Statistics Table - FRN2192
+--*********************************************************************
+
+usSrxSipEPStatsTable OBJECT-TYPE
+        SYNTAX SEQUENCE OF UsSrxSipEPStatsTableEntry
+        MAX-ACCESS not-accessible
+        STATUS  current
+        DESCRIPTION "
+         The SIP Endpoint statiscs table.
+         A table containing a array of SIP Endpoints with their respective name,
+         IP Address, ResetTimestamp and usage counters."
+        ::= { usSrxSipEP 1 }
+
+usSrxSipEPStatsTableEntry OBJECT-TYPE
+        SYNTAX UsSrxSipEPStatsTableEntry
+        MAX-ACCESS not-accessible
+        STATUS  current
+        DESCRIPTION "
+          An entry in the usSrxSipEPStatsTable."
+        INDEX  { usSrxSipEPStatsId }
+        ::= { usSrxSipEPStatsTable 1 }
+
+UsSrxSipEPStatsTableEntry ::=
+	SEQUENCE {
+        usSrxSipEPStatsId               Integer32,
+        usSrxSipEPStatsName             DisplayString,
+        usSrxSipEPStatsIpAddress        IpAddress,
+        usSrxSipEPStatsResetTimestamp   DisplayString,
+        usSrxSipEPPrfInviteMsSbC        Integer32,
+        usSrxSipEPPrf100TryingMsgRbC    Integer32,
+        usSrxSipEPPrf180RingingMsgRbC   Integer32,
+        usSrxSipEPPrf200OKForInvtMsgRbC Integer32,
+        usSrxSipEPPrf301MsgRbC          Integer32,
+        usSrxSipEPPrf302MsgRbC          Integer32,
+        usSrxSipEPPrfAckForInvtMsgSbC   Integer32,
+        usSrxSipEPPrfAckForErrorMsgSbC  Integer32,
+        usSrxSipEPPrfErrorMsgRbC        Integer32,
+        usSrxSipEPPrfByeMsgSbC          Integer32,
+        usSrxSipEPPrf200OKForByeMsgRbC  Integer32,
+        usSrxSipEPPrfCancelMsgSbC       Integer32,
+        usSrxSipEPPrf200OKforCancMsgRbC Integer32,
+        usSrxSipEPPrf487MsgRbC          Integer32,
+        usSrxSipEPPrfAckForCancMsgSbC   Integer32,
+        usSrxSipEPPrf200OKfRgstrMsgSbS  Integer32,
+        usSrxSipEPPrfRegisterMsgRbS     Integer32,
+        usSrxSipEPPrf100TryingMsgSbS    Integer32,
+        usSrxSipEPPrfInviteMsgRbS       Integer32,
+        usSrxSipEPPrf180RingingMsgSbS   Integer32,
+        usSrxSipEPPrf200OKforInvtMsgSbS Integer32,
+        usSrxSipEPPrfAckforInvtMsgRbS   Integer32,
+        usSrxSipEPPrfErrorMsgSbS        Integer32,
+        usSrxSipEPPrfAckForErrorMsgRbS  Integer32,
+        usSrxSipEPPrf200OKforByeMsgSbS  Integer32,
+        usSrxSipEPPrfByeMsgRbS          Integer32,
+        usSrxSipEPPrf200OKforCancMsgSbS Integer32,
+        usSrxSipEPPrfCancMsgRbS         Integer32,
+        usSrxSipEPPrf487MsgSbS          Integer32,
+        usSrxSipEPPrfAckforCancelMsgRbS Integer32,
+        usSrxSipEPPrfUACSntRefer        Integer32,
+        usSrxSipEPPrfUACRcv202Accepted  Integer32,
+        usSrxSipEPPrfUACRcv4xx6xxRefer  Integer32,
+        usSrxSipEPPrfUACSntNotify       Integer32,
+        usSrxSipEPPrfUACRcv200OKNotify  Integer32,
+        usSrxSipEPPrfUACRcv4xx6xxNotify Integer32,
+        usSrxSipEPPrfUACSntSubscribe    Integer32,
+        usSrxSipEPPrfUACRcv200OKSubs    Integer32,
+        usSrxSipEPPrfUACRcv4xx6xxSubs   Integer32,
+        usSrxSipEPPrfUACSntInfo         Integer32,
+        usSrxSipEPPrfUACRcv200OKInfo    Integer32,
+        usSrxSipEPPrfUACRcv300Multiple  Integer32,
+        usSrxSipEPPrfUASRcvRefer        Integer32,
+        usSrxSipEPPrfUASSnt202Accepted  Integer32,
+        usSrxSipEPPrfUASSnt4xx6xxRefer  Integer32,
+        usSrxSipEPPrfUASRcvNotify       Integer32,
+        usSrxSipEPPrfUASSnt200OKNotify  Integer32,
+        usSrxSipEPPrfUASSnt4xx6xxNotify Integer32,
+        usSrxSipEPPrfUASRcvSubscribe    Integer32,
+        usSrxSipEPPrfUASSnt200OKSubs    Integer32,
+        usSrxSipEPPrfUASSnt4xx6xxSubs   Integer32,
+        usSrxSipEPPrfUASRcvInfo         Integer32,
+        usSrxSipEPPrfUASSnt200OKInfo    Integer32,
+        usSrxSipEPPrf183MsgRbC          Integer32,
+        usSrxSipEPPrf1xxMsgRbC          Integer32,
+        usSrxSipEPPrf2xxMsgRbC          Integer32,
+        usSrxSipEPPrf3xxMsgRbC          Integer32,
+        usSrxSipEPPrf4xxMsgRbC          Integer32,
+        usSrxSipEPPrf5xxMsgRbC          Integer32,
+        usSrxSipEPPrf6xxMsgRbC          Integer32,
+        usSrxSipEPPrf183MsgSbS          Integer32,
+        usSrxSipEPPrf1xxMsgSbS          Integer32,
+        usSrxSipEPPrf2xxMsgSbS          Integer32,
+        usSrxSipEPPrf3xxMsgSbS          Integer32,
+        usSrxSipEPPrf4xxMsgSbS          Integer32,
+        usSrxSipEPPrf5xxMsgSbS          Integer32,
+        usSrxSipEPPrf6xxMsgSbS          Integer32,
+        usSrxSipEPPrfNoSupportRbC       Integer32,
+        usSrxSipEPPrackMsgRbC           Integer32,
+        usSrxSipEPUpdateMsgRbC          Integer32,
+        usSrxSipEPPrackMsgSbS           Integer32,
+        usSrxSipEPUpdateMsgSbS          Integer32,
+        usSrxSipEP200OKForPrackRbS      Integer32,
+        usSrxSipEP200OKForUpdateRbS     Integer32,
+        usSrxSipEP200OKForPrackSbC      Integer32,
+        usSrxSipEP200OKForUpdateSbC     Integer32,
+        usSrxSipEpAckFor3xxSbC          Integer32,
+        usSrxSipEPPrfUsage              Integer32,
+        usSrxSipEPStatsInetAddressType  InetAddressType,		
+        usSrxSipEPStatsInetAddress      InetAddress		
+    }
+
+usSrxSipEPStatsId OBJECT-TYPE
+        SYNTAX Integer32
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION "
+          A unique, non-reusable index of a SIP Endpoint."
+        ::= { usSrxSipEPStatsTableEntry 1 }	
+
+usSrxSipEPStatsName OBJECT-TYPE
+        SYNTAX DisplayString
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION "
+          The Name of the SIP Endpoint."
+        ::= { usSrxSipEPStatsTableEntry 2 }
+
+usSrxSipEPStatsIpAddress OBJECT-TYPE
+        SYNTAX IpAddress
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION "
+          The Ip Address of the SIP Endpoint."
+        ::= { usSrxSipEPStatsTableEntry 3 }
+
+usSrxSipEPStatsResetTimestamp OBJECT-TYPE
+        SYNTAX DisplayString
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION "
+          The timestamp associated with a SIP Endpoint.
+          The timestamp is populated whenever there is an event , e.g. 
+          process reinitialization, that causes the counters to cover a 
+          partial/incomplete interval. 
+          The timestamp is cleared whenever the EP counters are reset to 
+          begin the next interval."
+        ::= { usSrxSipEPStatsTableEntry 4 }
+
+usSrxSipEPPrfInviteMsSbC OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the count of Invite 
+	messages sent from Client."
+    ::= { usSrxSipEPStatsTableEntry 5 }
+
+usSrxSipEPPrf100TryingMsgRbC OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the 100 Trying messages Received
+        by the SIP Client." 
+    ::= { usSrxSipEPStatsTableEntry 6 }
+
+
+usSrxSipEPPrf180RingingMsgRbC OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the 180 Ringing messages Received
+        by the SIP Client." 
+    ::= { usSrxSipEPStatsTableEntry 7 }
+
+usSrxSipEPPrf200OKForInvtMsgRbC OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the 200 OK for Invite messages Received
+        by the SIP Client." 
+    ::= { usSrxSipEPStatsTableEntry 8 }
+
+usSrxSipEPPrf301MsgRbC OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the 301 (Moved Permanently) messages Received
+        by the SIP Client." 
+    ::= { usSrxSipEPStatsTableEntry 9 }
+
+usSrxSipEPPrf302MsgRbC OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the 302 (Moved Temporarily) messages Received
+        by the SIP Client." 
+    ::= { usSrxSipEPStatsTableEntry 10 }
+
+usSrxSipEPPrfAckForInvtMsgSbC OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the Ack for Invite messages sent
+        by the SIP Client." 
+    ::= { usSrxSipEPStatsTableEntry 11 }
+
+usSrxSipEPPrfAckForErrorMsgSbC OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the Ack For Error messages sent
+        by the SIP Client." 
+    ::= { usSrxSipEPStatsTableEntry 12 }
+
+
+usSrxSipEPPrfErrorMsgRbC OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the Error messages Received
+        by the SIP Client." 
+    ::= { usSrxSipEPStatsTableEntry 13 }
+
+
+usSrxSipEPPrfByeMsgSbC OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the Bye messages Sent
+        by the SIP Client." 
+    ::= { usSrxSipEPStatsTableEntry 14 }
+
+
+usSrxSipEPPrf200OKForByeMsgRbC OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the 200 OK for Bye messages Received
+        by the SIP Client." 
+    ::= { usSrxSipEPStatsTableEntry 15 }
+
+
+usSrxSipEPPrfCancelMsgSbC OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the Cancel messages Sent
+        by the SIP Client." 
+    ::= { usSrxSipEPStatsTableEntry 16 }
+
+usSrxSipEPPrf200OKforCancMsgRbC OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the 200 OK for Cancel messages 
+	Received by the SIP Client." 
+    ::= { usSrxSipEPStatsTableEntry 17 }
+
+usSrxSipEPPrf487MsgRbC OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the 487 (Request Terminated) 
+	messages Received by the SIP Client." 
+    ::= { usSrxSipEPStatsTableEntry 18 }
+
+usSrxSipEPPrfAckForCancMsgSbC OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the Ack For Cancel messages Sent
+        by the SIP Client." 
+    ::= { usSrxSipEPStatsTableEntry 19 }
+
+usSrxSipEPPrf200OKfRgstrMsgSbS OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the 200 OK for Register messages Sent
+        by the SIP Server." 
+    ::= { usSrxSipEPStatsTableEntry 20 }
+
+usSrxSipEPPrfRegisterMsgRbS OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the Register messages Received
+        by the SIP Server." 
+    ::= { usSrxSipEPStatsTableEntry 21 }
+
+
+usSrxSipEPPrf100TryingMsgSbS OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the 100 Trying messages 
+	Sent by the SIP Server." 
+    ::= { usSrxSipEPStatsTableEntry 22 }
+
+
+usSrxSipEPPrfInviteMsgRbS OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the Invite messages Received
+        by the SIP Server." 
+    ::= { usSrxSipEPStatsTableEntry 23 }
+
+usSrxSipEPPrf180RingingMsgSbS OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the 180 Ringing messages Sent
+        by the SIP Server." 
+    ::= { usSrxSipEPStatsTableEntry 24 }
+
+
+usSrxSipEPPrf200OKforInvtMsgSbS OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the 200 OK for Invite messages Sent
+        by the SIP Server." 
+    ::= { usSrxSipEPStatsTableEntry 25 }
+
+usSrxSipEPPrfAckforInvtMsgRbS OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+        "This value identifies the for Ack messages Received by the SIP Server."
+    ::= { usSrxSipEPStatsTableEntry 26 }
+
+
+usSrxSipEPPrfErrorMsgSbS OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the Error messages Sent
+        by the SIP Server." 
+    ::= { usSrxSipEPStatsTableEntry 27 }
+
+
+usSrxSipEPPrfAckForErrorMsgRbS OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the Ack for Error messages Received
+        by the SIP Server." 
+    ::= { usSrxSipEPStatsTableEntry 28 }
+
+
+usSrxSipEPPrf200OKforByeMsgSbS OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the 200 OK for Bye messages Sent
+        by the SIP Server." 
+    ::= { usSrxSipEPStatsTableEntry 29 }
+
+
+usSrxSipEPPrfByeMsgRbS OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the Bye messages Received
+        by the SIP Server." 
+    ::= { usSrxSipEPStatsTableEntry 30 }
+
+
+usSrxSipEPPrf200OKforCancMsgSbS OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the 200 OK for Cancel messages Sent
+        by the SIP Server." 
+    ::= { usSrxSipEPStatsTableEntry 31 }
+
+
+usSrxSipEPPrfCancMsgRbS OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the Cancel messages Received
+        by the SIP Server." 
+    ::= { usSrxSipEPStatsTableEntry 32 }
+
+usSrxSipEPPrf487MsgSbS OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the 487 (Connection Terminated) messages Sent
+        by the SIP Server." 
+    ::= { usSrxSipEPStatsTableEntry 33 }
+
+
+usSrxSipEPPrfAckforCancelMsgRbS OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION 
+       "This value identifies the ACK for Cancel messages Received
+        by the SIP Server." 
+    ::= { usSrxSipEPStatsTableEntry 34 }
+
+usSrxSipEPPrfUACSntRefer OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the REFER messages Sent
+        by the SIP Client."
+    ::= { usSrxSipEPStatsTableEntry 35 }
+
+usSrxSipEPPrfUACRcv202Accepted OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the 202 ACCEPTED messages Received
+        by the SIP Client."
+    ::= { usSrxSipEPStatsTableEntry 36 }
+
+usSrxSipEPPrfUACRcv4xx6xxRefer OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the 4xx-6xx for REFER messages Received
+        by the SIP Client."
+    ::= { usSrxSipEPStatsTableEntry 37 }
+
+usSrxSipEPPrfUACSntNotify OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the NOTIFY messages Sent
+        by the SIP Client."
+    ::= { usSrxSipEPStatsTableEntry 38 }
+
+usSrxSipEPPrfUACRcv200OKNotify OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the 200OK for NOTIFY messages Received
+        by the SIP Client."
+    ::= { usSrxSipEPStatsTableEntry 39 }
+
+usSrxSipEPPrfUACRcv4xx6xxNotify OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the 4xx-6xx for NOTIFY messages Received
+        by the SIP Client."
+    ::= { usSrxSipEPStatsTableEntry 40 }
+
+usSrxSipEPPrfUACSntSubscribe OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the SUBSCRIBE messages Sent
+        by the SIP Client."
+    ::= { usSrxSipEPStatsTableEntry 41 }
+
+usSrxSipEPPrfUACRcv200OKSubs OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the 200OK for SUBSCRIBE messages Received
+        by the SIP Client."
+    ::= { usSrxSipEPStatsTableEntry 42 }
+
+usSrxSipEPPrfUACRcv4xx6xxSubs OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the 4xx-6xx for SUBSCRIBE messages Received
+        by the SIP Client."
+    ::= { usSrxSipEPStatsTableEntry 43 }
+
+usSrxSipEPPrfUACSntInfo OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the INFO messages Sent
+        by the SIP Client."
+    ::= { usSrxSipEPStatsTableEntry 44 }
+
+usSrxSipEPPrfUACRcv200OKInfo OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the 200OK for INFO messages Received
+        by the SIP Client."
+    ::= { usSrxSipEPStatsTableEntry 45 }
+
+usSrxSipEPPrfUACRcv300Multiple OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the 300 MULTIPLE CHOICES messages Received
+        by the SIP Client."
+    ::= { usSrxSipEPStatsTableEntry 46 }
+
+usSrxSipEPPrfUASRcvRefer OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the REFER messages Received
+        by the SIP Server."
+    ::= { usSrxSipEPStatsTableEntry 47 }
+
+usSrxSipEPPrfUASSnt202Accepted OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the 202 ACCEPTED messages Sent
+        by the SIP Server."
+    ::= { usSrxSipEPStatsTableEntry 48 }
+
+usSrxSipEPPrfUASSnt4xx6xxRefer OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the 4xx-6xx for REFER messages Sent
+        by the SIP Server."
+    ::= { usSrxSipEPStatsTableEntry 49 }
+
+usSrxSipEPPrfUASRcvNotify OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the NOTIFY messages Received
+        by the SIP Server."
+    ::= { usSrxSipEPStatsTableEntry 50 }
+
+usSrxSipEPPrfUASSnt200OKNotify OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the 200OK for NOTIFY messages Sent
+        by the SIP Server."
+    ::= { usSrxSipEPStatsTableEntry 51 }
+
+usSrxSipEPPrfUASSnt4xx6xxNotify OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the 4xx-6xx for NOTIFY messages Sent
+        by the SIP Server."
+    ::= { usSrxSipEPStatsTableEntry 52 }
+
+usSrxSipEPPrfUASRcvSubscribe OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the SUBSCRIBE messages Received
+        by the SIP Server."
+    ::= { usSrxSipEPStatsTableEntry 53 }
+
+usSrxSipEPPrfUASSnt200OKSubs OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the 200OK for SUBSCRIBE messages Sent
+        by the SIP Server."
+    ::= { usSrxSipEPStatsTableEntry 54 }
+
+usSrxSipEPPrfUASSnt4xx6xxSubs OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the 4xx-6xx for SUBSCRIBE messages Sent
+        by the SIP Server."
+    ::= { usSrxSipEPStatsTableEntry 55 }
+
+usSrxSipEPPrfUASRcvInfo OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the INFO messages Received
+        by the SIP Server."
+    ::= { usSrxSipEPStatsTableEntry 56 }
+
+usSrxSipEPPrfUASSnt200OKInfo OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the 200OK for INFO messages Sent
+        by the SIP Server."
+    ::= { usSrxSipEPStatsTableEntry 57 }
+
+usSrxSipEPPrf183MsgRbC OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the total 183 messages received."
+    ::= { usSrxSipEPStatsTableEntry 58 }
+
+usSrxSipEPPrf1xxMsgRbC OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the rest of supported 1xx messages received."
+    ::= { usSrxSipEPStatsTableEntry 59 }
+
+usSrxSipEPPrf2xxMsgRbC OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the rest of supported 2xx messages received."
+    ::= { usSrxSipEPStatsTableEntry 60 }
+
+usSrxSipEPPrf3xxMsgRbC OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the rest of supported 3xx messages received."
+    ::= { usSrxSipEPStatsTableEntry 61 }
+
+usSrxSipEPPrf4xxMsgRbC OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the rest of supported 4xx messages received."
+    ::= { usSrxSipEPStatsTableEntry 62 }
+
+usSrxSipEPPrf5xxMsgRbC OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the rest of supported 5xx messages received."
+    ::= { usSrxSipEPStatsTableEntry 63 }
+
+usSrxSipEPPrf6xxMsgRbC OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the rest of supported 6xx  messages received."
+    ::= { usSrxSipEPStatsTableEntry 64 }
+
+usSrxSipEPPrf183MsgSbS OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the total 183 messages sent."
+    ::= { usSrxSipEPStatsTableEntry 65 }
+
+usSrxSipEPPrf1xxMsgSbS OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the rest of supported 1xx messages sent."
+    ::= { usSrxSipEPStatsTableEntry 66 }
+
+usSrxSipEPPrf2xxMsgSbS OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the rest of supported 2xx messages sent."
+    ::= { usSrxSipEPStatsTableEntry 67 }
+
+usSrxSipEPPrf3xxMsgSbS OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the rest of supported 3xx messages sent."
+    ::= { usSrxSipEPStatsTableEntry 68 }
+
+usSrxSipEPPrf4xxMsgSbS OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the rest of supported 4xx messages sent."
+    ::= { usSrxSipEPStatsTableEntry 69 }
+
+usSrxSipEPPrf5xxMsgSbS OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the rest of supported 5xx messages sent."
+    ::= { usSrxSipEPStatsTableEntry 70 }
+
+usSrxSipEPPrf6xxMsgSbS OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the rest of supported 6xx  messages sent."
+    ::= { usSrxSipEPStatsTableEntry 71 }
+
+usSrxSipEPPrfNoSupportRbC OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the number of unsupported messages received."
+    ::= { usSrxSipEPStatsTableEntry 72 }
+
+
+usSrxSipEPPrackMsgRbC OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the PRACK messages received."
+    ::= { usSrxSipEPStatsTableEntry 73 }
+
+usSrxSipEPUpdateMsgRbC OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the Update messages received."
+    ::= { usSrxSipEPStatsTableEntry 74 }
+
+usSrxSipEPPrackMsgSbS OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the PRACK messages sent."
+    ::= { usSrxSipEPStatsTableEntry 75 }
+
+usSrxSipEPUpdateMsgSbS OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the Update messages sent."
+    ::= { usSrxSipEPStatsTableEntry 76 }
+
+usSrxSipEP200OKForPrackRbS OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the 200OKs received for PRACK messages."
+    ::= { usSrxSipEPStatsTableEntry 77 }
+
+usSrxSipEP200OKForUpdateRbS OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the 200OKs received for Update messages."
+    ::= { usSrxSipEPStatsTableEntry 78 }
+
+usSrxSipEP200OKForPrackSbC OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the 200OKs sent for PRACK messages."
+    ::= { usSrxSipEPStatsTableEntry 79 }
+
+usSrxSipEP200OKForUpdateSbC OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the 200OKs sent for Update messages."
+    ::= { usSrxSipEPStatsTableEntry 80 }
+
+usSrxSipEpAckFor3xxSbC OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the Acks sent in response to 3xx messages."
+    ::= { usSrxSipEPStatsTableEntry 81 }
+
+usSrxSipEPPrfUsage OBJECT-TYPE
+    SYNTAX     Integer32
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+       "This value identifies the local call durations for the EP in CCS."
+    ::= { usSrxSipEPStatsTableEntry 82 }
+
+usSrxSipEPStatsInetAddressType OBJECT-TYPE
+    SYNTAX InetAddressType
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+	   "The Ip Address type of the SIP Endpoint. IPv4 or IPv6"
+    ::= { usSrxSipEPStatsTableEntry 83 }
+
+usSrxSipEPStatsInetAddress OBJECT-TYPE
+    SYNTAX InetAddress
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+	   "The Ip Address of the SIP Endpoint."
+    ::= { usSrxSipEPStatsTableEntry 84 }
+
+END

@@ -1,0 +1,14 @@
+HP-ICF-JUMBO-MIB,1.3.6.1.4.1.11.2.14.10.2.13,hpicfJumboMIB,""200408221030Z"  -- AUGUST 22, 2004",READ-ONLY,"Hewlett Packard Company 8000 Foothills Blvd. Roseville, CA 95747"
+HP-ICF-JUMBO-MIB,1.3.6.1.4.1.11.2.14.10.2.13.1,hpicfJumboObjects,"OBJECT IDENTIFIER",READ-ONLY,
+HP-ICF-JUMBO-MIB,1.3.6.1.4.1.11.2.14.10.2.13.1.1,hpJumboStats,"OBJECT IDENTIFIER",READ-ONLY,
+HP-ICF-JUMBO-MIB,1.3.6.1.4.1.11.2.14.10.2.13.1.1.1,hpJumboStatsTable,"SEQUENCE OF HPJUMBOSTATSENTRY",NOT-ACCESSIBLE,"A table that contains jumbos information about the physical ports of this device."
+HP-ICF-JUMBO-MIB,1.3.6.1.4.1.11.2.14.10.2.13.1.1.1.1,hpJumboStatsEntry,SEQUENCE,NOT-ACCESSIBLE,"Information about the physical ports of this device."
+HP-ICF-JUMBO-MIB,1.3.6.1.4.1.11.2.14.10.2.13.1.1.1.1.1,hpJumboStatsIndex,INTEGER32,READ-ONLY,"The interface index associated with this set of counters."
+HP-ICF-JUMBO-MIB,1.3.6.1.4.1.11.2.14.10.2.13.1.1.1.1.2,hpJumboStatsPkts1523to2047Octets,COUNTER32,READ-ONLY,"The total number of packets (including bad packets) received that were between 1523 and 2047 octets in length inclusive (excluding framing bits but including FCS octets)."
+HP-ICF-JUMBO-MIB,1.3.6.1.4.1.11.2.14.10.2.13.1.1.1.1.3,hpJumboStatsPkts2048to4095Octets,COUNTER32,READ-ONLY,"The total number of packets (including bad packets) received that were between 2048 and 4095 octets in length inclusive (excluding framing bits but including FCS octets)."
+HP-ICF-JUMBO-MIB,1.3.6.1.4.1.11.2.14.10.2.13.1.1.1.1.4,hpJumboStatsPkts4096to9216Octets,COUNTER32,READ-ONLY,"The total number of packets (including bad packets) received that were between 4096 and 9216 octets in length inclusive (excluding framing bits but including FCS octets)."
+HP-ICF-JUMBO-MIB,1.3.6.1.4.1.11.2.14.10.2.13.2,hpicfJumboConformance,"OBJECT IDENTIFIER",READ-ONLY,
+HP-ICF-JUMBO-MIB,1.3.6.1.4.1.11.2.14.10.2.13.2.1,hpicfJumboGroups,"OBJECT IDENTIFIER",READ-ONLY,
+HP-ICF-JUMBO-MIB,1.3.6.1.4.1.11.2.14.10.2.13.2.1.1,hpicfJumboStatsGroup,OBJECT-GROUP,READ-ONLY,"A collection of objects providing private HP Jumbo packet statistics."
+HP-ICF-JUMBO-MIB,1.3.6.1.4.1.11.2.14.10.2.13.2.2,hpicfJumboCompliances,"OBJECT IDENTIFIER",READ-ONLY,
+HP-ICF-JUMBO-MIB,1.3.6.1.4.1.11.2.14.10.2.13.2.2.1,hpicfJumboCompliance,MODULE-COMPLIANCE,READ-ONLY,"The compliance statement for devices support of HP-ICF-JUMBO MIB."

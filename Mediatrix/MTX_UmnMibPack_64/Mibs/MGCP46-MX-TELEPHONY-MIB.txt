@@ -1,0 +1,203 @@
+-- ****************************************************************************
+-- ****************************************************************************
+--
+--             Copyright(c) 2001-2005 Mediatrix Telecom, Inc.
+--
+--  NOTICE:
+--   This document contains information that is confidential and proprietary
+--   to Mediatrix Telecom, Inc.
+--
+--   Mediatrix Telecom, Inc. reserves all rights to this document as well as
+--   to the Intellectual Property of the document and the technology and
+--   know-how that it includes and represents.
+--
+--   This publication cannot be reproduced, neither in whole nor in part in
+--   any form whatsoever without written prior approval by
+--   Mediatrix Telecom, Inc.
+--
+--   Mediatrix Telecom, Inc. reserves the right to revise this publication
+--   and make changes at any time and without the obligation to notify any
+--   person and/or entity of such revisions and/or changes.
+--
+-- ****************************************************************************
+-- ****************************************************************************
+
+MGCP46-MX-TELEPHONY-MIB
+DEFINITIONS ::= BEGIN
+
+IMPORTS
+        MODULE-IDENTITY,
+        OBJECT-TYPE,
+        Unsigned32
+    FROM SNMPv2-SMI
+        MODULE-COMPLIANCE,
+        OBJECT-GROUP
+    FROM SNMPv2-CONF
+        mediatrixConfig
+    FROM MX-SMI;
+
+telephonyMIB MODULE-IDENTITY
+    LAST-UPDATED "200502240000Z"
+    ORGANIZATION "Mediatrix Telecom, Inc."
+    CONTACT-INFO "Mediatrix Telecom, Inc.
+                  4229, Garlock Street
+                  Sherbrooke (Quebec)
+                  Canada
+                  Phone: (819) 829-8749
+                  "
+    DESCRIPTION  "This MIB provides telephony-specifics settings."
+    -- ************************************************************************
+    -- Revision history
+    -- ************************************************************************
+    REVISION    "200502240000Z"
+    DESCRIPTION      "Addition of Austria2 in the country selection list."
+    REVISION    "200310200000Z"
+    DESCRIPTION "Added uae (United Arab Emirates) as option for telephonyCountrySelection."
+    REVISION    "200308150000Z"
+    DESCRIPTION "Remove malaysia options from telephonyCountrySelection."
+    REVISION    "200307030000Z"
+    DESCRIPTION "Added support for Brazil"
+    REVISION    "200306060000Z"
+    DESCRIPTION "Added one choice to telephonyCountrySelection:
+                    - netherlands"
+    REVISION    "200305010000Z"
+    DESCRIPTION "Added two choices to telephonyCountrySelection:
+                    - france-etsi-fsk
+                    - france-etsi-dtmf"
+    REVISION    "200301210000Z"
+    DESCRIPTION "Added support for Russia.
+                    Revised descriptions for telephonyCountrySelection
+                    and telephonyIpSignalingProtocolSelection following most
+                    recent MIB Guidelines."
+    REVISION    "200301140000Z"
+    DESCRIPTION "Added three choices to telephonyCountrySelection:
+                    - uk-bellcore(100)
+                    - uk-cca(101)
+                    - uk-etsi-fsk(102)
+                    Updated telephonyCountrySelection DESCRIPTION to reflect
+                    its new role."
+    REVISION    "200211250000Z"
+    DESCRIPTION "Added H323 as a choice for
+                    telephonyIpSignalingProtocolSelection."
+    REVISION    "200210090000Z"
+    DESCRIPTION "Added a precision in the description of
+                    telephonyIpSignalingProtocolSelection."
+    REVISION    "200203290000Z"
+    DESCRIPTION "Added china, hongKong, and malaysia as options for
+                    telephonyCountrySelection."
+    REVISION    "200111050000Z"
+    DESCRIPTION "Added autralia2 as option for telephonyCountrySelection."                    
+    REVISION    "200108290000Z"
+    DESCRIPTION "Creation"                 
+    ::= { mediatrixConfig 25 }
+
+telephonyMIBObjects     OBJECT IDENTIFIER ::= { telephonyMIB 1 }
+telephonyConformance    OBJECT IDENTIFIER ::= { telephonyMIB 2 }
+
+    telephonyIpSignalingProtocolSelection  OBJECT-TYPE
+        SYNTAX     INTEGER {
+                             mgcp(1),
+                             sip(2),
+                             ncs(3),
+                             h323(4)
+                           }
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "The signaling protocol which will be used
+                     by the endpoints.
+
+                     mgcp : Media Gateway Control Protocol.
+                     sip  : Session Initiation Protocol.
+                     ncs  : PacketCable Network-based Call Signaling protocol.
+                     h323 : Packet-Based Multimedia Communications Systems
+
+
+                     The main managed object needs to be restarted before the
+                     new setting applies.
+
+                     This variable's semantics are different depending on protocol and/or
+                     hardware platforms.
+                     Please refer to the documentation shipped with your device for more details."
+        DEFVAL      { mgcp }
+       ::= {  telephonyMIBObjects 3 }
+
+    telephonyCountrySelection OBJECT-TYPE
+        SYNTAX      INTEGER {
+                             northAmerica1(1),
+                             northAmerica2(2),
+                             austria(3),
+                             france(4),
+                             germany1(5),
+                             germany2(6),
+                             uk(7),
+                             italy(8),
+                             spain(9),
+                             switzerland(10),
+                             sweden(11),
+                             australia1(12),
+                             japan(13),
+                             israel(14),
+                             thailand(15),
+                             indonesia(16),
+                             australia2(17),
+                             china(18),
+                             hongKong(19),
+                             russia(21),
+                             netherlands(22),
+                             brazil(23),
+                             uae(24),
+                             austria2(29),
+                             uk-bellcore(100),
+                             uk-cca(101),
+                             uk-etsi-fsk(102),
+                             france-etsi-fsk(110),
+                             france-etsi-dtmf(111)
+                            }
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "The country selection permits the selection of predefined country
+                     settings for the tone profiles, the ring patterns and other parameters
+                     such as input and output gains.
+
+                     For some countries, the caller ID standard can be selected with this variable.
+
+                     This variable's semantics are different depending on protocol and/or
+                     hardware platforms.
+                     Please refer to the documentation shipped with your device for more details."
+        DEFVAL      { northAmerica1 }
+        ::= { telephonyMIBObjects 6 }
+
+
+    -- ************************************************************************
+    -- Conformance information
+    -- ************************************************************************
+    telephonyCompliances OBJECT IDENTIFIER ::= { telephonyConformance 1 }
+
+    telephonyComplVer1 MODULE-COMPLIANCE
+        STATUS      current
+        DESCRIPTION
+            "This is the list of conformance group to support telephony global
+             parameters."
+        MODULE -- This Module
+            MANDATORY-GROUPS {
+                                telephonyGroupVer1
+                             }
+        ::= { telephonyCompliances 1 }
+
+    -- ************************************************************************
+    -- MIB variable grouping
+    -- ************************************************************************
+    telephonyGroups OBJECT IDENTIFIER ::= { telephonyConformance 2 }
+
+    telephonyGroupVer1 OBJECT-GROUP
+        OBJECTS {
+                 telephonyIpSignalingProtocolSelection,
+                 telephonyCountrySelection
+                }
+        STATUS current
+        DESCRIPTION
+            "This group holds the objects that define telephony parameters"
+        ::= { telephonyGroups 1 }
+
+
+END

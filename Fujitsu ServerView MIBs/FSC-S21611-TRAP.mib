@@ -1,0 +1,954 @@
+--------------------------------------------------------------------------------
+--                               Fujitsu Siemens S21611 TRAP MIB
+--
+--                     Copyright 2001 - 2003 Avocent Corporation
+--
+--                                   Revision: 1.1
+--
+--                          Last Modified: March 26, 2003
+--
+--------------------------------------------------------------------------------
+
+S21611-TRAP-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+   Gauge,enterprises,TimeTicks,IpAddress,Counter,NetworkAddress
+      FROM RFC1155-SMI
+   OBJECT-TYPE
+      FROM RFC-1212
+   DisplayString,PhysAddress
+      FROM RFC1213-MIB
+   TRAP-TYPE
+      FROM RFC-1215;
+
+--------------------------------------------------------------------------------
+-- Object Groupings
+--------------------------------------------------------------------------------
+
+avocent        		OBJECT IDENTIFIER ::= { enterprises 10418 }
+ds             		OBJECT IDENTIFIER ::= { avocent 3 }
+dsProducts     		OBJECT IDENTIFIER ::= { ds 1 }
+dsManagement   		OBJECT IDENTIFIER ::= { ds 2 }
+
+fscS21611TrapObject   	OBJECT IDENTIFIER ::= { dsManagement 6 }     	-- 1.3.6.1.4.1.10418.3.2.6
+
+-- Note: every product type should be uniquely identified underneath the
+-- dsProducts object group. Each product should report its unique dsProducts
+-- OBJECT IDENTIFIER in mib-2.system.sysObjectID. 
+
+fscS21611SysObjectID OBJECT IDENTIFIER ::= { dsProducts 12 }            -- 1.3.6.1.4.1.10418.3.1.12
+
+--------------------------------------------------------------------------------
+-- Trap Object Group (fscS21611TrapObject)              1.3.6.1.4.1.10418.3.2.6
+--
+-- The following objects are implemented only for the generation of
+-- TRAPs. The objects are sent in traps and are not accessible in
+-- any other way.
+--------------------------------------------------------------------------------
+
+fscS21611TrapObjectUserName OBJECT-TYPE
+      SYNTAX UTF8String ( SIZE (3..16) )
+      ACCESS not-accessible
+      STATUS mandatory
+  --% AVAILABILITY public
+      DESCRIPTION
+         "This object is sent in a trap to identify the name of the user
+         for which the trap condition occured. If the trap condition occurred
+         as a result of activity on the local port (OSD), then the value of this
+         object will be the following string:
+
+            local port
+         "
+      ::= { fscS21611TrapObject 1 }
+
+fscS21611TrapObjectTargetUserName OBJECT-TYPE
+      SYNTAX UTF8String ( SIZE (3..16) )
+      ACCESS not-accessible
+      STATUS mandatory
+  --% AVAILABILITY public
+      DESCRIPTION
+         "This object is sent in a trap to identify the name of the target
+         user for which a trap condition occurred.
+         "
+      ::= { fscS21611TrapObject 2 }
+
+fscS21611TrapObjectImageType OBJECT-TYPE
+      SYNTAX UTF8String ( SIZE (0..64) )
+      ACCESS not-accessible
+      STATUS mandatory
+  --% AVAILABILITY public
+      DESCRIPTION
+         "This object is sent in a trap to identify the type of software image
+         for which the trap condition occured.
+         "
+      ::= { fscS21611TrapObject 3 }
+
+fscS21611TrapObjectImageNewVersion OBJECT-TYPE
+      SYNTAX UTF8String ( SIZE (0..32) )
+      ACCESS not-accessible
+      STATUS mandatory
+  --% AVAILABILITY public
+      DESCRIPTION
+         "This object is sent in a trap to identify the version of the new
+         software image the appliance is being upgraded to.
+         "
+      ::= { fscS21611TrapObject 4 }
+
+fscS21611TrapObjectImageCurrentVersion OBJECT-TYPE
+      SYNTAX UTF8String ( SIZE (0..32) )
+      ACCESS not-accessible
+      STATUS mandatory
+  --% AVAILABILITY public
+      DESCRIPTION
+         "This object is sent in a trap to identify the version of the
+         software image that the appliance is currently running.
+         "
+      ::= { fscS21611TrapObject 5 }
+
+fscS21611TrapObjectImageUpgradeResults OBJECT-TYPE
+      SYNTAX UTF8String ( SIZE (0..64) )
+      ACCESS not-accessible
+      STATUS mandatory
+  --% AVAILABILITY public
+      DESCRIPTION
+         "This object is sent in a trap to report the results of a
+         TFTP image upgrade."
+      ::= { fscS21611TrapObject 6 }
+
+fscS21611TrapObjectSessionIdentifier OBJECT-TYPE
+      SYNTAX UTF8String ( SIZE (0..32) )
+      ACCESS not-accessible
+      STATUS mandatory
+  --% AVAILABILITY public
+      DESCRIPTION
+         "This object is sent in a trap to identify the session
+         for which the trap condition occurred. The value will be
+         the name of a server if the server name is known, otherwise
+         the value will be the connection path to a server.
+
+         If the value is a connection path it will have the 
+         following format:
+
+            KVMS2 i:Channel c
+
+         Where i is the ID of the KVMS2, and c is the cascade switch
+         channel number (0 if there is no switch in the path).
+         "
+      ::= { fscS21611TrapObject 7 }
+
+fscS21611TrapObjectKVMS2Id OBJECT-TYPE
+      SYNTAX UTF8String ( SIZE (0..32) )
+      ACCESS not-accessible
+      STATUS mandatory
+  --% AVAILABILITY public
+      DESCRIPTION
+         "This object is sent in a trap to identify the KVMS2 for 
+         which the trap condition occurred.
+         "
+      ::= { fscS21611TrapObject 8 }
+
+fscS21611TrapObjectCascadeSwitchName OBJECT-TYPE
+      SYNTAX UTF8String ( SIZE (0..15) )
+      ACCESS not-accessible
+      STATUS mandatory
+  --% AVAILABILITY public
+      DESCRIPTION
+         "This object is sent in a trap to identify the cascade switch 
+         for which the trap condition occurred.
+         "
+      ::= { fscS21611TrapObject 9 }
+
+fscS21611TrapObjectOldCascadeSwitchName OBJECT-TYPE
+      SYNTAX UTF8String ( SIZE (0..15) )
+      ACCESS not-accessible
+      STATUS mandatory
+  --% AVAILABILITY public
+      DESCRIPTION
+         "This object is sent in a trap to identify the old name of a 
+         cascade switch whose name was changed.
+         "
+      ::= { fscS21611TrapObject 10 }
+
+fscS21611TrapObjectServerName OBJECT-TYPE
+      SYNTAX UTF8String ( SIZE (0..15) )
+      ACCESS not-accessible
+      STATUS mandatory
+  --% AVAILABILITY public
+      DESCRIPTION
+         "This object is sent in a trap to identify the server for
+         which the trap condition occurred.
+         "
+      ::= { fscS21611TrapObject 11 }
+
+fscS21611TrapObjectOldServerName OBJECT-TYPE
+      SYNTAX UTF8String ( SIZE (0..15) )
+      ACCESS not-accessible
+      STATUS mandatory
+  --% AVAILABILITY public
+      DESCRIPTION
+         "This object is sent in a trap to identify the old name of 
+         a server whose name was changed.
+         "
+      ::= { fscS21611TrapObject 12 }
+
+fscS21611TrapObjectFileName OBJECT-TYPE
+      SYNTAX DisplayString ( SIZE (0..12) )
+      ACCESS not-accessible
+      STATUS mandatory
+  --% AVAILABILITY public
+      DESCRIPTION
+         "This object is sent in a trap to identify the name of a file
+         for which the trap condition occurred.
+         "
+      ::= { fscS21611TrapObject 13 }
+
+fscS21611TrapObjectFirmwareCondition OBJECT-TYPE
+      SYNTAX OCTET STRING ( SIZE (0..64) )
+      ACCESS not-accessible
+      STATUS mandatory
+  --% AVAILABILITY public
+      DESCRIPTION
+         "This trap message will contain data for application specific
+         diagnostics.  It is designed in provision for diagnostic help
+         for installation-specific problems, would require the operator
+         to install firmware provided to isolate their particular problems
+         and to enable the trap to report conditions.
+
+         The contents will be an Avocent Application Message Packet with
+         the address, size, and command header removed.  The parameters
+         of the message will depend on the specific problem the firmware
+         is designed to detect and report.
+         "
+      ::= { fscS21611TrapObject 14 }
+
+fscS21611TrapObjectDeviceId OBJECT-TYPE
+      SYNTAX UTF8String ( SIZE (0..32) )
+      ACCESS not-accessible
+      STATUS mandatory
+  --% AVAILABILITY public
+      DESCRIPTION
+         "This object is sent in a trap to identify the device for which
+         the trap condition occurred.
+         "
+      ::= { fscS21611TrapObject 15 }
+
+fscS21611TrapObjectAlarmCondition OBJECT-TYPE
+      SYNTAX INTEGER {
+                        alarm(1),
+                        ok(2)
+                     }
+      ACCESS not-accessible
+      STATUS mandatory
+  --% AVAILABILITY public
+      DESCRIPTION
+         "This object is sent in a trap to identify Warning/Alarm activity for
+         the device on which the trap condition occurred.
+         Alarm sets the alarm, OK indicates the condition has cleared up.
+          "
+      ::= { fscS21611TrapObject 16 }
+
+fscS21611TrapObjectAlarmDescription OBJECT-TYPE
+      SYNTAX UTF8String ( SIZE (0..64) )
+      ACCESS not-accessible
+      STATUS mandatory
+  --% AVAILABILITY public
+      DESCRIPTION
+         "This object is sent in a trap to explain the Warning/Alarm condition
+         for which the trap condition occurred.  This is intended for display
+         or logging.
+         "
+      ::= { fscS21611TrapObject 17 }
+
+fscS21611TrapObjectLockReason OBJECT-TYPE
+      SYNTAX UTF8String( SIZE (0..64) )
+      ACCESS not-accessible
+      STATUS mandatory
+  --% AVAILABILITY public
+      DESCRIPTION
+         "This object is sent in a trap to explain the reason for which a 
+         user account has been locked.
+         "
+      ::= { fscS21611TrapObject 18 }
+
+fscS21611TrapObjectUnlockReason OBJECT-TYPE
+      SYNTAX UTF8String( SIZE (0..64) )
+      ACCESS not-accessible
+      STATUS mandatory
+  --% AVAILABILITY public
+      DESCRIPTION
+         "This object is sent in a trap to explain the reason for which a
+         user account has been unlocked.
+         "
+      ::= { fscS21611TrapObject 19 }
+
+fscS21611TrapObjectIPAddress OBJECT-TYPE
+      SYNTAX DisplayString( SIZE (0..32) )
+      ACCESS not-accessible
+      STATUS mandatory
+  --% AVAILABILITY public
+      DESCRIPTION
+         "This object is sent in a trap to identify the IP address for 
+         which a trap condition occurred.
+         "
+      ::= { fscS21611TrapObject 20 }
+
+--------------------------------------------------------------------------------
+-- Enterprise Traps
+--------------------------------------------------------------------------------
+
+fscS21611RebootStartedTrap TRAP-TYPE
+      ENTERPRISE  fscS21611SysObjectID
+      VARIABLES   { fscS21611TrapObjectUserName }
+      DESCRIPTION
+         "The appliance is in the process of rebooting.
+
+         The name of the user who initiated the reboot
+         is contained in fscS21611TrapObjectUserName.
+         "
+
+      --#SUMMARY     "The appliance is rebooting. Command issued by user: %s."
+      --#ARGUMENTS   { 0 }
+      --#SEVERITY    INFORMATIONAL
+      ::= 1
+
+fscS21611UserLoginTrap TRAP-TYPE
+      ENTERPRISE  fscS21611SysObjectID
+      VARIABLES   { fscS21611TrapObjectUserName }
+      DESCRIPTION
+         "A user logged into the appliance.
+
+         The name of the user who logged in
+         is contained in fscS21611TrapObjectUserName.
+         "
+
+      --#SUMMARY     "User logged into the appliance. User: %s."
+      --#ARGUMENTS   { 0 }
+      --#SEVERITY    INFORMATIONAL
+      ::= 2
+
+fscS21611UserLogoutTrap TRAP-TYPE
+      ENTERPRISE  fscS21611SysObjectID
+      VARIABLES   { fscS21611TrapObjectUserName }
+      DESCRIPTION
+         "A user logged out of the appliance.
+
+         The name of the user who logged out is contained
+         in fscS21611TrapObjectUserName.
+         "
+
+      --#SUMMARY     "User logged out of the appliance. User: %s."
+      --#ARGUMENTS   { 0 }
+      --#SEVERITY    INFORMATIONAL
+      ::= 3
+
+fscS21611VideoSessionStartedTrap TRAP-TYPE
+      ENTERPRISE  fscS21611SysObjectID
+      VARIABLES   {
+                     fscS21611TrapObjectUserName,
+                     fscS21611TrapObjectSessionIdentifier
+                  }
+      DESCRIPTION
+         "A video session has started.
+
+         The name of the user who is connected to the session
+         is contained in fscS21611TrapObjectUserName.
+
+         The session identifier is contained in fscS21611TrapObjectSessionIdentifier.
+         "
+
+      --#SUMMARY     "Video session started. User: %s. Server: %s."
+      --#ARGUMENTS   { 0, 1 }
+      --#SEVERITY    INFORMATIONAL
+      ::= 4
+
+fscS21611VideoSessionStoppedTrap TRAP-TYPE
+      ENTERPRISE  fscS21611SysObjectID
+      VARIABLES   {
+                     fscS21611TrapObjectUserName,
+                     fscS21611TrapObjectSessionIdentifier
+                  }
+      DESCRIPTION
+         "A video session has stoppped.
+
+         The name of the user who was connected to the session
+         is contained in fscS21611TrapObjectUserName.
+
+         The session identifier is contained in fscS21611TrapObjectSessionIdentifier.
+         "
+
+      --#SUMMARY     "Video session stopped. User: %s. Server: %s"
+      --#ARGUMENTS   { 0, 1 }
+      --#SEVERITY    INFORMATIONAL
+      ::= 5
+
+fscS21611VideoSessionTerminatedTrap TRAP-TYPE
+      ENTERPRISE  fscS21611SysObjectID
+      VARIABLES   {
+                     fscS21611TrapObjectUserName,
+                     fscS21611TrapObjectTargetUserName,
+                     fscS21611TrapObjectSessionIdentifier
+                  }
+      DESCRIPTION
+         "A video session has been terminated by another
+         user.
+
+         The name of the user who terminated the session is
+         contained in fscS21611TrapObjectUserName.
+
+         The name of the user who was terminated from the session
+         is contained in fscS21611TrapObjectTargetUserName.
+
+         The session identifier is contained in fscS21611TrapObjectSessionIdentifier.
+         "
+
+      --#SUMMARY     "Video session terminated. Command issued by user: %s. Terminated user: %s. Server: %s."
+      --#ARGUMENTS   { 0, 1, 2 }
+      --#SEVERITY    INFORMATIONAL
+      ::= 6
+
+fscS21611LocalPortViewingStartedTrap TRAP-TYPE
+      ENTERPRISE  fscS21611SysObjectID
+      VARIABLES   { fscS21611TrapObjectSessionIdentifier }
+      DESCRIPTION
+         "A user on the local port has started viewing a server.
+
+         The session identifier is contained in fscS21611TrapObjectSessionIdentifier.
+         "
+
+      --#SUMMARY     "Viewing started on the local port. Server: %s."
+      --#ARGUMENTS   { 0 }
+      --#SEVERITY    INFORMATIONAL
+      ::= 7
+
+fscS21611LocalPortViewingStoppedTrap TRAP-TYPE
+      ENTERPRISE  fscS21611SysObjectID
+      VARIABLES   { fscS21611TrapObjectSessionIdentifier }
+      DESCRIPTION
+         "A user on the local port has stopped viewing a server.
+
+         The session identifier is contained in fscS21611TrapObjectSessionIdentifier.
+         "
+
+      --#SUMMARY     "Viewing stopped on the local port. Server: %s."
+      --#ARGUMENTS   { 0 }
+      --#SEVERITY    INFORMATIONAL
+      ::= 8
+
+fscS21611ImageUpgradeStarted TRAP-TYPE
+      ENTERPRISE  fscS21611SysObjectID
+      VARIABLES   {
+                     fscS21611TrapObjectUserName,
+                     fscS21611TrapObjectImageType,
+                     fscS21611TrapObjectImageNewVersion,
+                     fscS21611TrapObjectImageCurrentVersion
+                  }
+      DESCRIPTION
+         "The appliance has started a TFTP upgrade of an image.
+
+         The name of the user who initiated the TFTP image upgrade is
+         contained in fscS21611TrapObjectUserName.
+
+         The type of image that is being upgraded is contained
+         in fscS21611TrapObjectImageType.
+
+         The version of the image that the appliance is upgrading to is
+         contained in fscS21611TrapObjectImageNewVersion.
+
+         The version of the image that the appliance is currently running
+         is contained in fscS21611TrapObjectImageCurrentVersion.
+         "
+
+      --#SUMMARY     "TFTP image upgrade started. Command issued by user: %s. Image type: %s. New version: %s. Current version: %s"
+      --#ARGUMENTS   { 0, 1, 2, 3 }
+      --#SEVERITY    INFORMATIONAL
+      ::= 9
+
+fscS21611ImageUpgradeResultsTrap TRAP-TYPE
+      ENTERPRISE  fscS21611SysObjectID
+      VARIABLES   { fscS21611TrapObjectImageUpgradeResults }
+      DESCRIPTION
+         "The results of a TFTP image upgrade."
+
+      --#SUMMARY     "TFTP image upgrade results: %s"
+      --#ARGUMENTS   { 0 }
+      --#SEVERITY    INFORMATIONAL
+      ::= 10
+
+fscS21611UserAddedTrap TRAP-TYPE
+      ENTERPRISE  fscS21611SysObjectID
+      VARIABLES   {
+                     fscS21611TrapObjectUserName,
+                     fscS21611TrapObjectTargetUserName
+                  }
+      DESCRIPTION
+         "A new user has been added to the local user database.
+
+         The name of the user who added the new user is contained
+         in fscS21611TrapObjectUserName.
+
+         The name of the new user is contained in fscS21611TrapObjectTargetUserName.
+         "
+
+      --#SUMMARY     "New user added to local user database. Command issued by user: %s. New user: %s."
+      --#ARGUMENTS   { 0, 1 }
+      --#SEVERITY    INFORMATIONAL
+      ::= 11
+
+fscS21611UserDeletedTrap TRAP-TYPE
+      ENTERPRISE  fscS21611SysObjectID
+      VARIABLES   {
+                     fscS21611TrapObjectUserName,
+                     fscS21611TrapObjectTargetUserName
+                  }
+      DESCRIPTION
+         "A user has been deleted from the local user database.
+
+         The name of the user who deleted the user is contained
+         in fscS21611TrapObjectUserName.
+
+         The name of the user who was deleted is contained
+         in fscS21611TrapObjectTargetUserName.
+         "
+
+      --#SUMMARY     "User deleted from local user database. Command issued by user: %s. Deleted user: %s."
+      --#ARGUMENTS   { 0, 1 }
+      --#SEVERITY    INFORMATIONAL
+      ::= 12
+
+fscS21611UserModifiedTrap TRAP-TYPE
+      ENTERPRISE  fscS21611SysObjectID
+      VARIABLES   {
+                     fscS21611TrapObjectUserName,
+                     fscS21611TrapObjectTargetUserName
+                  }
+      DESCRIPTION
+         "A user was modified.
+
+         The name of the user who modified the user is contain
+         in fscS21611TrapObjectUserName.
+
+         The name of the user who was modified is contained
+         in fscS21611TrapObjectTargetUserName.
+         "
+
+      --#SUMMARY     "User modified in local user database. Command issued by user: %s. Modified user: %s."
+      --#ARGUMENTS   { 0, 1 }
+      --#SEVERITY    INFORMATIONAL
+      ::= 13
+
+fscS21611UserAuthenticationFailureTrap TRAP-TYPE
+      ENTERPRISE  fscS21611SysObjectID
+      VARIABLES   { fscS21611TrapObjectUserName }
+      DESCRIPTION
+         "A user failed to authenticate with the appliance.
+
+         The name of the user who failed to authenticate
+         is contained in fscS21611TrapObjectUserName.
+         "
+
+      --#SUMMARY     "User authentication failed with the appliance. User: %s."
+      --#ARGUMENTS   { 0 }
+      --#SEVERITY    INFORMATIONAL
+      ::= 14
+
+fscS21611KVMS2AddedTrap TRAP-TYPE
+      ENTERPRISE  fscS21611SysObjectID
+      VARIABLES   { fscS21611TrapObjectKVMS2Id }
+      DESCRIPTION
+         "An KVMS2 was added. The ID of the KVMS2 which was added is
+         contained in fscS21611TrapObjectKVMS2Id.
+         "
+
+      --#SUMMARY     "KVMS2 added. KVMS2 ID: %s."
+      --#ARGUMENTS   { 0 }
+      --#SEVERITY    INFORMATIONAL
+      ::= 15
+
+fscS21611KVMS2RemovedTrap TRAP-TYPE
+      ENTERPRISE  fscS21611SysObjectID
+      VARIABLES   { fscS21611TrapObjectKVMS2Id }
+      DESCRIPTION
+         "A KVMS2 was removed. The ID of the KVMS2 which was removed is
+         contained in fscS21611TrapObjectKVMS2Id.
+         "
+
+      --#SUMMARY     "KVMS2 removed. KVMS2 ID: %s."
+      --#ARGUMENTS   { 0 }
+      --#SEVERITY    INFORMATIONAL
+      ::= 16
+
+fscS21611ServerNameChangedTrap TRAP-TYPE
+      ENTERPRISE  fscS21611SysObjectID
+      VARIABLES   {
+                     fscS21611TrapObjectOldServerName,
+                     fscS21611TrapObjectServerName,
+                     fscS21611TrapObjectKVMS2Id
+                  }
+      DESCRIPTION
+         "The name of a server has changed.
+
+         The previous name of the server is contained in
+         fscS21611TrapObjectOldServerName.
+
+         The new name of the server is contained in
+         fscS21611TrapObjectServerName.
+
+         The ID of the KVMS2 the server is attached to is
+         contained in fscS21611TrapObjectKVMS2Id.
+         "
+
+      --#SUMMARY     "Server name changed. Old name: %s. New name: %s. Attached to KVMS2: %s."
+      --#ARGUMENTS   { 0, 1, 2 }
+      --#SEVERITY    INFORMATIONAL
+      ::= 17
+
+fscS21611CascadeSwitchAddedTrap TRAP-TYPE
+      ENTERPRISE  fscS21611SysObjectID
+      VARIABLES   {
+                    fscS21611TrapObjectCascadeSwitchName,
+                    fscS21611TrapObjectKVMS2Id
+                  }
+      DESCRIPTION
+         "A cascade switch was added. The name of the switch
+         which was added is contained in fscS21611TrapObjectCascadeSwitchName.
+
+         The ID of the KVMS2 the switch was added to is contained
+         in fscS21611TrapObjectKVMS2Id.
+         "
+
+      --#SUMMARY     "Cascade switch added. Cascade switch name: %s. Attached to KVMS2: %s."
+      --#ARGUMENTS   { 0, 1 }
+      --#SEVERITY    INFORMATIONAL
+      ::= 18
+
+fscS21611CascadeSwitchRemovedTrap TRAP-TYPE
+      ENTERPRISE  fscS21611SysObjectID
+      VARIABLES   {
+                    fscS21611TrapObjectCascadeSwitchName,
+                    fscS21611TrapObjectKVMS2Id
+                  }
+      DESCRIPTION
+         "A cascade switch was removed. The name of the switch
+         which was removed is contained in fscS21611TrapObjectCascadeSwitchName.
+
+         The ID of the KVMS2 the switch was attached to is contained
+         in fscS21611TrapObjectKVMS2Id.
+         "
+
+      --#SUMMARY     "Cascade switch removed. Cascade switch name: %s. Was attached to KVMS2: %s."
+      --#ARGUMENTS   { 0, 1 }
+      --#SEVERITY    INFORMATIONAL
+      ::= 19
+
+fscS21611CascadeSwitchNameChangedTrap TRAP-TYPE
+      ENTERPRISE  fscS21611SysObjectID
+      VARIABLES   {
+                     fscS21611TrapObjectOldCascadeSwitchName,
+                     fscS21611TrapObjectCascadeSwitchName,
+                     fscS21611TrapObjectKVMS2Id
+                  }
+      DESCRIPTION
+         "The name of a cascade switch has changed.
+
+         The previous name of the cascade switch is contained in
+         fscS21611TrapObjectOldCascadeSwitchName.
+
+         The new name of the cascade switch is contained in
+         fscS21611TrapObjectCascadeSwitchName.
+
+         The ID of the KVMS2 the switch is attached to is contained
+         in fscS21611TrapObjectKVMS2Id.
+         "
+
+      --#SUMMARY     "Cascade switch name changed. Old name: %s. New name: %s. Attached to KVMS2: %s."
+      --#ARGUMENTS   { 0, 1, 2 }
+      --#SEVERITY    INFORMATIONAL
+      ::= 20
+
+fscS21611ConfigurationFileLoadedTrap TRAP-TYPE
+      ENTERPRISE  fscS21611SysObjectID
+      VARIABLES   {
+                     fscS21611TrapObjectUserName,
+                     fscS21611TrapObjectFileName
+                  }
+      DESCRIPTION
+         "The appliance has loaded a configuration file.
+
+         The name of the user who commanded the appliance to
+         load the configuration file is contained in
+         fscS21611TrapObjectUserName.
+
+         The name of the file that was loaded is contained in
+         fscS21611TrapObjectFileName.
+         "
+
+      --#SUMMARY     "Configuration file loaded in the appliance. Command issued by user: %s. Name of file loaded: %s."
+      --#ARGUMENTS   { 0, 1 }
+      --#SEVERITY    INFORMATIONAL
+      ::= 21
+
+fscS21611UserDatabaseFileLoadedTrap TRAP-TYPE
+      ENTERPRISE  fscS21611SysObjectID
+      VARIABLES   {
+                     fscS21611TrapObjectUserName,
+                     fscS21611TrapObjectFileName
+                  }
+      DESCRIPTION
+         "The appliance has loaded a user database file.
+
+         The name of the user who commanded the appliance to
+         load the user database file is contained in
+         fscS21611TrapObjectUserName.
+
+         The name of the file that was loaded is contained in
+         fscS21611TrapObjectFileName.
+         "
+
+      --#SUMMARY     "User database file loaded in the appliance. Command issued by user: %s. Name of file loaded: %s."
+      --#ARGUMENTS   { 0, 1 }
+      --#SEVERITY    INFORMATIONAL
+      ::= 22
+
+fscS21611InvalidHookupDetectedTrap TRAP-TYPE
+      ENTERPRISE  fscS21611SysObjectID
+      VARIABLES   {
+                     fscS21611TrapObjectDeviceId,
+                     fscS21611TrapObjectFirmwareCondition
+                  }
+      DESCRIPTION
+         "The appliance has detected an invalid connection.
+
+         This can include two KVMS2 devices on a port where one or more
+         have a legacy KVM Switch, or some other illegal setup condition.
+
+         Information about the nature of the failure is stored in the
+         fscS21611TrapObjectFirmwareCondition object.
+         "
+
+      --#SUMMARY     "Invalid connection detected. Device ID: %s."
+      --#ARGUMENTS   { 0 }
+      --#SEVERITY    MAJOR
+      ::= 23
+
+fscS21611SubsystemUpgradeStartedTrap TRAP-TYPE
+      ENTERPRISE  fscS21611SysObjectID
+      VARIABLES   {
+                     fscS21611TrapObjectDeviceId,
+                     fscS21611TrapObjectFirmwareCondition
+                  }
+      DESCRIPTION
+         "The appliance has started a Subsystem Upgrade.
+
+         This can be a download from the DModule to the Main Board, or
+         a KVMS2 or other subsystem download from the Main Board...
+
+         Information about the subsystem being updated is stored in the
+         fscS21611TrapObjectFirmwareCondition object.
+         "
+
+      --#SUMMARY     "Subsystem Upgrade started. Device ID: %s."
+      --#ARGUMENTS   { 0 }
+      --#SEVERITY    INFORMATIONAL
+      ::= 24
+
+fscS21611SubsystemRestartTrap TRAP-TYPE
+      ENTERPRISE  fscS21611SysObjectID
+      VARIABLES   {
+                     fscS21611TrapObjectDeviceId,
+                     fscS21611TrapObjectFirmwareCondition
+                  }
+      DESCRIPTION
+         "The appliance has completed a download and is restarting the
+         subsystem specified in the fscS21611TrapObjectFirmwareCondition object.
+         "
+
+      --#SUMMARY     "Subsystem restarting. Device ID: %s."
+      --#ARGUMENTS   { 0 }
+      --#SEVERITY    INFORMATIONAL
+      ::= 25
+
+fscS21611FirmwareCommunicationsTrap TRAP-TYPE
+      ENTERPRISE  fscS21611SysObjectID
+      VARIABLES   {
+                     fscS21611TrapObjectDeviceId,
+                     fscS21611TrapObjectFirmwareCondition
+                  }
+      DESCRIPTION
+         "The appliance has detected communication problems in the system
+         configuration.  This can be used to indicate install problems that
+         might result in percieved problems with the switch.
+         "
+
+      --#SUMMARY     "Communication problems in the system configuration. Device ID: %s."
+      --#ARGUMENTS   { 0 }
+      --#SEVERITY    MAJOR
+      ::= 26
+
+fscS21611NVMemoryFailureTrap TRAP-TYPE
+      ENTERPRISE  fscS21611SysObjectID
+      VARIABLES   {
+                     fscS21611TrapObjectDeviceId,
+                     fscS21611TrapObjectFirmwareCondition
+                  }
+      DESCRIPTION
+         "The Appliance has detected a memory problem, the nature of which
+          has been described in the fscS21611TrapObjectFirmwareCondition object.
+         "
+
+      --#SUMMARY     "Memory problem. Device ID: %s"
+      --#ARGUMENTS   { 0 }
+      --#SEVERITY    CRITICAL
+      ::= 27
+
+fscS21611WatchdogResetTrap TRAP-TYPE
+      ENTERPRISE  fscS21611SysObjectID
+      VARIABLES   {
+                     fscS21611TrapObjectDeviceId,
+                     fscS21611TrapObjectFirmwareCondition
+                  }
+      DESCRIPTION
+         "The appliance has detected a watchdog reset condition.
+
+         This indicates a catastrophic failure in the Firmware/Hardware
+         preventing normal operation of the appliance.
+         "
+
+      --#SUMMARY     "Watchdog reset. Device ID: %s."
+      --#ARGUMENTS   { 0 }
+      --#SEVERITY    CRITICAL
+      ::= 28
+
+fscS21611DiagnosticConditionTrap TRAP-TYPE
+      ENTERPRISE  fscS21611SysObjectID
+      VARIABLES   {
+                     fscS21611TrapObjectDeviceId,
+                     fscS21611TrapObjectFirmwareCondition
+                  }
+      DESCRIPTION
+         "The Appliance has detected a special condition to be trapped
+          for diagnostics.  The condition has been recorded is stored
+          in the fscS21611TrapObjectFirmwareCondition object.
+         "
+
+      --#SUMMARY     "Special condition was trapped. Device ID: %s."
+      --#ARGUMENTS   { 0 }
+      --#SEVERITY    INFORMATIONAL
+      ::= 29
+
+fscS21611SubsystemUpgradeFailureTrap TRAP-TYPE
+      ENTERPRISE  fscS21611SysObjectID
+      VARIABLES   {
+                     fscS21611TrapObjectDeviceId,
+                     fscS21611TrapObjectFirmwareCondition
+                  }
+      DESCRIPTION
+         "The Appliance has detected a special condition resulting in a
+         failed subsystem update.  The condition has been recorded is stored
+         in the fscS21611TrapObjectFirmwareCondition object.
+         "
+
+      --#SUMMARY     "Subsystem upgrade failed. Device ID: %s."
+      --#ARGUMENTS   { 0 }
+      --#SEVERITY    INFORMATIONAL
+      ::= 30
+
+fscS21611WarningConditionTrap TRAP-TYPE
+      ENTERPRISE  fscS21611SysObjectID
+      VARIABLES   {
+                     fscS21611TrapObjectDeviceId,
+                     fscS21611TrapObjectAlarmCondition,
+                     fscS21611TrapObjectAlarmDescription
+                  }
+      DESCRIPTION
+         "The Appliance has detected a special condition to be trapped
+         for warning the operator.  The condition indicates some parameter
+         outside of normal operation, such as over temperature range.
+         These are not expected to result in unusual behavior, but may
+         be precursor to a subsequent urgent condition.
+         "
+
+      --#SUMMARY     "Warning condition. Device ID: %s. Alarm condition: %d. Alarm description: %s."
+      --#ARGUMENTS   { 0, 1, 2 }
+      --#SEVERITY    MINOR
+      ::= 31
+
+fscS21611UrgentConditionTrap TRAP-TYPE
+      ENTERPRISE  fscS21611SysObjectID
+      VARIABLES   {
+                     fscS21611TrapObjectDeviceId,
+                     fscS21611TrapObjectAlarmCondition,
+                     fscS21611TrapObjectAlarmDescription
+                  }
+      DESCRIPTION
+         "The Appliance has detected a special condition to be trapped
+         for alerting the operator.  The condition indicates some parameter
+         outside of normal operation that is expected to result in
+         unpredictable system behavior.
+         "
+
+      --#SUMMARY     "Urgent condition. Device ID: %s. Alarm condition: %d. Alarm description: %s."
+      --#ARGUMENTS   { 0, 1, 2 }
+      --#SEVERITY    CRITICAL
+      ::= 32
+
+fscS21611UserLockedTrap TRAP-TYPE
+      ENTERPRISE  fscS21611SysObjectID
+      VARIABLES   {
+                     fscS21611TrapObjectIPAddress,
+                     fscS21611TrapObjectTargetUserName,
+                     fscS21611TrapObjectLockReason
+                  }
+      DESCRIPTION
+         "A user account has been locked.
+
+         The IP address of the client is contained in fscS21611TrapObjectIPAddress.
+
+         The name of the user who was locked is contained
+         in fscS21611TrapObjectTargetUserName.
+
+         The reason for which the user account has been locked is contained
+         in fscS21611TrapObjectLockReason.
+         "
+
+      --#SUMMARY     "User account has been locked. Client IP Address: %s. Locked user: %s. Reason: %s"
+      --#ARGUMENTS   { 0, 1, 2 }
+      --#SEVERITY    MINOR
+      ::= 33
+
+fscS21611UserUnlockedTrap TRAP-TYPE
+      ENTERPRISE  fscS21611SysObjectID
+      VARIABLES   {
+                     fscS21611TrapObjectIPAddress,
+                     fscS21611TrapObjectUserName,
+                     fscS21611TrapObjectTargetUserName,
+                     fscS21611TrapObjectUnlockReason
+                  }
+      DESCRIPTION
+         "A user account has been unlocked.
+
+         The IP address of the client that originated the unlock request
+         is contained in fscS21611TrapObjectIPAddress. When the user 
+         account is unlocked by an appliance reboot or by the expiration
+         of the lockout period (as specified in the 
+         fscS21611TrapObjectUnlockReason object), the IP address 
+         will be blank.
+
+         The name of the user who unlocked the user is contained
+         in fscS21611TrapObjectUserName. When the user account is unlocked 
+         by an appliance reboot or by the expiration of the lockout period 
+         (as specified in the fscS21611TrapObjectUnlockReason object), the
+         name of the user will be blank.
+
+         The name of the user who was unlocked is contained
+         in fscS21611TrapObjectTargetUserName.
+
+         The reason for which the user account has been unlocked is contained 
+         in fscS21611TrapObjectUnlockReason.
+         "
+
+      --#SUMMARY     "User account has been unlocked. Client IP Address: %s. Command issued by user: %s. Unlocked user: %s. Reason: %s"
+      --#ARGUMENTS   { 0, 1, 2, 3 }
+      --#SEVERITY    MINOR
+      ::= 34
+
+END

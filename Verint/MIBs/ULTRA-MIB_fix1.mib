@@ -1,0 +1,2015 @@
+
+ULTRA-MIB DEFINITIONS ::= BEGIN
+
+
+--
+--  1) Imports section
+--
+--
+
+IMPORTS
+OBJECT-TYPE, MODULE-IDENTITY, OBJECT-IDENTITY, Integer32,
+NOTIFICATION-TYPE, enterprises
+FROM SNMPv2-SMI
+TEXTUAL-CONVENTION, DisplayString
+FROM SNMPv2-TC;
+
+--
+--
+-- 2) The Module Identification
+--
+--
+
+--
+--
+-- Object Id registration
+--
+--
+cis OBJECT-IDENTITY
+STATUS	current
+DESCRIPTION
+"The Comverse Information Systems subdivision"
+::= { enterprises 1619 }
+
+ad OBJECT-IDENTITY
+STATUS	current
+DESCRIPTION
+"The AudioDisk activity"
+::= { cis 20 }
+
+infosys MODULE-IDENTITY
+LAST-UPDATED	"0004060000Z"
+ORGANIZATION 	"Comverse Infosys"
+CONTACT-INFO
+"Guy Tsafrir"
+DESCRIPTION
+"The root of the OID sub-tree assigned to Infosys Generic tree
+under the AudioDisk group.
+
+This entire module is designed according to the recommanded
+guidelines given in section 8.5 'OID Infrastructure Organization'
+(pages 217-220 and onward) in 'Understanding SNMP MIBs' by David
+Perkins and Evan McGinnis"
+::= { ad 100 }
+
+
+--
+--
+-- 4) Registration for top level structure of MIB
+--		ULTRA Module registration
+-- 
+
+ultra MODULE-IDENTITY
+LAST-UPDATED	"0004060000Z"
+ORGANIZATION 	"Verint"
+CONTACT-INFO
+"Edi Timchenko"
+DESCRIPTION
+"The root of the OID sub-tree assigned to ULTRA subsystem tree
+under the Infosys group. This MIB sits under the Infosys MIB as it is
+an Infosys subsystem."
+::= { infosys 50 }
+
+
+ultraEvents OBJECT-IDENTITY
+STATUS	current
+DESCRIPTION
+"ULTRA hardware components"
+::= { ultra 1 }
+
+ultraEventsV2 OBJECT-IDENTITY
+STATUS	current
+DESCRIPTION
+"IOPS hardware events V2. Their is a trick to make events
+so the tree sits in 0 instance."
+::= { ultraEvents 0 }
+
+
+ultraMsg	OBJECT-TYPE
+SYNTAX	DisplayString
+MAX-ACCESS	read-only
+STATUS	current
+DESCRIPTION
+"Message string with details about failure"
+::= { ultra 2 }
+
+
+
+--
+--
+-- 5) The managed objects and notifications
+--
+--
+
+--
+--
+--
+--
+-- Notifications
+--
+--
+
+srvUltraalarmQMDBSFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: Issued in {Site Name} by Application Database"
+           ::= { ultraEventsV2 11001 }
+
+
+srvUltraAlarmAGSFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: Issued in {Site Name} by Application Gateway"
+           ::= { ultraEventsV2 11002 }
+
+
+srvUltraAlarmVAMFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: Issued in {Site Name} by Voice Acquisition Module"
+           ::= { ultraEventsV2 11003 }
+
+
+srvUltraAlarmPPSFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: Issued in {Site Name} by Audio Conversion PPS"
+           ::= { ultraEventsV2 11004 }
+
+
+srvUltraAlarmAMSFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: Issued in {Site Name} by Audio Server Module"
+           ::= { ultraEventsV2 11005 }
+
+
+srvUltraAlarmDBSFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: Issued in {Site Name} by Contact Database"
+           ::= { ultraEventsV2 11006 }
+
+
+srvUltraAlarmIntelliconnectFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: Issued in {Site Name} by IntelliConnect"
+           ::= { ultraEventsV2 11007 }
+
+
+srvUltraAlarmIntelliFindFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: Issued in {Site Name} by IntelliFind"
+           ::= { ultraEventsV2 11008 }
+
+
+srvUltraAlarmIntelliFlowFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: Issued in {Site Name} by IntelliFlow"
+           ::= { ultraEventsV2 11009 }
+
+
+srvUltraAlarmIntelliLinkFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: Issued in {Site Name} by IntelliLink"
+           ::= { ultraEventsV2 11010 }
+
+
+srvUltraAlarmIntelliStorFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: Issued in {Site Name} by IntelliStor"
+           ::= { ultraEventsV2 11011 }
+
+
+srvUltraAlarmOSPFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: Issued in {Site Name} by OpenStorage Portal "
+           ::= { ultraEventsV2 11012 }
+
+
+srvUltraAlarmReportServerFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: Issued in {Site Name} by Reporter"
+           ::= { ultraEventsV2 11013 }
+
+
+srvUltraAlarmSCRFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: Issued in {Site Name} by Screen Acquisition Module"
+           ::= { ultraEventsV2 11014 }
+
+
+srvUltraAlarmTPMFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: Issued in {Site Name} by Telephone Playback Manager"
+           ::= { ultraEventsV2 11015 }
+
+
+srvUltraAlarmUDBFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: Issued in {Site Name} by Universal Database"
+           ::= { ultraEventsV2 11016 }
+
+
+srvUltraAlarmAnalyticsFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: Issued in {Site Name} by Analytics Reports"
+           ::= { ultraEventsV2 11017 }
+
+
+srvUltraAlarmDiskMgrFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: Issued in {Site Name} by Disk Manager"
+           ::= { ultraEventsV2 11018 }
+
+
+srvUltraAlarmSYMFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: Issued in {Site Name} by System Monitor"
+           ::= { ultraEventsV2 11019 }
+
+
+srvultraAlarmBackupFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: Issued in {Site Name} by Media Backup Manager"
+           ::= { ultraEventsV2 11020 }
+
+
+srvUltraAlarmVoIPFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: Issued in {Site Name} by VoIP Acquisition Module"
+           ::= { ultraEventsV2 11021 }
+
+
+srvUltraAlarmSigsFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: Issued in {Site Name} by VoIP Signaling Service"
+           ::= { ultraEventsV2 11022 }
+
+
+srvUltraAlarmQMDBSOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: In {Site Name}  the Application Database"
+           ::= { ultraEventsV2 11023 }
+
+
+srvUltraAlarmAGSOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: In {Site Name}  the Application Gateway"
+           ::= { ultraEventsV2 11024 }
+
+
+srvUltraAlarmVAMOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: In {Site Name}  the Voice Acquisition Module"
+           ::= { ultraEventsV2 11025 }
+
+
+srvUltraAlarmPPSOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: In {Site Name}  the Audio Conversion PPS"
+           ::= { ultraEventsV2 11026 }
+
+
+srvUltraAlarmAMSOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: In {Site Name}  the Audio Server Module"
+           ::= { ultraEventsV2 11027 }
+
+
+srvUltraAlarmDBSOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: In {Site Name}  the Contact Database"
+           ::= { ultraEventsV2 11028 }
+
+
+srvUltraAlarmIntelliconnectOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: In {Site Name}  the IntelliConnect"
+           ::= { ultraEventsV2 11029 }
+
+
+srvUltraAlarmIntelliFindOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: In {Site Name}  the IntelliFind"
+           ::= { ultraEventsV2 11030 }
+
+
+srvUltraAlarmIntelliFlowOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: In {Site Name}  the IntelliFlow"
+           ::= { ultraEventsV2 11031 }
+
+
+srvUltraAlarmIntelliLinkOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: In {Site Name}  the IntelliLink"
+           ::= { ultraEventsV2 11032 }
+
+
+srvUltraAlarmIntelliStorOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: In {Site Name}  the IntelliStor"
+           ::= { ultraEventsV2 11033 }
+
+
+srvUltraAlarmOSPOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: In {Site Name}  the OpenStorage Portal 1 130.1.1.1 returned to normal operation"
+           ::= { ultraEventsV2 11034 }
+
+
+srvUltraAlarmReportServerOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: In {Site Name}  the Reporter"
+           ::= { ultraEventsV2 11035 }
+
+
+srvUltraAlarmSCROk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: In {Site Name}  the Screen Acquisition Module"
+           ::= { ultraEventsV2 11036 }
+
+
+srvUltraAlarmTPMOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: In {Site Name}  the Telephone Playback Manager"
+           ::= { ultraEventsV2 11037 }
+
+
+srvUltraAlarmUDBOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: In {Site Name}  the Universal Database"
+           ::= { ultraEventsV2 11038 }
+
+
+srvUltraAlarmAnalyticsOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: In {Site Name}  the Analytics Reports"
+           ::= { ultraEventsV2 11039 }
+
+
+srvUltraAlarmDiskMgrOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: In {Site Name}  the Disk Manager"
+           ::= { ultraEventsV2 11040 }
+
+
+srvUltraAlarmSYMOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: In {Site Name}  the System Monitor"
+           ::= { ultraEventsV2 11041 }
+
+
+srvultraAlarmBackupOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: In {Site Name}  the Media Backup Manager"
+           ::= { ultraEventsV2 11042 }
+
+
+srvUltraAlarmVoIPOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: In {Site Name}  the VoIP Acquisition Module"
+           ::= { ultraEventsV2 11043 }
+
+
+srvUltraAlarmSigsOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: In {Site Name}  the VoIP Signaling Service 130.1.1.1 returned to normal operation"
+           ::= { ultraEventsV2 11044 }
+
+
+srvUltraAlarmAMOFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: Issued in {Site Name} by Acquisition Module 1 130.1.1.1 at 01/01/01 11:11"
+           ::= { ultraEventsV2 11045 }
+
+
+srvUltraAlarmAMOOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: In {Site Name}  the Acquisition Module 130.1.1.1 returned to normal operation"
+           ::= { ultraEventsV2 11046 }
+
+
+srvUltraAlarmMASFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: Issued in {Site Name} by Monitoring Real-Time Events Service 1 130.1.1.1 at 01/01/01 11:11"
+           ::= { ultraEventsV2 11047 }
+
+
+srvUltraAlarmMASOK NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: In {Site Name}  the Master Monitoring Real-Time Events Service 130.1.1.1 returned to normal operation"
+           ::= { ultraEventsV2 11048 }
+
+
+srvUltraAlarmAssistOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: In {Site Name}  the Monitoring Real-Time Web Service 130.1.1.1 returned to normal operation"
+           ::= { ultraEventsV2 11049 }
+
+
+srvUltraAlarmAssistFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: Issued in {Site Name} by Monitoring Real-Time Web Service 1 130.1.1.1 at 01/01/01 11:11"
+           ::= { ultraEventsV2 11050 }
+
+
+srvUltraAlarmPortalFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: Issued in {Site Name} by IntelliPortal 1 130.1.1.1 at 01/01/01 11:11"
+           ::= { ultraEventsV2 11051 }
+
+
+srvUltraAlarmPortalOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: In {Site Name}  the IntelliPortal 130.1.1.1 returned to normal operation"
+           ::= { ultraEventsV2 11052 }
+
+
+srvUltraAlarmTRNSRVFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: In {Site Name}  the Transcription Server 130.1.1.1 returned to normal operation"
+           ::= { ultraEventsV2 11053 }
+
+
+srvUltraAlarmTRNSRVOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: In {Site Name}  the Transcription Server 130.1.1.1 returned to normal operation"
+           ::= { ultraEventsV2 11054 }
+
+
+srvUltraAlarmRedundancyMonFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: Issued in {Site Name} by Redundancy Monitor 1 130.1.1.1 at 01/01/01 11:11"
+           ::= { ultraEventsV2 26010 }
+
+
+srvUltraAlarmRedundancyMonOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: In {Site Name}  the Redundancy Monitor 1 130.1.1.1 returned to normal operation"
+           ::= { ultraEventsV2 26011 }
+
+
+srvUltraAlarmCenteraFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: Issued in {Site Name} by Centera Integrator Service 1 130.1.1.1 at 01/01/01 11:11"
+           ::= { ultraEventsV2 26140 }
+
+
+srvUltraAlarmCenteraOK NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "ULTRA Alarm: In {Site Name}  the Centera Integrator Service 130.1.1.1 returned to normal operation"
+           ::= { ultraEventsV2 26141 }
+
+
+srvVAMLastTimeRestarted NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Last time Voice Acquisition Module restarted"
+           ::= { ultraEventsV2 11502 }
+
+
+srvVAMRecordingLiabilityOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Voice Acquisition Module Unit 1: active and recording in Liability mode"
+           ::= { ultraEventsV2 11503 }
+
+
+srvVAMCardActiveOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Voice Acquisition Module Unit 1: Voice Processing Card is active"
+           ::= { ultraEventsV2 11504 }
+
+
+srvVAMConnectedToDBSOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Voice Acquisition Module Unit 1: Connected to the Contact Database"
+           ::= { ultraEventsV2 11505 }
+
+
+srvVAMConnectedToIntelliFlowOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Voice Acquisition Module Unit 1: Connected to the IntelliFlow"
+           ::= { ultraEventsV2 11506 }
+
+
+srvVAMMalfunctioningADIMEFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Voice Acquisition Module Unit 1: ADIME card number 7 is malfunctioning"
+           ::= { ultraEventsV2 11508 }
+
+
+srvVAMCardMalfunctionFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Voice Acquisition Module Unit 1: Voice Processing Card is malfunctioning"
+           ::= { ultraEventsV2 11509 }
+
+
+srvVAMDisconnectedFromDBSFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Voice Acquisition Module Unit 1: Disconnected from the Contact Database and working in offline mode"
+           ::= { ultraEventsV2 11510 }
+
+
+srvVAMOfflineRecordsDeletedFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Voice Acquisition Module Unit 1: Offline contact records have been deleted in the last 24 hours"
+           ::= { ultraEventsV2 11511 }
+
+
+srvVAMDisconnectedFromIntelliFlowFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Voice Acquisition Module Unit 1: Disconnected from the IntelliFlow"
+           ::= { ultraEventsV2 11512 }
+
+
+srvVAMUnitInactiveFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Voice Acquisition Module Unit 1: Inactive"
+           ::= { ultraEventsV2 11513 }
+
+
+srvAMInactiveFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Acquisition Module is inactive"
+           ::= { ultraEventsV2 11514 }
+
+
+srvVAMCTIDisconnectedFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Voice Acquisition Module Unit 1: IntelliFlow reported a disconnection from CTI"
+           ::= { ultraEventsV2 11516 }
+
+
+srvVAMTruncMalfunctioningFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Voice Acquisition Module Unit 1: Trunk number 7 is malfunctioning"
+           ::= { ultraEventsV2 11517 }
+
+
+srvVAMLongVoxFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Voice Acquisition Module Unit 1: At least one target is displaying VOX activity for more than 24 hours"
+           ::= { ultraEventsV2 11518 }
+
+
+srvVAMVoxInactivityFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Voice Acquisition Module Unit 1: At least one target is displaying VOX inactivity"
+           ::= { ultraEventsV2 11519 }
+
+
+srvVAMTargetMalfunctionFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Voice Acquisition Module Unit 1: At least one target is malfunctioning"
+           ::= { ultraEventsV2 11520 }
+
+
+srvVAMQueueExceededFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Voice Acquisition Module Unit 1: Unit has stopped recording audio - hardware problem may have occurred"
+           ::= { ultraEventsV2 11521 }
+
+
+srvVAMIOFailureFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Voice Acquisition Module Unit 1: At least one contact failed due to I/O failure in the last 24 hours"
+           ::= { ultraEventsV2 11522 }
+
+
+srvVAMMarkingFailureFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Voice Acquisition Module Unit 1: At least one contact failed due to contact marking failure in the last 24 hours"
+           ::= { ultraEventsV2 11523 }
+
+
+srvVAMAudioLossFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Voice Acquisition Module Unit 1: Audio was lost in the last 24 hours"
+           ::= { ultraEventsV2 11524 }
+
+
+srvVAMNGXMalfunctionFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Voice Acquisition Module Unit 1: NGX card number 7 is malfunctioning"
+           ::= { ultraEventsV2 11525 }
+
+
+srvVAMPT16MalfunctionFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Voice Acquisition Module Unit 1: PT16 card number 7 is malfunctioning"
+           ::= { ultraEventsV2 11526 }
+
+
+srvVAMIntliFlowModuleInactiveFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Voice Acquisition Module Unit 1: IntelliFlow Module is inacti"
+           ::= { ultraEventsV2 11528 }
+
+
+srvVAMDBSModuleInactiveFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Voice Acquisition Module Unit 1: Contact Database Module is inactive "
+           ::= { ultraEventsV2 11529 }
+
+
+srvVAMRecordingPerformanceOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Voice Acquisition Module Unit 1: active and recording in Performance mode"
+           ::= { ultraEventsV2 11531 }
+
+
+srvVAMRecordingApplicationOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Voice Acquisition Module Unit 1: active and recording in Application mode"
+           ::= { ultraEventsV2 11532 }
+
+
+srvVAMHourMarkingRateOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Voice Acquisition Module Unit 1:  Contact Database marking rate is 200 segments per hour"
+           ::= { ultraEventsV2 11533 }
+
+
+srvVAMDayMarkingRateOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Voice Acquisition Module Unit 1: Contact Database marking rate is 5000 segments per day"
+           ::= { ultraEventsV2 11534 }
+
+
+srvVAMMarkingRateTooHigh NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Voice Acquisition Module Unit 1: Contact Database marking rate exceeded 2200 segments per hour"
+           ::= { ultraEventsV2 11535 }
+
+
+srvVAMHourRecordingRateOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Voice Acquisition Module Unit 1: Recording rate is 20 segments per hour"
+           ::= { ultraEventsV2 11536 }
+
+
+srvVAMDayRecordingRateOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Voice Acquisition Module Unit 1: Recording rate is 20 segments per day"
+           ::= { ultraEventsV2 11537 }
+
+
+srvVAMRecordingPercentageOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Voice Acquisition Module Unit 1: Percentage of successful recording attempts is 95%"
+           ::= { ultraEventsV2 11538 }
+
+
+srvVAMLowRecordingPercentageFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Voice Acquisition Module Unit 1: Percentage of successful recording attempts is lower than the minimum threshold of 90%"
+           ::= { ultraEventsV2 11539 }
+
+
+srvVOIPDBSDisconnectedFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: Disconnected from the Contact Database and working in offline mode"
+           ::= { ultraEventsV2 11540 }
+
+
+srvVOIPOfflineContactHaveBeenDeletedFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: Offline contact records have been deleted in the last 24 hours"
+           ::= { ultraEventsV2 11541 }
+
+
+srvVOIPIntelliflowDisconnectedFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: Disconnected from the IntelliFlow"
+           ::= { ultraEventsV2 11542 }
+
+
+srvVOIPModuleIsInactiveFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: VoIP Acquisition Module is inactive"
+           ::= { ultraEventsV2 11543 }
+
+
+srvVOIPCTIDisconnectedFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: IntelliFlow reported a disconnection from CTI"
+           ::= { ultraEventsV2 11545 }
+
+
+srvVOIPHardwareProblemFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: Unit has stopped recording audio - hardware problem may have occurred"
+           ::= { ultraEventsV2 11546 }
+
+
+srvVOIPContactMarkingFailureFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: At least one contact failed due to contact marking failure in the last 24 hours"
+           ::= { ultraEventsV2 11547 }
+
+
+srvVOIPAudioLostInTheLast24HoursFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: Audio was lost in the last 24 hours."
+           ::= { ultraEventsV2 11548 }
+
+
+srvVOIPContactSegmentIsEmptyFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: At least one Contact Segment is empty in the last 24 hours"
+           ::= { ultraEventsV2 11549 }
+
+
+srvVOIPIntelliflowConnectedOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: Connected to the IntelliFlow"
+           ::= { ultraEventsV2 11550 }
+
+
+srvVOIPVOXInactivityFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: At least one target is displaying VOX inactivity"
+           ::= { ultraEventsV2 11554 }
+
+
+srvVOIPNetworkConnectionUpOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: Connection to the VoIP Network is up"
+           ::= { ultraEventsV2 11555 }
+
+
+srvVOIPNetworkConnectionDownFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: Connection to the VoIP Network is down"
+           ::= { ultraEventsV2 11556 }
+
+
+srvVOIPIPResolvingFailureFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: At least one contact failed due to IP resolving failure in the last 24 hours"
+           ::= { ultraEventsV2 11557 }
+
+
+srvVOIPIOFailureFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: At least one contact failed due to I/O failure in the last 24 hours"
+           ::= { ultraEventsV2 11558 }
+
+
+srvVOIPIPResolvingIsActiveOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: IP Resolving Module is active"
+           ::= { ultraEventsV2 11559 }
+
+
+srvVOIPSignalingServiceConnectedOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: Connected to the VoIP Signaling service"
+           ::= { ultraEventsV2 11560 }
+
+
+srvVOIPSignalingServiceDisconnectedFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: Disconnected from the VoIP Signaling service"
+           ::= { ultraEventsV2 11561 }
+
+
+srvVOIPIPResolvingModuleIsInactiveFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: IP Resolving Module is inactive "
+           ::= { ultraEventsV2 11562 }
+
+
+srvVOIPContactDBSIsInactiveFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: Contact Database Module is inactive "
+           ::= { ultraEventsV2 11563 }
+
+
+srvVOIPIntelliflowIsInactiveFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: IntelliFlow Module is inactive "
+           ::= { ultraEventsV2 11564 }
+
+
+srvVOIPSignalingServiceIsInactiveFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: VoIP Signaling service is inactive"
+           ::= { ultraEventsV2 11565 }
+
+
+srvVOIPContactDBSUpOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: Connected to the Contact Database"
+           ::= { ultraEventsV2 11566 }
+
+
+srvVOIPLiabilityModeOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: active and recording in Liability mode"
+           ::= { ultraEventsV2 11567 }
+
+
+srvVOIPInactiveFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: Inactive"
+           ::= { ultraEventsV2 11568 }
+
+
+srvVOIPPerformanceModeOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: active and recording in Performance mode"
+           ::= { ultraEventsV2 11569 }
+
+
+srvVOIPApplicationModeOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: active and recording in Application mode"
+           ::= { ultraEventsV2 11570 }
+
+
+srvVOIPDBSMarkingRatePerHourOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1:  Contact Database marking rate is 200 segments per hour"
+           ::= { ultraEventsV2 11571 }
+
+
+srvVOIPDBSMarkingRatePerDayOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1:  Contact Database marking rate is 200 segments per day"
+           ::= { ultraEventsV2 11572 }
+
+
+srvVOIPRecordingRatePerHourOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: Recording rate is 20 segments per hour"
+           ::= { ultraEventsV2 11573 }
+
+
+srvVOIPRecordingRatePerDayOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: Recording rate is 20 segments per day"
+           ::= { ultraEventsV2 11574 }
+
+
+srvVOIPPercentageOfSuccessfulRecordingAttemptsOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: Percentage of successful recording attempts is 95%"
+           ::= { ultraEventsV2 11575 }
+
+
+srvVOIPPercentageOfSuccessfulRecordingAttemptsFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: Percentage of successful recording attempts is lower than the minimum threshold of 90%"
+           ::= { ultraEventsV2 11576 }
+
+
+srvVAMLastAcquisitionTimeOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Last acquisition time"
+           ::= { ultraEventsV2 11585 }
+
+
+srvAMNoAcquisitionYet NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "No acquisition has occurred since initialization"
+           ::= { ultraEventsV2 11587 }
+
+
+srvVAMNearFullOfflineDBSFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Voice Acquisition Module Unit 1: 200 contacts in the internal offline database (near maximum capacity)"
+           ::= { ultraEventsV2 11599 }
+
+
+srvVOIPNumContactInTheInternalOfflineDBSOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: 200 contacts in the internal offline database"
+           ::= { ultraEventsV2 11600 }
+
+
+srvVAMOfflineDBSSizeOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Voice Acquisition Module Unit 1: 200 contacts in the internal offline database"
+           ::= { ultraEventsV2 11601 }
+
+
+srvVOIPNumContactInTheInternalOfflineDBSFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: 200 contacts in the internal offline database (near maximum capacity)"
+           ::= { ultraEventsV2 11602 }
+
+
+srvVOIPMarkingRateTooHigh NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VOIP Acquisition Module Unit 1: Contact Database marking rate exceeded 2200 segments per hour"
+           ::= { ultraEventsV2 11608 }
+
+
+srvVOIPStreamingModuleInactive NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit1: The Monitoring Streaming Module is inactive"
+           ::= { ultraEventsV2 11609 }
+
+
+srvVOIPControllingModuleInactive NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit1: Monitoring terminated. The Monitoring Control module is inactive"
+           ::= { ultraEventsV2 11610 }
+
+
+srvVOIPMonitoringStreamingMalfunction NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: Streaming has been terminated due to network disconnection "
+           ::= { ultraEventsV2 11611 }
+
+
+srvVOIPDuplicatePackets NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: Duplicate packets received on at least one extension"
+           ::= { ultraEventsV2 11612 }
+
+
+srvVOIPSSRCChanges NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: Frequent segmentation changes (suspected inadvertent Gateway monitoring) "
+           ::= { ultraEventsV2 11613 }
+
+
+srvVAMControllingModuleInactive NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Voice Acquisition Module Unit 1: Monitoring terminated. The Monitoring Control module is inactive"
+           ::= { ultraEventsV2 11614 }
+
+
+srvVAMMonitoringStreamingMalfunction NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Voice Acquisition Module Unit 1: Streaming has been terminated due to network disconnection "
+           ::= { ultraEventsV2 11615 }
+
+
+srvVOIPCompressionFailed NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: Audio compression failed due to incompatible multimedia support package version1"
+           ::= { ultraEventsV2 11617 }
+
+
+srvVAMBoardTappingError NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Voice Acquisition Module Unit 1: Board tapping mode configuration error"
+           ::= { ultraEventsV2 11618 }
+
+
+srvVAMLocalMDBConfigError NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Voice Acquisition Module Unit 1: Local MDB configuration error"
+           ::= { ultraEventsV2 11619 }
+
+
+srvVOIPLocalMDBConfigError NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: Local MDB configuration error"
+           ::= { ultraEventsV2 11620 }
+
+
+srvVOIPExceedLimitOfSimCalls NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: Exceeded the limit of 30 simultaneous recordings"
+           ::= { ultraEventsV2 11621 }
+
+
+srvVoIPCMAPIClientDisconnectedFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: CMAPI client disconnected from IntelliLink server"
+           ::= { ultraEventsV2 11622 }
+
+
+srvVoIpClientdisconnectedFromILDBFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: ILDB client disconnected from IntelliLink's DataBank server"
+           ::= { ultraEventsV2 11623 }
+
+
+srvVoIPFaileSilenceObservationFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: At least one channel failed to perform silent observation"
+           ::= { ultraEventsV2 11624 }
+
+
+srvVoIPCMAPIControllerdisconnectedFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: CMAPI Controller disconnected from the CMAPI Connector"
+           ::= { ultraEventsV2 11625 }
+
+
+srvVoiceVoiceinactivitydetectedFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Voice Acquisition Module Unit 1: Voice inactivity detected on channel(s)"
+           ::= { ultraEventsV2 11627 }
+
+
+srvVoIPVoiceinactivitydetectedFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: Voice inactivity detected on channel(s)"
+           ::= { ultraEventsV2 11628 }
+
+
+srvVOIPNearFullOfflineSessionUpdateDBSFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: Number of contact segments pending data update is near maximum capacity"
+           ::= { ultraEventsV2 11629 }
+
+
+srvVAMNearFullOfflineSessionUpdateDBSFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Voice Acquisition Module Unit 1: Number of contact segments pending data update is near maximum capacity"
+           ::= { ultraEventsV2 11630 }
+
+
+srvVOIPNearFullOfflineCallUpdateDBSFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: Number of contacts pending data update is near maximum capacity"
+           ::= { ultraEventsV2 11631 }
+
+
+srvVAMNearFullOfflineCallUpdateDBSFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Voice Acquisition Module Unit 1: Number of contacts pending data update is near maximum capacity"
+           ::= { ultraEventsV2 11632 }
+
+
+srvVAMNumContactInTheSessionUpdateOfflineDBSOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Voice Acquisition Module Unit 1: 200 contact segments pending data update"
+           ::= { ultraEventsV2 11633 }
+
+
+srvVOIPNumContactInTheSessionUpdateOfflineDBSOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: 200 contact segments pending data update"
+           ::= { ultraEventsV2 11634 }
+
+
+srvVAMNumContactInTheCallUpdateOfflineDBSOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Voice Acquisition Module Unit 1: 200 contacts pending data update"
+           ::= { ultraEventsV2 11635 }
+
+
+srvVOIPNumContactInTheCallUpdateOfflineDBSOk NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: 200 contacts pending data update"
+           ::= { ultraEventsV2 11636 }
+
+
+srvRecoverVAMMalfunctioningADIMEFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11508 was recovered: ADIME card number 7 is malfunctioning"
+           ::= { ultraEventsV2 26195 }
+
+
+srvRecoverVAMCardMalfunctionFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11509 was recovered: Voice Acquisition Module Unit 1: Voice Processing Card is malfunctioning"
+           ::= { ultraEventsV2 26196 }
+
+
+srvRecoverVAMDisconnectedFromDBSFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11510 was recovered: Voice Acquisition Module Unit 1: Disconnected from the Contact Database and working in offline mode"
+           ::= { ultraEventsV2 26197 }
+
+
+srvRecoverVAMOfflineRecordsDeletedFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11511 was recovered: Voice Acquisition Module Unit 1: Offline contact records have been deleted in the last 24 hours"
+           ::= { ultraEventsV2 26198 }
+
+
+srvRecoveredVAMDisconnectedFromIntelliFlowFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11512 was recovered: Voice Acquisition Module Unit 1: Disconnected from the IntelliFlow"
+           ::= { ultraEventsV2 26199 }
+
+
+srvRecoverVAMCTIDisconnectedFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11516 was recovered: Voice Acquisition Module Unit 1: IntelliFlow reported a disconnection from CTI"
+           ::= { ultraEventsV2 26200 }
+
+
+srvRecoverVAMTruncMalfunctioningFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11517 was recovered: Voice Acquisition Module Unit 1: Trunk number 7 is malfunctioning"
+           ::= { ultraEventsV2 26201 }
+
+
+srvRecoverVAMLongVoxFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11518 was recovered: Voice Acquisition Module Unit 1: At least one target is displaying VOX activity for more than 24 hours"
+           ::= { ultraEventsV2 26202 }
+
+
+srvRecoverVAMVoxInactivityFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11519 was recovered: Voice Acquisition Module Unit 1: At least one target is displaying VOX inactivity"
+           ::= { ultraEventsV2 26203 }
+
+
+srvRecoverVAMTargetMalfunctionFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11520 was recovered: Voice Acquisition Module Unit 1: At least one target is malfunctioning"
+           ::= { ultraEventsV2 26204 }
+
+
+srvRecoverVAMQueueExceededFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11521 was recovered: Voice Acquisition Module Unit 1: Unit has stopped recording audio - hardware problem may have occurred"
+           ::= { ultraEventsV2 26205 }
+
+
+srvRecoverVAMIOFailureFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11522 was recovered: Voice Acquisition Module Unit 1: At least one contact failed due to I/O failure in the last 24 hours"
+           ::= { ultraEventsV2 26206 }
+
+
+srvRecoverVAMMarkingFailureFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11523 was recovered: Voice Acquisition Module Unit 1: At least one contact failed due to contact marking failure in the last 24 hours"
+           ::= { ultraEventsV2 26207 }
+
+
+srvRecoverVAMAudioLossFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11524 was recovered: Voice Acquisition Module Unit 1: Audio was lost in the last 24 hours"
+           ::= { ultraEventsV2 26208 }
+
+
+srvRecoverVAMNGXMalfunctionFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11525 was recovered: NGX card number 7 is malfunctioning"
+           ::= { ultraEventsV2 26209 }
+
+
+srvRecoverVAMPT16MalfunctionFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11526 was recovered: PT16 card number 7 is malfunctioning"
+           ::= { ultraEventsV2 26210 }
+
+
+srvRecoverVAMMarkingRateTooHigh NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11535 was recovered: Voice Acquisition Module Unit 1: Contact Database marking rate exceeded 2200 segments per hour"
+           ::= { ultraEventsV2 26211 }
+
+
+srvRecoverVAMLowRecordingPercentageFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11539 was recovered: Voice Acquisition Module Unit 1: Percentage of successful recording attempts is lower than the minimum threshold of 90%"
+           ::= { ultraEventsV2 26212 }
+
+
+srvRecoverVOIPDBSDisconnectedFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11540 was recovered: VoIP Acquisition Module Unit 1: Disconnected from the Contact Database and working in offline mode"
+           ::= { ultraEventsV2 26213 }
+
+
+srvRecoverVOIPOfflineContactHaveBeenDeletedFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11541 was recovered: VoIP Acquisition Module Unit 1: Offline contact records have been deleted in the last 24 hours"
+           ::= { ultraEventsV2 26214 }
+
+
+srvRecoverVOIPIntelliflowDisconnectedFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11542 was recovered: VoIP Acquisition Module Unit 1: Disconnected from the IntelliFlow"
+           ::= { ultraEventsV2 26215 }
+
+
+srvRecoverVOIPCTIDisconnectedFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11545 was recovered: VoIP Acquisition Module Unit 1: IntelliFlow reported a disconnection from CTI"
+           ::= { ultraEventsV2 26216 }
+
+
+srvRecoverVOIPHardwareProblemFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11546 was recovered: VoIP Acquisition Module Unit 1: Unit has stopped recording audio - hardware problem may have occurred"
+           ::= { ultraEventsV2 26217 }
+
+
+srvRecoverVOIPContactMarkingFailureFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11547 was recovered: VoIP Acquisition Module Unit 1: At least one contact failed due to contact marking failure in the last 24 hours"
+           ::= { ultraEventsV2 26218 }
+
+
+srvRecoverVOIPAudioLostInTheLast24HoursFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11548 was recovered: VoIP Acquisition Module Unit 1: Audio was lost in the last 24 hours"
+           ::= { ultraEventsV2 26219 }
+
+
+srvRecoverVOIPContactSegmentIsEmptyFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11549 was recovered: VoIP Acquisition Module Unit 1: At least one Contact Segment is empty in the last 24 hours"
+           ::= { ultraEventsV2 26220 }
+
+
+srvRecoverVOIPVOXInactivityFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11554 was recovered: VoIP Acquisition Module Unit 1: At least one target is displaying VOX inactivity"
+           ::= { ultraEventsV2 26221 }
+
+
+srvRecoverVOIPNetworkConnectionDownFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11556 was recovered: VoIP Acquisition Module Unit 1: Connection to the VoIP Network is down"
+           ::= { ultraEventsV2 26222 }
+
+
+srvRecoverVOIPIPResolvingFailureFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11557 was recovered: VoIP Acquisition Module Unit 1: At least one contact failed due to IP resolving failure in the last 24 hours"
+           ::= { ultraEventsV2 26223 }
+
+
+srvRecoverVOIPIOFailureFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11558 was recovered: VoIP Acquisition Module Unit 1: At least one contact failed due to I/O failure in the last 24 hours"
+           ::= { ultraEventsV2 26224 }
+
+
+srvRecoverVOIPSignalingServiceDisconnectedFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11561 was recovered: VoIP Acquisition Module Unit 1: Disconnected from the VoIP Signaling service"
+           ::= { ultraEventsV2 26225 }
+
+
+srvRecoverVOIPPercentageOfSuccessfulRecordingAttemptsFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11576 was recovered: VoIP Acquisition Module Unit 1: Percentage of successful recording attempts is lower than the minimum threshold of 90%"
+           ::= { ultraEventsV2 26226 }
+
+
+srvRecoverVAMNearFullOfflineDBSFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11599 was recovered: Voice Acquisition Module Unit 1: Number of contacts in the internal offline database is near maximum capacity"
+           ::= { ultraEventsV2 26228 }
+
+
+srvRecoverVOIPNumContactInTheInternalOfflineDBSFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11602 was recovered: Voice Acquisition Module Unit 1: Number of contacts in the internal offline database is near maximum capacity"
+           ::= { ultraEventsV2 26229 }
+
+
+srvRecoverVOIPMarkingRateTooHigh NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11608 was recovered: VoIP Acquisition Module Unit 1: Contact Database marking rate exceeded 2200 segments per hour"
+           ::= { ultraEventsV2 26230 }
+
+
+srvRecoverVOIPMonitoringStreamingMalfunction NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11611 was recovered: VoIP Acquisition Module Unit 1: Streaming has been terminated due to network disconnection"
+           ::= { ultraEventsV2 26231 }
+
+
+srvRecoverVOIPDuplicatePackets NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11612 was recovered: VoIP Acquisition Module Unit 1: Duplicate packets received on at least one extension"
+           ::= { ultraEventsV2 26232 }
+
+
+srvRecoverVOIPSSRCChanges NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11613 was recovered: VoIP Acquisition Module Unit 1: Frequent segmentation changes (suspected inadvertent Gateway monitoring)"
+           ::= { ultraEventsV2 26233 }
+
+
+srvRecoverVAMMonitoringStreamingMalfunction NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11615 was recovered: Voice Acquisition Module Unit 1: Streaming has been terminated due to network disconnection"
+           ::= { ultraEventsV2 26234 }
+
+
+srvRecoverVOIPCompressionFailed NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11617 was recovered: VoIP Acquisition Module Unit 1: Audio compression failed due to incompatible multimedia support package version"
+           ::= { ultraEventsV2 26235 }
+
+
+srvRecoverVAMBoardTappingError NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11618 was recovered: Voice Acquisition Module Unit 1: Board tapping mode configuration error"
+           ::= { ultraEventsV2 26236 }
+
+
+srvRecoverVAMLocalMDBConfigError NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11619 was recovered: Voice Acquisition Module Unit 1: Local MDB configuration error"
+           ::= { ultraEventsV2 26237 }
+
+
+srvRecoverVOIPLocalMDBConfigError NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11620 was recovered: VoIP Acquisition Module Unit 1: Local MDB configuration error"
+           ::= { ultraEventsV2 26238 }
+
+
+srvRecoverVOIPExceedLimitOfSimCalls NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11621 was recovered: VoIP Acquisition Module Unit 1: Exceeded the limit of 30 simultaneous recordings"
+           ::= { ultraEventsV2 26239 }
+
+
+srvRecoverVoIPCMAPIClientDisconnectedFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11622 was recovered: VoIP Acquisition Module Unit 1: CMAPI client disconnected from IntelliLink server"
+           ::= { ultraEventsV2 26240 }
+
+
+srvRecoverVoIpClientdisconnectedFromILDBFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11623 was recovered: VoIP Acquisition Module Unit 1: ILDB client disconnected from IntelliLink's DataBank server"
+           ::= { ultraEventsV2 26241 }
+
+
+srvRecoverVoIPFaileSilenceObservationFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11624 was recovered: VoIP Acquisition Module Unit 1: At least one channel failed to perform silent observation"
+           ::= { ultraEventsV2 26242 }
+
+
+srvRecoverVoIPCMAPIControllerdisconnectedFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11625 was recovered: VoIP Acquisition Module Unit 1: CMAPI Controller disconnected from the CMAPI Connector"
+           ::= { ultraEventsV2 26243 }
+
+
+srvRecoverVoIPTargetmalfunctioningFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11626 was recovered: VoIP Acquisition Module Unit 1: At least one target is malfunctioning"
+           ::= { ultraEventsV2 26244 }
+
+
+srvRecoverVAMVoiceInactivityDetectedFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11627 was recovered: Voice Acquisition Module Unit 1: Voice inactivity detected on channel(s)"
+           ::= { ultraEventsV2 26245 }
+
+
+srvRecoverVoIPVoiceinactivitydetectedFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11628 was recovered: VoIP Acquisition Module Unit 1: Voice inactivity detected on channel(s)"
+           ::= { ultraEventsV2 26246 }
+
+
+srvRecoverVOIPNearFullOfflineSessionUpdateDBSFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11629 was recovered: VoIP Acquisition Module Unit 1: Number of contacts in the CFMSessionUpdate table is near maximum capacity"
+           ::= { ultraEventsV2 26247 }
+
+
+srvRecoverVAMNearFullOfflineSessionUpdateDBSFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11630 was recovered: Voice Acquisition Module Unit 1: Number of contacts in the CFMSessionUpdate table is near maximum capacity"
+           ::= { ultraEventsV2 26248 }
+
+
+srvRecoverVOIPNearFullOfflineCallUpdateDBSFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11631 was recovered: VoIP Acquisition Module Unit 1: Number of contacts in the CFMCallUpdate table is near maximum capacity"
+           ::= { ultraEventsV2 26249 }
+
+
+srvRecoverVAMNearFullOfflineCallUpdateDBSFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 11632 was recovered: Voice Acquisition Module Unit 1: Number of contacts in the CFMCallUpdate table is near maximum capacity"
+           ::= { ultraEventsV2 26250 }
+
+
+srvRecoverVAMMSMQFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 23057 was recovered: Voice Acquisition Module Unit 1: MSMQ Service on local computer is not in running state"
+           ::= { ultraEventsV2 26253 }
+
+
+srvRecoverVoIPMSMQFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 23058 was recovered: VoIP Acquisition Module Unit 1: MSMQ Service on local computer is not in running state"
+           ::= { ultraEventsV2 26254 }
+
+
+srvRecoverVoIPoutgoingQExceedsFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 23059 was recovered: VoIP Acquisition Module Unit 1: The Number of messages in outgoing queue exceeds allowed quantity"
+           ::= { ultraEventsV2 26255 }
+
+
+srvRecoverVAMoutgoingQExceedsFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 23060 was recovered: Voice Acquisition Module Unit 1: The Number of messages in outgoing queue exceeds allowed quantity"
+           ::= { ultraEventsV2 26256 }
+
+
+srvRecoverVoIPOutgoingMarkingQueueFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 23073 was recovered: VoIP Acquisition Module Unit 1: The Outgoing marking queue is overloaded, continuing marking could cause a loss"
+           ::= { ultraEventsV2 26257 }
+
+
+srvRecoverVAMOutgoingMarkingQueueFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 23074 was recovered: Voice Acquisition Module Unit 1: The Outgoing marking queue is overloaded, continuing marking could cause a loss"
+           ::= { ultraEventsV2 26258 }
+
+
+srvRecoverVAMOutgoingMessageRateFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 23075 was recovered: Voice Acquisition Module Unit 1: Outgoing message rate is increasing and could cause queue to be overloaded"
+           ::= { ultraEventsV2 26259 }
+
+
+srvRecoverVoIPOutgoingMessageRateFail NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 23076 was recovered: VoIP Acquisition Module Unit 1: Outgoing message rate is increasing and could cause queue to be overloaded"
+           ::= { ultraEventsV2 26260 }
+
+
+srvRecoverVoIPEncriptionFailed NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 26155 was recovered: VoIP Acquisition Module Unit 1: Failed to encrypt at least 1 file in the last 24 hours"
+           ::= { ultraEventsV2 26261 }
+
+
+srvRecoverVAMEncriptionFailed NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 26156 was recovered: Voice Acquisition Module Unit 1: Failed to encrypt at least 1 file in the last 24 hours"
+           ::= { ultraEventsV2 26262 }
+
+
+srvRecoverVoIPConnectionToVoIPNetworkFailure NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 16871 was recovered: VoIP Acquisition Module Unit 1: At least one connection to the VoIP Network is down"
+           ::= { ultraEventsV2 26263 }
+
+
+srcRecoverVAMNotConnectedToAllAcquisitionDirectors NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 26165 was recovered: Voice Acquisition Module Unit 1: Connected to 1 out of 6 IntelliFlow servers (connected to 10.161.223.64)"
+           ::= { ultraEventsV2 26264 }
+
+
+srcRecoverVoipNotConnectedToAllAcquisitionDirectors NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 26166 was recovered: VoIP Acquisition Module Unit 1: Connected to 1 out of 6 IntelliFlow servers (connected to 10.161.223.64)"
+           ::= { ultraEventsV2 26265 }
+
+
+srcRecoverVoipSomeCTIDisconnection NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 26167 was recovered: VoIP Acquisition Module Unit 1: 2 IntelliFlow servers reported a disconnection from CTI "
+           ::= { ultraEventsV2 26266 }
+
+
+srcRecoverVAMSomeCTIDisconnection NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 26168 was recovered: Voice Acquisition Module Unit 1: 2 IntelliFlow servers reported a disconnection from CTI "
+           ::= { ultraEventsV2 26267 }
+
+
+srvVoIPDisconnectedFromIL NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: Disconnected from the IntelliLink"
+           ::= { ultraEventsV2 26268 }
+
+
+srcRecoverDisconnectedFromIL NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 26268 was recovered: VoIP Acquisition Module Unit 1: Disconnected from the IntelliLink"
+           ::= { ultraEventsV2 26269 }
+
+
+srvVoIPCurruptedPackets NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: Corrupted packets were identified on channel(s)"
+           ::= { ultraEventsV2 26274 }
+
+
+srvVoipMessageRoutingStuck NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: Message routing might be stuck for channel(s)"
+           ::= { ultraEventsV2 26275 }
+
+
+srcRecoverMessageRoutingStuck NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 26275 was recovered: VoIP Acquisition Module Unit 1: Message routing might be stuck for channel(s)"
+           ::= { ultraEventsV2 26276 }
+
+
+srvVoipLostMoreThan20Packets NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: At least one session lost more than 20% packets"
+           ::= { ultraEventsV2 26294 }
+
+
+srvVoipExceedAmountOfNetworkTraffic NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "VoIP Acquisition Module Unit 1: Expectable amount of Network traffic was exceeded"
+           ::= { ultraEventsV2 26296 }
+
+
+srcVoipLostTooMuchRtpPackets NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 26294 was recovered: VoIP Acquisition Module Unit 1: At least one session lost more than 20% packets"
+           ::= { ultraEventsV2 26298 }
+
+
+srcExceedingAmountOfNetworkTraffic NOTIFICATION-TYPE
+   OBJECTS	  { ultraMsg}
+   STATUS	   current
+   DESCRIPTION
+           "Message 26296 was recovered: Expectable amount of Network traffic was exceeded"
+           ::= { ultraEventsV2 26299 }
+
+
+
+--
+--
+-- 6) Mib compliance statements
+							 --
+							 --
+ END
+

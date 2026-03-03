@@ -1,0 +1,423 @@
+MGCP-MIB21 DEFINITIONS ::= BEGIN
+
+IMPORTS
+	Unsigned32, enterprises
+	FROM SNMPv2-SMI;
+		
+mediatrix			OBJECT IDENTIFIER		::=  {	enterprises  4935  }
+
+experimental		OBJECT IDENTIFIER		::=  {	mediatrix  1  }
+
+products			OBJECT IDENTIFIER		::=  {	experimental  1  }
+
+voIpGateway			OBJECT IDENTIFIER		::=  {	products  1  }
+
+signalingProtocols	OBJECT IDENTIFIER		::=  {	voIpGateway  3  }
+
+mgcpMib MODULE-IDENTITY
+	LAST-UPDATED	"0012010000Z"
+	ORGANIZATION	"Mediatrix Telecom, inc."
+	CONTACT-INFO	"Mediatrix Telecom, inc."
+	DESCRIPTION
+		"Mediatrix Telecom APA III MIB."
+	REVISION	"0012010000Z"
+	DESCRIPTION
+		"01-12-00:	   creation (bkaran)"
+	::=  {	signalingProtocols  1	}
+
+mgcpMibVersion OBJECT-TYPE
+	SYNTAX	OCTET STRING (SIZE(0..25))
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION
+		"MIB version."
+	DEFVAL { "1.0" }
+	::=  {	mgcpMib  1	}
+	
+mgcpConfigurationGroup OBJECT IDENTIFIER	::=  {	mgcpMib  2  }
+
+mgcpConfigurationResidentialGatewayPortNumber OBJECT-TYPE
+	SYNTAX Unsigned32 (0..65535)
+	MAX-ACCESS read-write
+	STATUS current
+	DESCRIPTION "MGCP Residential Gateway UDP port number.
+				This is the UDP port number on which the APA is listening
+				for any MGCP request."
+	DEFVAL { 2427 }
+	::= { mgcpConfigurationGroup 1 }
+
+mgcpConfigurationEpIdGroup OBJECT IDENTIFIER	::=  {	mgcpConfigurationGroup  2  }
+
+mgcpConfigurationEpIdLocalNameTerm1 OBJECT-TYPE
+	SYNTAX OCTET STRING (SIZE (1..255))
+	MAX-ACCESS read-write
+	STATUS current
+	DESCRIPTION "String that specifies the term1 of the endpoint name."
+	DEFVAL { "aaln" }
+	::= { mgcpConfigurationEpIdGroup 1 }
+	
+mgcpConfigurationEpIdGatewayFqdnUseDns OBJECT-TYPE
+	SYNTAX Unsigned32 (0..1)
+	MAX-ACCESS read-write
+	STATUS current
+	DESCRIPTION "Select the provenance of the Fqdn.
+ 				0 = Static
+ 				1 = DNS"
+	DEFVAL { 0 }
+	::= { mgcpConfigurationEpIdGroup 2 }
+
+mgcpConfigurationEpIdStaticGatewayFqdn OBJECT-TYPE
+	SYNTAX OCTET STRING (SIZE (1..255))
+	MAX-ACCESS read-write
+	STATUS current
+	DESCRIPTION "Static Fully Qualified Domain Name (FQDN) of the unit."
+	DEFVAL { "mediatrix.com" }
+	::= { mgcpConfigurationEpIdGroup 3 }
+
+mgcpConfigurationCallAgentGroup OBJECT IDENTIFIER	::=  {	mgcpConfigurationGroup  3  }
+
+mgcpConfigurationCallAgentUseDhcp OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..1)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"Select the provenance of the Call Agent configuration.
+		 0 = Static
+		 1 = DHCP"
+	DEFVAL { 1 }
+	::=  {	mgcpConfigurationCallAgentGroup  1 }
+	
+mgcpConfigurationCallAgentStaticGroup OBJECT IDENTIFIER	  ::=  {  mgcpConfigurationCallAgentGroup  2  }
+
+mgcpConfigurationCallAgentStaticPrimaryAddress OBJECT-TYPE
+	SYNTAX OCTET STRING (SIZE (1..255))
+	MAX-ACCESS read-write
+	STATUS current
+	DESCRIPTION "Primary static Call Agent address.
+				Can be a dotted IP string or a FQDN address."
+	DEFVAL { "192.168.0.10"}
+	::= { mgcpConfigurationCallAgentStaticGroup 1 }
+
+mgcpConfigurationCallAgentStaticPrimaryPortNumber OBJECT-TYPE
+	SYNTAX Unsigned32 (0..65535)
+	MAX-ACCESS read-write
+	STATUS current
+	DESCRIPTION "Primary static Call Agent UDP port number."
+	DEFVAL { 2727 }
+	::= { mgcpConfigurationCallAgentStaticGroup 2 }
+
+mgcpConfigurationCallAgentStaticSecondaryAddress OBJECT-TYPE
+	SYNTAX OCTET STRING (SIZE (1..255))
+	MAX-ACCESS read-write
+	STATUS current
+	DESCRIPTION "Secondary static Call Agent address.
+				Can be a dotted IP string or a FQDN address."
+	DEFVAL { "192.168.0.10"}
+	::= { mgcpConfigurationCallAgentStaticGroup 3 }
+
+mgcpConfigurationCallAgentStaticSecondaryPortNumber OBJECT-TYPE
+	SYNTAX Unsigned32 (0..65535)
+	MAX-ACCESS read-write
+	STATUS current
+	DESCRIPTION "Secondary static Call Agent UDP port number."
+	DEFVAL { 2727 }
+	::= { mgcpConfigurationCallAgentStaticGroup 4 }
+	
+mgcpConfigurationCallAgentDhcpGroup OBJECT IDENTIFIER	  ::=  {  mgcpConfigurationCallAgentGroup  3  }
+
+mgcpConfigurationCallAgentDhcpPrimaryVendorSpecificCode OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..254)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"DHCP primary Call Agent vendor specific code."
+	DEFVAL { 206 }
+	::=  {	mgcpConfigurationCallAgentDhcpGroup  1  }
+
+mgcpConfigurationCallAgentDhcpPrimaryAddress OBJECT-TYPE
+	SYNTAX OCTET STRING (SIZE (1..255))
+	MAX-ACCESS read-only
+	STATUS current
+	DESCRIPTION "Primary Call Agent address provided by DHCP server.
+				Can be a dotted IP string or a FQDN address."
+	DEFVAL { "192.168.0.10"}
+	::= { mgcpConfigurationCallAgentDhcpGroup 2 }
+
+mgcpConfigurationCallAgentDhcpPrimaryPortNumber OBJECT-TYPE
+	SYNTAX Unsigned32 (0..65535)
+	MAX-ACCESS read-only
+	STATUS current
+	DESCRIPTION "Primary Call Agent UDP port number provided by DHCP server."
+	DEFVAL { 2727 }
+	::= { mgcpConfigurationCallAgentDhcpGroup 3 }
+
+mgcpConfigurationCallAgentDhcpSecondaryVendorSpecificCode OBJECT-TYPE
+	SYNTAX	Unsigned32 (0..254)
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION
+		"DHCP secondary Call Agent vendor specific code."
+	DEFVAL { 207 }
+	::=  {	mgcpConfigurationCallAgentDhcpGroup  4  }
+
+mgcpConfigurationCallAgentDhcpSecondaryAddress OBJECT-TYPE
+	SYNTAX OCTET STRING (SIZE (1..255))
+	MAX-ACCESS read-only
+	STATUS current
+	DESCRIPTION "Secondary Call Agent address provided by DHCP server.
+				Can be a dotted IP string or a FQDN address."
+	DEFVAL { "192.168.0.10"}
+	::= { mgcpConfigurationCallAgentDhcpGroup 5 }
+
+mgcpConfigurationCallAgentDhcpSecondaryPortNumber OBJECT-TYPE
+	SYNTAX Unsigned32 (0..65535)
+	MAX-ACCESS read-only
+	STATUS current
+	DESCRIPTION "Secondary Call Agent UDP port number provided by DHCP server."
+	DEFVAL { 2727 }
+	::= { mgcpConfigurationCallAgentDhcpGroup 6 }
+
+mgcpConfigurationRetransmissionGroup OBJECT IDENTIFIER	::=  {	mgcpConfigurationGroup  4  }
+
+mgcpConfigurationRetransmissionAlgorithm OBJECT-TYPE
+	SYNTAX Unsigned32 (0..2)
+	MAX-ACCESS read-write
+	STATUS current
+	DESCRIPTION "Retransmission algorith:
+				0 = static
+				1 = exponential
+				2 = exponential with jitter"
+	DEFVAL { 2 }
+	::= { mgcpConfigurationRetransmissionGroup 1 }
+
+mgcpConfigurationRetransmissionInitialPeriod OBJECT-TYPE
+	SYNTAX Unsigned32 (0..4294967295)
+	MAX-ACCESS read-write
+	STATUS current
+	DESCRIPTION "Retransmission initial period in ms."
+	DEFVAL { 1000 }
+	::= { mgcpConfigurationRetransmissionGroup 2 }
+
+mgcpConfigurationRetransmissionMaxPeriod OBJECT-TYPE
+	SYNTAX Unsigned32 (0..4294967295)
+	MAX-ACCESS read-write
+	STATUS current
+	DESCRIPTION "Retransmission maximum period in ms.
+				0 = No maximum"
+	DEFVAL { 30000 }
+	::= { mgcpConfigurationRetransmissionGroup 3 }
+
+mgcpConfigurationRetransmissionTimeout OBJECT-TYPE
+	SYNTAX INTEGER (-1..2147483647)
+	MAX-ACCESS read-write
+	STATUS current
+	DESCRIPTION "Retransmission timeout in second.
+				-1 = infinite - always retransmit
+				 0 = none - never retransmit"
+	DEFVAL { 30 }
+	::= { mgcpConfigurationRetransmissionGroup 4 }
+
+mgcpConfigurationRetransmissionRetryCount OBJECT-TYPE
+	SYNTAX INTEGER (-1..2147483647)
+	MAX-ACCESS read-write
+	STATUS current
+	DESCRIPTION "Retransmission retry count.
+				-1 = infinite - always retransmit"
+	DEFVAL { 30 }
+	::= { mgcpConfigurationRetransmissionGroup 5 }
+
+mgcpConfigurationRetransmissionRsipInitialDelay OBJECT-TYPE
+	SYNTAX Unsigned32 (0..4294967295)
+	MAX-ACCESS read-write
+	STATUS current
+	DESCRIPTION "Delay in ms since the last RSIP to wait before sending 
+				the first RSIP for a new endpoint that wants to register.
+				This is to avoid restart avalanche.
+				0 = Send immediately"
+	DEFVAL { 0 }
+	::= { mgcpConfigurationRetransmissionGroup 6 }
+
+mgcpConfigurationGenericMediaPackageGroup OBJECT IDENTIFIER	::=  {	mgcpConfigurationGroup  5  }
+
+mgcpConfigurationGenericMediaPackageRtDuration  OBJECT-TYPE
+	SYNTAX Unsigned32 (0..4294967295)
+	MAX-ACCESS read-write
+	STATUS current
+	DESCRIPTION "Ring back tone timeout value in msec."
+	DEFVAL { 180000 }
+	::= { mgcpConfigurationGenericMediaPackageGroup 1 }
+	
+mgcpConfigurationGenericMediaPackageRbkDuration  OBJECT-TYPE
+	SYNTAX Unsigned32 (0..4294967295)
+	MAX-ACCESS read-write
+	STATUS current
+	DESCRIPTION "Ring back on connection tone timeout value in msec."
+	DEFVAL { 180000 }
+	::= { mgcpConfigurationGenericMediaPackageGroup 2 }
+
+mgcpConfigurationDtmfPackageGroup OBJECT IDENTIFIER	::=  {	mgcpConfigurationGroup  6  }
+
+mgcpConfigurationDtmfPackageDefaultDigitMap  OBJECT-TYPE
+	SYNTAX OCTET STRING (SIZE (0..255))
+	MAX-ACCESS read-write
+	STATUS current
+	DESCRIPTION "The default Digit Map to apply."
+	DEFVAL { "0-9T" }
+	::= { mgcpConfigurationDtmfPackageGroup 1 }
+
+mgcpConfigurationDtmfPackageInterdigitTimerShortDuration  OBJECT-TYPE
+	SYNTAX INTEGER (-1..2147483647)
+	MAX-ACCESS read-write
+	STATUS current
+	DESCRIPTION "If the gateway can't determine when the final digit is occured,
+				 the timer value is set to a short duration.
+				 -1 = infinite
+				 0 = none"
+	DEFVAL { 4000 }
+	::= { mgcpConfigurationDtmfPackageGroup 2 }
+
+mgcpConfigurationDtmfPackageInterdigitTimerLongDuration  OBJECT-TYPE
+	SYNTAX INTEGER (-1..2147483647)
+	MAX-ACCESS read-write
+	STATUS current
+	DESCRIPTION "If the gateway can determine when the final digit is occured,
+				 the timer value is set to a long duration. 
+				 -1 = infinite
+				 0 = none"
+	DEFVAL { 16000 }
+	::= { mgcpConfigurationDtmfPackageGroup 3 }
+
+mgcpConfigurationLinePackageGroup OBJECT IDENTIFIER	::=  {	mgcpConfigurationGroup  7  }
+
+mgcpConfigurationLinePackageBzDuration  OBJECT-TYPE
+	SYNTAX Unsigned32 (0..4294967295)
+	MAX-ACCESS read-write
+	STATUS current
+	DESCRIPTION "Busy tone timeout value in msec."
+	DEFVAL { 30000 }
+	::= { mgcpConfigurationLinePackageGroup 1 }
+	
+mgcpConfigurationLinePackageDlDuration  OBJECT-TYPE
+	SYNTAX Unsigned32 (0..4294967295)
+	MAX-ACCESS read-write
+	STATUS current
+	DESCRIPTION "Dial tone timeout value in msec."
+	DEFVAL { 16000 }
+	::= { mgcpConfigurationLinePackageGroup 2 }
+	
+mgcpConfigurationLinePackageRgDuration   OBJECT-TYPE
+	SYNTAX Unsigned32 (0..4294967295)
+	MAX-ACCESS read-write
+	STATUS current
+	DESCRIPTION "Ring tone timeout value in msec."
+	DEFVAL { 180000 }
+	::= { mgcpConfigurationLinePackageGroup 3 }
+	
+mgcpConfigurationLinePackageSlDuration  OBJECT-TYPE
+	SYNTAX Unsigned32 (0..4294967295)
+	MAX-ACCESS read-write
+	STATUS current
+	DESCRIPTION "Stutter dial tone timeout value in msec."
+	DEFVAL { 16000 }
+	::= { mgcpConfigurationLinePackageGroup 4 }
+	
+mgcpConfigurationLinePackageOtDuration  OBJECT-TYPE
+	SYNTAX Unsigned32 (0..4294967295)
+	MAX-ACCESS read-write
+	STATUS current
+	DESCRIPTION "Off hook warning tone timeout value in msec."
+	DEFVAL { 65535000 }
+	::= { mgcpConfigurationLinePackageGroup 5 }
+	
+mgcpStatusGroup OBJECT IDENTIFIER ::= { mgcpMib 3 }
+                                  
+mgcpStatusProtocolVersion OBJECT-TYPE
+	SYNTAX OCTET STRING (SIZE (1..255))
+	MAX-ACCESS read-only
+	STATUS current
+	DESCRIPTION "Version of the MGCP protocol."
+	DEFVAL { "N/A" }
+	::= { mgcpStatusGroup 1 }
+	
+mgcpStatusStackVersion OBJECT-TYPE
+	SYNTAX OCTET STRING (SIZE (1..255))
+	MAX-ACCESS read-only
+	STATUS current
+	DESCRIPTION "Version of the MGCP stack."
+	DEFVAL { "N/A" }
+	::= { mgcpStatusGroup 2}
+
+mgcpStatusCallAgentAddress OBJECT-TYPE
+	SYNTAX OCTET STRING (SIZE (1..255))
+	MAX-ACCESS read-only
+	STATUS current
+	DESCRIPTION "The address of the Call Agent on which the APA
+				 is currently registered."
+	DEFVAL { "0.0.0.0" }
+	::= { mgcpStatusGroup 3 }
+
+mgcpStatusCallAgentPortNumber OBJECT-TYPE
+	SYNTAX Unsigned32 (0..65535)
+	MAX-ACCESS read-only
+	STATUS current
+	DESCRIPTION "Port number of the Call Agent."
+	DEFVAL { 0 }
+	::= { mgcpStatusGroup 4 }
+	
+mgcpStatusRegistered OBJECT-TYPE
+	SYNTAX Unsigned32 (0..1)
+	MAX-ACCESS read-only
+	STATUS current
+	DESCRIPTION "Gateway status
+				 0 = NOT REGISTERED - The gateway has not been able to successfully 
+				 register with the call agent. 
+				 1 = REGISTERED - The gateway is registered with the call agent whose 
+				 IP address is in mgcpStatusCallAgentAddress."
+	DEFVAL { 0 }
+	::= { mgcpStatusGroup 5 }
+	
+mgcpStatusEndpointIdGatewayFqdn OBJECT-TYPE
+	SYNTAX OCTET STRING (SIZE (1..255))
+	MAX-ACCESS read-only
+	STATUS current
+	DESCRIPTION "Fully Qualified Domain Name (FQDN)."
+	DEFVAL { "N/A" }
+	::= { mgcpStatusGroup 6 }
+		
+mgcpStatisticsGroup OBJECT IDENTIFIER ::= { mgcpMib 4 }
+
+mgcpStatisticsNumberOfActiveConnections OBJECT-TYPE
+	SYNTAX Unsigned32 (0..4)
+	MAX-ACCESS read-only
+	STATUS current
+	DESCRIPTION "Number of active connections."
+	DEFVAL { 0 }
+	::= { mgcpStatisticsGroup 1 }
+
+mgcpStatisticsTotalNumberOfConnections OBJECT-TYPE
+	SYNTAX Unsigned32 (0..4294967295)
+	MAX-ACCESS read-only
+	STATUS current
+	DESCRIPTION "Total number of connections since the last start up."
+	DEFVAL { 0 }
+	::= { mgcpStatisticsGroup 2 }
+
+mgcpStatisticsAvgConnectionTime OBJECT-TYPE
+	SYNTAX Unsigned32 (0..4294967295)
+	MAX-ACCESS read-only
+	STATUS current
+	DESCRIPTION "Average connection time (in second) since the last restart."
+	DEFVAL { 0 }
+	::= { mgcpStatisticsGroup 3 }
+
+mgcpStatisticsTotalNumberOfErrors OBJECT-TYPE
+	SYNTAX Unsigned32 (0..4294967295)
+	MAX-ACCESS read-only
+	STATUS current
+	DESCRIPTION "The total number of the errors since the last start up."
+	DEFVAL { 0 }
+	::= { mgcpStatisticsGroup 4 }
+
+
+
+END

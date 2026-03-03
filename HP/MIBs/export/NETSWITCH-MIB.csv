@@ -1,0 +1,69 @@
+NETSWITCH-MIB,1.3.6.1.4.1.11,hp,"OBJECT IDENTIFIER",READ-WRITE,
+NETSWITCH-MIB,1.3.6.1.4.1.11.2,nm,"OBJECT IDENTIFIER",READ-WRITE,
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.3,system,"OBJECT IDENTIFIER",READ-WRITE,
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.3.7,netElement,"OBJECT IDENTIFIER",READ-WRITE,
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.3.7.11,hpEtherSwitch,"OBJECT IDENTIFIER",READ-WRITE,
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.3.7.11.4,hpAdvSwitch200,"OBJECT IDENTIFIER",READ-WRITE,
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.3.7.11.4.1,hpAdvSwitch208T,"OBJECT IDENTIFIER",READ-WRITE,
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.3.7.11.4.2,hpAdvSwitch208VG,"OBJECT IDENTIFIER",READ-WRITE,
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.3.7.11.4.3,hpAdvSwitch224T,"OBJECT IDENTIFIER",READ-WRITE,
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.3.7.11.4.4,hpAdvSwitch224VG,"OBJECT IDENTIFIER",READ-WRITE,
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.3.7.11.99,hpEtherSwitchPortType,"OBJECT IDENTIFIER",READ-WRITE,
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.3.7.11.99.1,hpEtherSwitchPort10T,"OBJECT IDENTIFIER",READ-WRITE,
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.3.7.11.99.2,hpEtherSwitchPort100T,"OBJECT IDENTIFIER",READ-WRITE,
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.3.7.11.99.3,hpEtherSwitchPort100VG,"OBJECT IDENTIFIER",READ-WRITE,
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.3.7.11.99.4,hpEtherSwitchPort100F,"OBJECT IDENTIFIER",READ-WRITE,
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14,icf,"OBJECT IDENTIFIER",READ-WRITE,
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11,hpicfObjects,"OBJECT IDENTIFIER",READ-WRITE,
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5,hpicfSwitch,"OBJECT IDENTIFIER",READ-WRITE,
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5.1,hpSwitch,"OBJECT IDENTIFIER",READ-WRITE,
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5.1.1,hpOpSystem,"OBJECT IDENTIFIER",READ-WRITE,
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5.1.1.1,hpBuf,"OBJECT IDENTIFIER",READ-WRITE,
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5.1.1.1.1,hpMsgBuf,"OBJECT IDENTIFIER",READ-WRITE,
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5.1.1.1.1.1,hpMsgBufTable,"SEQUENCE OF HPMSGBUFENTRY",NOT-ACCESSIBLE,"A table that contains information on all the Message buffers for each slot."
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5.1.1.1.1.1.1,hpMsgBufEntry,SEQUENCE,NOT-ACCESSIBLE,"Information about a slot in a chassis"
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5.1.1.1.1.1.1.1,hpMsgBufSlotIndex,INTEGER,READ-ONLY,"The slot number within the box for which this entry contains information."
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5.1.1.1.1.1.1.2,hpMsgBufCorrupted,COUNTER,READ-ONLY,"The number of times a corrupted buffer was deleted."
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5.1.1.1.1.1.1.3,hpMsgBufFree,INTEGER,READ-ONLY,"The number of message buffers available for internal VME transfers or external transfers, respectively. Because switch operations and application software modules impose some overhead on global memory buffers, the number of buffers available for data transfers is less than the total number of buffers allocated when the switch boots."
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5.1.1.1.1.1.1.4,hpMsgBufInit,INTEGER,READ-ONLY,"The number of message buffers allocated when the switch booted."
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5.1.1.1.1.1.1.5,hpMsgBufMin,INTEGER,READ-ONLY,"The smallest number of message buffers available since the switch booted."
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5.1.1.1.1.1.1.6,hpMsgBufMiss,COUNTER,READ-ONLY,"The number of times that the switch was unable to obtain a message buffer. Failure to obtain a buffer indicates that buffers were busy. This parameter is directly related to hpMsgBufMin. If hpMsgBufMiss is greater than 0, hpMsgBufMin must equal 0. Conversely, if hpMsgBufMiss equals 0, then hpMsgBufMin must be greater than 0."
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5.1.1.1.1.1.1.7,hpMsgBufSize,INTEGER,READ-ONLY,"The size of the message buffer in bytes."
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5.1.1.1.2,hpPktBuf,"OBJECT IDENTIFIER",READ-ONLY,
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5.1.1.1.2.1,hpPktBufTable,"SEQUENCE OF HPPKTBUFENTRY",NOT-ACCESSIBLE,"A table that contains information on all the Packet buffers for each slot."
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5.1.1.1.2.1.1,hpPktBufEntry,SEQUENCE,NOT-ACCESSIBLE,"Information about a slot in a chassis"
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5.1.1.1.2.1.1.1,hpPktBufSlotIndex,INTEGER,READ-ONLY,"The slot number within the box for which this entry contains information."
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5.1.1.1.2.1.1.2,hpPktBufCorrupted,COUNTER,READ-ONLY,"The number of times a corrupted buffer was deleted."
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5.1.1.1.2.1.1.3,hpPktBufFree,INTEGER,READ-ONLY,"The number of packet buffers available for internal VME transfers or external transfers, respectively. Because switch operations and application software modules impose some overhead on global memory buffers, the number of buffers available for data transfers is less than the total number of buffers allocated when the switch boots."
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5.1.1.1.2.1.1.4,hpPktBufInit,INTEGER,READ-ONLY,"The number of packet buffers allocated when the switch booted."
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5.1.1.1.2.1.1.5,hpPktBufMin,INTEGER,READ-ONLY,"The smallest number of packet buffers available since the switch booted."
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5.1.1.1.2.1.1.6,hpPktBufMiss,COUNTER,READ-ONLY,"The number of times that the switch was unable to obtain a packet buffer. Failure to obtain a buffer indicates that buffers were busy. This parameter is directly related to hpPktBufMin. If hpPktBufMiss is greater than 0, hpPktBufMin must equal 0. Conversely, if hpPktBufMiss equals 0, then hpPktBufMin must be greater than 0."
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5.1.1.1.2.1.1.7,hpPktBufSize,INTEGER,READ-ONLY,"The size of the packet buffer in bytes."
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5.1.1.2,hpMem,"OBJECT IDENTIFIER",READ-ONLY,
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5.1.1.2.1,hpLocalMem,"OBJECT IDENTIFIER",READ-ONLY,
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5.1.1.2.1.1,hpLocalMemTable,"SEQUENCE OF HPLOCALMEMENTRY",NOT-ACCESSIBLE,"A table that contains information on all the local memory for each slot."
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5.1.1.2.1.1.1,hpLocalMemEntry,SEQUENCE,NOT-ACCESSIBLE,"Information about a slot in a chassis"
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5.1.1.2.1.1.1.1,hpLocalMemSlotIndex,INTEGER,READ-ONLY,"The slot number within the box for which this entry contains information."
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5.1.1.2.1.1.1.2,hpLocalMemSlabCnt,COUNTER,READ-ONLY,"The current number of discretely managed memory areas. Each slab is further broken down into smaller contiguous areas called segments."
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5.1.1.2.1.1.1.3,hpLocalMemFreeSegCnt,COUNTER,READ-ONLY,"The current number of free memory segments. A free memory segment is an unused contiguous memory block of greater than 16 bytes. Generally, an increase in the number of free memory segments indicates an increase in memory fragmentation."
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5.1.1.2.1.1.1.4,hpLocalMemAllocSegCnt,COUNTER,READ-ONLY,"The number of currently allocated memory segments."
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5.1.1.2.1.1.1.5,hpLocalMemTotalBytes,INTEGER,READ-ONLY,"The number of currently installed bytes."
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5.1.1.2.1.1.1.6,hpLocalMemFreeBytes,INTEGER,READ-ONLY,"The number of available (unallocated) bytes."
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5.1.1.2.1.1.1.7,hpLocalMemAllocBytes,INTEGER,READ-ONLY,"The number of currently allocated bytes."
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5.1.1.2.2,hpGlobalMem,"OBJECT IDENTIFIER",READ-ONLY,
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5.1.1.2.2.1,hpGlobalMemTable,"SEQUENCE OF HPGLOBALMEMENTRY",NOT-ACCESSIBLE,"A table that contains information on all the local memory for each slot."
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5.1.1.2.2.1.1,hpGlobalMemEntry,SEQUENCE,NOT-ACCESSIBLE,"Information about a slot in a chassis"
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5.1.1.2.2.1.1.1,hpGlobalMemSlotIndex,INTEGER,READ-ONLY,"The slot number within the box for which this entry contains information."
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5.1.1.2.2.1.1.2,hpGlobalMemSlabCnt,COUNTER,READ-ONLY,"The current number of discretely managed memory areas. Each slab is further broken down into smaller contiguous areas called segments."
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5.1.1.2.2.1.1.3,hpGlobalMemFreeSegCnt,COUNTER,READ-ONLY,"The current number of free memory segments. A free memory segment is an unused contiguous memory block of greater than 16 bytes. Generally, an increase in the number of free memory segments indicates an increase in memory fragmentation."
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5.1.1.2.2.1.1.4,hpGlobalMemAllocSegCnt,COUNTER,READ-ONLY,"The number of currently allocated memory segments."
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5.1.1.2.2.1.1.5,hpGlobalMemTotalBytes,INTEGER,READ-ONLY,"The number of currently installed bytes."
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5.1.1.2.2.1.1.6,hpGlobalMemFreeBytes,INTEGER,READ-ONLY,"The number of available (unallocated) bytes."
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5.1.1.2.2.1.1.7,hpGlobalMemAllocBytes,INTEGER,READ-ONLY,"The number of currently allocated bytes."
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5.1.1.3,hpSwitchOsVersion,DISPLAYSTRING,READ-ONLY,"Contains the operating code version number (also known as software or firmware). For example, a software version such as A.08.01 is described as follows: A the function set available in your router 08 the common release number 01 updates to the current common release"
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5.1.1.4,hpSwitchRomVersion,DISPLAYSTRING,READ-ONLY,"Contains the ROM version number (such as A.08.01 is described as follows: A the function set available in your router 08 the common release number 01 updates to the current common release"
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5.1.1.5,hpSwitchSmartCardType,INTEGER,READ-ONLY,"Return the type of Smart Cards in the system. Some system may contains more than one types of smart cards, such as FDDI and ATM"
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5.1.2,hpHwSystem,"OBJECT IDENTIFIER",READ-ONLY,
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5.1.3,hpVLAN,"OBJECT IDENTIFIER",READ-ONLY,
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5.1.7,hpConfig,"OBJECT IDENTIFIER",READ-ONLY,
+NETSWITCH-MIB,1.3.6.1.4.1.11.2.14.11.5.1.9,hpSwitchStatistics,"OBJECT IDENTIFIER",READ-ONLY,

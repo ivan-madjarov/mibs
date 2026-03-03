@@ -1,0 +1,314 @@
+ISCSI-MIB DEFINITIONS  ::= BEGIN
+
+    IMPORTS
+    MODULE-IDENTITY, OBJECT-TYPE, OBJECT-IDENTITY, NOTIFICATION-TYPE,
+    Unsigned32, Counter32, Counter64, Gauge32,
+    mib-2
+    FROM SNMPv2-SMI
+
+    TEXTUAL-CONVENTION, TruthValue, RowPointer, TimeStamp, RowStatus,
+    AutonomousType, StorageType
+    FROM SNMPv2-TC
+
+    MODULE-COMPLIANCE, OBJECT-GROUP, NOTIFICATION-GROUP
+    FROM SNMPv2-CONF
+
+    SnmpAdminString
+    FROM SNMP-FRAMEWORK-MIB -- RFC 3411 <rfc3411.html>
+
+    InetAddressType, InetAddress, InetPortNumber
+    FROM INET-ADDRESS-MIB; -- RFC 4001 <rfc4001.html>
+
+iscsiMibModule MODULE-IDENTITY
+    LAST-UPDATED "200605220000Z" -- May 22, 2006
+    ORGANIZATION "IETF IPS Working Group"
+    CONTACT-INFO
+    "
+    Mark Bakke
+    Cisco Systems, Inc
+    7900 International Drive, Suite 400
+    Bloomington, MN
+    USA 55425
+
+    E-mail: mbakke@cisco.com
+
+    Marjorie Krueger
+    Hewlett-Packard
+    Networked Storage Architecture
+    Networked Storage Solutions Org.
+    8000 Foothills Blvd.
+    Roseville, CA 95747
+
+
+    E-mail: marjorie_krueger@hp.com
+
+    Tom McSweeney
+    IBM Corporation
+    600 Park Offices Drive
+    Research Triangle Park, NC
+    USA 27709
+
+    E-mail: tommcs@us.ibm.com
+
+    James Muchow
+    Qlogic Corp.
+    6321 Bury Dr.
+    Eden Prairie, MN
+    USA 55346
+
+    E-mail: james.muchow@qlogic.com"
+
+    DESCRIPTION
+    "The iSCSI Protocol MIB module.
+    Copyright ¨ The Internet Society (2006). This version of this MIB
+    module is part of RFC 4544 <rfc4544.html>; see the RFC itself for
+    full legal notices."
+    REVISION "200605220000Z" -- May 22, 2006
+    DESCRIPTION
+    "Initial version of the iSCSI Protocol MIB module"
+
+::= { mib-2 142 }
+
+iscsiNotifications OBJECT IDENTIFIER ::= { iscsiMibModule 0 }
+iscsiObjects       OBJECT IDENTIFIER ::= { iscsiMibModule 1 }
+iscsiConformance   OBJECT IDENTIFIER ::= { iscsiMibModule 2 }
+iscsiAdmin         OBJECT IDENTIFIER ::= { iscsiMibModule 3 }
+
+-- Textual Conventions
+
+IscsiTransportProtocol ::= TEXTUAL-CONVENTION
+    DISPLAY-HINT  "d"
+    STATUS        current
+    DESCRIPTION
+        "This data type is used to define the transport
+        protocols that will carry iSCSI PDUs."
+    REFERENCE
+        "RFC791 <rfc791.html>, RFC1700 <rfc1700.html>
+
+    The presently known, officially delegated numbers
+    can be found at:
+    http://www.iana.org/assignments/protocol-numbers"
+
+
+    SYNTAX        Unsigned32 (0..255)
+
+IscsiDigestMethod ::= TEXTUAL-CONVENTION
+    STATUS        current
+    DESCRIPTION
+        "This data type represents the methods possible
+        for digest negotiation.
+        none     - a placeholder for a secondary digest method
+                   that means only the primary method can be
+                   used.
+        other    - a digest method other than those defined below.
+        noDigest - does not support digests (will operate without
+                   a digest (Note: implementations must support
+                   digests to be compliant with the RFC3720 <rfc3720.html>).
+        CRC32c   - require a CRC32C digest."
+    REFERENCE
+        "RFC 3720 <rfc3720.html>, Section 12.1 <#sec-12.1>, HeaderDigest and DataDigest"
+    SYNTAX        INTEGER {
+                      none(1),
+                      other(2),
+                      noDigest(3),
+                      crc32c(4)
+                  }
+
+IscsiName ::= TEXTUAL-CONVENTION
+    DISPLAY-HINT  "223t"
+    STATUS        current
+    DESCRIPTION
+        "This data type is used for objects whose value is an
+        iSCSI name with the properties described in RFC 3720 <rfc3720.html>
+        section 3.2.6.1 <#sec-3.2.6.1>, and encoded as specified in RFC 3720 <rfc3720.html>
+        section 3.2.6.2 <#sec-3.2.6.2>.  A zero-length string indicates the
+        absence of an iSCSI name."
+    REFERENCE
+        "RFC 3720 <rfc3720.html>, Section 3.2.6 <#sec-3.2.6>, iSCSI Names."
+    SYNTAX        OCTET STRING (SIZE(0 | 16..223))
+
+--**********************************************************************
+
+
+
+--**********************************************************************
+
+iscsiTarget OBJECT IDENTIFIER ::= { iscsiObjects 6 }
+
+-- Target Attributes Table
+
+iscsiTargetAttributesTable OBJECT-TYPE
+
+    SYNTAX        SEQUENCE OF IscsiTargetAttributesEntry
+    MAX-ACCESS    not-accessible
+    STATUS        current
+    DESCRIPTION
+        "A list of iSCSI nodes that can take on a target role,
+        belonging to each iSCSI instance present on the local
+        system."
+::= { iscsiTarget 1 }
+
+iscsiTargetAttributesEntry OBJECT-TYPE
+
+    SYNTAX        IscsiTargetAttributesEntry
+    MAX-ACCESS    not-accessible
+    STATUS        current
+    DESCRIPTION
+        "An entry (row) containing management information applicable
+        to a particular node that can take on a target role."
+    INDEX { iscsiInstIndex, iscsiNodeIndex }
+::= { iscsiTargetAttributesTable 1 }
+
+IscsiTargetAttributesEntry ::= SEQUENCE {
+    iscsiTgtLoginFailures           Counter32,
+    iscsiTgtLastFailureTime         TimeStamp,
+    iscsiTgtLastFailureType         AutonomousType,
+    iscsiTgtLastIntrFailureName     IscsiName,
+    iscsiTgtLastIntrFailureAddrType InetAddressType,
+    iscsiTgtLastIntrFailureAddr     InetAddress
+
+    }
+
+iscsiTgtLoginFailures OBJECT-TYPE
+
+    SYNTAX        Counter32
+    UNITS         "failed login attempts"
+    MAX-ACCESS    read-only
+    STATUS        current
+    DESCRIPTION
+        "This object counts the number of times a login attempt to this
+        local target has failed.
+        If this counter has suffered a discontinuity, the time of the
+        last discontinuity is indicated in iscsiNodeDiscontinuityTime."
+    REFERENCE
+        "RFC 3720 <rfc3720.html>, Section 10.13.5 <#sec-10.13.5>, Status-Class and Status-Detail"
+::= { iscsiTargetAttributesEntry 1 }
+
+iscsiTgtLastFailureTime OBJECT-TYPE
+
+    SYNTAX        TimeStamp
+    MAX-ACCESS    read-only
+    STATUS        current
+    DESCRIPTION
+        "The timestamp of the most recent failure of a login attempt
+        to this target.  A value of zero indicates that no such
+        failures have occurred since the last system boot."
+::= { iscsiTargetAttributesEntry 2 }
+
+iscsiTgtLastFailureType OBJECT-TYPE
+
+    SYNTAX        AutonomousType
+    MAX-ACCESS    read-only
+    STATUS        current
+    DESCRIPTION
+        "The type of the most recent failure of a login attempt
+        to this target, represented as the OID of the counter
+        object in iscsiTargetLoginStatsTable for which the
+        relevant instance was incremented.  A value of 0.0
+        indicates a type that is not represented by any of
+        the counters in iscsiTargetLoginStatsTable."
+::= { iscsiTargetAttributesEntry 3 }
+
+iscsiTgtLastIntrFailureName OBJECT-TYPE
+
+    SYNTAX        IscsiName
+    MAX-ACCESS    read-only
+    STATUS        current
+    DESCRIPTION
+    "The iSCSI name of the initiator that failed the last login attempt."
+
+::= { iscsiTargetAttributesEntry 4 }
+
+iscsiTgtLastIntrFailureAddrType OBJECT-TYPE
+
+    SYNTAX        InetAddressType
+    MAX-ACCESS    read-only
+    STATUS        current
+    DESCRIPTION
+        "The type of Internet Network Address contained in the
+        corresponding instance of the iscsiTgtLastIntrFailureAddr.
+        The value 'dns' is not allowed."
+::= { iscsiTargetAttributesEntry 5 }
+
+iscsiTgtLastIntrFailureAddr OBJECT-TYPE
+
+    SYNTAX        InetAddress
+    MAX-ACCESS    read-only
+    STATUS        current
+    DESCRIPTION
+        "An Internet Network Address, of the type specified by
+        the object iscsiTgtLastIntrFailureAddrType, giving the
+        host address of the initiator that failed the last login
+        attempt."
+::= { iscsiTargetAttributesEntry 6 }
+
+
+
+--**********************************************************************
+
+-- Notifications
+
+iscsiTgtLoginFailure NOTIFICATION-TYPE
+
+    OBJECTS {
+        iscsiTgtLoginFailures,
+        iscsiTgtLastFailureType,
+        iscsiTgtLastIntrFailureName,
+        iscsiTgtLastIntrFailureAddrType,
+        iscsiTgtLastIntrFailureAddr
+    }
+    STATUS current
+    DESCRIPTION
+        "Sent when a login is failed by a target.
+
+    To avoid sending an excessive number of notifications due to
+    multiple errors counted, an SNMP agent implementing this
+    notification *SHOULD NOT* send more than 3 notifications of this
+    type in any 10-second time period."
+
+::= { iscsiNotifications 1 }
+
+iscsiIntrLoginFailure NOTIFICATION-TYPE
+
+    OBJECTS {
+        iscsiIntrLoginFailures,
+        iscsiIntrLastFailureType,
+        iscsiIntrLastTgtFailureName,
+        iscsiIntrLastTgtFailureAddrType,
+    	iscsiIntrLastTgtFailureAddr
+    }
+    STATUS current
+    DESCRIPTION
+    "Sent when a login is failed by an initiator.
+
+    To avoid sending an excessive number of notifications due to
+    multiple errors counted, an SNMP agent implementing this
+    notification *SHOULD NOT* send more than 3 notifications of this
+    type in any 10-second time period."
+
+::= { iscsiNotifications 2 }
+
+iscsiInstSessionFailure NOTIFICATION-TYPE
+
+    OBJECTS {
+        iscsiInstSsnFailures,
+        iscsiInstLastSsnFailureType,
+        iscsiInstLastSsnRmtNodeName
+    }
+    STATUS current
+    DESCRIPTION
+        "Sent when an active session is failed by either the initiator
+        or the target.
+
+    To avoid sending an excessive number of notifications due to
+    multiple errors counted, an SNMP agent implementing this
+    notification *SHOULD NOT* send more than 3 notifications of this
+    type in any 10-second time period."
+
+::= { iscsiNotifications 3 }
+
+--**********************************************************************
+
+
+
+END

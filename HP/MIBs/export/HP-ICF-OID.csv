@@ -1,0 +1,426 @@
+HP-ICF-OID,1.3.6.1.4.1.11,hp,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2,nm,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.3,hpSystem,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7,netElement,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.1,bridge,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.1.1,bridge1010,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP 28673A 10:10 LAN Bridge."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.1.2,bridgeRemote,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP 28674A/B Remote Bridge."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.1.3,eswitch,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J2418A EtherTwist LAN Switch."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.1.8,eswitch2,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J2980A AdvanceStack LAN Switch-16."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.1.9,netSwitch100,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J3126A AdvanceStack Switch 100."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.1.10,netSwitch200,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J3125A AdvanceStack Switch 200."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.2,router,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.2.1,icfRouterER,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP 27285A Router ER."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.2.2,icfRouterTR,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP 27286A Router TR."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.2.3,icfRouterSR,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP 27288A Router SR."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.2.4,icfRouterFR,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP 27289A Router FR."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.2.5,icfRouterLR,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP Router LR."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.2.6,icfRouterBR,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP 27290A Router BR."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.2.7,icfRouterPR,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J2540A Router PR."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.2.8,icfRouter650,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J2430A AdvanceStack Router 650."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.2.8.2,icfRouter650Engine,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the routing engine card for the HP J2430A AdvanceStack Router 650."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.2.8.3,icfRouter650Port4E,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J2435A AdvanceStack Router 4E Port Module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.2.8.4,icfRouter650Port4S,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J2434A AdvanceStack Router 4S Port Module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.2.8.5,icfRouter650Port4T,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J2437A AdvanceStack Router 4T Port Module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.2.8.6,icfRouter650PortFDDI,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J2436A AdvanceStack Router FDDI Port Module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.2.8.7,icfRouter650Port100VG,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J2438A AdvanceStack Router 100VG Port Module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.2.9,icfRouter230,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J2540B Router 230."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.2.10,icfRouter250,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP 27289B Router 250."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.2.11,icfRouter255,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J2543A Router 255."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.2.12,icfRouter210,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J2628A AdvanceStack Router 210."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.5,hub,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.5.1,etherTwist12,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP 27288A/B EtherTwist Hub PLUS."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.5.3,fiberOptic,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP 28682A Fiber-Optic Hub PLUS."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.5.4,etherTwist48,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP 28699A EtherTwist Hub PLUS/48."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.5.5,thinLAN,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP 28692A ThinLAN Hub PLUS."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.5.6,etherTwist24S,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J2355A EtherTwist Secure Hub PLUS/24S"
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.5.7,advStack12,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J2600A AdvanceStack 10Base-T Hub-12"
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.5.8,advStack24,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J2601A/B AdvanceStack 10Base-T Hub-24."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.5.9,advStack48,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J2602A/B AdvanceStack 10Base-T Hub-48."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.5.10,advStackVg15,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J2410A AdvanceStack 100VG Hub-15."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.5.11,advStackU8,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J2610A AdvanceStack 10Base-T Hub-8U."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.5.12,advStackU16,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J2611A AdvanceStack 10Base-T Hub-16U."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.5.13,advStackVg6,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J2413A AdvanceStack 100VG Hub-7M."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.5.14,advStackVg12,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J2415A AdvanceStack 100VG Hub-14."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.5.15,hpAdvStkEnetSH12R,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J3200A AdvanceStack 10BT Switching Hub-12R."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.5.16,hpAdvStkEnetSH24R,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J3202A AdvanceStack 10BT Switching Hub-24R."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.5.17,hpAdvStkEnetSH24T,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J3204A AdvanceStack 10BT Switching Hub-24T."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.5.18,hpAdvStk100Tx12TM,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J3233A AdvanceStack 100B-TX Hub-12TM w/MGMT."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.5.19,hp10THub16M,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J3188A 10Base-T Hub-16M."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.5.20,hp10BaseTHub12M,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J3301A 10Base-T Hub-12M"
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.5.21,hp10BaseTHub24M,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J3303A 10Base-T Hub-24M"
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.5.22,hpProCurve10T100THub12M,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J3288A ProCurve 100Base-T Hub 12M"
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.5.23,hpProCurve10T100THub24M,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J3289A ProCurve 100Base-T Hub 24M"
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8,chassis,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.1,repeaterAgent,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J2603A/B AdvanceStack Ethernet SNMP module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.2,chassisAgents,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.2.1,icfVgAgent,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J2414A AdvanceStack 100VG/ET SNMP/Bridge Module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.2.3,icfVgAgent2,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J2414B AdvanceStack 100VG/ET SNMP/Bridge Module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.2.4,hpicfEnetSMM,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HPJ3133A AdvanceStack 8U/16U SNMP Module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.2.5,hpAdvStkEnetSHAgent,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HPJ3210A AdvanceStack 10BT Switching Hub Management Module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.2.6,hpAdvStkSwStackTopMgmt,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HPJ3179A AdvanceStack Switch StackTop Management Module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.2.7,hpSwitch8000CpuCard,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4110A Switch 8000M and HP J4121A Switch 4000M CPU card."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.3,icfSensors,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.3.1,icfPowerSupplySensor,OBJECT-IDENTITY,READ-CREATE,"Identifier for a power supply sensor type."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.3.2,icfFanSensor,OBJECT-IDENTITY,READ-CREATE,"Identifier for a fan sensor type."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.3.3,icfTemperatureSensor,OBJECT-IDENTITY,READ-CREATE,"Identifier for a temperature sensor type."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.3.4,icfFutureSlotSensor,OBJECT-IDENTITY,READ-CREATE,"Identifier for a FutureSlot sensor type."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.4,icfCards,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.4.1,icfUnidentifiedCard,OBJECT-IDENTITY,READ-CREATE,"Used to indicate that a module is installed in a slot in a chassis, but the agent is unable to identify it."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.4.2,hpAdvStkEnetSHSwitch,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J3212A AdvanceStack 10BT Switching Hub Switch Module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.4.3,hpAdvStkSwStackExpander,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HPJ3180A AdvanceStack Switch Stack Expander Module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.5,hpicfStacks,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.5.1,hpAdvStkEnetSHStack,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for a stack of HP AdvanceStack 10Base-T Switching Hubs."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.6,hpicfBackplanes,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.6.1,hpAdvStkEnetSHExtSeg,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for an inter-box repeater segment in a stack of HP AdvanceStack 10Base-T Switching Hubs."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.6.2,hpAdvStkEnetSHIntSeg,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for a repeater segment that is internal to a single box in a stack of HP AdvanceStack 10Base-T Switching Hubs."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.6.3,hp10BaseTHubSeg,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for a repeater segment in an HP 10Base-T Hub-12M or HP 10Base-T Hub-24M."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.6.4,hpSwitchBackplane,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for an HP Switch backplane."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.6.5,hp100BaseTHubSeg,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for a repeater segment in an HP ProCurve 100Base-T Hub 12M or HP ProCurve 100Base-T Hub 24M."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.7,hpicfSlots,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.7.1,hpAdvStkEnetSHAgentSlot,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the Management Slot in an HP AdvanceStack 10Base-T Switching Hub."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.7.2,hpAdvStkEnetSHIOSlot,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the Expansion Slot in an HP AdvanceStack 10Base-T Switching Hub."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.7.3,hpAdvStkSwStackMgmtSlot,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the Management/Stacking Slot in an HP AdvanceStack Switch 208 or Switch 224."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.7.4,hpAdvStkSwStackExpSlot,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the Expansion Slot in an HP AdvanceStack Switch 208 or Switch 224."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.7.5,hpSwitch8000PowerSupplyBay,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for a power supply bay in an HP Switch 8000 or HP Switch 4000."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.7.6,hpSwitch8000CpuSlot,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the CPU slot in an HP Switch 8000 or HP Switch 4000."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.7.7,hpSwitch8000PortSlot,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for a port module slot in an HP Switch 8000, HP Switch 4000, HP Switch 1600, or HP Switch 2400/2424."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.7.8,hpSwitch2524PortSlot,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for a port module slot in an HP Switch 2524, HP Switch 2512, or HP Network Blade."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.7.9,hpSwitch5308PowerSupplyBay,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for a power supply bay in an HP Switch 5308XL or HP Switch 5304XL."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.7.10,hpSwitch5308PortSlot,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for a port module slot in an HP Switch 5308XL, HP Switch 5304XL, HP Switch 3324XL, or HP Switch 3124XL."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.7.11,hpSwitch4865PowerSupplyBay,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for a power supply bay in an HP Switch 4108GL."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.7.12,hpSwitch4865PortSlot,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for a port module slot in an HP Switch 4108GL."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.7.13,hpSwitch2650PortSlot,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for a port module slot in an HP Switch 2650."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.7.14,hpSwitch6108PortSlot,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for a port module slot in an HP Switch 6108."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.7.15,hpSwitch2824PortSlot,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for a port module slot in an HP Switch 2824 or HP Switch 2848."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.7.16,hpSwitch2626PortSlot,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for a port module slot in an HP Switch 2626."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.7.17,hpSwitch2650PPortSlot,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for a port module slot in an HP Switch 2650-PWR."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.7.18,hpSwitch2626PPortSlot,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for a port module slot in an HP Switch 2626-PWR."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.7.19,hpSwitch3324PortSlot,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for a port module slot in an HP Switch 3400cl-24G or HP Switch 3400cl-48G."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.7.20,hpSwitch2650CRPortSlot,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for a port module slot in an HP Switch 2650-CR."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.7.21,hpSwitch2626CRPortSlot,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for a port module slot in an HP Switch 2626-CR."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.7.22,hpSwitch2600n8PPortSlot,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for a port module slot in an HP Switch 2600-8-PWR."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.7.23,hpSwitch869xPowerSupplyBay,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for a power supply bay in an HP Switch 8697 or HP Switch 8698."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.7.24,hpSwitch869xPortSlot,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for a port module slot in an HP Switch 8697, HP Switch 8698, HP Switch 8692, HP switch 8693 and HP Switch 8992."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.7.25,hpSwitch2510PortSlot,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for a port module slot in an HP Switch 2510vl-24 or HP Switch 2510vl-48."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.7.26,hpSwitch2810PortSlot,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for a port module slot in an HP Switch 2810vl-24G or HP Switch 2810vl-48G."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.7.27,hpSwitch5400CpuCardBay,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for a Management Module bay in a Procurve Switch 54XXZL or Procurve Switch 8212ZL."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.7.28,hpSwitch8212FabricBay,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for a Fabric bay in a Procurve Switch 8212ZL."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.8,hpicfHubPorts,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.8.1,hpAdvStkEnetSHExtPort,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for a repeater port which has an external connector on an HP AdvanceStack 10Base-T Switching Hub."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.8.2,hpAdvStkEnetSHIntPort,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for a repeater port which does not have an external connector on an HP AdvanceStack 10Base-T Switching Hub. This port may be used to connect to an interface on an expansion module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.8.3,hpAdvStkEnetSHAgentPort,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for an internal repeater port used to connect to an interface on a management module in an HP AdvanceStack 10Base-T Switching Hub."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.8.4,hp10BaseTHubPort,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for a repeater port which has an external connector on an HP 10Base-T Hub-12M or an HP 10Base-T Hub-24M."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.8.5,hp10BaseTHubAgentPort,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for an internal repeater port used to connect to an agent interface in an HP 10Base-T Hub-12M or an HP 10Base-T Hub-24M."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.8.6,hp10T100THubPort,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for a 10/100 repeater port that has an external connector on an HP ProCurve 100Base-T Hub."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.8.7,hp100BaseTHubAgentPort,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for an internal 100Mbit repeater port used to connect to an agent interface in an HP ProCurve 100Base-T Hub."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.9,hpicfEnetChipSets,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.9.1,hpicfEnetChipSetHydra,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP Hydra 4-interface Ethernet LAN controller."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.9.2,hpicfEnetChipSetGT48001,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the GT48001 8-interface switch chip."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.9.3,hpicfEnetChipSetPentagon,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP Pentagon ASIC."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.10,hpicfSwitchPorts,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.10.1,hpicfSwitchPort10T100TX,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for an IEEE 802.3 10BASE-T/100BASE-TX autonegotiating port on an HP switch."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.10.2,hpicfSwitchPort100FX,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for an IEEE 802.3 100BASE-FX port on an HP switch."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.10.3,hpicfSwitchPort10FL,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for an IEEE 802.3 10BASE-FL port on an HP switch."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.10.4,hpicfSwitchPort1000SX,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for an IEEE 802.3 1000BASE-SX port on an HP switch."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.10.5,hpicfSwitchPort10T,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for an IEEE 802.3 10BASE-T port on an HP switch."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.10.6,hpicfSwitchPort1000LX,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for an IEEE 802.3 1000BASE-LX port on an HP switch."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.10.7,hpicfSwitchPort1000T,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for an IEEE 802.3 1000BASE-T port on an HP switch."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.10.8,hpicfSwitchPort1000Stk,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for an IEEE 802.3 1000BASE-Stk port on an HP switch."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.10.9,hpicfSwitchPort1000LH,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for an IEEE 802.3 1000BASE-LH port on an HP switch."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.10.10,hpicfSwitchPort10GigBaseCX4,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for an IEEE 802.3 10GIGBASE-CX4 port on an HP switch."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.10.11,hpicfSwitchPort1000ESP,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for an internal ESP Blade port on an HP switch."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.10.12,hpicfSwitchPort10GigBaseSR,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for an IEEE 802.3 10GIGBASE-SR port on an HP switch."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.10.13,hpicfSwitchPort10GigBaseER,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for an IEEE 802.3 10GIGBASE-ER port on an HP switch."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.10.14,hpicfSwitchPort10GigBaseLR,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for an IEEE 802.3 10GIGBASE-LR port on an HP switch."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.11,hpicfMAUTypes,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.11.1,hpicfMauType1000BaseSXHD,OBJECT-IDENTITY,READ-CREATE,"IEEE 802.3 X fiber over short-wavelength laser PMD (clause 38), half-duplex."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.11.2,hpicfMauType1000BaseSXFD,OBJECT-IDENTITY,READ-CREATE,"IEEE 802.3 X fiber over short-wavelength laser PMD (clause 38), full-duplex."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.11.3,hpicfMauType1000BaseLXHD,OBJECT-IDENTITY,READ-CREATE,"IEEE 802.3 X fiber over long-wavelength laser PMD (clause 38), half-duplex."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.11.4,hpicfMauType1000BaseLXFD,OBJECT-IDENTITY,READ-CREATE,"IEEE 802.3 X fiber over long-wavelength laser PMD (clause 38), full-duplex."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.11.5,hpicfMauType1000BaseTHD,OBJECT-IDENTITY,READ-CREATE,"IEEE 802.3 four-pair Category 5 UTP PHY (clause 40), half-duplex."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.11.6,hpicfMauType1000BaseTFD,OBJECT-IDENTITY,READ-CREATE,"IEEE 802.3 four-pair Category 5 UTP PHY (clause 40), full-duplex."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.11.7,hpicfMauType1000BaseStkHD,OBJECT-IDENTITY,READ-CREATE,"IEEE 802.3 X copper, half-duplex."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.11.8,hpicfMauType1000BaseStkFD,OBJECT-IDENTITY,READ-CREATE,"IEEE 802.3 X copper, full-duplex."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.11.9,hpicfMauType1000BaseLHFD,OBJECT-IDENTITY,READ-CREATE,"Proprietary Long Haul, Fiber full-duplex."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.11.10,hpicfMauType1000BaseEspPCS,OBJECT-IDENTITY,READ-CREATE,"Proprietary internal, PCS port."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.11.11,hpicfMauType1000BaseEspG,OBJECT-IDENTITY,READ-CREATE,"Proprietary internal, GMII port."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.11.12,hpicfMauType10GigBaseCX4,OBJECT-IDENTITY,READ-CREATE,"Proprietary 10Gig CX4, full-duplex."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.11.13,hpicfMauType10GigBaseSR,OBJECT-IDENTITY,READ-CREATE,"Proprietary 10Gig SR, full-duplex."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.11.14,hpicfMauType10GigBaseER,OBJECT-IDENTITY,READ-CREATE,"Proprietary 10Gig ER, full-duplex."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.8.11.15,hpicfMauType10GigBaseLR,OBJECT-IDENTITY,READ-CREATE,"Proprietary 10Gig LR, full-duplex."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11,hpEtherSwitch,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.1,hpAdvSwitch2000,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J3100A AdvanceStack Switch 2000."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.1.1,hpSwitchPortModuleET4,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J3102A AdvanceStack Switch Ethernet Port Module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.1.2,hpSwitchPortModuleVG2,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J3103A AdvanceStack Switch 100VG Port Module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.1.3,hpSwitchPortModule10FL,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP AdvanceStack Switch 10BaseFL Port Module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.1.4,hpSwitchPortModuleFDDI,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP AdvanceStack Switch FDDI Port Module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.1.5,hpSwitchPortModuleTX2,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP AdvanceStack Switch 100BaseT Port Module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.1.6,hpSwitchPortModuleATM,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP AdvanceStack Switch ATM Port Module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.2,hpAdvSwitch2000B,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J3100B AdvanceStack Switch 2000B."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.3,hpAdvSwitch800T,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J3245A AdvanceStack Switch 800T."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.4,hpAdvSwitch200,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J3175A AdvanceStack Switch 208T and HP J3177A AdvanceStack Switch 224T."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.4.1,hpAdvSwitch208T,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.4.2,hpAdvSwitch208VG,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.4.3,hpAdvSwitch224T,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.4.4,hpAdvSwitch224VG,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.5,hpSwitch212M,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J3298A Switch 212M."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.6,hpSwitch224M,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J3299A Switch 224M."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.7,hpSwitch8000,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4110A Switch 8000M."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.7.1,hpSwitchPortModule100TX8,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4111A 8-port 10/100Base-TX module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.7.2,hpSwitchPortModule100FX4,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4112A 4-port 100Base-FX module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.7.3,hpSwitchPortModule10FL4,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4118A 4-port 10Base-FL module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.7.4,hpSwitchPortModuleGigSX,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4113A 1-port Gigabit SX module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.7.5,hpSwitchPortModuleGigLX,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4114A 1-port Gigabit LX module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.7.6,hpSwitchPortModuleTwoGig,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4130A 2-port Gigabit module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.7.7,hpSwitchPortModuleGigStk,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4130A 1-port Gigabit Stacking module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.7.8,hpSwitchPortModuleGigT,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4115A 1-port Gigabit T module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.8,hpSwitch1600,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4120A Switch 1600M."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.9,hpSwitch4000,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4121A Switch 4000M."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.10,hpSwitch2400,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4122A Switch 2400M."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.11,hpSwitch2424,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4122B Switch 2424M."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.13,hpSwitch9308,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4138A Routing Switch 9308M."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.14,hpSwitch9304,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4139A Routing Switch 9304M."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.15,hpSwitch6308,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4840A Routing Switch 6308M."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.16,hpSwitch6208,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4841A Switch 6208M."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.17,hpSwitchJ4819A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4819A Switch 5308XL."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.17.1,hpSwitchPortModuleJ4820A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4820A 24 Port 10/100Base-TX Module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.17.2,hpSwitchPortModuleJ4821A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4821A 4 Port 100/1000Base-TX Module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.17.3,hpSwitchPortModuleJ4878A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4878A 4x MiniGBIC Module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.17.4,hpSwitchModuleJ4852A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4852A 12-port 100-FX MTRJ"
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.17.5,hpSwitchModuleJ8161A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J8161A 24-port 10/100Base-TX PoE Module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.17.6,hpSwitchModuleJ4907A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4907A Gig-T/GBIC xl Module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.17.7,hpSwitchModuleJ8162A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J8162A XL Access Controller Module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.17.8,hpSwitchPortModuleJ4820B,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4820B 24 Port 10/100Base-TX Module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.17.9,hpSwitchPortModuleJ4821B,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4821B 4 Port 100/1000Base-TX Module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.17.10,hpSwitchPortModuleJ4878B,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4878B 4x MiniGBIC Module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.17.11,hpSwitchModuleJ9001A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J9001A Module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.17.12,hpSwitchModuleJ9003A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J9003A Module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.17.13,hpSwitchModuleJ8988A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the ProCurve J8988A 10-GbE xl module. (DO NOT PUBLISH)"
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.18,hpSwitchJ4812A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4812A Switch 2512."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.18.1,hpSwitchModuleJ4812A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4812A 12-port 10/100Base-TX + 2 Gig module"
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.19,hpSwitchJ4813A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4813A Switch 2524."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.19.1,hpSwitchModuleJ4813A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4813A 24-port 10/100Base-TX + 2 Gig module"
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.20,hpSwitchJ4850A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4819A Switch 5304XL."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.21,hpSwitchJ4815A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4819A Switch 3324XL."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.22,hpSwitchJ4851A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4819A Switch 3124."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.23,hpSwitchJ4865A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4865A Switch 4108GL."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.23.1,hpSwitchModuleJ4862A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4862A 24-port 10/100Base-TX"
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.23.2,hpSwitchModuleJ4863A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4863A 6-port 100/1000Base-TX"
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.23.3,hpSwitchModuleJ4864A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4864A 3-port tranceiver module"
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.23.4,hpSwitchModuleJ4862B,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4862B 24-port 10/100Base-TX"
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.23.5,hpSwitchModuleJ4893A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4893A 6-port Mini-GBIC module"
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.23.6,hpSwitchModuleJ4892A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4892A 12-port 100-FX MTRJ"
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.23.7,hpSwitchModuleJ4908A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J489XA 20-port 10/100/1000Base-TX + 2 Mini-GBIC"
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.24,hpSwitchA6713A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP A6713A Network Blade."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.25,hpSwitchA6716A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP A6716A Network Blade."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.26,hpSwitchA6717A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP A6717A Network Blade."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.27,hpSwitchJ4887A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4887A Switch 4104GL."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.28,hpSwitchJ4874A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4874A Routing Switch 9315."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.29,hpSwitchJ4899A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4899A Switch 2650."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.30,hpSwitchJ4902A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4902A Switch 6108."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.31,hpSwitchJ4903A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4903A Switch 2824."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.31.1,hpSwitchModuleJ4903A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4903A 24-port 10/100/1000Base-TX"
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.31.2,hpSwitchModuleJ8434A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J8434A 2-port 10G CX4"
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.31.3,hpSwitchModuleJ8435A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J8435A 2-port 10G MF"
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.32,hpSwitchJ4904A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4904A Switch 2848."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.32.1,hpSwitchModuleJ4904A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4904A 48-port 10/100/1000Base-TX"
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.33,hpSwitchProliant,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP Proliant Series Switches."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.34,hpSwitchJ4900A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4900A Switch 2626."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.35,hpSwitchJ8165A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J8165A Switch 2650-PWR."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.36,hpSwitchJ8164A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J8164A Switch 2626-PWR."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.37,hpSwitchJ8130A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J8130A Wireless Access Point AP420WL."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.38,hpSwitchJ8133A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J8133A Wireless Access Point AP520WL."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.39,hpSwitchJ8153A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J8153A Access Controller 720WL."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.40,hpSwitchJ8154A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J8154A Access Controller Server 740WL."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.41,hpSwitchJ8155A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J8155A Integrated Access Manager 760WL."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.42,hpSwitchJ4905A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4905A Switch 3400cl-24G."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.42.1,hpSwitchModuleJ4905A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4905A Switch 3400cl-24G."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.43,hpSwitchJ4906A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4906A Switch 3400cl-48G."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.43.1,hpSwitchModuleJ4906A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4906A Switch 3400cl-48G."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.44,hpSwitchJ4899B,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4899B Switch 2650-CR."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.45,hpSwitchJ4900B,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J4900B Switch 2626-CR."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.46,hpSwitchJ8718A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J8718A Switch 5404yl."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.47,hpSwitchJ8719A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J8719A Switch 5408yl."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.48,hpSwitchJ8433A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J8433A Switch 6400cl-6XG."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.48.1,hpSwitchModuleJ8433A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J8433A Switch 6400cl-6XG."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.49,hpSwitchJ8474A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J8474A Switch 6410cl-6XG."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.49.1,hpSwitchModuleJ8474A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J8474A Switch 6410cl-6XG ."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.50,hpSwitchJ8697A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J8697A Switch 5406zl."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.50.1,hpSwitchModuleJ8701A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J8701A 24 port Gig-T."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.50.2,hpSwitchModuleJ8702A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J8702A 24 port Gig-T zl Module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.50.3,hpSwitchModuleJ8705A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J8705A Gig-T/SFP zl Module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.50.4,hpSwitchModuleJ8706A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J8706A 24 port SFP zl Module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.50.5,hpSwitchModuleJ8707A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J8707A 4 port 10-GbE zl Module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.50.6,hpSwitchModuleJ8708A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J8708A 4 port 10G CX4 zl Module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.50.7,hpSwitchModuleJ87xxA,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J87xxA yl Fixed Gig-T/SFP."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.50.8,hpSwitchModuleJ87yyA,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J87yyA yl Fixed 24p Gig-T."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.50.9,hpSwitchModuleJ8694A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J8694A yl X2/CX4 10-GbE Module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.50.10,hpSwitchModuleJ8726A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J8726A 5400 zl Management Module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.50.14,hpSwitchModuleJ9051A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J9051A Wireless services Primary zl Module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.50.15,hpSwitchModuleJ9052A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J9052A Wireless services Redundant zl Module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.51,hpSwitchJ8698A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J8698A Switch 5412zl."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.52,hpSwitchJ8770A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the ProCurve J8770A Switch 4204vl."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.52.1,hpSwitchModuleJ8765A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the ProCurve J8765A 10/100 module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.52.2,hpSwitchModuleJ8764A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the ProCurve J8764A 10/100/1000 module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.52.3,hpSwitchModuleJ8776A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the ProCurve J8776A miniGBIC module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.52.4,hpSwitchModuleJ8763A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the ProCurve J8763A 100FX module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.52.5,hpSwitchModuleJ8768A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the ProCurve J8768A Gig-T vl module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.52.6,hpSwitchModuleJ9033A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the ProCurve J9033A Gig-T/SFP vl module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.52.7,hpSwitchModuleJ9037A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the ProCurve J9037A 10/100Base-TX + SFP vl module. (DO NOT PUBLISH)"
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.52.8,hpSwitchModuleJ8765B,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the ProCurve J8765B 10/100-TX vl module. (DO NOT PUBLISH)"
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.52.9,hpSwitchModuleJ9036A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the ProCurve J9036A SFP vl module. (DO NOT PUBLISH)"
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.52.10,hpSwitchModuleJ8766A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the ProCurve J8766A 10-GbE vl module. (DO NOT PUBLISH)"
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.53,hpSwitchJ8773A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the ProCurve J8773A Switch 4208vl."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.54,hpSwitchJ8680A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J8680A Router 9608sl."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.55,hpSwitchJ8762A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J8762A Switch 2600-8-PWR."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.56,hpSwitchJ8771A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the ProCurve J8771A Switch 4202vl-48G."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.57,hpSwitchJ8772A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the ProCurve J8772A Switch 4202vl-72."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.58,hpSwitchJ8692A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J8692A Switch 3500yl-24G-PWR."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.59,hpSwitchJ8693A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J8693A Switch 3500yl-48G-PWR."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.60,hpSwitchJ8992A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J8992A Switch 6200yl-24G."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.61,hpSwitchJ9019A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the ProCurve J9019A Switch 2510-24A."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.61.1,hpSwitchModuleJ9019A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J9019A Switch 2510-24A."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.62,hpSwitchJ9020A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the ProCurve J9020A Switch 2510-48A."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.62.1,hpSwitchModuleJ9020A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J9020A Switch 2510-48A."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.63,hpSwitchJ9021A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the ProCurve J9021A Switch 2810-24G."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.63.1,hpSwitchModuleJ9021A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J9021A Switch 2810-24G."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.64,hpSwitchJ9022A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the ProCurve J9022A Switch 2810-48G."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.64.1,hpSwitchModuleJ9022A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J9022A Switch 2810-48G."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.65,hpSwitchJ9028A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the ProCurve J9028A Switch 1800-24G."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.66,hpSwitchJ9029A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the ProCurve J9029A Switch 1800-8G."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.67,hpSwitchJ9038A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the ProCurve J9038A device."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.68,hpSwitchJ9050A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J9050A Switch 2900-48G."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.68.11,hpSwitchModuleJ90xxA,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J9050A yl Fixed Gig-T/SFP."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.68.12,hpSwitchModuleJ90yyA,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J9050A yl Fixed 24p Gig-T."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.68.13,hpSwitchModuleJ90zzA,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J9050A yl X2/CX4 10-GbE Module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.69,hpSwitchJ9049A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J9049A Switch 2900-24G."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.70,hpSwitchJ9032A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the ProCurve J9032A Switch 4202vl-68G."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.71,hpSwitchJ9031A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the ProCurve J9031A Switch 4202vl-68. (DO NOT PUBLISH)"
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.72,hpSwitchJ8715A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J8715A Switch 8200zl."
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.99,hpEtherSwitchPortType,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.99.1,hpEtherSwitchPort10T,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.99.2,hpEtherSwitchPort100T,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.99.3,hpEtherSwitchPort100VG,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.3.7.11.99.4,hpEtherSwitchPort100F,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14,icf,""200607271200Z"  -- JULY 27, 2006",READ-CREATE,"Hewlett Packard Company 8000 Foothills Blvd. Roseville, CA 95747"
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.1,icfCommon,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.2,icfHub,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.3,icfBridge,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.4,icfSecurity,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.5,icfConfig,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.6,icfEsSwitch,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.6.1,hpEs,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.6.2,hpEs2,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.6.3,hpNetSwitch,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.7,icfRouter,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.8,icfDot12Draft,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.8.1,icfVgRepeater,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.8.2,icfVgInterface,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.9,hpEntityMIB,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.10,hpicfAdmin,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.10.1,hpicfDomains,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.10.1.1,hpicfLLCDomain,OBJECT-IDENTITY,READ-CREATE,"The SNMP over 802.2 transport domain."
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.10.2,hpicfObjectModules,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.10.2.1,icfSecurityMib,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.10.2.2,hpicfChainMib,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.10.2.3,hpicfChassisMib,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.10.2.4,hpicfDownloadMib,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.10.2.5,hpicfBasicMib,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.10.2.6,hpicfStackMib,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.10.2.7,hpicfLinkTestMib,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.10.2.8,hpicfGenRptrMib,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.10.2.9,hpicf8023RptrMib,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.10.2.10,icfVgRepeaterMib,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.10.2.11,hpicfVgRptrMib,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.10.2.12,hpicfFaultFinderMib,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.10.2.13,hpicfJumboMIB,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.10.2.14,hpicfRateLimitMIB,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.10.3,hpicfAgentModules,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.10.3.1,hpicfETwistHubAgentsMib,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.10.3.2,hpicfETwistBridgeAgentsMib,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.10.3.3,hpicfAdvStk8023AgentsMib,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.10.3.4,hpicfAdvStkVGAgentsMib,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.10.4,hpicfTextualConventions,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11,hpicfObjects,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.1,hpicfCommon,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.1.1,hpicfChain,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.1.2,hpicfChassis,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.1.3,hpicfDownload,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.1.4,hpicfBasic,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.1.5,hpicfStack,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.1.6,hpicfLinktest,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.1.7,hpicfFaultFinder,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.2,hpicfRepeater,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.3,hpicfVg,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.4,hpicfGenericRepeater,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.5,hpicfSwitch,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.5.1,hpSwitch,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.5.1.1,hpOpSystem,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.5.1.2,hpHwSystem,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.5.1.3,hpVLAN,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.5.1.7,hpConfig,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.5.1.9,hpSwitchStatistics,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.5.1.10,hpSwitchVirtualStackMib,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.5.1.11,hpicfDhcpRelay,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.5.1.12,hpicfBridge,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.5.1.13,hpicfRip,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.5.1.14,hpicfOspf,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.5.1.15,hpicfIpRouting,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.5.1.16,hpSwitchAuthenticationMIB,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.5.1.17,hpSwitchAccountingMIB,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.5.1.18,hpicfXrrpMIB,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.5.1.19,hpicfUsrAuthMIB,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.5.1.20,hpicfPimMIB,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.5.1.21,hpicfMstpMIB,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.5.1.23,hpicfUdpFwd,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.5.1.24,hpicfConnectionRateFilter,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.5.1.25,hpicfDot1xMIB,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.5.1.30,hpicfLldpMIB,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.5.1.31,hpicfVrrpMIB,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.5.1.32,hpSwitchAuthorizationMIB,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.5.1.34,hpicfIpDhcpSnoop,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.5.1.35,hpicfInstMonMIB,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.5.1.36,hpicfL3MacConfigMIB,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.5.1.37,hpicfArpProtect,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.6,hpicfAccess,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.7,hpicfWAN,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.7.1,hpWANRouters,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.7.1.1,hpSRJ8751A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J8751A Secure Router 7001dl."
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.7.1.2,hpSRJ8752A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J8752A Secure Router 7102dl."
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.7.1.3,hpSRJ8753A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J8753A Secure Router 7203dl."
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.7.1.4,hpSRJ8754A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J8754A Secure Router 7306dl."
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.7.1.4.1,hpSRPowerSupply8756A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP J8754A Secure Router 7306dl powersupply."
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.7.2,hpWANModules,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.7.2.1,hpSRmoduleJ8451A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP ProCurve SR dl 1 x T1 module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.7.2.2,hpSRmoduleJ8452A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP ProCurve SR dl 1 x T1 + DSX-1 module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.7.2.3,hpSRmoduleJ8453A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP ProCurve SR dl 2 x T1 module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.7.2.4,hpSRmoduleJ8454A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP ProCurve SR dl 1 x E1 module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.7.2.5,hpSRmoduleJ8455A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP ProCurve SR dl 1 x E1 + G.703 module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.7.2.6,hpSRmoduleJ8456A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP ProCurve SR dl 2 x E1 module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.7.2.7,hpSRmoduleJ8457A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP ProCurve SR dl 2 x ISDN BRI S/T module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.7.2.8,hpSRmoduleJ8458A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP ProCurve SR dl 1 x Serial module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.7.2.9,hpSRmoduleJ8459A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP ProCurve SR dl 1 x ADSL2+ Annex A module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.7.2.10,hpSRmoduleJ8759A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP ProCurve SR dl 1 x ADSL2+ Annex B module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.7.2.11,hpSRmoduleJ8460A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP ProCurve SR dl ISDN BRI U backup."
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.7.2.12,hpSRmoduleJ8461A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP ProCurve SR dl ISDN BRI S/T backup."
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.7.2.13,hpSRmoduleJ8462A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP ProCurve SR dl Analog Modem backup."
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.7.2.14,hpSRmoduleJ8463A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP ProCurve SR dl 8 x T1/E1 wide module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.7.2.15,hpSRmoduleJ8464A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP ProCurve SR dl DS-3 wide module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.7.2.16,hpSRmoduleJ8465A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP ProCurve SR dl HSSI wide module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.7.2.17,hpSRmoduleJ8471A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP ProCurve SR 7100/7200 IPSec module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.7.2.18,hpSRmoduleJ8472A,OBJECT-IDENTITY,READ-CREATE,"The authoritative identifier for the HP ProCurve SR 7300 series IPSec module."
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.11.8,hpicfFabric,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.12,hpicfNotifications,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.12.1,hpicfCommonTraps,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.12.1.0,hpicfCommonTrapsPrefix,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.12.2,hpicf8023RptrTraps,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.12.2.0,hpicf8023RptrTrapsPrefix,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.12.3,hpicfVgRptrTraps,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.12.3.0,hpicfVgRptrTrapsPrefix,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.12.4,hpicfGenRptrTraps,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.12.4.0,hpicfGenRptrTrapsPrefix,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.12.5,hpicfRateLimitTraps,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.12.5.0,hpicfRateLimitTrapsPrefix,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.13,hpicfOEMs,"OBJECT IDENTIFIER",READ-CREATE,
+HP-ICF-OID,1.3.6.1.4.1.11.2.14.13.1,hpicfFEHub,"OBJECT IDENTIFIER",READ-CREATE,

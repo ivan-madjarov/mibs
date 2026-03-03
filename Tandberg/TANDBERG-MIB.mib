@@ -1,0 +1,1034 @@
+TANDBERG-MIB DEFINITIONS ::= BEGIN
+IMPORTS
+        enterprises, TimeTicks
+        FROM RFC1155-SMI
+        OBJECT-TYPE
+        FROM RFC-1212
+        DisplayString
+        FROM RFC1213-MIB
+        TRAP-TYPE
+        FROM RFC-1215;
+ 
+tandberg       OBJECT IDENTIFIER ::= { enterprises 5596 }
+videoconf      OBJECT IDENTIFIER ::= { tandberg 10 }
+status         OBJECT IDENTIFIER ::= { videoconf 3 }
+callstatus     OBJECT IDENTIFIER ::= { status 2 }
+logging        OBJECT IDENTIFIER ::= { videoconf 4 }
+services        OBJECT IDENTIFIER ::= { videoconf 5 }
+system         OBJECT IDENTIFIER ::= { videoconf 6 }
+fun            OBJECT IDENTIFIER ::= { videoconf 7 }
+h323           OBJECT IDENTIFIER ::= { videoconf 8 }
+codec          OBJECT IDENTIFIER ::= { system 4 }
+security       OBJECT IDENTIFIER ::= { system 5 }
+events         OBJECT IDENTIFIER ::= { system 6 }
+experimental   OBJECT IDENTIFIER ::= { videoconf 8 }
+ 
+-- Common parameters
+ 
+callMode OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Call Mode = Idle, Telephone, Videophone, DuoVideo, MultiSite, ... "
+    ::= { callstatus 1 }
+ 
+callLastError OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Descriptive error message, set after a Enterprise Error Trap has been sent"
+    ::= { callstatus 2 }
+ 
+callLastErrorTime OBJECT-TYPE
+    SYNTAX TimeTicks
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "System time (since boot) when last error message was set"
+    ::= { callstatus 3 }
+ 
+callLastCauseCode OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "The cause value"
+    ::= { callstatus 4 }
+ 
+callLastCauseCodeLoc OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "The cause location"
+    ::= { callstatus 5 }
+ 
+statusStreaming OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Indicates if streaming is enabled or not. Idle or Streaming"
+    ::= { services 2 }
+ 
+statusVNC OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Indicates VNC status; idle, active, connectionfailure, toomanyattempts, authfailure, resfailure"
+    ::= { services 3 }
+ 
+telnet OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "enable/disable"
+    ::= { services 4 }
+ 
+ftp OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "enable/disable"
+    ::= { services 5 }
+ 
+http OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "enable/disable"
+    ::= { services 6 }
+ 
+h323 OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "enable/disable"
+    ::= { services 7 }
+ 
+remoteparameter OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "enable/disable"
+    ::= { services 8 }
+ 
+remotesoftware OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "enable/disable"
+    ::= { services 9 }
+ 
+snmp OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "enable/disable/read-only"
+    ::= { services 10 }
+ 
+telnetchallenge OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "enable/disable"
+    ::= { services 11 }
+ 
+telnetchallengeport OBJECT-TYPE
+    SYNTAX INTEGER
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "port number. 23 or 57"
+    ::= { services 12 }
+ 
+-- call information
+ 
+callNumber OBJECT-TYPE
+    SYNTAX INTEGER (0..1024)
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Number of channels available for this unit"
+    ::= { status 3 }
+ 
+callTable OBJECT-TYPE
+    SYNTAX SEQUENCE OF CallEntry
+    ACCESS not-accessible
+    STATUS mandatory
+    DESCRIPTION
+        "The Channel information table"
+    ::= { status 4 }
+ 
+callEntry OBJECT-TYPE
+    SYNTAX CallEntry
+    ACCESS not-accessible
+    STATUS mandatory
+    DESCRIPTION
+        "Information about each channels status, activity and usage"
+    INDEX { callID } 
+    ::= { callTable 1 } 
+ 
+CallEntry ::=
+    SEQUENCE {
+    callID
+    INTEGER,
+    callTag
+    DisplayString,
+    callRemoteSite
+    DisplayString,
+    callDirection
+    DisplayString,
+    callStatus
+    DisplayString,
+    callChannel
+    DisplayString,
+    callType
+    DisplayString,
+    callCause
+    DisplayString,
+    callDuration
+    TimeTicks,
+    callIncomingRestrict
+    DisplayString,
+    callOutgoingRestrict
+    DisplayString,
+    callAccNo
+    DisplayString,
+    callEncryption
+    DisplayString,
+    callSysUpTime
+    TimeTicks,
+    callChannelCurrent    
+    DisplayString,
+    callH323PacketLossVal    
+    INTEGER,
+    callH323PacketLossTot    
+    INTEGER,
+    callH323PacketLossReportTime 
+    INTEGER,
+    callH323PacketLossTotalPackets
+    INTEGER,
+    callH323PacketLossLostPackets
+    INTEGER
+    }   
+ 
+callID OBJECT-TYPE
+    SYNTAX INTEGER (0..1024)
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Channel number"
+    ::= { callEntry 1 }
+ 
+callTag OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Unique call identifier since reboot"
+    ::= { callEntry 2 }
+ 
+callRemoteSite OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Telephone number or other address of remote connection"
+    ::= { callEntry 3 }
+ 
+callDirection OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "idle, incoming, outgoing"
+    ::= { callEntry 4 }
+ 
+callStatus OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "idle,syncing,capex,unframed,speech,disconn,synced"
+    ::= { callEntry 5 }
+ 
+callChannel OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "idle,speech,h221-,bonding-,h323,unknown"
+    ::= { callEntry 6 }
+ 
+callType OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "idle,answering,calling,connected,disconnecting,disconnected"
+    ::= { callEntry 7 }
+ 
+callCause OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Cause code for failures"
+    ::= { callEntry 8 }
+ 
+callDuration OBJECT-TYPE
+    SYNTAX TimeTicks
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Duration of this connection"
+    ::= { callEntry 9 }
+ 
+callIncomingRestrict OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "restrict,norestrict"
+    ::= { callEntry 10 }
+ 
+callOutgoingRestrict OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "restrict,norestrict"
+    ::= { callEntry 11 }
+ 
+callAccNo OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "The access code entered for the call "
+    ::= { callEntry 12 }
+ 
+callEncryption OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "encryption status"
+    ::= { callEntry 13 }
+ 
+callSysUpTime OBJECT-TYPE
+    SYNTAX TimeTicks
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "system up time since reboot"
+    ::= { callEntry 14 }
+ 
+callChannelCurrent OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "idle,speech,h221-,bonding-,h323,unknown"
+    ::= { callEntry 15 }
+ 
+callH323PacketLossVal OBJECT-TYPE
+    SYNTAX INTEGER
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "packet loss value the last 2 seconds H323"
+    ::= { callEntry 16 }
+ 
+callH323PacketLossTot OBJECT-TYPE
+    SYNTAX INTEGER
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "total packet loss value since last downspeed H323"
+    ::= { callEntry 17 }
+ 
+callH323PacketLossReportTime OBJECT-TYPE
+    SYNTAX INTEGER
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Report time in seconds"
+    ::= { callEntry 18 }
+ 
+callH323PacketLossTotalPackets OBJECT-TYPE
+    SYNTAX INTEGER
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Total number of packets sendt during last report time"
+    ::= { callEntry 19 }
+ 
+callH323PacketLossLostPackets OBJECT-TYPE
+    SYNTAX INTEGER
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Total number of packets lost during last report time"
+    ::= { callEntry 20 }
+ 
+-- start of inncoming entries
+ 
+incomingNumber OBJECT-TYPE
+    SYNTAX INTEGER
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Number of entries in incomingTable"
+    ::= { status 8 }
+ 
+incomingTable OBJECT-TYPE
+    SYNTAX SEQUENCE OF IncomingEntry 
+    ACCESS not-accessible
+    STATUS mandatory
+    DESCRIPTION 
+        "Table with information about incoming connections"
+    ::= { status 9 }
+ 
+incomingEntry OBJECT-TYPE
+    SYNTAX IncomingEntry
+    ACCESS not-accessible
+    STATUS mandatory
+    DESCRIPTION
+        "Information about each channels status, activity and usage"
+    INDEX { callIncomingId } 
+    ::= { incomingTable 1 } 
+ 
+IncomingEntry ::= 
+    SEQUENCE {
+    callIncomingId
+    INTEGER,
+    callIncomingAudio
+    DisplayString,
+    callIncomingVideoMode
+    DisplayString,
+    callIncomingVideoResolution
+    DisplayString,
+    callIncomingDuoResolution
+    DisplayString    
+    }
+ 
+ 
+callIncomingId OBJECT-TYPE
+    SYNTAX INTEGER ( 0..1024 )
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Identifier for each incoming table entry."
+    ::= { incomingEntry 1 }
+ 
+callIncomingAudio OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Incoming audio compression method"
+    ::= { incomingEntry 2 }
+ 
+callIncomingVideoMode OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Incoming video compression method"
+    ::= { incomingEntry 3 }
+ 
+callIncomingVideoResolution OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Incoming resolution for video"
+    ::= { incomingEntry 4 }
+ 
+callIncomingDuoResolution OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Incoming resolution for duovideo"
+    ::= { incomingEntry 5 }
+ 
+-- end of incoming table
+ 
+-- start of outgoing entries
+ 
+outgoingNumber OBJECT-TYPE
+    SYNTAX INTEGER
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Number of entries in outgoingTable"
+    ::= { status 10 }
+ 
+ 
+outgoingTable OBJECT-TYPE
+    SYNTAX SEQUENCE OF OutgoingEntry
+    ACCESS not-accessible
+    STATUS mandatory
+    DESCRIPTION 
+        "Table with information about outgoing connection"
+    ::= { status 11 }
+ 
+ 
+outgoingEntry OBJECT-TYPE
+    SYNTAX OutgoingEntry
+    ACCESS not-accessible
+    STATUS mandatory
+    DESCRIPTION
+        "entry in outgoing information table"
+    INDEX { callOutgoingId }
+    ::= { outgoingTable 1 }
+ 
+OutgoingEntry ::=
+    SEQUENCE {
+    callOutgoingId
+    INTEGER,
+    callOutgoingAudio
+    DisplayString,
+    callOutgoingVideoMode
+    DisplayString,
+    callOutgoingVideoResolution
+    DisplayString,
+    callOutgoingDuoResolution
+    DisplayString
+    }
+ 
+callOutgoingId OBJECT-TYPE
+    SYNTAX INTEGER ( 0..1024 )
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Identifier for each outgoing table entry"
+    ::= { outgoingEntry 1 }
+ 
+callOutgoingAudio OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Outgoing audio compression method"
+    ::= { outgoingEntry 2 }
+ 
+ 
+callOutgoingVideoMode OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Outgoing video compression method"
+    ::= { outgoingEntry 3 }
+ 
+callOutgoingVideoResolution OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Outgoing resolution for video; qcif,cif,icif,..."
+    ::= { outgoingEntry 4 }
+ 
+callOutgoingDuoResolution OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Outgoing resolution for duovideo when enabled, qcif,cif,icif,..."
+    ::= { outgoingEntry 5 }
+ 
+-- end of outgoing entries
+ 
+-- Codec descriptors definition
+ 
+    unitDesc OBJECT-TYPE
+        SYNTAX DisplayString
+        ACCESS read-only
+        STATUS mandatory
+        DESCRIPTION
+            "Type of Codec, version"
+        ::= { codec 1 }
+ 
+    versionId OBJECT-TYPE
+        SYNTAX INTEGER
+        ACCESS read-only
+        STATUS mandatory
+        DESCRIPTION 
+            "Codec software configuration identifier for major releases"
+        ::= { codec 2 }
+ 
+    softwareType OBJECT-TYPE
+        SYNTAX DisplayString
+        ACCESS read-only
+        STATUS mandatory
+        DESCRIPTION 
+            "Software type descriptor (same as data port AT-command ati3)"
+        ::= { codec 3 }
+ 
+    hardwareConfig OBJECT-TYPE
+        SYNTAX DisplayString
+        ACCESS read-only
+        STATUS mandatory
+        DESCRIPTION 
+            "Codec hardware configuration (same as data port AT-command ati6) "
+        ::= { codec 5 }
+ 
+    softwareConfig OBJECT-TYPE
+        SYNTAX DisplayString
+        ACCESS read-only
+        STATUS mandatory
+        DESCRIPTION 
+            "Codec software configuration (same as data port AT-command ati7) "
+        ::= { codec 6 }
+ 
+    localISDN OBJECT-TYPE
+        SYNTAX DisplayString
+        ACCESS read-only
+        STATUS mandatory
+        DESCRIPTION
+            "ISDN telephone number for this codec"
+        ::= { codec 8 }
+ 
+    dispbox OBJECT-TYPE
+      SYNTAX INTEGER (0..1024)
+      ACCESS read-only
+      STATUS mandatory
+      DESCRIPTION
+            "User response from displaybox"
+      ::= { codec 9 }
+ 
+    protect OBJECT-TYPE
+        SYNTAX DisplayString
+        ACCESS read-only
+        STATUS mandatory
+        DESCRIPTION
+            "protect on/off on the dataport"
+        ::= { codec 10 }
+ 
+    ippass OBJECT-TYPE
+        SYNTAX DisplayString
+        ACCESS read-only
+        STATUS mandatory
+        DESCRIPTION
+            "password on/off on the dataport"
+        ::= { codec 11 }
+ 
+    h323alias OBJECT-TYPE
+        SYNTAX DisplayString
+        ACCESS read-only
+        STATUS mandatory
+        DESCRIPTION
+            "displays the h323alias of the codec"
+        ::= { codec 12 }
+ 
+-- security descriptors definition
+ 
+    authService OBJECT-TYPE
+        SYNTAX DisplayString
+        ACCESS read-only
+        STATUS mandatory
+        DESCRIPTION
+            "ftp, telnet or http "
+        ::= { security 1 }
+ 
+    authStatus OBJECT-TYPE
+        SYNTAX DisplayString
+        ACCESS read-only
+        STATUS mandatory
+        DESCRIPTION 
+            "true or false "
+        ::= { security 2 }
+ 
+    authAddr OBJECT-TYPE
+        SYNTAX DisplayString
+        ACCESS read-only     
+        STATUS mandatory
+        DESCRIPTION 
+           "Remote IP address"       
+       ::= { security 3 }
+ 
+    authTime OBJECT-TYPE
+        SYNTAX TimeTicks
+        ACCESS read-only
+        STATUS mandatory
+        DESCRIPTION 
+             "Time in ticks since last reboot"  
+        ::= { security 4 }
+ 
+-- events descriptors definition
+ 
+    eventService OBJECT-TYPE
+        SYNTAX DisplayString
+        ACCESS read-only
+        STATUS mandatory
+        DESCRIPTION
+            "ftp"
+        ::= { events 1 }
+ 
+    eventAddr OBJECT-TYPE
+        SYNTAX DisplayString
+        ACCESS read-only     
+        STATUS mandatory
+        DESCRIPTION 
+            "Remote IP address" 
+        ::= { events 2 }
+ 
+    eventTime OBJECT-TYPE
+        SYNTAX TimeTicks
+        ACCESS read-only
+        STATUS mandatory
+        DESCRIPTION 
+            "Time in ticks since last reboot"
+        ::= { events 3 }
+ 
+    eventDesc OBJECT-TYPE  
+        SYNTAX DisplayString
+        ACCESS read-only
+        STATUS mandatory
+        DESCRIPTION 
+            "Event descriptor"
+        ::= { events 4 }
+ 
+-- h323 descriptors definition
+    gkaddres OBJECT-TYPE
+        SYNTAX DisplayString
+        ACCESS read-only
+        STATUS mandatory
+        DESCRIPTION
+            "gatekeeper address"
+        ::= { h323 1 }
+ 
+-- fun
+ 
+    snakeHigh OBJECT-TYPE
+        SYNTAX INTEGER
+        ACCESS read-only
+        STATUS mandatory
+        DESCRIPTION
+            "Snake high score"
+        ::= { fun 1 }
+ 
+    snakeName OBJECT-TYPE
+        SYNTAX DisplayString
+        ACCESS read-only
+        STATUS mandatory
+        DESCRIPTION 
+            "Snake high score name"
+        ::= { fun 2 }
+ 
+-- end of generic definitions
+ 
+-- logging of calls
+ 
+logNumber OBJECT-TYPE
+    SYNTAX INTEGER (0..1024)
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "The number of log entries in the logTable "
+    ::= { logging 4 }
+ 
+logTable OBJECT-TYPE
+    SYNTAX SEQUENCE OF LogEntry
+    ACCESS not-accessible
+    STATUS mandatory
+    DESCRIPTION
+        "The call log information table"
+    ::= { logging 5 }
+ 
+logEntry OBJECT-TYPE
+    SYNTAX LogEntry
+    ACCESS not-accessible
+    STATUS mandatory
+    DESCRIPTION
+        "A call log entry in the logTable "
+    INDEX { logID } 
+    ::= { logTable 1 } 
+ 
+LogEntry ::=
+    SEQUENCE {
+    logID
+    INTEGER,
+    logTag
+    DisplayString,
+    logRemoteSite
+    DisplayString,
+    logDirection
+    DisplayString,
+    logStatus
+    DisplayString,
+    logChannel
+    DisplayString,
+    logType
+    DisplayString,
+    logCause
+    DisplayString,
+    logDuration
+    TimeTicks,
+    logIncomingRestrict
+    DisplayString,
+    logOutgoingRestrict
+    DisplayString,
+    logAccNo
+    DisplayString,
+    logEncryption
+    DisplayString,
+    logSysUpTime   
+    TimeTicks,
+    logH323PacketLossTot   
+    INTEGER        
+    }
+ 
+logID OBJECT-TYPE
+    SYNTAX INTEGER (0..1024)
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Identifier for each log table entry"
+    ::= { logEntry 1 }
+ 
+logTag OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Unique log identifier since reboot"
+    ::= { logEntry 2 }
+ 
+logRemoteSite OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "telephone number, H323-Alias or IP-address of remote connection"
+    ::= { logEntry 3 }
+ 
+logDirection OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "idle, incoming, outgoing"
+    ::= { logEntry 4 }
+ 
+logStatus OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "idle,syncing,capex,unframed,speech,disconn,synced"
+    ::= { logEntry 5 }
+ 
+logChannel OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "idle,speech,h221-,bonding-,h323,unknown"
+    ::= { logEntry 6 }
+ 
+logType OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "idle/answering/logging/connected/disconnecting/disconnected"
+    ::= { logEntry 7 }
+ 
+logCause OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Cause code for failures"
+    ::= { logEntry 8 }
+ 
+logDuration OBJECT-TYPE
+    SYNTAX TimeTicks
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Duration of this connection"
+    ::= { logEntry 9 }
+ 
+logIncomingRestrict OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "restrict, norestrict"
+    ::= { logEntry 10 }
+ 
+logOutgoingRestrict OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "restrict, norestrict"
+    ::= { logEntry 11 }
+ 
+logAccNo OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "The access code/account code used for the connection. 0 if nothing was
+used"
+    ::= { logEntry 12 }
+ 
+logEncryption OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "encryption status"
+    ::= { logEntry 13 }
+ 
+logSysUpTime OBJECT-TYPE
+    SYNTAX TimeTicks
+    ACCESS read-only 
+    STATUS mandatory
+    DESCRIPTION
+        "system up time since rebbot"
+    ::= { logEntry 14 }
+ 
+logH323PacketLossTot OBJECT-TYPE
+    SYNTAX INTEGER
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "total packet loss H323"
+    ::= { logEntry 15 }
+ 
+-- TRAP definitions
+ 
+ callModeChange TRAP-TYPE
+        ENTERPRISE tandberg
+        VARIABLES {callMode}
+        DESCRIPTION
+               "Informs of change in Call Mode, whenever a codec goes from Idle to Telephone, Videophone, MCU or similar."
+        ::= 1
+ 
+genericError TRAP-TYPE
+        ENTERPRISE tandberg
+        DESCRIPTION
+               "callLastError has been set with a new message, indicating some kind of Codec problem"
+        ::= 2
+ 
+ 
+lowBattery TRAP-TYPE
+        ENTERPRISE tandberg
+        DESCRIPTION
+               "Battery is low in the remote control"
+        ::= 3
+ 
+downSpeeding TRAP-TYPE
+        ENTERPRISE tandberg
+        DESCRIPTION
+               "Downspeeding, adjusting connection speed due to problem"
+        ::= 4
+ 
+startupgrade TRAP-TYPE
+        ENTERPRISE tandberg
+        DESCRIPTION
+               "A codec software upgrade has begun"
+        ::= 5
+ 
+finsishedupgrade TRAP-TYPE
+        ENTERPRISE tandberg
+        DESCRIPTION
+               "A codec software upgrade has been completed"
+        ::= 6
+ 
+dispboxtrap TRAP-TYPE
+        ENTERPRISE tandberg
+        DESCRIPTION
+               "When a display box (dispbox) is shown on the codec, and the user
+ presses a quick-key, this trap is sent to indivate the quick-key selected.
+ Values are 1,2,3"
+        ::= 7
+ 
+ connect TRAP-TYPE
+        ENTERPRISE tandberg
+        VARIABLES {callID, callRemoteSite, callTag}
+        DESCRIPTION
+               "The call is connected"
+        ::= 8
+ 
+ encryption TRAP-TYPE
+        ENTERPRISE tandberg
+        DESCRIPTION
+               "Encryption status changed to des"
+        ::= 9
+ 
+ gatekeeperregfailure TRAP-TYPE
+        ENTERPRISE tandberg
+        VARIABLES {gkaddres}
+        DESCRIPTION
+                "Gatekeeper registration failure"
+        ::= 10
+ 
+ gatekeeperregsuccess TRAP-TYPE
+        ENTERPRISE tandberg
+        VARIABLES {gkaddres}
+        DESCRIPTION
+               "Gatekeeper registration successs"
+        ::= 11
+ 
+ disconnect TRAP-TYPE
+        ENTERPRISE tandberg
+        VARIABLES {callID, callRemoteSite, callTag}
+        DESCRIPTION
+               "The call is disconnected"
+        ::= 12
+ 
+ipauthenticationfailure TRAP-TYPE
+        ENTERPRISE tandberg
+        VARIABLES {authService, authAddr, authTime}
+        DESCRIPTION
+               "A remote access to the codec failed. Access via telnet, ftp or http is logged"
+        ::= 13
+ 
+ flowcontrol TRAP-TYPE
+        ENTERPRISE tandberg
+        VARIABLES {callID, callH323PacketLossVal, callH323PacketLossTot}
+        DESCRIPTION
+               "H323 downspeed"
+        ::= 16
+ 
+ h323info TRAP-TYPE
+        ENTERPRISE tandberg
+        VARIABLES {callID, callH323PacketLossReportTime, callH323PacketLossTotalPackets, callH323PacketLossLostPackets}
+        DESCRIPTION
+               "H323 information"
+        ::= 17
+ 
+ eventreport TRAP-TYPE
+        ENTERPRISE tandberg
+        VARIABLES {eventService, eventAddr, eventTime, eventDesc}
+        DESCRIPTION
+               "Report event activity (only ftp for now)"
+        ::= 20
+ 
+ snakehighscore TRAP-TYPE
+        ENTERPRISE tandberg
+        DESCRIPTION
+               "snake high score"
+        ::= 99
+ 
+END

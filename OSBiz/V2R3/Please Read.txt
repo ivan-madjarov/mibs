@@ -1,0 +1,1 @@
+Original OSBiz.mib file modified to be able to load it in Zenoss, original structure kept, just addressed some stylistic errors causing issues with Zenoss MIB compiler.

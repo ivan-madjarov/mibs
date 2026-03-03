@@ -1,0 +1,2639 @@
+HPCIP-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+			enterprises,
+			OBJECT-TYPE, 
+			Integer32,
+			NOTIFICATION-TYPE,
+			MODULE-IDENTITY  	FROM SNMPv2-SMI;
+
+
+hpcipMib	MODULE-IDENTITY
+			LAST-UPDATED "201510050000Z"
+			ORGANIZATION "Unify Software and Solutions GmbH & Co. KG"
+			CONTACT-INFO "www.unify.com"
+			DESCRIPTION  "Database of the objects for HCIP"
+			
+			REVISION "201510050000Z"
+			DESCRIPTION "Renaming of Organization, Contact-Info and objects"
+
+			::= {enterprises 36378}
+
+bsipMibs			OBJECT IDENTIFIER ::= {hpcipMib 1}
+bsipTraps			OBJECT IDENTIFIER ::= {hpcipMib 2}
+mgwMibs				OBJECT IDENTIFIER ::= {hpcipMib 3}
+mgwTraps			OBJECT IDENTIFIER ::= {hpcipMib 4}
+
+-- -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
+-- BsIP Traps
+-- -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
+
+trBsip                  OBJECT IDENTIFIER ::= {bsipTraps 4}
+-- MAC
+trBsipMAC OBJECT-TYPE
+	SYNTAX		OCTET STRING 
+	MAX-ACCESS  read-only 
+	STATUS		current 
+	DESCRIPTION	"MAC address of belonging BSIP"
+	::= {trBsip 1}
+
+-- NAME
+trBsipName OBJECT-TYPE 
+	SYNTAX			OCTET STRING
+	MAX-ACCESS		read-only
+	STATUS			current
+	DESCRIPTION		"Name of belonging BSIP" 
+	::={trBsip 2}
+
+--EVENT
+trBsipEvent OBJECT-TYPE
+	SYNTAX			OCTET STRING
+	MAX-ACCESS		read-only
+	STATUS			current 
+	DESCRIPTION		"Event of belonging BSIP" 
+	::= {trBsip 3}
+
+--SEVERITY
+trBsipSeverity OBJECT-TYPE
+	SYNTAX			OCTET STRING
+	MAX-ACCESS		read-only
+	STATUS			current 
+	DESCRIPTION		"Severity of belonging BSIP" 
+	::= {trBsip 4}
+
+
+trBsipOnlineState NOTIFICATION-TYPE
+    OBJECTS  { trBsipMAC, trBsipName, trBsipEvent,
+                 trBsipSeverity }
+	STATUS		current
+	DESCRIPTION	" Online State of BSIP"
+	::= {bsipTraps 1}
+
+trBsipSyncState NOTIFICATION-TYPE
+    OBJECTS  { trBsipMAC, trBsipName, trBsipEvent,
+                 trBsipSeverity }
+	STATUS		current
+	DESCRIPTION	" Sync State of BSIP "
+	::= {bsipTraps 2}
+
+trBsip10Ovl100 NOTIFICATION-TYPE
+    OBJECTS  { trBsipMAC, trBsipName, trBsipEvent,
+                 trBsipSeverity }
+	STATUS		current
+	DESCRIPTION	" Overflow 100 State of BSIP "
+	::= {bsipTraps 3}
+	
+
+-- -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
+-- BsIP MIBS
+-- -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
+bsipStatistics			OBJECT IDENTIFIER ::= {bsipMibs 1}
+bsipStatistics-Version	OBJECT-TYPE SYNTAX OCTET STRING MAX-ACCESS read-only STATUS current DESCRIPTION "Version" ::= {bsipStatistics 1}
+bsipStatistics-MgwIndex	OBJECT-TYPE SYNTAX Integer32 MAX-ACCESS read-only STATUS current DESCRIPTION "Current MGW Index" ::= {bsipStatistics 2}
+
+-- userStatistics		OBJECT IDENTIFIER ::= {bsipMibs 2}
+
+bsipStatistics-01 OBJECT-TYPE
+    SYNTAX     SEQUENCE OF Entry-01
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Table"
+    ::= {bsipStatistics 3}
+bsipStatistics-02 OBJECT-TYPE
+    SYNTAX     SEQUENCE OF Entry-02
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Table"
+    ::= {bsipStatistics 4}
+bsipStatistics-03 OBJECT-TYPE
+    SYNTAX     SEQUENCE OF Entry-03
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Table"
+    ::= {bsipStatistics 5}
+bsipStatistics-04 OBJECT-TYPE
+    SYNTAX     SEQUENCE OF Entry-04
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Table"
+    ::= {bsipStatistics 6}
+bsipStatistics-05 OBJECT-TYPE
+    SYNTAX     SEQUENCE OF Entry-05
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Table"
+    ::= {bsipStatistics 7}
+bsipStatistics-06 OBJECT-TYPE
+    SYNTAX     SEQUENCE OF Entry-06
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Table"
+    ::= {bsipStatistics 8}
+bsipStatistics-07 OBJECT-TYPE
+    SYNTAX     SEQUENCE OF Entry-07
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Table"
+    ::= {bsipStatistics 9}
+bsipStatistics-08 OBJECT-TYPE
+    SYNTAX     SEQUENCE OF Entry-08
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Table"
+    ::= {bsipStatistics 10}
+bsipStatistics-09 OBJECT-TYPE
+    SYNTAX     SEQUENCE OF Entry-09
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Table"
+    ::= {bsipStatistics 11}
+bsipStatistics-10 OBJECT-TYPE
+    SYNTAX     SEQUENCE OF Entry-10
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Table"
+    ::= {bsipStatistics 12}
+bsipStatistics-11 OBJECT-TYPE
+    SYNTAX     SEQUENCE OF Entry-11
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Table"
+    ::= {bsipStatistics 13}
+bsipStatistics-12 OBJECT-TYPE
+    SYNTAX     SEQUENCE OF Entry-12
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Table"
+    ::= {bsipStatistics 14}
+bsipStatistics-13 OBJECT-TYPE
+    SYNTAX     SEQUENCE OF Entry-13
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Table"
+    ::= {bsipStatistics 15}
+bsipStatistics-14 OBJECT-TYPE
+    SYNTAX     SEQUENCE OF Entry-14
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Table"
+    ::= {bsipStatistics 16}
+    
+
+
+bsEntry01 OBJECT-TYPE
+    SYNTAX     Entry-01
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Entry"
+    INDEX   { bsIndex-01 }
+    ::= { bsipStatistics-01 1 }
+bsEntry02 OBJECT-TYPE
+    SYNTAX     Entry-02
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Entry"
+    INDEX   { bsIndex-02 }
+    ::= { bsipStatistics-02 1 }
+bsEntry03 OBJECT-TYPE
+    SYNTAX     Entry-03
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Entry"
+    INDEX   { bsIndex-03 }
+    ::= { bsipStatistics-03 1 }
+bsEntry04 OBJECT-TYPE
+    SYNTAX     Entry-04
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Entry"
+    INDEX   { bsIndex-04 }
+    ::= { bsipStatistics-04 1 }
+bsEntry05 OBJECT-TYPE
+    SYNTAX     Entry-05
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Entry"
+    INDEX   { bsIndex-05 }
+    ::= { bsipStatistics-05 1 }
+bsEntry06 OBJECT-TYPE
+    SYNTAX     Entry-06
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Entry"
+    INDEX   { bsIndex-06 }
+    ::= { bsipStatistics-06 1 }
+bsEntry07 OBJECT-TYPE
+    SYNTAX     Entry-07
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Entry"
+    INDEX   { bsIndex-07 }
+    ::= { bsipStatistics-07 1 }
+bsEntry08 OBJECT-TYPE
+    SYNTAX     Entry-08
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Entry"
+    INDEX   { bsIndex-08 }
+    ::= { bsipStatistics-08 1 }
+bsEntry09 OBJECT-TYPE
+    SYNTAX     Entry-09
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Entry"
+    INDEX   { bsIndex-09 }
+    ::= { bsipStatistics-09 1 }
+bsEntry10 OBJECT-TYPE
+    SYNTAX     Entry-10
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Entry"
+    INDEX   { bsIndex-10 }
+    ::= { bsipStatistics-10 1 }
+bsEntry11 OBJECT-TYPE
+    SYNTAX     Entry-11
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Entry"
+    INDEX   { bsIndex-11 }
+    ::= { bsipStatistics-11 1 }
+bsEntry12 OBJECT-TYPE
+    SYNTAX     Entry-12
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Entry"
+    INDEX   { bsIndex-12 }
+    ::= { bsipStatistics-12 1 }
+bsEntry13 OBJECT-TYPE
+    SYNTAX     Entry-13
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Entry"
+    INDEX   { bsIndex-13 }
+    ::= { bsipStatistics-13 1 }
+bsEntry14 OBJECT-TYPE
+    SYNTAX     Entry-14
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Entry"
+    INDEX   { bsIndex-14 }
+    ::= { bsipStatistics-14 1 }
+
+
+Entry-01 ::= SEQUENCE {
+  bsIndex-01	Integer32,
+  bsFrom-01	OCTET STRING,
+  bsTo-01		OCTET STRING,
+  bsRPN-01	OCTET STRING,
+  bsMAC-01	OCTET STRING,
+  bsName-01	OCTET STRING,
+  bsOVL70-01	OCTET STRING,
+  bsOVL100-01	OCTET STRING,
+  bsRoaming-01	OCTET STRING
+}
+
+Entry-02 ::= SEQUENCE {
+  bsIndex-02	Integer32,
+  bsFrom-02		OCTET STRING,
+  bsTo-02		OCTET STRING,
+  bsRPN-02		OCTET STRING,
+  bsMAC-02		OCTET STRING,
+  bsName-02		OCTET STRING,
+  bsOVL70-02	OCTET STRING,
+  bsOVL100-02	OCTET STRING,
+  bsRoaming-02	OCTET STRING
+}
+
+Entry-03 ::= SEQUENCE {
+  bsIndex-03	Integer32,
+  bsFrom-03		OCTET STRING,
+  bsTo-03		OCTET STRING,
+  bsRPN-03		OCTET STRING,
+  bsMAC-03		OCTET STRING,
+  bsName-03		OCTET STRING,
+  bsOVL70-03	OCTET STRING,
+  bsOVL100-03	OCTET STRING,
+  bsRoaming-03	OCTET STRING
+}
+
+Entry-04 ::= SEQUENCE {
+  bsIndex-04	Integer32,
+  bsFrom-04		OCTET STRING,
+  bsTo-04		OCTET STRING,
+  bsRPN-04		OCTET STRING,
+  bsMAC-04		OCTET STRING,
+  bsName-04		OCTET STRING,
+  bsOVL70-04	OCTET STRING,
+  bsOVL100-04	OCTET STRING,
+  bsRoaming-04	OCTET STRING
+}
+
+Entry-05 ::= SEQUENCE {
+  bsIndex-05	Integer32,
+  bsFrom-05		OCTET STRING,
+  bsTo-05		OCTET STRING,
+  bsRPN-05		OCTET STRING,
+  bsMAC-05		OCTET STRING,
+  bsName-05		OCTET STRING,
+  bsOVL70-05	OCTET STRING,
+  bsOVL100-05	OCTET STRING,
+  bsRoaming-05	OCTET STRING
+}
+
+Entry-06 ::= SEQUENCE {
+  bsIndex-06	Integer32,
+  bsFrom-06		OCTET STRING,
+  bsTo-06		OCTET STRING,
+  bsRPN-06		OCTET STRING,
+  bsMAC-06		OCTET STRING,
+  bsName-06		OCTET STRING,
+  bsOVL70-06	OCTET STRING,
+  bsOVL100-06	OCTET STRING,
+  bsRoaming-06	OCTET STRING
+}
+
+Entry-07 ::= SEQUENCE {
+  bsIndex-07	Integer32,
+  bsFrom-07		OCTET STRING,
+  bsTo-07		OCTET STRING,
+  bsRPN-07		OCTET STRING,
+  bsMAC-07		OCTET STRING,
+  bsName-07		OCTET STRING,
+  bsOVL70-07	OCTET STRING,
+  bsOVL100-07	OCTET STRING,
+  bsRoaming-07	OCTET STRING
+}
+
+Entry-08 ::= SEQUENCE {
+  bsIndex-08	Integer32,
+  bsFrom-08		OCTET STRING,
+  bsTo-08		OCTET STRING,
+  bsRPN-08		OCTET STRING,
+  bsMAC-08		OCTET STRING,
+  bsName-08		OCTET STRING,
+  bsOVL70-08	OCTET STRING,
+  bsOVL100-08	OCTET STRING,
+  bsRoaming-08	OCTET STRING
+}
+
+Entry-09 ::= SEQUENCE {
+  bsIndex-09	Integer32,
+  bsFrom-09		OCTET STRING,
+  bsTo-09		OCTET STRING,
+  bsRPN-09		OCTET STRING,
+  bsMAC-09		OCTET STRING,
+  bsName-09		OCTET STRING,
+  bsOVL70-09	OCTET STRING,
+  bsOVL100-09	OCTET STRING,
+  bsRoaming-09	OCTET STRING
+}
+
+Entry-10 ::= SEQUENCE {
+  bsIndex-10	Integer32,
+  bsFrom-10		OCTET STRING,
+  bsTo-10		OCTET STRING,
+  bsRPN-10		OCTET STRING,
+  bsMAC-10		OCTET STRING,
+  bsName-10		OCTET STRING,
+  bsOVL70-10	OCTET STRING,
+  bsOVL100-10	OCTET STRING,
+  bsRoaming-10	OCTET STRING
+}
+
+Entry-11 ::= SEQUENCE {
+  bsIndex-11	Integer32,
+  bsFrom-11		OCTET STRING,
+  bsTo-11		OCTET STRING,
+  bsRPN-11		OCTET STRING,
+  bsMAC-11		OCTET STRING,
+  bsName-11		OCTET STRING,
+  bsOVL70-11	OCTET STRING,
+  bsOVL100-11	OCTET STRING,
+  bsRoaming-11	OCTET STRING
+}
+
+Entry-12 ::= SEQUENCE {
+  bsIndex-12	Integer32,
+  bsFrom-12		OCTET STRING,
+  bsTo-12		OCTET STRING,
+  bsRPN-12		OCTET STRING,
+  bsMAC-12		OCTET STRING,
+  bsName-12		OCTET STRING,
+  bsOVL70-12	OCTET STRING,
+  bsOVL100-12	OCTET STRING,
+  bsRoaming-12	OCTET STRING
+}
+
+Entry-13 ::= SEQUENCE {
+  bsIndex-13	Integer32,
+  bsFrom-13		OCTET STRING,
+  bsTo-13		OCTET STRING,
+  bsRPN-13		OCTET STRING,
+  bsMAC-13		OCTET STRING,
+  bsName-13		OCTET STRING,
+  bsOVL70-13	OCTET STRING,
+  bsOVL100-13	OCTET STRING,
+  bsRoaming-13	OCTET STRING
+}
+
+Entry-14 ::= SEQUENCE {
+  bsIndex-14	Integer32,
+  bsFrom-14		OCTET STRING,
+  bsTo-14		OCTET STRING,
+  bsRPN-14		OCTET STRING,
+  bsMAC-14		OCTET STRING,
+  bsName-14		OCTET STRING,
+  bsOVL70-14	OCTET STRING,
+  bsOVL100-14	OCTET STRING,
+  bsRoaming-14	OCTET STRING
+}
+
+-- Entry 01
+bsIndex-01 OBJECT-TYPE
+    SYNTAX     Integer32 (0..32000)
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Index"
+    ::= { bsEntry01 1 }
+bsFrom-01 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of starting data collection in current MIB"
+    ::= { bsEntry01 2 }
+bsTo-01 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of stopping data collection in current MIB"
+    ::= { bsEntry01 3 }
+bsRPN-01 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "RPN of the belonging BSIP"
+    ::= { bsEntry01 4 }
+bsMAC-01 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "MAC Address of the belonging BSIP"
+    ::= { bsEntry01 5 }
+bsName-01 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Name of the belonging BSIP"
+    ::= { bsEntry01 6 }
+bsOVL70-01 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when BSIP had allocated more than 70% of the available channels"
+    ::= { bsEntry01  7 }
+bsOVL100-01 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when BSIP had allocated 100% of the available channels"
+    ::= { bsEntry01 8 }
+bsRoaming-01 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of Roaming Counts of handsets which have been accomplished at the belonging BSIP"
+    ::= { bsEntry01  9 }
+
+-- Entry 02
+bsIndex-02 OBJECT-TYPE
+    SYNTAX     Integer32 (0..32000)
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Index"
+    ::= { bsEntry02 1 }
+bsFrom-02 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of starting data collection in current MIB"
+    ::= { bsEntry02 2 }
+bsTo-02 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of stopping data collection in current MIB"
+    ::= { bsEntry02 3 }
+bsRPN-02 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "RPN of the belonging BSIP"
+    ::= { bsEntry02 4 }
+bsMAC-02 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "MAC Address of the belonging BSIP"
+    ::= { bsEntry02 5 }
+bsName-02 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Name of the belonging BSIP"
+    ::= { bsEntry02 6 }
+bsOVL70-02 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when BSIP had allocated more than 70% of the available channels"
+    ::= { bsEntry02  7 }
+bsOVL100-02 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when BSIP had allocated 100% of the available channels"
+    ::= { bsEntry02 8 }
+bsRoaming-02 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of Roaming Counts of handsets which have been accomplished at the belonging BSIP"
+    ::= { bsEntry02  9 }
+
+
+-- Entry 03
+bsIndex-03 OBJECT-TYPE
+    SYNTAX     Integer32 (0..32000)
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Index"
+    ::= { bsEntry03 1 }
+
+bsFrom-03 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of starting data collection in current MIB"
+    ::= { bsEntry03 2 }
+bsTo-03 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of stopping data collection in current MIB"
+    ::= { bsEntry03 3 }
+bsRPN-03 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "RPN of the belonging BSIP"
+    ::= { bsEntry03 4 }
+bsMAC-03 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "MAC Address of the belonging BSIP"
+    ::= { bsEntry03 5 }
+bsName-03 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Name of the belonging BSIP"
+    ::= { bsEntry03 6 }
+bsOVL70-03 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when BSIP had allocated more than 70% of the available channels"
+    ::= { bsEntry03  7 }
+bsOVL100-03 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when BSIP had allocated 100% of the available channels"
+    ::= { bsEntry03 8 }
+bsRoaming-03 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of Roaming Counts of handsets which have been accomplished at the belonging BSIP"
+    ::= { bsEntry03  9 }
+
+-- Entry 04
+bsIndex-04 OBJECT-TYPE
+    SYNTAX     Integer32 (0..32000)
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Index"
+    ::= { bsEntry04 1 }
+bsFrom-04 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of starting data collection in current MIB"
+    ::= { bsEntry04 2 }
+bsTo-04 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of stopping data collection in current MIB"
+    ::= { bsEntry04 3 }
+bsRPN-04 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "RPN of the belonging BSIP"
+    ::= { bsEntry04 4 }
+bsMAC-04 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "MAC Address of the belonging BSIP"
+    ::= { bsEntry04 5 }
+bsName-04 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Name of the belonging BSIP"
+    ::= { bsEntry04 6 }
+bsOVL70-04 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when BSIP had allocated more than 70% of the available channels"
+    ::= { bsEntry04  7 }
+bsOVL100-04 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when BSIP had allocated 100% of the available channels"
+    ::= { bsEntry04 8 }
+bsRoaming-04 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of Roaming Counts of handsets which have been accomplished at the belonging BSIP"
+    ::= { bsEntry04  9 }
+
+-- Entry 05
+bsIndex-05 OBJECT-TYPE
+    SYNTAX     Integer32 (0..32000)
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Index"
+    ::= { bsEntry05 1 }
+bsFrom-05 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of starting data collection in current MIB"
+    ::= { bsEntry05 2 }
+bsTo-05 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of stopping data collection in current MIB"
+    ::= { bsEntry05 3 }
+bsRPN-05 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "RPN of the belonging BSIP"
+    ::= { bsEntry05 4 }
+bsMAC-05 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "MAC Address of the belonging BSIP"
+    ::= { bsEntry05 5 }
+bsName-05 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Name of the belonging BSIP"
+    ::= { bsEntry05 6 }
+bsOVL70-05 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when BSIP had allocated more than 70% of the available channels"
+    ::= { bsEntry05  7 }
+bsOVL100-05 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when BSIP had allocated 100% of the available channels"
+    ::= { bsEntry05 8 }
+bsRoaming-05 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of Roaming Counts of handsets which have been accomplished at the belonging BSIP"
+    ::= { bsEntry05  9 }
+
+-- Entry 06
+bsIndex-06 OBJECT-TYPE
+    SYNTAX     Integer32 (0..32000)
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Index"
+    ::= { bsEntry06 1 }
+bsFrom-06 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of starting data collection in current MIB"
+    ::= { bsEntry06 2 }
+bsTo-06 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of stopping data collection in current MIB"
+    ::= { bsEntry06 3 }
+bsRPN-06 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "RPN of the belonging BSIP"
+    ::= { bsEntry06 4 }
+bsMAC-06 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "MAC Address of the belonging BSIP"
+    ::= { bsEntry06 5 }
+bsName-06 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Name of the belonging BSIP"
+    ::= { bsEntry06 6 }
+bsOVL70-06 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when BSIP had allocated more than 70% of the available channels"
+    ::= { bsEntry06  7 }
+bsOVL100-06 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when BSIP had allocated 100% of the available channels"
+    ::= { bsEntry06 8 }
+bsRoaming-06 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of Roaming Counts of handsets which have been accomplished at the belonging BSIP"
+    ::= { bsEntry06  9 }
+
+-- Entry 07
+bsIndex-07 OBJECT-TYPE
+    SYNTAX     Integer32 (0..32000)
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Index"
+    ::= { bsEntry07 1 }
+bsFrom-07 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of starting data collection in current MIB"
+    ::= { bsEntry07 2 }
+bsTo-07 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of stopping data collection in current MIB"
+    ::= { bsEntry07 3 }
+bsRPN-07 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "RPN of the belonging BSIP"
+    ::= { bsEntry07 4 }
+bsMAC-07 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "MAC Address of the belonging BSIP"
+    ::= { bsEntry07 5 }
+bsName-07 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Name of the belonging BSIP"
+    ::= { bsEntry07 6 }
+bsOVL70-07 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when BSIP had allocated more than 70% of the available channels"
+    ::= { bsEntry07  7 }
+bsOVL100-07 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when BSIP had allocated 100% of the available channels"
+    ::= { bsEntry07 8 }
+bsRoaming-07 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of Roaming Counts of handsets which have been accomplished at the belonging BSIP"
+    ::= { bsEntry07  9 }
+
+-- Entry 08
+bsIndex-08 OBJECT-TYPE
+    SYNTAX     Integer32 (0..32000)
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Index"
+    ::= { bsEntry08 1 }
+bsFrom-08 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of starting data collection in current MIB"
+    ::= { bsEntry08 2 }
+bsTo-08 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of stopping data collection in current MIB"
+    ::= { bsEntry08 3 }
+bsRPN-08 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "RPN of the belonging BSIP"
+    ::= { bsEntry08 4 }
+bsMAC-08 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "MAC Address of the belonging BSIP"
+    ::= { bsEntry08 5 }
+bsName-08 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Name of the belonging BSIP"
+    ::= { bsEntry08 6 }
+bsOVL70-08 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when BSIP had allocated more than 70% of the available channels"
+    ::= { bsEntry08  7 }
+bsOVL100-08 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when BSIP had allocated 100% of the available channels"
+    ::= { bsEntry08 8 }
+bsRoaming-08 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of Roaming Counts of handsets which have been accomplished at the belonging BSIP"
+    ::= { bsEntry08  9 }
+
+-- Entry 09
+bsIndex-09 OBJECT-TYPE
+    SYNTAX     Integer32 (0..32000)
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Index"
+    ::= { bsEntry09 1 }
+bsFrom-09 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of starting data collection in current MIB"
+    ::= { bsEntry09 2 }
+bsTo-09 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of stopping data collection in current MIB"
+    ::= { bsEntry09 3 }
+bsRPN-09 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "RPN of the belonging BSIP"
+    ::= { bsEntry09 4 }
+bsMAC-09 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "MAC Address of the belonging BSIP"
+    ::= { bsEntry09 5 }
+bsName-09 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Name of the belonging BSIP"
+    ::= { bsEntry09 6 }
+bsOVL70-09 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when BSIP had allocated more than 70% of the available channels"
+    ::= { bsEntry09  7 }
+bsOVL100-09 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when BSIP had allocated 100% of the available channels"
+    ::= { bsEntry09 8 }
+bsRoaming-09 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of Roaming Counts of handsets which have been accomplished at the belonging BSIP"
+    ::= { bsEntry09  9 }
+
+-- Entry 10
+bsIndex-10 OBJECT-TYPE
+    SYNTAX     Integer32 (0..32000)
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Index"
+    ::= { bsEntry10 1 }
+bsFrom-10 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of starting data collection in current MIB"
+    ::= { bsEntry10 2 }
+bsTo-10 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of stopping data collection in current MIB"
+    ::= { bsEntry10 3 }
+bsRPN-10 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "RPN of the belonging BSIP"
+    ::= { bsEntry10 4 }
+bsMAC-10 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "MAC Address of the belonging BSIP"
+    ::= { bsEntry10 5 }
+bsName-10 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Name of the belonging BSIP"
+    ::= { bsEntry10 6 }
+bsOVL70-10 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when BSIP had allocated more than 70% of the available channels"
+    ::= { bsEntry10  7 }
+bsOVL100-10 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when BSIP had allocated 100% of the available channels"
+    ::= { bsEntry10 8 }
+bsRoaming-10 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of Roaming Counts of handsets which have been accomplished at the belonging BSIP"
+    ::= { bsEntry10  9 }
+
+
+
+
+
+-- Entry 11
+bsIndex-11 OBJECT-TYPE
+    SYNTAX     Integer32 (0..32000)
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Index"
+    ::= { bsEntry11 1 }
+bsFrom-11 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of starting data collection in current MIB"
+    ::= { bsEntry11 2 }
+bsTo-11 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of stopping data collection in current MIB"
+    ::= { bsEntry11 3 }
+bsRPN-11 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "RPN of the belonging BSIP"
+    ::= { bsEntry11 4 }
+bsMAC-11 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "MAC Address of the belonging BSIP"
+    ::= { bsEntry11 5 }
+bsName-11 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Name of the belonging BSIP"
+    ::= { bsEntry11 6 }
+bsOVL70-11 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when BSIP had allocated more than 70% of the available channels"
+    ::= { bsEntry11  7 }
+bsOVL100-11 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when BSIP had allocated 100% of the available channels"
+    ::= { bsEntry11 8 }
+bsRoaming-11 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of Roaming Counts of handsets which have been accomplished at the belonging BSIP"
+    ::= { bsEntry11  9 }
+
+-- Entry 12
+bsIndex-12 OBJECT-TYPE
+    SYNTAX     Integer32 (0..32000)
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Index"
+    ::= { bsEntry12 1 }
+bsFrom-12 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of starting data collection in current MIB"
+    ::= { bsEntry12 2 }
+bsTo-12 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of stopping data collection in current MIB"
+    ::= { bsEntry12 3 }
+bsRPN-12 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "RPN of the belonging BSIP"
+    ::= { bsEntry12 4 }
+bsMAC-12 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "MAC Address of the belonging BSIP"
+    ::= { bsEntry12 5 }
+bsName-12 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Name of the belonging BSIP"
+    ::= { bsEntry12 6 }
+bsOVL70-12 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when BSIP had allocated more than 70% of the available channels"
+    ::= { bsEntry12  7 }
+bsOVL100-12 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when BSIP had allocated 100% of the available channels"
+    ::= { bsEntry12 8 }
+bsRoaming-12 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of Roaming Counts of handsets which have been accomplished at the belonging BSIP"
+    ::= { bsEntry12  9 }
+
+-- Entry 13
+bsIndex-13 OBJECT-TYPE
+    SYNTAX     Integer32 (0..32000)
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Index"
+    ::= { bsEntry13 1 }
+bsFrom-13 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of starting data collection in current MIB"
+    ::= { bsEntry13 2 }
+bsTo-13 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of stopping data collection in current MIB"
+    ::= { bsEntry13 3 }
+bsRPN-13 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "RPN of the belonging BSIP"
+    ::= { bsEntry13 4 }
+bsMAC-13 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "MAC Address of the belonging BSIP"
+    ::= { bsEntry13 5 }
+bsName-13 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Name of the belonging BSIP"
+    ::= { bsEntry13 6 }
+bsOVL70-13 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when BSIP had allocated more than 70% of the available channels"
+    ::= { bsEntry13  7 }
+bsOVL100-13 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when BSIP had allocated 100% of the available channels"
+    ::= { bsEntry13 8 }
+bsRoaming-13 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of Roaming Counts of handsets which have been accomplished at the belonging BSIP"
+    ::= { bsEntry13  9 }
+
+-- Entry 14
+bsIndex-14 OBJECT-TYPE
+    SYNTAX     Integer32 (0..32000)
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Index"
+    ::= { bsEntry14 1 }
+bsFrom-14 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of starting data collection in current MIB"
+    ::= { bsEntry14 2 }
+bsTo-14 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of stopping data collection in current MIB"
+    ::= { bsEntry14 3 }
+bsRPN-14 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "RPN of the belonging BSIP"
+    ::= { bsEntry14 4 }
+bsMAC-14 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "MAC Address of the belonging BSIP"
+    ::= { bsEntry14 5 }
+bsName-14 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Name of the belonging BSIP"
+    ::= { bsEntry14 6 }
+bsOVL70-14 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when BSIP had allocated more than 70% of the available channels"
+    ::= { bsEntry14  7 }
+bsOVL100-14 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when BSIP had allocated 100% of the available channels"
+    ::= { bsEntry14 8 }
+bsRoaming-14 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of Roaming Counts of handsets which have been accomplished at the belonging BSIP"
+    ::= { bsEntry14  9 }
+
+
+-- -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
+-- MGW Traps
+-- -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
+trMgw                  OBJECT IDENTIFIER ::= {mgwTraps 4}
+
+-- MGW Index
+trMgwIndex		OBJECT-TYPE
+	SYNTAX		OCTET STRING
+	MAX-ACCESS	read-only
+	STATUS		current 
+	DESCRIPTION "Index of belonging MGW" 
+	::= {trMgw 1}
+-- MAC
+trMgwMAC		OBJECT-TYPE
+	SYNTAX 		OCTET STRING 
+	MAX-ACCESS 	read-only 
+	STATUS 		current 
+	DESCRIPTION	"MAC address of belonging MGW"
+	::= {trMgw 2}
+
+-- NAME
+trMgwName		OBJECT-TYPE 
+	SYNTAX		OCTET STRING
+	MAX-ACCESS	read-only
+	STATUS		current
+	DESCRIPTION "Name of belonging MGW" 
+	::={trMgw 3}
+
+--EVENT
+trMgwEvent	OBJECT-TYPE
+	SYNTAX		OCTET STRING
+	MAX-ACCESS	read-only
+	STATUS		current 
+	DESCRIPTION "Event of belonging MGW" 
+	::= {trMgw 4}
+
+trMgwControlOnlineState NOTIFICATION-TYPE
+    OBJECTS  { trMgwIndex, trMgwMAC, trMgwName,
+                 trBsipSeverity }
+	STATUS		current
+	DESCRIPTION "Control Online State of MGW" 
+	::= {mgwTraps 1}
+
+trMgwSignalOnlineState NOTIFICATION-TYPE
+    OBJECTS  { trMgwIndex, trMgwMAC, trMgwName,
+                 trBsipSeverity }
+	STATUS		current
+	DESCRIPTION	"Signaling Online State of MGW"
+	::= {mgwTraps 2}
+
+
+trMgwOvl100 NOTIFICATION-TYPE
+    OBJECTS  { trMgwIndex, trMgwMAC, trMgwName,
+                 trBsipSeverity }
+	STATUS		current
+	DESCRIPTION	" Overflow 100 State of MGW "
+	::= {mgwTraps 3}
+
+-- -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
+-- MGW MIBS
+-- -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
+mgwStatistics			OBJECT IDENTIFIER ::= {mgwMibs 1}
+mgwStatistics-Version	OBJECT-TYPE SYNTAX OCTET STRING MAX-ACCESS read-only STATUS current DESCRIPTION "Version" ::= {mgwStatistics 1}
+
+mgwStatistics-01 OBJECT-TYPE
+    SYNTAX     SEQUENCE OF MgwEntry-01
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Table"
+    ::= {mgwStatistics 2}
+mgwStatistics-02 OBJECT-TYPE
+    SYNTAX     SEQUENCE OF MgwEntry-02
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Table"
+    ::= {mgwStatistics 3}
+mgwStatistics-03 OBJECT-TYPE
+    SYNTAX     SEQUENCE OF MgwEntry-03
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Table"
+    ::= {mgwStatistics 4}
+mgwStatistics-04 OBJECT-TYPE
+    SYNTAX     SEQUENCE OF MgwEntry-04
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Table"
+    ::= {mgwStatistics 5}
+mgwStatistics-05 OBJECT-TYPE
+    SYNTAX     SEQUENCE OF MgwEntry-05
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Table"
+    ::= {mgwStatistics 6}
+mgwStatistics-06 OBJECT-TYPE
+    SYNTAX     SEQUENCE OF MgwEntry-06
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Table"
+    ::= {mgwStatistics 7}
+mgwStatistics-07 OBJECT-TYPE
+    SYNTAX     SEQUENCE OF MgwEntry-07
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Table"
+    ::= {mgwStatistics 8}
+mgwStatistics-08 OBJECT-TYPE
+    SYNTAX     SEQUENCE OF MgwEntry-08
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Table"
+    ::= {mgwStatistics 9}
+mgwStatistics-09 OBJECT-TYPE
+    SYNTAX     SEQUENCE OF MgwEntry-09
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Table"
+    ::= {mgwStatistics 10}
+mgwStatistics-10 OBJECT-TYPE
+    SYNTAX     SEQUENCE OF MgwEntry-10
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Table"
+    ::= {mgwStatistics 11}
+mgwStatistics-11 OBJECT-TYPE
+    SYNTAX     SEQUENCE OF MgwEntry-11
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Table"
+    ::= {mgwStatistics 12}
+mgwStatistics-12 OBJECT-TYPE
+    SYNTAX     SEQUENCE OF MgwEntry-12
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Table"
+    ::= {mgwStatistics 13}
+mgwStatistics-13 OBJECT-TYPE
+    SYNTAX     SEQUENCE OF MgwEntry-13
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Table"
+    ::= {mgwStatistics 14}
+mgwStatistics-14 OBJECT-TYPE
+    SYNTAX     SEQUENCE OF MgwEntry-14
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Table"
+    ::= {mgwStatistics 15}
+
+mgwEntry01 OBJECT-TYPE
+    SYNTAX     MgwEntry-01
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Entry"
+    INDEX   { mgwIndex-01 }
+    ::= { mgwStatistics-01 1 }
+mgwEntry02 OBJECT-TYPE
+    SYNTAX     MgwEntry-02
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Entry"
+    INDEX   { mgwIndex-02 }
+    ::= { mgwStatistics-02 1 }
+mgwEntry03 OBJECT-TYPE
+    SYNTAX     MgwEntry-03
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Entry"
+    INDEX   { mgwIndex-03 }
+    ::= { mgwStatistics-03 1 }
+mgwEntry04 OBJECT-TYPE
+    SYNTAX     MgwEntry-04
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Entry"
+    INDEX   { mgwIndex-04 }
+    ::= { mgwStatistics-04 1 }
+mgwEntry05 OBJECT-TYPE
+    SYNTAX     MgwEntry-05
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Entry"
+    INDEX   { mgwIndex-05 }
+    ::= { mgwStatistics-05 1 }
+mgwEntry06 OBJECT-TYPE
+    SYNTAX     MgwEntry-06
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Entry"
+    INDEX   { mgwIndex-06 }
+    ::= { mgwStatistics-06 1 }
+mgwEntry07 OBJECT-TYPE
+    SYNTAX     MgwEntry-07
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Entry"
+    INDEX   { mgwIndex-07 }
+    ::= { mgwStatistics-07 1 }
+mgwEntry08 OBJECT-TYPE
+    SYNTAX     MgwEntry-08
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Entry"
+    INDEX   { mgwIndex-08 }
+    ::= { mgwStatistics-08 1 }
+mgwEntry09 OBJECT-TYPE
+    SYNTAX     MgwEntry-09
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Entry"
+    INDEX   { mgwIndex-09 }
+    ::= { mgwStatistics-09 1 }
+mgwEntry10 OBJECT-TYPE
+    SYNTAX     MgwEntry-10
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Entry"
+    INDEX   { mgwIndex-10 }
+    ::= { mgwStatistics-10 1 }
+mgwEntry11 OBJECT-TYPE
+    SYNTAX     MgwEntry-11
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Entry"
+    INDEX   { mgwIndex-11 }
+    ::= { mgwStatistics-11 1 }
+mgwEntry12 OBJECT-TYPE
+    SYNTAX     MgwEntry-12
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Entry"
+    INDEX   { mgwIndex-12 }
+    ::= { mgwStatistics-12 1 }
+mgwEntry13 OBJECT-TYPE
+    SYNTAX     MgwEntry-13
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Entry"
+    INDEX   { mgwIndex-13 }
+    ::= { mgwStatistics-13 1 }
+mgwEntry14 OBJECT-TYPE
+    SYNTAX     MgwEntry-14
+    MAX-ACCESS not-accessible
+    STATUS     current
+    DESCRIPTION
+            "Entry"
+    INDEX   { mgwIndex-14 }
+    ::= { mgwStatistics-14 1 }
+
+
+MgwEntry-01 ::= SEQUENCE {
+  mgwIndex-01		Integer32,
+  mgwFrom-01		OCTET STRING,
+  mgwTo-01			OCTET STRING,
+  mgwMgwIndex-01	OCTET STRING,
+  mgwMAC-01			OCTET STRING,
+  mgwName-01		OCTET STRING,
+  mgwOVL70-01		OCTET STRING,
+  mgwOVL100-01		OCTET STRING
+}
+
+MgwEntry-02 ::= SEQUENCE {
+  mgwIndex-02		Integer32,
+  mgwFrom-02		OCTET STRING,
+  mgwTo-02			OCTET STRING,
+  mgwMgwIndex-02	OCTET STRING,
+  mgwMAC-02			OCTET STRING,
+  mgwName-02		OCTET STRING,
+  mgwOVL70-02		OCTET STRING,
+  mgwOVL100-02		OCTET STRING
+}
+
+MgwEntry-03 ::= SEQUENCE {
+  mgwIndex-03		Integer32,
+  mgwFrom-03		OCTET STRING,
+  mgwTo-03			OCTET STRING,
+  mgwMgwIndex-03	OCTET STRING,
+  mgwMAC-03			OCTET STRING,
+  mgwName-03		OCTET STRING,
+  mgwOVL70-03		OCTET STRING,
+  mgwOVL100-03		OCTET STRING
+}
+
+MgwEntry-04 ::= SEQUENCE {
+  mgwIndex-04		Integer32,
+  mgwFrom-04		OCTET STRING,
+  mgwTo-04			OCTET STRING,
+  mgwMgwIndex-04	OCTET STRING,
+  mgwMAC-04			OCTET STRING,
+  mgwName-04		OCTET STRING,
+  mgwOVL70-04		OCTET STRING,
+  mgwOVL100-04		OCTET STRING
+}
+
+MgwEntry-05 ::= SEQUENCE {
+  mgwIndex-05		Integer32,
+  mgwFrom-05		OCTET STRING,
+  mgwTo-05			OCTET STRING,
+  mgwMgwIndex-05	OCTET STRING,
+  mgwMAC-05			OCTET STRING,
+  mgwName-05		OCTET STRING,
+  mgwOVL70-05		OCTET STRING,
+  mgwOVL100-05		OCTET STRING
+}
+
+MgwEntry-06 ::= SEQUENCE {
+  mgwIndex-06		Integer32,
+  mgwFrom-06		OCTET STRING,
+  mgwTo-06			OCTET STRING,
+  mgwMgwIndex-06	OCTET STRING,
+  mgwMAC-06			OCTET STRING,
+  mgwName-06		OCTET STRING,
+  mgwOVL70-06		OCTET STRING,
+  mgwOVL100-06		OCTET STRING
+}
+
+MgwEntry-07 ::= SEQUENCE {
+  mgwIndex-07		Integer32,
+  mgwFrom-07		OCTET STRING,
+  mgwTo-07			OCTET STRING,
+  mgwMgwIndex-07	OCTET STRING,
+  mgwMAC-07			OCTET STRING,
+  mgwName-07		OCTET STRING,
+  mgwOVL70-07		OCTET STRING,
+  mgwOVL100-07		OCTET STRING
+}
+
+MgwEntry-08 ::= SEQUENCE {
+  mgwIndex-08		Integer32,
+  mgwFrom-08		OCTET STRING,
+  mgwTo-08			OCTET STRING,
+  mgwMgwIndex-08	OCTET STRING,
+  mgwMAC-08			OCTET STRING,
+  mgwName-08		OCTET STRING,
+  mgwOVL70-08		OCTET STRING,
+  mgwOVL100-08		OCTET STRING
+}
+
+MgwEntry-09 ::= SEQUENCE {
+  mgwIndex-09		Integer32,
+  mgwFrom-09		OCTET STRING,
+  mgwTo-09			OCTET STRING,
+  mgwMgwIndex-09	OCTET STRING,
+  mgwMAC-09			OCTET STRING,
+  mgwName-09		OCTET STRING,
+  mgwOVL70-09		OCTET STRING,
+  mgwOVL100-09		OCTET STRING
+}
+
+MgwEntry-10 ::= SEQUENCE {
+  mgwIndex-10		Integer32,
+  mgwFrom-10		OCTET STRING,
+  mgwTo-10			OCTET STRING,
+  mgwMgwIndex-10	OCTET STRING,
+  mgwMAC-10			OCTET STRING,
+  mgwName-10		OCTET STRING,
+  mgwOVL70-10		OCTET STRING,
+  mgwOVL100-10		OCTET STRING
+}
+
+MgwEntry-11 ::= SEQUENCE {
+  mgwIndex-11		Integer32,
+  mgwFrom-11		OCTET STRING,
+  mgwTo-11			OCTET STRING,
+  mgwMgwIndex-11	OCTET STRING,
+  mgwMAC-11			OCTET STRING,
+  mgwName-11		OCTET STRING,
+  mgwOVL70-11		OCTET STRING,
+  mgwOVL100-11		OCTET STRING
+}
+
+MgwEntry-12 ::= SEQUENCE {
+  mgwIndex-12		Integer32,
+  mgwFrom-12		OCTET STRING,
+  mgwTo-12			OCTET STRING,
+  mgwMgwIndex-12	OCTET STRING,
+  mgwMAC-12			OCTET STRING,
+  mgwName-12		OCTET STRING,
+  mgwOVL70-12		OCTET STRING,
+  mgwOVL100-12		OCTET STRING
+}
+
+MgwEntry-13 ::= SEQUENCE {
+  mgwIndex-13		Integer32,
+  mgwFrom-13		OCTET STRING,
+  mgwTo-13			OCTET STRING,
+  mgwMgwIndex-13	OCTET STRING,
+  mgwMAC-13			OCTET STRING,
+  mgwName-13		OCTET STRING,
+  mgwOVL70-13		OCTET STRING,
+  mgwOVL100-13		OCTET STRING
+}
+
+MgwEntry-14 ::= SEQUENCE {
+  mgwIndex-14		Integer32,
+  mgwFrom-14		OCTET STRING,
+  mgwTo-14			OCTET STRING,
+  mgwMgwIndex-14	OCTET STRING,
+  mgwMAC-14			OCTET STRING,
+  mgwName-14		OCTET STRING,
+  mgwOVL70-14		OCTET STRING,
+  mgwOVL100-14		OCTET STRING
+}
+
+-- Entry 01
+mgwIndex-01 OBJECT-TYPE
+    SYNTAX     Integer32 (0..32000)
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Index"
+    ::= { mgwEntry01 1 }
+mgwFrom-01 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of starting data collection in current MIB"
+    ::= { mgwEntry01 2 }
+mgwTo-01 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of stopping data collection in current MIB"
+    ::= { mgwEntry01 3 }
+mgwMgwIndex-01 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Index of the belonging MGW"
+    ::= { mgwEntry01 4 }
+mgwMAC-01 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "MAC Address of the belonging MGW"
+    ::= { mgwEntry01 5 }
+mgwName-01 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Name of the belonging MGW"
+    ::= { mgwEntry01 6 }
+mgwOVL70-01 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when MGW had allocated more than 70% of the available channels"
+    ::= { mgwEntry01  7 }
+mgwOVL100-01 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when MGW had allocated 100% of the available channels"
+    ::= { mgwEntry01 8 }
+
+-- Entry 02
+mgwIndex-02 OBJECT-TYPE
+    SYNTAX     Integer32 (0..32000)
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Index"
+    ::= { mgwEntry02 1 }
+mgwFrom-02 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of starting data collection in current MIB"
+    ::= { mgwEntry02 2 }
+mgwTo-02 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of stopping data collection in current MIB"
+    ::= { mgwEntry02 3 }
+mgwMgwIndex-02 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Index of the belonging MGW"
+    ::= { mgwEntry02 4 }
+mgwMAC-02 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "MAC Address of the belonging MGW"
+    ::= { mgwEntry02 5 }
+mgwName-02 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Name of the belonging MGW"
+    ::= { mgwEntry02 6 }
+mgwOVL70-02 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when MGW had allocated more than 70% of the available channels"
+    ::= { mgwEntry02  7 }
+mgwOVL100-02 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when MGW had allocated 100% of the available channels"
+    ::= { mgwEntry02 8 }
+
+-- Entry 03
+mgwIndex-03 OBJECT-TYPE
+    SYNTAX     Integer32 (0..32000)
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Index"
+    ::= { mgwEntry03 1 }
+mgwFrom-03 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of starting data collection in current MIB"
+    ::= { mgwEntry03 2 }
+mgwTo-03 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of stopping data collection in current MIB"
+    ::= { mgwEntry03 3 }
+mgwMgwIndex-03 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Index of the belonging MGW"
+    ::= { mgwEntry03 4 }
+mgwMAC-03 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "MAC Address of the belonging MGW"
+    ::= { mgwEntry03 5 }
+mgwName-03 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Name of the belonging MGW"
+    ::= { mgwEntry03 6 }
+mgwOVL70-03 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when MGW had allocated more than 70% of the available channels"
+    ::= { mgwEntry03  7 }
+mgwOVL100-03 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when MGW had allocated 100% of the available channels"
+    ::= { mgwEntry03 8 }
+    
+-- Entry 04
+mgwIndex-04 OBJECT-TYPE
+    SYNTAX     Integer32 (0..32000)
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Index"
+    ::= { mgwEntry04 1 }
+mgwFrom-04 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of starting data collection in current MIB"
+    ::= { mgwEntry04 2 }
+mgwTo-04 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of stopping data collection in current MIB"
+    ::= { mgwEntry04 3 }
+mgwMgwIndex-04 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Index of the belonging MGW"
+    ::= { mgwEntry04 4 }
+mgwMAC-04 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "MAC Address of the belonging MGW"
+    ::= { mgwEntry04 5 }
+mgwName-04 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Name of the belonging MGW"
+    ::= { mgwEntry04 6 }
+mgwOVL70-04 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when MGW had allocated more than 70% of the available channels"
+    ::= { mgwEntry04  7 }
+mgwOVL100-04 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when MGW had allocated 100% of the available channels"
+    ::= { mgwEntry04 8 }
+
+-- Entry 05
+mgwIndex-05 OBJECT-TYPE
+    SYNTAX     Integer32 (0..32000)
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Index"
+    ::= { mgwEntry05 1 }
+mgwFrom-05 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of starting data collection in current MIB"
+    ::= { mgwEntry05 2 }
+mgwTo-05 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of stopping data collection in current MIB"
+    ::= { mgwEntry05 3 }
+mgwMgwIndex-05 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Index of the belonging MGW"
+    ::= { mgwEntry05 4 }
+mgwMAC-05 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "MAC Address of the belonging MGW"
+    ::= { mgwEntry05 5 }
+mgwName-05 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Name of the belonging MGW"
+    ::= { mgwEntry05 6 }
+mgwOVL70-05 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when MGW had allocated more than 70% of the available channels"
+    ::= { mgwEntry05  7 }
+mgwOVL100-05 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when MGW had allocated 100% of the available channels"
+    ::= { mgwEntry05 8 }
+
+-- Entry 06
+mgwIndex-06 OBJECT-TYPE
+    SYNTAX     Integer32 (0..32000)
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Index"
+    ::= { mgwEntry06 1 }
+mgwFrom-06 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of starting data collection in current MIB"
+    ::= { mgwEntry06 2 }
+mgwTo-06 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of stopping data collection in current MIB"
+    ::= { mgwEntry06 3 }
+mgwMgwIndex-06 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Index of the belonging MGW"
+    ::= { mgwEntry06 4 }
+mgwMAC-06 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "MAC Address of the belonging MGW"
+    ::= { mgwEntry06 5 }
+mgwName-06 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Name of the belonging MGW"
+    ::= { mgwEntry06 6 }
+mgwOVL70-06 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when MGW had allocated more than 70% of the available channels"
+    ::= { mgwEntry06  7 }
+mgwOVL100-06 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when MGW had allocated 100% of the available channels"
+    ::= { mgwEntry06 8 }
+
+-- Entry 07
+mgwIndex-07 OBJECT-TYPE
+    SYNTAX     Integer32 (0..32000)
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Index"
+    ::= { mgwEntry07 1 }
+mgwFrom-07 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of starting data collection in current MIB"
+    ::= { mgwEntry07 2 }
+mgwTo-07 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of stopping data collection in current MIB"
+    ::= { mgwEntry07 3 }
+mgwMgwIndex-07 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Index of the belonging MGW"
+    ::= { mgwEntry07 4 }
+mgwMAC-07 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "MAC Address of the belonging MGW"
+    ::= { mgwEntry07 5 }
+mgwName-07 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Name of the belonging MGW"
+    ::= { mgwEntry07 6 }
+mgwOVL70-07 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when MGW had allocated more than 70% of the available channels"
+    ::= { mgwEntry07  7 }
+mgwOVL100-07 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when MGW had allocated 100% of the available channels"
+    ::= { mgwEntry07 8 }
+
+-- Entry 08
+mgwIndex-08 OBJECT-TYPE
+    SYNTAX     Integer32 (0..32000)
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Index"
+    ::= { mgwEntry08 1 }
+mgwFrom-08 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of starting data collection in current MIB"
+    ::= { mgwEntry08 2 }
+mgwTo-08 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of stopping data collection in current MIB"
+    ::= { mgwEntry08 3 }
+mgwMgwIndex-08 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Index of the belonging MGW"
+    ::= { mgwEntry08 4 }
+mgwMAC-08 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "MAC Address of the belonging MGW"
+    ::= { mgwEntry08 5 }
+mgwName-08 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Name of the belonging MGW"
+    ::= { mgwEntry08 6 }
+mgwOVL70-08 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when MGW had allocated more than 70% of the available channels"
+    ::= { mgwEntry08  7 }
+mgwOVL100-08 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when MGW had allocated 100% of the available channels"
+    ::= { mgwEntry08 8 }
+
+-- Entry 09
+mgwIndex-09 OBJECT-TYPE
+    SYNTAX     Integer32 (0..32000)
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Index"
+    ::= { mgwEntry09 1 }
+mgwFrom-09 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of starting data collection in current MIB"
+    ::= { mgwEntry09 2 }
+mgwTo-09 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of stopping data collection in current MIB"
+    ::= { mgwEntry09 3 }
+mgwMgwIndex-09 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Index of the belonging MGW"
+    ::= { mgwEntry09 4 }
+mgwMAC-09 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "MAC Address of the belonging MGW"
+    ::= { mgwEntry09 5 }
+mgwName-09 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Name of the belonging MGW"
+    ::= { mgwEntry09 6 }
+mgwOVL70-09 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when MGW had allocated more than 70% of the available channels"
+    ::= { mgwEntry09  7 }
+mgwOVL100-09 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when MGW had allocated 100% of the available channels"
+    ::= { mgwEntry09 8 }
+
+-- Entry 10
+mgwIndex-10 OBJECT-TYPE
+    SYNTAX     Integer32 (0..32000)
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Index"
+    ::= { mgwEntry10 1 }
+mgwFrom-10 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of starting data collection in current MIB"
+    ::= { mgwEntry10 2 }
+mgwTo-10 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of stopping data collection in current MIB"
+    ::= { mgwEntry10 3 }
+mgwMgwIndex-10 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Index of the belonging MGW"
+    ::= { mgwEntry10 4 }
+mgwMAC-10 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "MAC Address of the belonging MGW"
+    ::= { mgwEntry10 5 }
+mgwName-10 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Name of the belonging MGW"
+    ::= { mgwEntry10 6 }
+mgwOVL70-10 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when MGW had allocated more than 70% of the available channels"
+    ::= { mgwEntry10  7 }
+mgwOVL100-10 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when MGW had allocated 100% of the available channels"
+    ::= { mgwEntry10 8 }
+
+-- Entry 11
+mgwIndex-11 OBJECT-TYPE
+    SYNTAX     Integer32 (0..32000)
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Index"
+    ::= { mgwEntry11 1 }
+mgwFrom-11 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of starting data collection in current MIB"
+    ::= { mgwEntry11 2 }
+mgwTo-11 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of stopping data collection in current MIB"
+    ::= { mgwEntry11 3 }
+mgwMgwIndex-11 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Index of the belonging MGW"
+    ::= { mgwEntry11 4 }
+mgwMAC-11 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "MAC Address of the belonging MGW"
+    ::= { mgwEntry11 5 }
+mgwName-11 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Name of the belonging MGW"
+    ::= { mgwEntry11 6 }
+mgwOVL70-11 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when MGW had allocated more than 70% of the available channels"
+    ::= { mgwEntry11  7 }
+mgwOVL100-11 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when MGW had allocated 100% of the available channels"
+    ::= { mgwEntry11 8 }
+
+-- Entry 12
+mgwIndex-12 OBJECT-TYPE
+    SYNTAX     Integer32 (0..32000)
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Index"
+    ::= { mgwEntry12 1 }
+mgwFrom-12 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of starting data collection in current MIB"
+    ::= { mgwEntry12 2 }
+mgwTo-12 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of stopping data collection in current MIB"
+    ::= { mgwEntry12 3 }
+mgwMgwIndex-12 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Index of the belonging MGW"
+    ::= { mgwEntry12 4 }
+mgwMAC-12 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "MAC Address of the belonging MGW"
+    ::= { mgwEntry12 5 }
+mgwName-12 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Name of the belonging MGW"
+    ::= { mgwEntry12 6 }
+mgwOVL70-12 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when MGW had allocated more than 70% of the available channels"
+    ::= { mgwEntry12  7 }
+mgwOVL100-12 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when MGW had allocated 100% of the available channels"
+    ::= { mgwEntry12 8 }
+
+-- Entry 13
+mgwIndex-13 OBJECT-TYPE
+    SYNTAX     Integer32 (0..32000)
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Index"
+    ::= { mgwEntry13 1 }
+mgwFrom-13 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of starting data collection in current MIB"
+    ::= { mgwEntry13 2 }
+mgwTo-13 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of stopping data collection in current MIB"
+    ::= { mgwEntry13 3 }
+mgwMgwIndex-13 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Index of the belonging MGW"
+    ::= { mgwEntry13 4 }
+mgwMAC-13 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "MAC Address of the belonging MGW"
+    ::= { mgwEntry13 5 }
+mgwName-13 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Name of the belonging MGW"
+    ::= { mgwEntry13 6 }
+mgwOVL70-13 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when MGW had allocated more than 70% of the available channels"
+    ::= { mgwEntry13  7 }
+mgwOVL100-13 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when MGW had allocated 100% of the available channels"
+    ::= { mgwEntry13 8 }
+
+-- Entry 14
+mgwIndex-14 OBJECT-TYPE
+    SYNTAX     Integer32 (0..32000)
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Index"
+    ::= { mgwEntry14 1 }
+mgwFrom-14 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of starting data collection in current MIB"
+    ::= { mgwEntry14 2 }
+mgwTo-14 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Date/Time/Reason of stopping data collection in current MIB"
+    ::= { mgwEntry14 3 }
+mgwMgwIndex-14 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Index of the belonging MGW"
+    ::= { mgwEntry14 4 }
+mgwMAC-14 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "MAC Address of the belonging MGW"
+    ::= { mgwEntry14 5 }
+mgwName-14 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Name of the belonging MGW"
+    ::= { mgwEntry14 6 }
+mgwOVL70-14 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when MGW had allocated more than 70% of the available channels"
+    ::= { mgwEntry14  7 }
+mgwOVL100-14 OBJECT-TYPE
+    SYNTAX     OCTET STRING
+    MAX-ACCESS read-only
+    STATUS     current
+    DESCRIPTION
+            "Number of events when MGW had allocated 100% of the available channels"
+    ::= { mgwEntry14 8 }
+
+END

@@ -1,0 +1,386 @@
+-- ****************************************************************************
+-- ****************************************************************************
+--             Copyright(c) 2004 Mediatrix Telecom, Inc.
+--  NOTICE:
+--   This document contains information that is confidential and proprietary
+--   to Mediatrix Telecom, Inc.
+--   Mediatrix Telecom, Inc. reserves all rights to this document as well as
+--   to the Intellectual Property of the document and the technology and
+--   know-how that it includes and represents.
+--   This publication cannot be reproduced, neither in whole nor in part in
+--   any form whatsoever without written prior approval by
+--   Mediatrix Telecom, Inc.
+--   Mediatrix Telecom, Inc. reserves the right to revise this publication
+--   and make changes at any time and without the obligation to notify any
+--   person and/or entity of such revisions and/or changes.
+-- ****************************************************************************
+-- ****************************************************************************
+
+
+PBX10-MX-CWMP-MIB
+DEFINITIONS ::= BEGIN
+
+IMPORTS
+        MODULE-IDENTITY,
+        OBJECT-TYPE,
+        Unsigned32,
+        Integer32
+    FROM SNMPv2-SMI
+        MODULE-COMPLIANCE,
+        OBJECT-GROUP
+    FROM SNMPv2-CONF
+        MxEnableState,
+        MxActivationState,
+        MxIpHostName,
+        MxIpPort,
+        MxAdvancedIpPort,
+        MxIpSubnetMask,
+        MxDigitMap
+    FROM MX-TC
+        MxUInt64,
+        MxFloat32,
+        MxIpHostNamePort,
+        MxIpAddr,
+        MxIpAddrPort,
+        MxIpAddrMask,
+        MxUri,
+        MxUrl
+    FROM MX-TC2
+        mediatrixServices
+    FROM MX-SMI2;
+
+cwmpMIB MODULE-IDENTITY
+ LAST-UPDATED   "0909180000Z"
+ ORGANIZATION " Mediatrix Telecom, Inc. "
+ CONTACT-INFO " Mediatrix Telecom, Inc.
+                4229, Garlock Street
+                Sherbrooke (Quebec)
+                Canada
+                Phone: (819) 829-8749
+                "
+ DESCRIPTION  " CPE WAN Management Protocol
+
+                The CPE WAN Management Protocol service manages the support of
+                the TR-069 protocol for auto provisioning.
+                "
+ -- ****************************************************************************
+ 
+ -- Revision history
+ -- ****************************************************************************
+ REVISION       "0909180000Z"
+ DESCRIPTION  " Initial Revision "
+ REVISION       "1010010000Z"
+ DESCRIPTION  " Added group Tr106, added variable Tr106LanNetworkInterface "
+ ::= { mediatrixServices 3900 }
+
+cwmpMIBObjects OBJECT IDENTIFIER ::= { cwmpMIB 1 }
+
+-- Scalar:Root Element
+
+rootElement OBJECT-TYPE
+ SYNTAX        INTEGER { device(100) , internetGatewayDevice(200) }
+ MAX-ACCESS    read-write
+ STATUS        current
+ DESCRIPTION " Root Element
+
+               Determines the data model used for the configuration.
+
+                 * Device: Uses the Device data model as defined in TR-106.
+                 * InternetGatewayDevice: Uses the Internet Gateway Device data
+                   model as defined in TR-098.
+
+
+               "
+ DEFVAL        { device }
+ ::= { cwmpMIBObjects 100 }
+
+-- Scalar:Listening Port
+
+listeningPort OBJECT-TYPE
+ SYNTAX        MxAdvancedIpPort
+ MAX-ACCESS    read-write
+ STATUS        current
+ DESCRIPTION " Listening Port
+
+               Port on which the unit listens for incoming TR-069 connections.
+
+               Note: If set to 0, the unit uses the default TR-069 port 7547.
+
+
+               "
+ DEFVAL        { 0 }
+ ::= { cwmpMIBObjects 200 }
+
+-- ****************************************************************************
+
+-- Group:ACS
+
+-- ****************************************************************************
+
+acs OBJECT IDENTIFIER
+ ::= { cwmpMIBObjects 1000 }
+ -- Scalar:ACS URL Config Source
+
+ acsUrlConfigSource OBJECT-TYPE
+  SYNTAX        INTEGER { dhcp(100) , static(200) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " ACS URL Config Source
+
+                Determines the method to obtain the URL of the ACS.
+
+                  * Dhcp: Uses the DHCP protocol to find the URL as defined in
+                    TR-106 section 3.1.
+                  * Static: Uses the URL defined in the AcsStaticUrl variable.
+
+
+                "
+  DEFVAL        { dhcp }
+  ::= { acs 100 }
+
+ -- Scalar:ACS Static URL
+
+ acsStaticUrl OBJECT-TYPE
+  SYNTAX        OCTET STRING ( SIZE(0..256) )
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " ACS Static URL
+
+                URL used by the unit to connect to the ACS using the CPE WAN
+                Management Protocol if the AcsUrlConfigSource variable is set
+                to 'Static'.
+
+                This parameter must be a valid HTTP or HTTPS URL.
+
+                Example:
+
+                  * 'http://somewhere.com'.
+                  * 'https://somewhere.secure.com'.
+
+
+                "
+  DEFVAL        { "" }
+  ::= { acs 200 }
+
+ -- Scalar:Username
+
+ username OBJECT-TYPE
+  SYNTAX        OCTET STRING ( SIZE(0..256) )
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Username
+
+                Username used to authenticate the unit when making a
+                connection to the ACS using the CPE WAN Management Protocol.
+                "
+  DEFVAL        { "" }
+  ::= { acs 300 }
+
+ -- Scalar:Password
+
+ password OBJECT-TYPE
+  SYNTAX        OCTET STRING ( SIZE(0..256) )
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Password
+
+                Password used to authenticate the unit when making a
+                connection to the ACS the CPE WAN Management Protocol.
+                "
+  DEFVAL        { "" }
+  ::= { acs 600 }
+
+-- End of group:ACS
+
+-- ****************************************************************************
+
+-- Group:Periodic Inform
+
+-- ****************************************************************************
+
+periodicInform OBJECT IDENTIFIER
+ ::= { cwmpMIBObjects 2000 }
+ -- Scalar:Periodic Inform Enable
+
+ periodicInformEnable OBJECT-TYPE
+  SYNTAX        MxEnableState
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Periodic Inform Enable
+
+                Defines whether or not the unit needs to periodically send CPE
+                information to the ACS using the Inform method call.
+
+                  * Disable: The unit does not send periodic inform.
+                  * Enable: The unit sends periodic inform.
+
+
+                "
+  DEFVAL        { disable }
+  ::= { periodicInform 100 }
+
+ -- Scalar:Periodic Inform Interval
+
+ periodicInformInterval OBJECT-TYPE
+  SYNTAX        Unsigned32 ( 1..4294967295 )
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Periodic Inform Interval
+
+                The duration, in seconds, of the interval for which the unit
+                needs to attempt to connect with the ACS and call the Inform
+                method if the PeriodicInformEnable variable is set to
+                'Enable'.
+                "
+  DEFVAL        { 3600 }
+  ::= { periodicInform 200 }
+
+ -- Scalar:Periodic Inform Time
+
+ periodicInformTime OBJECT-TYPE
+  SYNTAX        OCTET STRING ( SIZE(20..20) )
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Periodic Inform Time
+
+                An absolute time reference in UTC format to determine when the
+                unit initiates the periodic Inform method calls. Each Inform
+                call MUST occur at this reference time plus or minus an
+                integer multiple of the PeriodicInformInterval.
+
+                PeriodicInformTime is used only to set the 'phase' of the
+                periodic Informs. The actual value of PeriodicInformTime can
+                be arbitrarily far into the past or future.
+
+                For example, if PeriodicInformInterval is 86400 (a day) and if
+                PeriodicInformTime is set to UTC midnight on some day (in the
+                past, present, or future), then periodic Informs will occur
+                every day at UTC midnight. These MUST begin on the very next
+                midnight, even if PeriodicInformTime refers to a day in the
+                future.
+
+                The Unknown Time value indicates that no particular time
+                reference is specified. That is, the unit locally chooses the
+                time reference and needs only to follow the specified
+                PeriodicInformInterval.
+
+                If absolute time is not available to the unit, its periodic
+                Inform behavior is the same as if the PeriodicInformTime
+                parameter was set to the Unknown Time value.
+
+                The format of the value is 'CCYY-MM-DDThh:mm:ssZ' where:
+
+                  * CCYY: Year number.
+                  * MM: Month number in the year.
+                  * DD: Day number in the month.
+                  * hh: Hour number in the day.
+                  * mm: Minute number in the hour.
+                  * ss: Second number in the minute.
+
+                Example: 1969-07-21T02:28:00Z.
+
+                The Unknown Time value is defined at '0001-01-01T00:00:00Z'.
+
+
+                "
+  DEFVAL        { "0001-01-01T00:00:00Z" }
+  ::= { periodicInform 300 }
+
+-- End of group:Periodic Inform
+
+-- ****************************************************************************
+
+-- Group:TR106
+
+-- ****************************************************************************
+
+tr106 OBJECT IDENTIFIER
+ ::= { cwmpMIBObjects 3000 }
+ -- Scalar:TR-106 Lan Profile Network Interface Override
+
+ tr106LanNetworkInterface OBJECT-TYPE
+  SYNTAX        OCTET STRING ( SIZE(0..256) )
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " TR-106 Lan Profile Network Interface Override
+
+                Network interface referred by the TR-106 LAN profile. If
+                empty, use the network interface configured in
+                Hoc.ManagementInterface. If Hoc.ManagementInterface is set to
+                ?All?, use the network interface used for contacting the ACS.
+                "
+  DEFVAL        { "" }
+  ::= { tr106 100 }
+
+-- End of group:TR106
+
+-- ****************************************************************************
+
+-- Group:Notification Messages Configuration
+
+-- ****************************************************************************
+
+notificationsGroup OBJECT IDENTIFIER
+ ::= { cwmpMIBObjects 60010 }
+ -- Scalar:Minimal Severity of Notification
+
+ minSeverity OBJECT-TYPE
+  SYNTAX        INTEGER { disable(0) , debug(100) , info(200) , warning(300) ,
+                error(400) , critical (500) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Minimal Severity of Notification
+
+                Sets the minimal severity to issue a notification message
+                incoming from this service.
+
+                  * Disable: No notification is issued.
+                  * Debug: All notification messages are issued.
+                  * Info: Notification messages with severity 'Informational'
+                    and higher are issued.
+                  * Warning: Notification messages with severity 'Warning' and
+                    higher are issued.
+                  * Error: Notification messages with severity 'Error' and
+                    higher are issued.
+                  * Critical: Notification messages with severity 'Critical'
+                    are issued.
+
+
+                "
+  DEFVAL        { warning }
+  ::= { notificationsGroup 100 }
+
+-- End of group:Notification Messages Configuration
+
+-- ****************************************************************************
+
+-- Group:Configuration Settings
+
+-- ****************************************************************************
+
+configurationGroup OBJECT IDENTIFIER
+ ::= { cwmpMIBObjects 60020 }
+ -- Scalar:Need Restart
+
+ needRestartInfo OBJECT-TYPE
+  SYNTAX        INTEGER { no(0) , yes(100) }
+  MAX-ACCESS    read-only
+  STATUS        current
+  DESCRIPTION " Need Restart
+
+                Indicates if the service needs to be restarted for its
+                configuration to fully take effect.
+
+                  * Yes: Service needs to be restarted.
+                  * No: Service does not need to be restarted.
+
+                Services can be restarted by using the command
+                Scm.ServiceCommands.Restart.
+
+
+                "
+  ::= { configurationGroup 100 }
+
+-- End of group:Configuration Settings
+
+END

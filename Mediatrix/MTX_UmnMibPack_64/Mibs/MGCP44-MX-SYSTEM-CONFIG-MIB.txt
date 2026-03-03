@@ -1,0 +1,476 @@
+-- ****************************************************************************
+-- ****************************************************************************
+--
+--             Copyright(c) 2001-2004 Mediatrix Telecom, Inc.
+--
+--  NOTICE:
+--   This document contains information that is confidential and proprietary to
+--   Mediatrix Telecom, Inc.
+--
+--   Mediatrix Telecom, Inc. reserves all rights to this document as well as to
+--   the Intellectual Property of the document and the technology and know-how
+--   that it includes and represents.
+--
+--   This publication cannot be reproduced, neither in whole nor in part, in any
+--   form whatsoever, without prior written approval by Mediatrix Telecom, Inc.
+--
+--   Mediatrix Telecom, Inc. reserves the right to revise this publication and
+--   make changes at any time and without the obligation to notify any person
+--   and/or entity of such revisions and/or changes.
+--
+-- ****************************************************************************
+-- ****************************************************************************
+
+MGCP44-MX-SYSTEM-CONFIG-MIB
+DEFINITIONS ::= BEGIN
+
+IMPORTS
+        MODULE-IDENTITY,
+        OBJECT-TYPE,
+        Unsigned32
+    FROM SNMPv2-SMI
+        MODULE-COMPLIANCE,
+        OBJECT-GROUP
+    FROM SNMPv2-CONF
+        MxIpAddress,
+        MxIpConfigSource,
+        MxIpPort,
+        MxIpSubnetMask,
+        MxIpSelectConfigSource
+    FROM MX-TC
+        ipAddressStatus,
+        ipAddressConfig,
+        mediatrixMgmt,
+        mediatrixConfig
+    FROM MX-SMI;
+
+sysConfigMIB MODULE-IDENTITY
+    LAST-UPDATED "0309110000Z"
+    ORGANIZATION "Mediatrix Telecom, Inc."
+    CONTACT-INFO "Mediatrix Telecom, Inc.
+                  4229, Garlock Street
+                  Sherbrooke (Quebec)
+                  Canada
+                  Phone: (819) 829-8749
+                  "
+    DESCRIPTION  "This MIB provides General system settings."
+    -- ************************************************************************
+    -- Revision history
+    -- ************************************************************************
+    REVISION    "200408230000Z"
+    DESCRIPTION "Removed variables sysConfigMinDynamicPort, sysConfigMaxDynamicPort,
+                 localHostWanAddressConfigSource, localHostWanAddress,
+                 localHostWanAddressSelectConfigSource and localHostStaticWanAddress
+                 for the 1.4.9.branch."
+    REVISION    "0309110000Z"
+    DESCRIPTION "September 11, 2003
+                    Addition of sysConfigMaxDynamicPort and sysConfigMinDynamicPort.
+                 July 16, 2003
+                    Added WAN address configuration and status objects.
+                 April 10, 2003
+                    Added the protocol specific note for localHostFqdn.
+                 April 07, 2003
+                    Removed reference to MGCP/NCS protocols in description of localHostFqdn.
+                 April 03, 2003
+                    Added variable for the computer ethernet connection speed.
+                    Renamed variable for network ethernet connection speed.
+                 March 11, 2003
+                    Updated sysConfigInterfaceEthernetSpeed description.
+                 August 19, 2002
+                    Updated local FQDN description.
+                 July 10, 2002
+                    Changed the layout of a DESCRIPTION to ease end users
+                    understanding.
+                    Removed the term 'III' in a DESCRIPTION.
+                 January 10, 2002
+                    Added the variables for FQDN choice.
+                 August 22, 2001
+                    Creation"
+    ::= { mediatrixConfig 3 }
+
+sysConfigMIBObjects     OBJECT IDENTIFIER ::= { sysConfigMIB 1 }
+sysConfigConformance    OBJECT IDENTIFIER ::= { sysConfigMIB 2 }
+
+
+
+    sysConfigNetworkEthernetSpeed OBJECT-TYPE
+        SYNTAX      INTEGER {
+                             autoDetect(0),
+                             at-10Mbs-HalfDuplex(1),
+                             at-100Mbs-HalfDuplex(2),
+                             at-10Mbs-FullDuplex(3),
+                             at-100Mbs-FullDuplex(4)
+                            }
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Set the network ethernet connection speed.
+
+                     By default, autoDetect should handle most situations. In some cases however, it
+                     might be required to force the speed and duplex to certain setting.
+
+                     Whenever forcing a connection speed / duplex mode, make sure that the other
+                     device has the same configuration.
+
+                     Please refer to the documentation shipped with your device for more details."
+        DEFVAL      { autoDetect }
+        ::=  {  sysConfigMIBObjects  10  }
+
+    sysConfigComputerEthernetSpeed OBJECT-TYPE
+        SYNTAX      INTEGER {
+                             autoDetect(0),
+                             at-10Mbs-HalfDuplex(1),
+                             at-100Mbs-HalfDuplex(2),
+                             at-10Mbs-FullDuplex(3),
+                             at-100Mbs-FullDuplex(4)
+                            }
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Set the computer ethernet connection speed.
+
+                     By default, autoDetect should handle most situations. In some cases however, it
+                     might be required to force the speed and duplex to certain setting.
+
+                     Whenever forcing a connection speed / duplex mode, make sure that the other
+                     device has the same configuration.
+
+                     Please refer to the documentation shipped with your device for more details."
+        DEFVAL      { autoDetect }
+        ::=  {  sysConfigMIBObjects  12  }
+
+sysConfigStats OBJECT IDENTIFIER ::= { sysConfigMIBObjects 25 }
+
+    sysConfigStatsPeriodLength OBJECT-TYPE
+        SYNTAX      Unsigned32 (1..288)
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Duration of time that statistics are collected in the
+                     current statistics buffer. At expiration, the current statistics
+                     are added to the cumulated statistics buffer and then reset.
+                     These are units of 5 minutes.
+                     1 = 5 minutes.
+                     12 = 1 hour.
+                     288 = 24 hours.
+                     Changing this value resets all the statistics buffers."
+        DEFVAL      { 1 }
+        ::=  {  sysConfigStats  1  }
+
+    sysConfigStatsNumberPeriods OBJECT-TYPE
+        SYNTAX      Unsigned32 (0..24)
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Number of statistics period used for cumulating statistics.
+                    Changing this value resets all the statistics buffers.
+                    0 = Disable cumulated statistics."
+        DEFVAL     { 0 }
+        ::= { sysConfigStats 2 }
+
+
+sysConfigDownloadConfig OBJECT IDENTIFIER ::= { sysConfigMIBObjects 30 }
+
+    sysConfigDownloadConfigFile OBJECT-TYPE
+        SYNTAX      INTEGER  {
+                              noFileDownload(0),
+                              fileDownload(1)
+                             }
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Request the configuration from the management server."
+        DEFVAL      { fileDownload }
+        ::= { sysConfigDownloadConfig 1 }
+
+    sysConfigDownloadConfigMode OBJECT-TYPE
+        SYNTAX      INTEGER  {
+                              request(-1),
+                              record(0),
+                              commit(1),
+                              undo(2)
+                             }
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Select the unit configuration mode
+
+                     request : Request and wait for the Config File. A Config
+                               File notification is sent to the Unit Manager to
+                               request a config file upload. The value is set
+                               back to record(0) after the file is received.
+                               NOTE: The mode must be set to commit(1) to apply
+                                     any new settings.
+
+                     record : Record any changes (TFTP or SNMP) - Changes are
+                              recorded but won't be applied until the mode is
+                              set back to commit(1).
+
+                     commit : Commit all changes - In this mode, changes are
+                              automatically applied.
+                              NOTE: Some changes may require to reboot the
+                                    system to take effect.
+
+                     undo : Undo all recorded changes - All changes recorded
+                            will be dismissed. The mode is set back to commit(1)
+                            afterward."
+        DEFVAL      { request }
+        ::= { sysConfigDownloadConfig 2 }
+
+
+    -- ************************************************************************
+    -- Local Host Ip address configuration and status
+    -- ************************************************************************
+
+ipAddressStatusLocalHost OBJECT IDENTIFIER ::= { ipAddressStatus 1 }
+ipAddressConfigLocalHost OBJECT IDENTIFIER ::= { ipAddressConfig 1 }
+
+   -- Add Status of various IP addresses
+
+    localHostConfigSource OBJECT-TYPE
+        SYNTAX      MxIpConfigSource
+        MAX-ACCESS  read-only
+        STATUS      current
+        DESCRIPTION "Indicates the source used during the last boot sequence
+                     for the provisioning of the localHost objects."
+        DEFVAL { dhcp }
+        ::=  {  ipAddressStatusLocalHost  1  }
+
+    localHostAddress OBJECT-TYPE
+        SYNTAX      MxIpAddress
+        MAX-ACCESS  read-only
+        STATUS      current
+        DESCRIPTION "Local IP address."
+        DEFVAL      { "192.168.0.1" }
+        ::=  {  ipAddressStatusLocalHost  2  }
+
+    localHostDhcpServer OBJECT-TYPE
+        SYNTAX      MxIpAddress
+        MAX-ACCESS  read-only
+        STATUS      current
+        DESCRIPTION "This value indicates the DHCP server IP address obtained
+                     from the network after a DHCP broadcast has been sent.
+                     In the case no DHPC server were found or DHCP not used,
+                     this field will be empty."
+        DEFVAL      { "192.168.0.10" }
+        ::= {  ipAddressStatusLocalHost  3  }
+
+    localHostPrimaryDns OBJECT-TYPE
+        SYNTAX      MxIpAddress
+        MAX-ACCESS  read-only
+        STATUS      current
+        DESCRIPTION "Primary DNS (domain name server) IP address."
+        DEFVAL      { "192.168.0.10" }
+        ::=  {  ipAddressStatusLocalHost  4  }
+
+    localHostSecondaryDns OBJECT-TYPE
+        SYNTAX      MxIpAddress
+        MAX-ACCESS  read-only
+        STATUS      current
+        DESCRIPTION "Secondary DNS (domain name server) IP address.
+                     This address is used in case the primary DNS can
+                     not be reached."
+        DEFVAL      { "192.168.0.10" }
+        ::=  {  ipAddressStatusLocalHost  5  }
+
+    localHostDefaultRouter OBJECT-TYPE
+        SYNTAX      MxIpAddress
+        MAX-ACCESS  read-only
+        STATUS      current
+        DESCRIPTION "Default router IP address."
+        DEFVAL      { "192.168.0.10" }
+        ::=  {  ipAddressStatusLocalHost  6  }
+
+     localHostSnmpPort OBJECT-TYPE
+        SYNTAX      MxIpPort
+        MAX-ACCESS  read-only
+        STATUS      current
+        DESCRIPTION "The port number used to reach the local host via SNMP protocol."
+        DEFVAL { 161 }
+        ::= { ipAddressStatusLocalHost 7 }
+
+    localHostSubnetMask OBJECT-TYPE
+        SYNTAX      MxIpSubnetMask
+        MAX-ACCESS  read-only
+        STATUS      current
+        DESCRIPTION "Subnet mask."
+        DEFVAL      { "255.255.255.0" }
+        ::=  {  ipAddressStatusLocalHost  8  }
+
+    localHostFqdnConfigSource OBJECT-TYPE
+        SYNTAX      INTEGER {
+                             static(0),
+                             dhcp(1),
+                             dns(2),
+                             none(3)
+                            }
+        MAX-ACCESS  read-only
+        STATUS      current
+        DESCRIPTION "Indicates the source used during the last boot sequence
+                     for the provisioning of the local FQDN."
+        DEFVAL      { none }
+        ::=  {  ipAddressStatusLocalHost  9  }
+
+    localHostFqdn OBJECT-TYPE
+        SYNTAX      OCTET STRING (SIZE (0..255))
+        MAX-ACCESS  read-only
+        STATUS      current
+        DESCRIPTION "Local FQDN.
+
+                     This variable's semantics are different depending on protocol and/or
+                     hardware platforms.
+                     Please refer to the documentation shipped with your device for more details."
+        DEFVAL      { "" }
+        ::=  {  ipAddressStatusLocalHost  10  }
+
+
+   -- Parameters to configure IP localHost
+
+    localHostSelectConfigSource OBJECT-TYPE
+        SYNTAX      MxIpSelectConfigSource
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Indicates the source to be used for the provisioning of
+                     the localHost objects."
+        DEFVAL      { dhcp }
+        ::=  {  ipAddressConfigLocalHost  1  }
+
+
+    localHostFqdnSelectConfigSource OBJECT-TYPE
+        SYNTAX      INTEGER {
+                             static(0),
+                             dhcp(1),
+                             dns(2),
+                             none(3)
+                            }
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Indicates the source to be used for the provisioning of
+                     the local FQDN."
+        DEFVAL      { none }
+        ::=  {  ipAddressConfigLocalHost  2  }
+
+
+    ipAddressConfigLocalHostStatic OBJECT IDENTIFIER ::= { ipAddressConfigLocalHost 10 }
+
+   -- ADD static ip address parameters
+
+    localHostStaticAddress OBJECT-TYPE
+        SYNTAX      MxIpAddress
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "User-defined local IP address."
+        DEFVAL      { "192.168.0.1" }
+        ::= { ipAddressConfigLocalHostStatic  1  }
+
+    localHostStaticPrimaryDns OBJECT-TYPE
+        SYNTAX      MxIpAddress
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "User-defined static primary DNS (domain name server) IP
+                     address. The DNS is used mainly to resolve a FQDN (Fully qualified
+                     domain name) into the proper IP address or to get the FQDN from
+                     a specified IP address."
+        DEFVAL      { "192.168.0.10" }
+        ::= {  ipAddressConfigLocalHostStatic 2 }
+
+    localHostStaticSecondaryDns OBJECT-TYPE
+        SYNTAX      MxIpAddress
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "User-defined static secondary DNS (domain name server) IP address.
+                     This address is used in case the primary DNS cannot be reached."
+        DEFVAL      { "192.168.0.10" }
+        ::=    {  ipAddressConfigLocalHostStatic  3  }
+
+    localHostStaticDefaultRouter OBJECT-TYPE
+        SYNTAX      MxIpAddress
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "User-defined default router IP address."
+        DEFVAL      { "192.168.0.10" }
+        ::=  {  ipAddressConfigLocalHostStatic  4  }
+
+    localHostStaticSnmpPort OBJECT-TYPE
+        SYNTAX      MxIpPort
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "The port number to use to reach the local host via SNMP protocol."
+        DEFVAL { 161 }
+        ::= { ipAddressConfigLocalHostStatic 5 }
+
+    localHostStaticSubnetMask OBJECT-TYPE
+        SYNTAX      MxIpSubnetMask
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "User-defined subnet mask."
+        DEFVAL      { "255.255.255.0" }
+        ::=  {  ipAddressConfigLocalHostStatic  6  }
+
+    localHostStaticFqdn OBJECT-TYPE
+        SYNTAX      OCTET STRING (SIZE (0..255))
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "User-defined local FQDN."
+        DEFVAL      { "" }
+        ::= { ipAddressConfigLocalHostStatic  7  }
+
+
+    -- ************************************************************************
+    -- Conformance information
+    -- ************************************************************************
+    sysConfigCompliances OBJECT IDENTIFIER ::= { sysConfigConformance 1 }
+
+    sysConfigComplVer1 MODULE-COMPLIANCE
+        STATUS      current
+        DESCRIPTION
+            ""
+        MODULE -- This Module
+            MANDATORY-GROUPS {
+                                sysConfigGroupVer1,
+                                commonLocalHostGroupVer1
+                             }
+        ::= { sysConfigCompliances 1 }
+
+    -- ************************************************************************
+    -- MIB variable grouping
+    -- ************************************************************************
+    sysConfigGroups OBJECT IDENTIFIER ::= { sysConfigConformance 2 }
+
+    sysConfigGroupVer1 OBJECT-GROUP
+        OBJECTS {
+                 sysConfigNetworkEthernetSpeed,
+                 sysConfigComputerEthernetSpeed,
+                 sysConfigStatsPeriodLength,
+                 sysConfigStatsNumberPeriods,
+                 sysConfigDownloadConfigFile,
+                 sysConfigDownloadConfigMode
+                }
+        STATUS current
+        DESCRIPTION
+            "This group holds the objects that define the system parameters"
+        ::= { sysConfigGroups 1 }
+
+    commonLocalHostGroupVer1 OBJECT-GROUP
+        OBJECTS {
+                 localHostConfigSource,
+                 localHostAddress,
+                 localHostDhcpServer,
+                 localHostPrimaryDns,
+                 localHostSecondaryDns,
+                 localHostDefaultRouter,
+                 localHostSnmpPort,
+                 localHostSubnetMask,
+                 localHostFqdnConfigSource,
+                 localHostFqdn,
+                 localHostSelectConfigSource,
+                 localHostFqdnSelectConfigSource,
+                 localHostStaticAddress,
+                 localHostStaticPrimaryDns,
+                 localHostStaticSecondaryDns,
+                 localHostStaticDefaultRouter,
+                 localHostStaticSnmpPort,
+                 localHostStaticSubnetMask,
+                 localHostStaticFqdn
+                }
+        STATUS current
+        DESCRIPTION
+            "This group holds the objects that define the local host IP
+             address information."
+       ::= { sysConfigGroups 2 }
+
+END

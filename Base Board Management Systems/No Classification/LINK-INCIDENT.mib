@@ -1,0 +1,654 @@
+-- Automatically generated from file
+-- Fri Jul 13 08:19:16 W. Europe Standard Time 2007
+
+LINK-INCIDENT-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+        enterprises, Gauge, Counter, IpAddress, TimeTicks FROM RFC1155-SMI
+        OBJECT-TYPE 	  FROM RFC1212
+        TRAP-TYPE 	  FROM RFC1215;
+
+bcsi OBJECT IDENTIFIER ::= {enterprises 1588}
+
+commDev OBJECT IDENTIFIER ::= {bcsi 2}
+
+fibrechannel OBJECT IDENTIFIER ::= {commDev 1}
+
+fcSwitch OBJECT IDENTIFIER ::= {fibrechannel 1}
+
+linkIncidentMIB OBJECT IDENTIFIER ::= {fcSwitch 50}
+
+LinkWwn ::= OCTET STRING
+
+FcPortID ::= OCTET STRING
+
+RNIDFlags ::= OCTET STRING
+
+RNIDType ::= OCTET STRING
+
+RNIDModel ::= OCTET STRING
+
+RNIDManufacturer ::= OCTET STRING
+
+RNIDManufacturerPlant ::= OCTET STRING
+
+RNIDSequenceNumber ::= OCTET STRING
+
+PortType ::= INTEGER {
+	n-port (1),
+	nl-port (2)
+	}
+
+LinkFormat ::= INTEGER {
+	ficon (1),
+	common (2)
+	}
+
+RNIDTagType ::= OCTET STRING
+
+RNIDParams ::= OCTET STRING
+
+RegType ::= INTEGER {
+	conditional (1),
+	unconditional (2)
+	}
+
+LIRRProtocol ::= INTEGER {
+	fcp (1),
+	sb2 (2)
+	}
+
+RLIRLinkFailureType ::= INTEGER {
+	bitErrorRate (2),
+	lossOfSignal (3),
+	nOSRecognized (4),
+	primitiveSequenceTimeout (5),
+	invalidSeqForPortState (6),
+	loopInitializationTimeout (7),
+	lossOfSignalInLoopInit (8)
+	}
+
+ficonRNID OBJECT IDENTIFIER ::= {linkIncidentMIB 2}
+ficonLIRR OBJECT IDENTIFIER ::= {linkIncidentMIB 3}
+ficonRLIR OBJECT IDENTIFIER ::= {linkIncidentMIB 4}
+
+linkIncidentMIBTraps OBJECT IDENTIFIER ::= {linkIncidentMIB 21}
+
+nodeRNIDTableNumEntries 	OBJECT-TYPE
+	SYNTAX INTEGER
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"The number of entries in Request Node Identification Data (RNID) table."
+	::= { ficonRNID 1 }
+
+nodeRNIDTable 	OBJECT-TYPE
+	SYNTAX SEQUENCE OF NodeRNIDEntry
+	ACCESS not-accessible
+	STATUS mandatory
+	DESCRIPTION
+		"A table that contains, one entry for each Ficon RNID  
+		 node attached to a switch."
+	::= { ficonRNID 2 }
+
+nodeRNIDEntry 	OBJECT-TYPE
+	SYNTAX NodeRNIDEntry
+	ACCESS not-accessible
+	STATUS mandatory
+	DESCRIPTION
+		"A entry containing the RNID information 
+		 for a ficon node"
+	INDEX {
+		nodeRNIDIndex
+	}
+	::= { nodeRNIDTable 1 }
+
+NodeRNIDEntry ::= SEQUENCE {
+	nodeRNIDIndex              INTEGER,
+	nodeRNIDIncidentPortWWN    LinkWwn,
+	nodeRNIDPID                FcPortID,
+	nodeRNIDFlags              RNIDFlags,
+	nodeRNIDType               RNIDType,
+	nodeRNIDModel              RNIDModel,
+	nodeRNIDManufacturer       RNIDManufacturer,
+	nodeRNIDManufacturerPlant  RNIDManufacturerPlant,
+	nodeRNIDSequenceNumber     RNIDSequenceNumber,
+	nodeRNIDConnectedPortWWN   LinkWwn,
+	nodeRNIDPortType           PortType,
+	nodeRNIDFormat             LinkFormat,
+	nodeRNIDTag                RNIDTagType,
+	nodeRNIDParams             RNIDParams
+	}
+
+nodeRNIDIndex 	OBJECT-TYPE
+	SYNTAX INTEGER
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"Index into nodeRNIDTable"
+	::= { nodeRNIDEntry 1 }
+
+nodeRNIDIncidentPortWWN 	OBJECT-TYPE
+	SYNTAX LinkWwn
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"Port WWN for Incident port. An N-port (ficon device
+		 or host) is an incident port"
+	::= { nodeRNIDEntry 2 }
+
+nodeRNIDPID 	OBJECT-TYPE
+	SYNTAX FcPortID
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"PID for an Incident port."
+	::= { nodeRNIDEntry 3 }
+
+nodeRNIDFlags 	OBJECT-TYPE
+	SYNTAX RNIDFlags
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"RNID flags for an Incident port."
+	::= { nodeRNIDEntry 4 }
+
+nodeRNIDType 	OBJECT-TYPE
+	SYNTAX RNIDType
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"Number associate with a node"
+	::= { nodeRNIDEntry 5 }
+
+nodeRNIDModel 	OBJECT-TYPE
+	SYNTAX RNIDModel
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"Model number of the RNID node"
+	::= { nodeRNIDEntry 6 }
+
+nodeRNIDManufacturer 	OBJECT-TYPE
+	SYNTAX RNIDManufacturer
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"Identifies the manufaturer of the node."
+	::= { nodeRNIDEntry 7 }
+
+nodeRNIDManufacturerPlant 	OBJECT-TYPE
+	SYNTAX RNIDManufacturerPlant
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"Identifies the manufacturer plant of the node."
+	::= { nodeRNIDEntry 8 }
+
+nodeRNIDSequenceNumber 	OBJECT-TYPE
+	SYNTAX RNIDSequenceNumber
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"Identifies the sequence number of the node."
+	::= { nodeRNIDEntry 9 }
+
+nodeRNIDConnectedPortWWN 	OBJECT-TYPE
+	SYNTAX LinkWwn
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"WWN of the connected port."
+	::= { nodeRNIDEntry 10 }
+
+nodeRNIDPortType 	OBJECT-TYPE
+	SYNTAX PortType
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"Port type (N, NL or virtual port) of the connected port."
+	::= { nodeRNIDEntry 11 }
+
+nodeRNIDFormat 	OBJECT-TYPE
+	SYNTAX LinkFormat
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"Node identification data format of the connected port."
+	::= { nodeRNIDEntry 12 }
+
+nodeRNIDTag 	OBJECT-TYPE
+	SYNTAX RNIDTagType
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"Node identification tag of the connected port."
+	::= { nodeRNIDEntry 13 }
+
+nodeRNIDParams 	OBJECT-TYPE
+	SYNTAX RNIDParams
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"Node parameters of the connected port."
+	::= { nodeRNIDEntry 14 }
+
+switchRNIDTableNumEntries 	OBJECT-TYPE
+	SYNTAX INTEGER
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"The number of entries in RNID table which corresponds to switch."
+	::= { ficonRNID 3 }
+
+switchRNIDTable 	OBJECT-TYPE
+	SYNTAX SEQUENCE OF SwitchRNIDEntry
+	ACCESS not-accessible
+	STATUS mandatory
+	DESCRIPTION
+		"A table that contains, one entry for each switch ficon node."
+	::= { ficonRNID 4 }
+
+switchRNIDEntry 	OBJECT-TYPE
+	SYNTAX SwitchRNIDEntry
+	ACCESS not-accessible
+	STATUS mandatory
+	DESCRIPTION
+		""
+	INDEX {
+		switchRNIDIndex
+	}
+	::= { switchRNIDTable 1 }
+
+SwitchRNIDEntry ::= SEQUENCE {
+	switchRNIDIndex              INTEGER,
+	switchRNIDSwitchWWN          LinkWwn,
+	switchRNIDFlags              RNIDFlags,
+	switchRNIDType               RNIDType,
+	switchRNIDModel              RNIDModel,
+	switchRNIDManufacturer       RNIDManufacturer,
+	switchRNIDManufacturerPlant  RNIDManufacturerPlant,
+	switchRNIDSequenceNumber     RNIDSequenceNumber,
+	switchRNIDTag                RNIDTagType,
+	switchRNIDParams             RNIDParams
+	}
+
+switchRNIDIndex 	OBJECT-TYPE
+	SYNTAX INTEGER
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"Index into switchRNIDTable."
+	::= { switchRNIDEntry 1 }
+
+switchRNIDSwitchWWN 	OBJECT-TYPE
+	SYNTAX LinkWwn
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"WWN of the switch."
+	::= { switchRNIDEntry 2 }
+
+switchRNIDFlags 	OBJECT-TYPE
+	SYNTAX RNIDFlags
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"RNID flags for switch."
+	::= { switchRNIDEntry 3 }
+
+switchRNIDType 	OBJECT-TYPE
+	SYNTAX RNIDType
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"Type Number associate with a switch."
+	::= { switchRNIDEntry 4 }
+
+switchRNIDModel 	OBJECT-TYPE
+	SYNTAX RNIDModel
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"Model number of the RNID switch."
+	::= { switchRNIDEntry 5 }
+
+switchRNIDManufacturer 	OBJECT-TYPE
+	SYNTAX RNIDManufacturer
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"Identifies the manufaturer of the switch."
+	::= { switchRNIDEntry 6 }
+
+switchRNIDManufacturerPlant 	OBJECT-TYPE
+	SYNTAX RNIDManufacturerPlant
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"Identifies the manufacturer plant of the switch."
+	::= { switchRNIDEntry 7 }
+
+switchRNIDSequenceNumber 	OBJECT-TYPE
+	SYNTAX RNIDSequenceNumber
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"Identifies the sequence number of the switch."
+	::= { switchRNIDEntry 8 }
+
+switchRNIDTag 	OBJECT-TYPE
+	SYNTAX RNIDTagType
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"Identification tag of the switch."
+	::= { switchRNIDEntry 9 }
+
+switchRNIDParams 	OBJECT-TYPE
+	SYNTAX RNIDParams
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"Parameters of the switch."
+	::= { switchRNIDEntry 10 }
+
+lIRRTableNumEntries 	OBJECT-TYPE
+	SYNTAX INTEGER
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"The number of entries in Link Incident Record 
+		 Registration (LIRR) table"
+	::= { ficonLIRR 1 }
+
+lIRRTable 	OBJECT-TYPE
+	SYNTAX SEQUENCE OF LIRREntry
+	ACCESS not-accessible
+	STATUS mandatory
+	DESCRIPTION
+		"A table that contains, one entry for each LIRR incident 
+		 for an attached FICON device."
+	::= { ficonLIRR 2 }
+
+lIRREntry 	OBJECT-TYPE
+	SYNTAX LIRREntry
+	ACCESS not-accessible
+	STATUS mandatory
+	DESCRIPTION
+		"An entry containing LIRR information."
+	INDEX {
+		lIRRIndex
+	}
+	::= { lIRRTable 1 }
+
+LIRREntry ::= SEQUENCE {
+	lIRRIndex            INTEGER,
+	lIRRListenerPortWWN  LinkWwn,
+	lIRRListenerPID      FcPortID,
+	lIRRRegType          RegType,
+	lIRRProtocol         LIRRProtocol,
+	lIRRPortType         PortType,
+	lIRRFormat           LinkFormat
+	}
+
+lIRRIndex 	OBJECT-TYPE
+	SYNTAX INTEGER
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"Index into the LIRR table."
+	::= { lIRREntry 1 }
+
+lIRRListenerPortWWN 	OBJECT-TYPE
+	SYNTAX LinkWwn
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"WWN of the Listener port."
+	::= { lIRREntry 2 }
+
+lIRRListenerPID 	OBJECT-TYPE
+	SYNTAX FcPortID
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"PID for the listener port."
+	::= { lIRREntry 3 }
+
+lIRRRegType 	OBJECT-TYPE
+	SYNTAX RegType
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"Registration type - conditional or unconditional."
+	::= { lIRREntry 4 }
+
+lIRRProtocol 	OBJECT-TYPE
+	SYNTAX LIRRProtocol
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"Protocol type supported."
+	::= { lIRREntry 5 }
+
+lIRRPortType 	OBJECT-TYPE
+	SYNTAX PortType
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"Attached port type."
+	::= { lIRREntry 6 }
+
+lIRRFormat 	OBJECT-TYPE
+	SYNTAX LinkFormat
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"Registration type - conditional or unconditional."
+	::= { lIRREntry 7 }
+
+rLIRTableNumEntries 	OBJECT-TYPE
+	SYNTAX INTEGER
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"The number of entries in switch Registered Link 
+		 Incident Report (RLIR) table"
+	::= { ficonRLIR 1 }
+
+rLIRTable 	OBJECT-TYPE
+	SYNTAX SEQUENCE OF RLIREntry
+	ACCESS not-accessible
+	STATUS mandatory
+	DESCRIPTION
+		"A table that contains, one entry for each LIRR incident 
+		 for an attached FICON device."
+	::= { ficonRLIR 2 }
+
+rLIREntry 	OBJECT-TYPE
+	SYNTAX RLIREntry
+	ACCESS not-accessible
+	STATUS mandatory
+	DESCRIPTION
+		"An entry containing RLIR information."
+	INDEX {
+		rLIRIndex
+	}
+	::= { rLIRTable 1 }
+
+RLIREntry ::= SEQUENCE {
+	rLIRIndex               INTEGER,
+	rLIRIncidentPortWwn     LinkWwn,
+	rLIRIncidentNodeWwn     LinkWwn,
+	rLIRIncidentPortType    PortType,
+	rLIRIncidentPID         FcPortID,
+	rLIRIncidentPortNumber  INTEGER,
+	rLIRConnectedPortWwn    LinkWwn,
+	rLIRConnectedNodeWwn    LinkWwn,
+	rLIRFabricWwn           LinkWwn,
+	rLIRLinkFailureType     RLIRLinkFailureType,
+	rLIRTimeStamp           OCTET STRING,
+	rLIRFormat              LinkFormat
+	}
+
+rLIRIndex 	OBJECT-TYPE
+	SYNTAX INTEGER
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"Index into RLIR table."
+	::= { rLIREntry 1 }
+
+rLIRIncidentPortWwn 	OBJECT-TYPE
+	SYNTAX LinkWwn
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"Port WWN for RLIR Incident port."
+	::= { rLIREntry 2 }
+
+rLIRIncidentNodeWwn 	OBJECT-TYPE
+	SYNTAX LinkWwn
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"Incident node WWN."
+	::= { rLIREntry 3 }
+
+rLIRIncidentPortType 	OBJECT-TYPE
+	SYNTAX PortType
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"RLIR Incident port type."
+	::= { rLIREntry 5 }
+
+rLIRIncidentPID 	OBJECT-TYPE
+	SYNTAX FcPortID
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"RLIR Incident PID."
+	::= { rLIREntry 6 }
+
+rLIRIncidentPortNumber 	OBJECT-TYPE
+	SYNTAX INTEGER
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"RLIR Incident port number.This is vendor specific
+		 port number."
+	::= { rLIREntry 7 }
+
+rLIRConnectedPortWwn 	OBJECT-TYPE
+	SYNTAX LinkWwn
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"RLIR Connected port WWN."
+	::= { rLIREntry 8 }
+
+rLIRConnectedNodeWwn 	OBJECT-TYPE
+	SYNTAX LinkWwn
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"RLIR Connected node WWN."
+	::= { rLIREntry 9 }
+
+rLIRFabricWwn 	OBJECT-TYPE
+	SYNTAX LinkWwn
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"RLIR Fabric Wwn."
+	::= { rLIREntry 10 }
+
+rLIRLinkFailureType 	OBJECT-TYPE
+	SYNTAX RLIRLinkFailureType
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"RLIR Link failure type."
+	::= { rLIREntry 11 }
+
+rLIRTimeStamp 	OBJECT-TYPE
+	SYNTAX OCTET STRING
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"RLIR time stamp."
+	::= { rLIREntry 12 }
+
+rLIRFormat 	OBJECT-TYPE
+	SYNTAX LinkFormat
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"RLIR Format."
+	::= { rLIREntry 13 }
+
+linkRNIDDeviceRegistration 	TRAP-TYPE
+	ENTERPRISE linkIncidentMIBTraps
+	VARIABLES {
+		nodeRNIDIndex,
+		nodeRNIDIncidentPortWWN,
+		nodeRNIDConnectedPortWWN
+	}
+	DESCRIPTION
+		" A device registered with the switch"
+	::= 1
+
+linkRNIDDeviceDeRegistration 	TRAP-TYPE
+	ENTERPRISE linkIncidentMIBTraps
+	VARIABLES {
+		nodeRNIDIndex,
+		nodeRNIDIncidentPortWWN,
+		nodeRNIDConnectedPortWWN
+	}
+	DESCRIPTION
+		" A device de-regsitered with the switch"
+	::= 2
+
+linkLIRRListenerAdded 	TRAP-TYPE
+	ENTERPRISE linkIncidentMIBTraps
+	VARIABLES {
+		lIRRListenerPortWWN,
+		lIRRListenerPID,
+		lIRRIndex
+	}
+	DESCRIPTION
+		" A listener for link failure incident is added"
+	::= 3
+
+linkLIRRListenerRemoved 	TRAP-TYPE
+	ENTERPRISE linkIncidentMIBTraps
+	VARIABLES {
+		lIRRListenerPortWWN,
+		lIRRListenerPID,
+		lIRRIndex
+	}
+	DESCRIPTION
+		" A listener for link failure incident is removed"
+	::= 4
+
+linkRLIRFailureIncident 	TRAP-TYPE
+	ENTERPRISE linkIncidentMIBTraps
+	VARIABLES {
+		nodeRNIDIndex,
+		lIRRIndex,
+		rLIRIncidentPortWwn,
+		rLIRConnectedPortWwn,
+		rLIRIndex,
+		rLIRLinkFailureType,
+		lIRRListenerPID
+	}
+	DESCRIPTION
+		" A link failure incident has occured. The value of
+lIRRIndex will be -2147483647 and lIRRListenerPID will
+be 0 (zero) , if there is no listener for incident."
+	::= 5
+
+END
+

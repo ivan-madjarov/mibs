@@ -1,0 +1,698 @@
+-- ****************************************************************************
+-- ****************************************************************************
+--
+--             Copyright(c) 2002-2005 Mediatrix Telecom, Inc.
+--
+--  NOTICE:
+--   This document contains information that is confidential and proprietary to
+--   Mediatrix Telecom, Inc.
+--
+--   Mediatrix Telecom, Inc. reserves all rights to this document as well as to
+--   the Intellectual Property of the document and the technology and know-how
+--   that it includes and represents.
+--
+--   This publication cannot be reproduced, neither in whole nor in part, in any
+--   form whatsoever, without prior written approval by Mediatrix Telecom, Inc.
+--
+--   Mediatrix Telecom, Inc. reserves the right to revise this publication and
+--   make changes at any time and without the obligation to notify any person
+--   and/or entity of such revisions and/or changes.
+--
+-- ****************************************************************************
+-- ****************************************************************************
+
+H32340-MX-SIP-INTEROP-MIB
+DEFINITIONS ::= BEGIN
+
+IMPORTS
+        MODULE-IDENTITY,
+        OBJECT-IDENTITY,
+        OBJECT-TYPE,
+        Unsigned32
+    FROM SNMPv2-SMI
+        OBJECT-GROUP,
+        MODULE-COMPLIANCE
+    FROM SNMPv2-CONF
+         MxEnableState
+    FROM MX-TC
+        mediatrixExperimental
+    FROM MX-SMI;
+
+sipInteropMIB MODULE-IDENTITY
+    LAST-UPDATED "200506280000Z"
+    ORGANIZATION "Mediatrix Telecom, Inc."
+    CONTACT-INFO "Mediatrix Telecom, Inc.
+                  4229, Garlock Street
+                  Sherbrooke (Quebec)
+                  Canada
+                  Phone: (819) 829-8749
+                  "
+    DESCRIPTION "This MIB contains SIP interoperability configuration objects."
+
+    -- ************************************************************************
+    -- Revision history
+    -- ************************************************************************
+    REVISION    "200506280000Z"
+    DESCRIPTION "Modified the sipInteropSymmetricUdpSourcePortEnable and 
+                 sipInteropMaxForwardsValue descriptions."
+    REVISION    "200505200000Z"
+    DESCRIPTION "Added sipInteropUseDtmfPayloadTypeFoundInAnswer."
+    REVISION    "200501250000Z"
+    DESCRIPTION "Added sipInteropIgnoreViaBranchIdInCancelEnable."
+    REVISION    "200501100000Z"
+    DESCRIPTION "Added sipInteropAuthenticationQop."
+    REVISION    "200412220000Z"
+    DESCRIPTION "Added sipInteropRingingResponseCode."
+    REVISION    "200411020000Z"
+    DESCRIPTION "Added sipInteropDefaultRegistrationExpiration."
+    REVISION    "200410250000Z"
+    DESCRIPTION "Added sipInteropBranchMatchingMethod."
+    REVISION    "200410040000Z"
+    DESCRIPTION "Added sipInteropDtmfTransportBySipProtocol,
+                 sipInteropDtmfTransportMethod and sipInteropDtmfTransportDuration."
+    REVISION    "200409290000Z"
+    DESCRIPTION "Added sipInteropRejectCodeForNoRessource."
+    REVISION    "200409210000Z"
+    DESCRIPTION "Added sipInteropLockDnsSrvRecordPerCallEnable and
+                 sipInteropReuseCredentialEnable."
+    REVISION    "200407280000Z"
+    DESCRIPTION "Added sipInteropReferredByConfig"
+    REVISION    "200406140000Z"
+    DESCRIPTION "Updated sipInteropOnHoldSdpStreamDirection description."
+    REVISION    "200406020000Z"
+    DESCRIPTION "Added sipInteropSdpOriginLineSessionIDAndVersionMaxLength."
+    REVISION    "200404270000Z"
+    DESCRIPTION "Added sipInteropSdpDirectionAttributeEnable and updated the
+                 sipInteropOnHoldSdpStreamDirection description."
+    REVISION    "200404210000Z"
+    DESCRIPTION "Added sipInteropLocalRingOnProvisionalResponse"
+    REVISION    "200403250000Z"
+    DESCRIPTION "Added sipInteropOnHoldSdpStreamDirection"
+    REVISION    "200402130000Z"
+    DESCRIPTION "Added sipInteropSendUAHeaderEnable"
+    REVISION    "200311170000Z"
+    DESCRIPTION "Fixed typo in sipInteropReplacesVersion variable."
+    REVISION    "200311060000Z"
+    DESCRIPTION "Added sipInteropMaxForwardsValue variable."
+    REVISION    "200311050000Z"
+    DESCRIPTION "Added sipInteropSymmetricUdpSourcePortEnable variable."
+    REVISION    "200311030000Z"
+    DESCRIPTION "Added sipInteropReplacesVersion variable."
+    REVISION    "200303110000Z"
+    DESCRIPTION "Updated sipInteropTransmissionTimeout description."
+    REVISION    "200210280000Z"
+    DESCRIPTION "Added sipInteropTransmissionTimeout variable."
+    REVISION    "200210160000Z"
+    DESCRIPTION "Added variables sipInteropTransferVersion and
+                 sipInteropSessionTimerVersion."
+    REVISION    "200210010000Z"
+    DESCRIPTION "Created"
+    ::= { mediatrixExperimental 20 }
+
+sipInteropMIBObjects  OBJECT IDENTIFIER ::= { sipInteropMIB 1 }
+sipInteropConformance OBJECT IDENTIFIER ::= { sipInteropMIB 2 }
+
+    -- ************************************************************************
+    -- Sip Interop Variables
+    -- ************************************************************************
+    sipInteropReplacesConfig OBJECT-TYPE
+        SYNTAX      INTEGER {
+                             doNotUseReplaces(0),
+                             useReplacesWithRequire(1),
+                             useReplacesNoRequire(2)
+                            }
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Configures usage of the Replaces header mechanism used in a
+                     transfer. When supported by the target of the transfer, Replaces
+                     ensures a more seamless transfer by permitting the initiating party
+                     to effectively replace a current call by another instead of
+                     disconnecting the call to be replaced and creating a second
+                     call.
+
+                     doNotUseReplaces :
+                        The Replaces header is not used.
+
+                     useReplacesWithRequire :
+                        The Replaces header is used. It can be seen in the Refer-To
+                        header found in the REFER request sent by the transferor.
+                        It can also be seen in the INVITE sent by the transferee.
+                        The target that supports Replaces will use its information
+                        to merge the new INVITE with an existing call specified in
+                        the Replaces header.
+
+                        The transferee will require the use of the replaces extension
+                        for proper completion of the transfer. If the replaces extension
+                        is not supported by the target of the transfer, the unit
+                        will go into a fallback algorithm to retry the transfer
+                        using replaces, by reversing the roles of the target and
+                        the transferee (by resending the REFER to the initial target
+                        instead of the initial transferee). As a last resort (if none
+                        of the participants supports replaces), the transfer will
+                        be carried out without using the replaces extension.
+
+
+                     useReplacesNoRequire :
+                        The Replaces header is used. It can be seen in the Refer-To
+                        header found in the REFER request sent by the transferor.
+                        It can also be seen in the INVITE sent by the transferee.
+                        The target that supports Replaces will use its information
+                        to merge the new INVITE with an existing call specified in
+                        the Replaces header.
+
+                        This will disable the transfer fallback. The replaces
+                        information will still be present, but no check will be
+                        made that it is effectively used to complete the transfer."
+        DEFVAL      { useReplacesWithRequire }
+        ::= { sipInteropMIBObjects  5 }
+
+
+    sipInteropTransferVersion OBJECT-TYPE
+        SYNTAX      INTEGER {
+                             transfer02(0),
+                             transfer05UsingRefer02(1)
+                            }
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Selects the version of the transfer draft that the unit will
+                     use. The provisioned version is used for initiating transfers
+                     and receiving them. Transfer versions other than those provisioned
+                     will not work.
+
+                     transfer02 :
+                        The unit will execute transfers using the methods described
+                        in the now expired draft-ietf-sip-cc-transfer-02.txt.
+                        This draft was obsoleted. Its use is deprecated and
+                        this setting should be used for backward compatibility
+                        issues only.
+
+                     transfer05UsingRefer02 :
+                        The unit will execute transfers using the methods described
+                        in the more recent draft-ietf-sip-cc-transfer-05.txt.
+                        This draft version contains several enhancements over the
+                        previous ones. Among others, it is possible to use the
+                        replaces header to provide a more seamless attended transfer
+                        to the user. This method also uses draft-ietf-sip-refer-02.txt.
+                        This setting should be used if you don't need to interop
+                        with transfer02-enabled parties."
+        DEFVAL      { transfer05UsingRefer02 }
+        ::= { sipInteropMIBObjects  10 }
+
+
+    sipInteropSessionTimerVersion OBJECT-TYPE
+        SYNTAX      INTEGER {
+                             sessionTimer04(0),
+                             sessionTimer08(1)
+                            }
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Selects the version of the session timer draft that the unit
+                     will use. Session timer versions other than those provisioned
+                     may not work because of backward compatibility issues between
+                     the versions.
+
+                     sessionTimer04 :
+                        The unit will use the session timer extension as described
+                        in the now expired draft-ietf-sip-session-timer-04.txt.
+                        This draft was obsoleted. Its use is deprecated and
+                        this setting should be used for backward compatibility
+                        issues only.
+
+                     sessionTimer08 :
+                        The unit will use the session timer extension as described
+                        in the more recent draft-ietf-sip-session-timer-08.txt.
+                        This draft version contains several enhancements over the
+                        previous ones, including the use of the Min-SE header.
+                        This setting should be used if you don't need
+                        to interoperate with session timer v4-enabled parties."
+        DEFVAL      { sessionTimer08 }
+        ::= { sipInteropMIBObjects  15 }
+
+
+    sipInteropTransmissionTimeout OBJECT-TYPE
+        SYNTAX      Unsigned32 ( 1..32 )
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Changes the time to wait for a response or an ACK before considering a
+                     transaction timed out. This corresponds to timers B, F and H for all transport
+                     protocols and timer J for UDP. These timers are defined in section A of RFC3261.
+
+                     This timeout will affect the number of retransmissions. Retransmissions continue
+                     to follow the timing guidelines found in RFC3261.
+
+                     For example, if using DNS SRV and multiple entries are present, this value will
+                     be the time spent waiting for answers from each entry.
+
+                     This value is expressed in seconds (s)."
+        DEFVAL      { 32 }
+        ::= { sipInteropMIBObjects  20 }
+
+
+    sipInteropReplacesVersion OBJECT-TYPE
+        SYNTAX      INTEGER {
+                             replaces01(0),
+                             replaces03(1)
+                            }
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Selects the version of the ietf-sip-replaces draft to conform to. The
+                     provisioned version affects the way blind transfers are executed.
+
+                     replaces01 :
+                        When following the sip-replaces-01 draft, the Transferor is allowed to use a
+                        REFER with Replaces when proceeding to initiate a blind transfer. This, in turn,
+                        results in the Transferee including a Replaces header in its INVITE to the
+                        Transfer Target.
+
+                     replaces03 :
+                        The sip-replaces-03 draft forbids the use of Replaces in the case of a blind
+                        transfer.  When initiating one, the Transferor first CANCELs its call with the
+                        Target and then issues a REFER without Replaces to the Transferee."
+        DEFVAL      { replaces01 }
+        ::= { sipInteropMIBObjects  25 }
+
+    sipInteropSymmetricUdpSourcePortEnable OBJECT-TYPE
+        SYNTAX      MxEnableState
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Indicates whether the unit always uses the same local port when sending SIP
+                     traffic over UDP.
+
+                     Symmetric UDP ports are sometimes needed to traverse NAT/Firewall devices.
+
+                     Note that when changing this setting, all destinations are automatically thrown
+                     out of the penalty box, when applicable.
+
+                     enable :
+                        SIP signaling sent over UDP originates from the same port as the port on which
+                        the user agent is listening. This is configured in MX-SIP-MIB's sipPort
+                        variable. When enabled, ICMP messages are not processed, which means that
+                        unreachable targets will take longer to detect.
+
+                     disable :
+                        SIP signaling over UDP uses a randomly-generated originating port. ICMP
+                        errors are processed correctly.
+
+                     This variable's semantics are different depending on the software version.
+                     Please refer to the Administration Manual shipped with your device for more
+                     details."
+
+        DEFVAL      { enable }
+        ::=  { sipInteropMIBObjects  30 }
+
+    sipInteropMaxForwardsValue OBJECT-TYPE
+        SYNTAX      INTEGER ( -1..200 )
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Sets the value that will be used in the Max-Forwards header, in conformance
+                     with RFC3261.
+
+                     When this value is positive, the Max-Forwards header is inserted in sent SIP
+                     requests.
+
+                     To disable inclusion of this header in SIP requests, set the value to '-1'.
+
+                     This variable's semantics are different depending on the software version.
+                     Please refer to the Administration Manual shipped with your device for more
+                     details."
+
+        DEFVAL      { -1 }
+        ::=  { sipInteropMIBObjects  35 }
+
+
+      sipInteropSendUAHeaderEnable OBJECT-TYPE
+        SYNTAX      MxEnableState
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Enables/Disables sending of the SIP User-Agent header"
+
+        DEFVAL      { enable }
+        ::=  { sipInteropMIBObjects  50 }
+
+    sipInteropSdpDirectionAttributeEnable OBJECT-TYPE
+        SYNTAX      MxEnableState
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Indicates if the SDP direction attribute is present in the initial
+                     INVITE sent by the unit and if the direction attribute present
+                     in the SDP received from the peer is ignored or not.
+
+                     disable :
+                      - No direction attribute is present in the SDP sent by the unit.
+                      - Any direction attribute found in the SDP received from the peer
+                        is ignored by the unit.
+                      - To put an endpoint on hold, a SDP containing a connection address
+                        of '0.0.0.0' is sent.
+                      The method to put a session on hold is in conformance with RFC 2543.
+
+                     enable :
+                      - The unit always sends the direction attribute in the SDP of the
+                        initial INVITE.
+                      - The initial handshake determines if the peer supports the direction
+                        attribute or not.
+                      - If present in the SDP, the direction attribute is preferred over the
+                        connection address to transmit session modification information.
+                      This method is in conformance with RFC 3264."
+        DEFVAL      { enable }
+        ::= { sipInteropMIBObjects  75 }
+
+    sipInteropOnHoldSdpStreamDirection OBJECT-TYPE
+        SYNTAX      INTEGER {
+                             inactive(0),
+                             sendonly(1)
+                            }
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Indicates the direction attribute and the meaning of the
+                     connection address '0.0.0.0' sent in the SDP when an endpoint
+                     is put on hold.
+
+                     inactive :
+                        The stream is put on hold by marking it as inactive.
+
+                     sendonly :
+                        The stream is put on hold by marking it as sendonly.
+                        This method is in conformance with RFC 3264."
+        DEFVAL      { inactive }
+        ::= { sipInteropMIBObjects  100 }
+
+    sipInteropLocalRingOnProvisionalResponse OBJECT-TYPE
+        SYNTAX      MxEnableState
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Specifies if the local ring should be started on reception
+                     of a '18x Provisional' response without SDP.
+
+                     Note that this variable does not affect the behaviour in case
+                     where the '18x Provisional' response contains SDP.
+
+                     disable :
+                        The local ring will not be started on a '18x Provisional'
+                        response without SDP, except for a '180 Ringing' message.
+
+                     enable :
+                        The local ring will be started on any '18x Provisional'
+                        response without SDP."
+        DEFVAL      { disable }
+        ::= { sipInteropMIBObjects  150 }
+
+    sipInteropSdpOriginLineSessionIDAndVersionMaxLength OBJECT-TYPE
+        SYNTAX      INTEGER {
+                             max-32bits(10),
+                             max-64bits(20)
+                            }
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "The maximum length of the session ID and the session version
+                     number in the origin line (o=) of the SDP.
+
+                     max-32bits :
+                        The session ID and the session version number are represented
+                        with a 32 bit integer. They have a maximum length of 10 digits.
+
+                     max-64bits :
+                        The session ID and the session version number are represented
+                        with a 64 bit integer. They have a maximum length of 20 digits."
+        DEFVAL      { max-64bits }
+        ::= { sipInteropMIBObjects  200 }
+
+    sipInteropReferredByConfig OBJECT-TYPE
+        SYNTAX      INTEGER {
+                             useSipStackDefault(0),
+                             useLocalUrl(1)
+                            }
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Configures usage of the Referred-By field used in a
+                     SIP REFER message.
+
+                     useSipStackDefault :
+                        Let the SIP stack populate the Referred-By header field.
+
+                     useLocalUrl :
+                        Use the local URL to populate the Referred-By header field."
+        DEFVAL      { useSipStackDefault }
+        ::= { sipInteropMIBObjects  250 }
+
+    sipInteropLockDnsSrvRecordPerCallEnable OBJECT-TYPE
+        SYNTAX      MxEnableState
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Configures the behavior of the DNS SRV feature.
+
+                     disable :
+                        The behavior follows RFC 3263.
+
+                     enable :
+                        All messages during a call or registration use the same
+                        SRV record."
+        DEFVAL      { disable }
+        ::= { sipInteropMIBObjects  300 }
+
+    sipInteropReuseCredentialEnable OBJECT-TYPE
+        SYNTAX      MxEnableState
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Configures how to reuse the credential in different transactions
+                     of the same call or registration.
+
+                     disable :
+                        Do not reuse the credential negociated in previous transactions.
+
+                     enable :
+                        Reuse the credential negotiated in previous transactions."
+        DEFVAL      { enable }
+        ::= { sipInteropMIBObjects  350 }
+
+    sipInteropRingingResponseCode OBJECT-TYPE
+        SYNTAX      INTEGER {
+                             send180Ringing(0),
+                             send183WithSdp(1)
+                            }
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Configures the response code sent back when the endpoint starts
+                     ringing.
+
+                     send180Ringing :
+                        Send out a '180 Ringing' response without a body.
+
+                     send183WithSdp :
+                        Return a '183 Session Progress' packet with SDP
+                        (needed if the endpoint is required to generate ringback
+                        on connection)."
+        DEFVAL      { send180Ringing }
+        ::= { sipInteropMIBObjects  375 }
+
+    sipInteropRejectCodeForNoRessource OBJECT-TYPE
+        SYNTAX      INTEGER {
+                             temporarilyUnavailable(0),
+                             busyHere(1)
+                            }
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Configures the rejection code used when all lines of the group
+                     are unavailable.
+
+                     temporarilyUnavailable :
+                        The '480 Temporarily Unavailable' rejection code is used.
+
+                     busyHere :
+                        The '486 Busy Here' rejection code is used."
+        DEFVAL      { temporarilyUnavailable }
+        ::= { sipInteropMIBObjects  400 }
+
+    sipInteropBranchMatchingMethod OBJECT-TYPE
+        SYNTAX      INTEGER {
+                             rfc2543(0),
+                             rfc3261(1)
+                            }
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Configures the method used to match incoming SIP packets with
+                     a branch.
+
+                     rfc2543 :
+                        Follows the method described in RFC2543 (section 10.1.2).
+
+                     rfc3261 :
+                        Follows the method described in RFC3261 (section 8.1.1.7)."
+        DEFVAL      { rfc3261 }
+        ::= { sipInteropMIBObjects  425 }
+
+    sipInteropIgnoreViaBranchIdInCancelEnable OBJECT-TYPE
+        SYNTAX      MxEnableState
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Specifies whether the SIP stack's transaction matching procedure
+                     ignores the Via header field's branch parameter in CANCEL requests
+                     with no To tag.
+
+                     disable :
+                        The transaction matching procedure behaves according to section
+                        17.2.3 of RFC3261.
+
+                     enable :
+                        The branch parameter is not used as a transaction matching
+                        criterion for CANCEL requests with no To tag."
+        DEFVAL      { disable }
+        ::= { sipInteropMIBObjects  432 }
+
+    sipInteropDefaultRegistrationExpiration OBJECT-TYPE
+        SYNTAX      Unsigned32 ( 1..86400 )
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Configures the default registration expiration. This value is used when
+                     the contact in a registration response contains no expires or the expires
+                     is badly formatted. In this case, the delay before a re-REGISTER is the
+                     value set in the sipInteropDefaultRegistrationExpiration variable minus
+                     the value set in the sipReRegistrationTime variable.
+
+                     The recommended value in RFC3261 (section 10.2) is 3600.
+
+                     This value is expressed in seconds (s)."
+        DEFVAL      { 3600 }
+        ::= { sipInteropMIBObjects  438 }
+
+    sipInteropAuthenticationQop OBJECT-TYPE
+        SYNTAX      INTEGER {
+                             auth(0),
+                             auth-int(1)
+                            }
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Specifies the quality of protection the SIP User Agent
+                     should apply to its authentication request.
+
+                     auth :
+                        The SIP User Agent applies authentication only.
+
+                     auth-int :
+                        The SIP User Agent applies authentication with integrity
+                        protection.(see RFC 2617)"
+        DEFVAL      { auth }
+        ::= { sipInteropMIBObjects  444 }
+
+    sipInteropUseDtmfPayloadTypeFoundInAnswer OBJECT-TYPE
+        SYNTAX      MxEnableState
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "The default behavior when sending an initial offer
+                     that contains an RFC 2833 payload type is to keep using 
+                     that payload type even if the response comes back with a 
+                     different one.  When this variable is enabled, 
+                     the unit rather uses the payload type found in the answer.  
+                     The variable does not affect the behavior when receiving an
+                     offer.
+
+                     disable :
+                        Keep using the initial payload type.
+
+                     enable :
+                        Use the RFC 2833 payload type found in the received
+                        answer.
+                        
+                     This variable only has an effect when voiceIfDtmfTransport
+                     is set to outOfBandUsingRtp."
+        DEFVAL      { disable }
+        ::= { sipInteropMIBObjects  447 }
+
+sipInteropDtmfTransportBySipProtocol OBJECT IDENTIFIER ::= { sipInteropMIBObjects 450 }
+
+    -- *************************************************************************
+    -- DTMF Transport By SIP Protocol
+    -- *************************************************************************
+        sipInteropDtmfTransportMethod OBJECT-TYPE
+            SYNTAX      INTEGER {
+                                 draftChoudhuriSipInfoDigit00(0),
+                                 infoDtmfRelay(1)
+                                }
+            MAX-ACCESS  read-write
+            STATUS      current
+            DESCRIPTION "Configures the method used to transmit DTMFs over the
+                         SIP protocol.
+
+                         This variable is effective only if the endpoint is configured
+                         to use the DTMF out-of-band by protocol transport method
+                         (outOfBandUsingSignalingProtocol; refer to the variable
+                         'voiceIfDtmfTransport').
+
+
+                         draftChoudhuriSipInfoDigit00 :
+                            Transmits DTMFs by using the method defined in the draft
+                            'draft-choudhuri-sip-info-digit-00'.
+
+                         infoDtmfRelay :
+                            Transmits DTMFs by using a custom method.
+
+                            This custom method requires no SDP negotiation and uses
+                            a SIP INFO message with a content of type
+                            'application/dtmf-relay'."
+            DEFVAL      { draftChoudhuriSipInfoDigit00 }
+            ::= { sipInteropDtmfTransportBySipProtocol  50 }
+
+        sipInteropDtmfTransportDuration OBJECT-TYPE
+            SYNTAX      INTEGER ( 50..2000 )
+            MAX-ACCESS  read-write
+            STATUS      current
+            DESCRIPTION "Configures the DTMF duration sent in the INFO message when
+                         using the 'infoDtmfRelay' method (refer to the variable
+                         'sipInteropDtmfTransportMethod').
+
+                         This value is expressed in milliseconds (ms)."
+            DEFVAL      { 100 }
+            ::= { sipInteropDtmfTransportBySipProtocol  100 }
+
+    -- ************************************************************************
+    -- Conformance information
+    -- ************************************************************************
+    sipInteropCompliances OBJECT IDENTIFIER ::= { sipInteropConformance 1 }
+
+    sipInteropBasicComplVer1 MODULE-COMPLIANCE
+        STATUS      current
+        DESCRIPTION "Minimal definitions for the SIP protocol group"
+        MODULE -- This Module
+            MANDATORY-GROUPS {
+                                sipInteropGroupVer1
+                             }
+        ::= { sipInteropCompliances 1 }
+
+
+    -- ************************************************************************
+    -- MIB variable grouping
+    -- ************************************************************************
+    sipInteropGroups OBJECT IDENTIFIER ::= { sipInteropConformance 2 }
+
+    sipInteropGroupVer1 OBJECT-GROUP
+        OBJECTS {
+                    sipInteropReplacesConfig,
+                    sipInteropTransferVersion,
+                    sipInteropSessionTimerVersion,
+                    sipInteropTransmissionTimeout,
+                    sipInteropReplacesVersion,
+                    sipInteropSymmetricUdpSourcePortEnable,
+                    sipInteropMaxForwardsValue,
+                    sipInteropSendUAHeaderEnable,
+                    sipInteropSdpDirectionAttributeEnable,
+                    sipInteropOnHoldSdpStreamDirection,
+                    sipInteropLocalRingOnProvisionalResponse,
+                    sipInteropSdpOriginLineSessionIDAndVersionMaxLength,
+                    sipInteropReferredByConfig,
+                    sipInteropLockDnsSrvRecordPerCallEnable,
+                    sipInteropReuseCredentialEnable,
+                    sipInteropRingingResponseCode,
+                    sipInteropRejectCodeForNoRessource,
+                    sipInteropBranchMatchingMethod,
+                    sipInteropIgnoreViaBranchIdInCancelEnable,
+                    sipInteropDefaultRegistrationExpiration,
+                    sipInteropAuthenticationQop,
+                    sipInteropUseDtmfPayloadTypeFoundInAnswer,
+                    sipInteropDtmfTransportMethod,
+                    sipInteropDtmfTransportDuration
+                }
+        STATUS      current
+        DESCRIPTION "This group holds the objects that define the
+                     main unit group."
+        ::= { sipInteropGroups 5 }
+
+END

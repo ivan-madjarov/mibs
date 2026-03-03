@@ -1,0 +1,948 @@
+-- ****************************************************************************
+-- ****************************************************************************
+--             Copyright(c) 2004 Mediatrix Telecom, Inc.
+--  NOTICE:
+--   This document contains information that is confidential and proprietary
+--   to Mediatrix Telecom, Inc.
+--   Mediatrix Telecom, Inc. reserves all rights to this document as well as
+--   to the Intellectual Property of the document and the technology and
+--   know-how that it includes and represents.
+--   This publication cannot be reproduced, neither in whole nor in part in
+--   any form whatsoever without written prior approval by
+--   Mediatrix Telecom, Inc.
+--   Mediatrix Telecom, Inc. reserves the right to revise this publication
+--   and make changes at any time and without the obligation to notify any
+--   person and/or entity of such revisions and/or changes.
+-- ****************************************************************************
+-- ****************************************************************************
+  
+SEC10-MX-POTS-MIB
+DEFINITIONS ::= BEGIN
+
+IMPORTS
+        MODULE-IDENTITY,
+        OBJECT-TYPE,
+        Unsigned32
+    FROM SNMPv2-SMI
+        MODULE-COMPLIANCE,
+        OBJECT-GROUP
+    FROM SNMPv2-CONF
+        MxEnableState,
+        MxActivationState,
+        MxIpHostName,
+        MxIpPort,
+        MxAdvancedIpPort,
+        MxIpSubnetMask,
+        MxDigitMap
+    FROM MX-TC
+        MxUInt64,
+        MxFloat32,
+        MxIpHostNamePort,
+        MxIpAddr,
+        MxIpAddrPort,
+        MxIpAddrMask,
+        MxUri,
+        MxUrl
+    FROM MX-TC2
+        mediatrixServices       
+    FROM MX-SMI2;
+
+potsMIB MODULE-IDENTITY                                                        
+    LAST-UPDATED   "0511290000Z"                                               
+    ORGANIZATION " Mediatrix Telecom, Inc. "                                   
+    CONTACT-INFO " Mediatrix Telecom, Inc.                                     
+                   4229, Garlock Street                                        
+                   Sherbrooke (Quebec)                                         
+                   Canada                                                      
+                   Phone: (819) 829-8749                                       
+                   "                                                           
+    DESCRIPTION  " Plain Old Telephony System Line                             
+                                                                               
+                   The POTS (Plain Old Telephony System) line service allows to
+                   configure the analog specification of each line.            
+                   "                                                           
+    -- *************************************************************************
+                                                                               
+    -- Revision history                                                        
+                                                                               
+    -- *************************************************************************
+    REVISION       "0511290000Z"                                               
+    DESCRIPTION  " Initial Revision "                                          
+    ::= { mediatrixServices 1800 }                                             
+
+potsMIBObjects OBJECT IDENTIFIER ::= { potsMIB 1 }
+
+-- Scalar:  Country Selection                                                  
+                                                                               
+countrySelection OBJECT-TYPE                                                   
+    SYNTAX        INTEGER { austria1(2000) , france1(6000) , germany1(7000) ,  
+                  germany2(7100) , italy1(11000) , northAmerica1(17000) ,      
+                  spain1(19000) }                                              
+    MAX-ACCESS    read-write                                                   
+    STATUS        current                                                      
+    DESCRIPTION " Country Selection                                            
+                                                                               
+                  The country selection allows to select predefined country    
+                  settings for the tone profiles, ring patterns, and other     
+                  parameters such as input and output gains.                   
+                  "                                                            
+    DEFVAL        { northAmerica1 }                                            
+    ::= { potsMIBObjects 100 }                                                 
+
+-- *****************************************************************************
+                                                                               
+-- Table:  Line Table                                                          
+                                                                               
+-- *****************************************************************************
+                                                                               
+lineTable OBJECT-TYPE                                                          
+    SYNTAX        SEQUENCE OF LineEntry                                        
+    MAX-ACCESS    not-accessible                                               
+    STATUS        current                                                      
+    DESCRIPTION " Line Table                                                   
+                                                                               
+                  This table shows the current available lines and allows their
+                  basic configuration.                                         
+                  "                                                            
+    ::= { potsMIBObjects 200 }                                                 
+                                                                               
+                                                                               
+    lineEntry OBJECT-TYPE                                                      
+        SYNTAX         LineEntry                                               
+        MAX-ACCESS     not-accessible                                          
+        STATUS         current                                                 
+        DESCRIPTION  " A row in the Line Table. "                              
+        INDEX          {                                                       
+                            id                                                 
+                       }                                                       
+                                                                               
+        ::= { lineTable 1 }                                                    
+                                                                               
+    LineEntry ::= SEQUENCE                                                     
+    {                                                                          
+        id         OCTET STRING,                                               
+        typeStatus INTEGER                                                     
+    }                                                                          
+                                                                               
+    -- Index:  Line Identifier                                                 
+                                                                               
+    lineId OBJECT-TYPE                                                         
+        SYNTAX         OCTET STRING                                            
+        MAX-ACCESS     read-only                                               
+        STATUS         current                                                 
+        DESCRIPTION  " Line Identifier                                         
+                                                                               
+                       String that identifies a line in other tables.          
+                       "                                                       
+        ::= { lineEntry 100 }                                                  
+                                                                               
+    -- Columnar:  Line Type Status                                             
+                                                                               
+    lineTypeStatus OBJECT-TYPE                                                 
+        SYNTAX         INTEGER { fxs(100) , fxo(200) }                         
+        MAX-ACCESS     read-only                                               
+        STATUS         current                                                 
+        DESCRIPTION  " Line Type Status                                        
+                                                                               
+                       The status POTS type of the line.                       
+                       "                                                       
+        ::= { lineEntry 300 }                                                  
+                                                                               
+                                                                               
+-- End of table:  Line Table                                                   
+
+-- *****************************************************************************
+                                                                                              
+-- Group:  Country Customization                                                              
+                                                                                              
+-- *****************************************************************************
+                                                                                              
+countryCustomizationGroup OBJECT IDENTIFIER                                                   
+    ::= { potsMIBObjects 300 }                                                                
+                                                                                              
+                                                                                              
+    -- Scalar:  Country Caller ID Customization                                               
+                                                                                              
+    countryCustomizationCallerId OBJECT-TYPE                                                  
+        SYNTAX        INTEGER { country(100) , etsiDtmf(500) , etsiFsk(600) }                 
+        MAX-ACCESS    read-write                                                              
+        STATUS        current                                                                 
+        DESCRIPTION " Country Caller ID Customization                                         
+                                                                                              
+                      The caller ID customization allows to select the detection/             
+                      generation method of caller ID.                                         
+                                                                                              
+                        * Country: Use the default caller ID of the country defined           
+                          in the CountrySelection variable.                                   
+                        * EtsiDtmf: ETSI 300 659-1 (DTMF string sent between first            
+                          and second ring)                                                    
+                        * EtsiFsk: ETSI 300 659-1 (FSK (V.21) sent between first              
+                          and second ring)                                                    
+                                                                                              
+                                                                                              
+                      "                                                                       
+        DEFVAL        { country }                                                             
+        ::= { countryCustomizationGroup 100 }                                                 
+                                                                                              
+    -- ****************************************************************************
+                                                                                              
+    -- Group:  Country Override FXS                                                           
+                                                                                              
+    -- ****************************************************************************
+                                                                                              
+    countryCustomizationFxsGroup OBJECT IDENTIFIER                                            
+        ::= { countryCustomizationGroup 200 }                                                 
+                                                                                              
+                                                                                              
+        -- Scalar:  Override FXS Country Configuration                                        
+                                                                                              
+        countryCustomizationFxsOverride OBJECT-TYPE                                           
+            SYNTAX        MxEnableState                                                       
+            MAX-ACCESS    read-write                                                          
+            STATUS        current                                                             
+            DESCRIPTION " Override FXS Country Configuration                                  
+                                                                                              
+                          Allows to override FXS-related default country settings.            
+                                                                                              
+                            * Disable: The line uses the default country FXS                  
+                              settings.                                                       
+                            * Enable: The line uses the FXS country configuration             
+                              set in the variables                                            
+                              CountryCustomizationFxsLoopCurrent,                             
+                              CountryCustomizationFxsFlashHookDetectionDelayMin               
+                              and                                                             
+                              CountryCustomizationFxsFlashHookDetectionDelayMax.              
+                                                                                              
+                                                                                              
+                          "                                                                   
+            DEFVAL        { disable }                                                         
+            ::= { countryCustomizationFxsGroup 100 }                                          
+                                                                                              
+        -- Scalar:  Country Override FXS Loop Current                                         
+                                                                                              
+        countryCustomizationFxsLoopCurrent OBJECT-TYPE                                        
+            SYNTAX        Unsigned32 ( 20..32 )                                               
+            MAX-ACCESS    read-write                                                          
+            STATUS        current                                                             
+            DESCRIPTION " Country Override FXS Loop Current                                   
+                                                                                              
+                          Loop current generated by the FXS port in ma.                       
+                                                                                              
+                          This configuration is used only if the variable                     
+                          CountryCustomizationFxsOverride is set to 'Enable'.                 
+                                                                                              
+                                                                                              
+                          "                                                                   
+            DEFVAL        { 30 }                                                              
+            ::= { countryCustomizationFxsGroup 200 }                                          
+                                                                                              
+        -- Scalar:  Country Override FXS Flash Hook Detection Minimal Delay                   
+                                                                                              
+        countryCustomizationFxsFlashHookDetectionDelayMin OBJECT-TYPE                         
+            SYNTAX        Unsigned32 ( 10..1200 )                                             
+            MAX-ACCESS    read-write                                                          
+            STATUS        current                                                             
+            DESCRIPTION " Country Override FXS Flash Hook Detection Minimal Delay             
+                                                                                              
+                          Minimum time, in ms, the hook switch must remain pressed            
+                          to perform a flash hook.                                            
+                                                                                              
+                          This configuration is used only if the variable                     
+                          CountryCustomizationFxsOverride is set to 'Enable'.                 
+                                                                                              
+                                                                                              
+                          "                                                                   
+            DEFVAL        { 100 }                                                             
+            ::= { countryCustomizationFxsGroup 300 }                                          
+                                                                                              
+        -- Scalar:  Country Override FXS Flash Hook Detection Maximal Delay                   
+                                                                                              
+        countryCustomizationFxsFlashHookDetectionDelayMax OBJECT-TYPE                         
+            SYNTAX        Unsigned32 ( 10..1200 )                                             
+            MAX-ACCESS    read-write                                                          
+            STATUS        current                                                             
+            DESCRIPTION " Country Override FXS Flash Hook Detection Maximal Delay             
+                                                                                              
+                          Maximum time, in ms, the hook switch can remain pressed             
+                          to perform a flash hook.                                            
+                                                                                              
+                          This configuration is used only if the variable                     
+                          CountryCustomizationFxsOverride is set to 'Enable'.                 
+                                                                                              
+                                                                                              
+                          "                                                                   
+            DEFVAL        { 1200 }                                                            
+            ::= { countryCustomizationFxsGroup 400 }                                          
+                                                                                              
+    -- End of group:  Country Override FXS                                                    
+                                                                                              
+    -- *****************************************************************************
+                                                                                              
+    -- Group:  Users Gain                                                                     
+                                                                                              
+    -- *****************************************************************************
+                                                                                              
+    countryCustomizationUserGainGroup OBJECT IDENTIFIER                                       
+        ::= { countryCustomizationGroup 300 }                                                 
+                                                                                              
+                                                                                              
+        -- Scalar:  Default User Input Gain Offset                                            
+                                                                                              
+        defaultCountryCustomizationUserGainInputOffset OBJECT-TYPE                            
+            SYNTAX        Integer32 ( -12..12 )                                               
+            MAX-ACCESS    read-write                                                          
+            STATUS        current                                                             
+            DESCRIPTION " Default User Input Gain Offset                                      
+                                                                                              
+                          The user input gain offset is added to the base input gain to       
+                          compute the total input gain. The user input gain is in dB.         
+                          Valid input gain range is between -12 dB and +12 dB.                
+                                                                                              
+                          If a specific configuration is set in the                           
+                          ineSpecificCountryCustomizationUserGain.InputOffset variable        
+                          and the LineSpecificCountryCustomizationUserGain.EnableConfig       
+                          variable is set to 'Enable', then it overrides the current          
+                          default configuration.                                              
+                                                                                              
+                                                                                              
+                          "                                                                   
+            DEFVAL        { 0 }                                                               
+            ::= { countryCustomizationUserGainGroup 100 }                                     
+                                                                                              
+        -- Scalar:  Default User Output Gain Offset                                           
+                                                                                              
+        defaultCountryCustomizationUserGainOutputOffset OBJECT-TYPE                           
+            SYNTAX        Integer32 ( -12..12 )                                               
+            MAX-ACCESS    read-write                                                          
+            STATUS        current                                                             
+            DESCRIPTION " Default User Output Gain Offset                                     
+                                                                                              
+                          The user output gain offset is added to the base output gain        
+                          to compute the total output gain. The user output gain is in        
+                          dB. Valid output gain range is between -12 dB and +12 dB.           
+                                                                                              
+                          If a specific configuration is set in the                           
+                          LineSpecificCountryCustomizationUserGain.OutputOffset               
+                          variable and the                                                    
+                          LineSpecificCountryCustomizationUserGain.EnableConfig               
+                          variable is set to 'Enable', then it overrides the current          
+                          default configuration.                                              
+                                                                                              
+                                                                                              
+                          "                                                                   
+            DEFVAL        { 0 }                                                               
+            ::= { countryCustomizationUserGainGroup 200 }                                     
+                                                                                              
+        -- *****************************************************************************
+                                                                                              
+        -- Table:  Line Specific User Gain                                                    
+                                                                                              
+        -- *****************************************************************************
+                                                                                              
+        lineSpecificCountryCustomizationUserGainTable OBJECT-TYPE                             
+            SYNTAX        SEQUENCE OF LineSpecificCountryCustomizationUserGainEntry           
+            MAX-ACCESS    not-accessible                                                      
+            STATUS        current                                                             
+            DESCRIPTION " Line Specific User Gain                                             
+                                                                                              
+                          This table allows to configure the user gain for a specific         
+                          line. All lines have the default configuration unless               
+                          'EnableConfig' is enabled.                                          
+                          "                                                                   
+            ::= { countryCustomizationUserGainGroup 300 }                                     
+                                                                                              
+                                                                                              
+            lineSpecificCountryCustomizationUserGainEntry OBJECT-TYPE                         
+                SYNTAX         LineSpecificCountryCustomizationUserGainEntry                  
+                MAX-ACCESS     not-accessible                                                 
+                STATUS         current                                                        
+                DESCRIPTION  " A row in the Line Specific User Gain. "                        
+                INDEX          {                                                              
+                                   lineId                                                     
+                               }                                                              
+                                                                                              
+                ::= { lineSpecificCountryCustomizationUserGainTable 1 }                       
+                                                                                              
+            LineSpecificCountryCustomizationUserGainEntry ::= SEQUENCE                        
+            {                                                                                 
+                   lineId                   OCTET STRING,                                     
+                   enableConfig             MxEnableState,                                    
+                   inputOffset              Integer32,                                        
+                   outputOffset             Integer32                                         
+            }                                                                                 
+                                                                                              
+            -- Index:  Line Identifier                                                        
+                                                                                              
+            lineSpecificCountryCustomizationUserGainLineId OBJECT-TYPE                        
+                SYNTAX         OCTET STRING                                                   
+                MAX-ACCESS     read-only                                                      
+                STATUS         current                                                        
+                DESCRIPTION  " Line Identifier                                                
+                                                                                              
+                               String that identifies a line in other tables.                 
+                               "                                                              
+                ::= { lineSpecificCountryCustomizationUserGainEntry 100 }                     
+                                                                                              
+            -- Columnar:  Enable Configuration                                                
+                                                                                              
+            lineSpecificCountryCustomizationUserGainEnableConfig OBJECT-TYPE                  
+                SYNTAX        MxEnableState                                                   
+                MAX-ACCESS    read-write                                                      
+                STATUS        current                                                         
+                DESCRIPTION " Enable Configuration                                            
+                                                                                              
+                              Defines the configuration to use for a specific line.           
+                                                                                              
+                                * Disable: The line uses the default configuration as         
+                                  defined in the                                              
+                                  DefaultCountryCustomizationUserGainInputOffset and          
+                                  DefaultCountryCustomizationUserGainOutputOffset             
+                                  variables.                                                  
+                                * Enable: The line uses the specific configuration as         
+                                  defined in the                                              
+                                  LineSpecificCountryCustomizationUserGain.InputOffset        
+                                  and                                                         
+                                  LineSpecificCountryCustomizationUserGain.OutputOffset       
+                                  variables.                                                  
+                                                                                              
+                                                                                              
+                              "                                                               
+                DEFVAL        { disable }                                                     
+                ::= { lineSpecificCountryCustomizationUserGainEntry 200 }                     
+                                                                                              
+            -- Columnar:  Line Specific User Input Gain Offset                                
+                                                                                              
+            lineSpecificCountryCustomizationUserGainInputOffset OBJECT-TYPE                   
+                SYNTAX        Integer32 ( -12..12 )                                           
+                MAX-ACCESS    read-write                                                      
+                STATUS        current                                                         
+                DESCRIPTION " Line Specific User Input Gain Offset                            
+                                                                                              
+                              The user input gain offset is added to the base input           
+                              gain to compute the total input gain. The user input gain       
+                              is in dB. Valid input gain range is between -12 dB and          
+                              +12 dB.                                                         
+                                                                                              
+                              This configuration overrides the default configuration          
+                              set in the DefaultCountryCustomizationUserGainInputOffset       
+                              variable if the                                                 
+                              LineSpecificCountryCustomizationUserGain.EnableConfig           
+                              variable is set to 'Enable'.                                    
+                                                                                              
+                                                                                              
+                              "                                                               
+                DEFVAL        { 0 }                                                           
+                ::= { lineSpecificCountryCustomizationUserGainEntry 300 }                     
+                                                                                              
+            -- Columnar:  Line Specific User Output Gain Offset                               
+                                                                                              
+            lineSpecificCountryCustomizationUserGainOutputOffset OBJECT-TYPE                  
+                SYNTAX        Integer32 ( -12..12 )                                           
+                MAX-ACCESS    read-write                                                      
+                STATUS        current                                                         
+                DESCRIPTION " Line Specific User Output Gain Offset                           
+                                                                                              
+                              The user output gain offset is added to the base output         
+                              gain to compute the total output gain. The user output          
+                              gain is in dB. Valid output gain range is between -12 dB        
+                              and +12 dB.                                                     
+                                                                                              
+                              This configuration overrides the default configuration          
+                              set in the                                                      
+                              DefaultCountryCustomizationUserGainOutputOffset variable        
+                              if the                                                          
+                              LineSpecificCountryCustomizationUserGain.EnableConfig           
+                              variable is set to 'Enable'.                                    
+                                                                                              
+                                                                                              
+                              "                                                               
+                DEFVAL        { 0 }                                                           
+                ::= { lineSpecificCountryCustomizationUserGainEntry 400 }                     
+                                                                                              
+                                                                                              
+        -- End of table:  Line Specific User Gain                                             
+                                                                                              
+    -- End of group:  Users Gain                                                              
+                                                                                              
+    -- *****************************************************************************
+                                                                                              
+    -- Group:  Country Override Dialing                                                       
+                                                                                              
+    -- *****************************************************************************
+                                                                                              
+    countryCustomizationDialingGroup OBJECT IDENTIFIER                                        
+        ::= { countryCustomizationGroup 400 }                                                 
+                                                                                              
+                                                                                              
+        -- Scalar:  Default Override Dialing Country Configuration                            
+                                                                                              
+        defaultCountryCustomizationDialingOverride OBJECT-TYPE                                
+            SYNTAX        MxEnableState                                                       
+            MAX-ACCESS    read-write                                                          
+            STATUS        current                                                             
+            DESCRIPTION " Default Override Dialing Country Configuration                      
+                                                                                              
+                          Allows to override the default country dialing setting.             
+                                                                                              
+                            * Disable: The line uses the default country dialing              
+                              setting.                                                        
+                            * Enable: The line uses the dialing country setting as            
+                              defined in the                                                  
+                              DefaultCountryCustomizationDialingInterDtmfDialDelay and        
+                              DefaultCountryCustomizationDialingDtmfDuration variables.       
+                                                                                              
+                          If a specific configuration is set in the                           
+                          LineSpecificCountryCustomizationDialing.Override variable and       
+                          the LineSpecificCountryCustomizationDialing.EnableConfig            
+                          variable is set to 'Enable', then it overrides the current          
+                          default configuration.                                              
+                                                                                              
+                                                                                              
+                          "                                                                   
+            DEFVAL        { disable }                                                         
+            ::= { countryCustomizationDialingGroup 100 }                                      
+                                                                                              
+        -- Scalar:  Default Country Override Delay Between Dialed DTMF                        
+                                                                                              
+        defaultCountryCustomizationDialingInterDtmfDialDelay OBJECT-TYPE                      
+            SYNTAX        Unsigned32 ( 50..600 )                                              
+            MAX-ACCESS    read-write                                                          
+            STATUS        current                                                             
+            DESCRIPTION " Default Country Override Delay Between Dialed DTMF                  
+                                                                                              
+                          The delay between two DTMFs when dialing on the pots.               
+                                                                                              
+                          This value is expressed in milliseconds (ms).                       
+                                                                                              
+                          This configuration is used only if the variable                     
+                          DefaultCountryCustomizationDialingOverride is set to                
+                          'Enable'.                                                           
+                                                                                              
+                          If a specific configuration is set in the                           
+                          LineSpecificCountryCustomizationDialing.InterDtmfDialDelay          
+                          variable and the                                                    
+                          LineSpecificCountryCustomizationDialing.EnableConfig variable       
+                          is set to 'Enable', then it overrides the current default           
+                          configuration.                                                      
+                                                                                              
+                                                                                              
+                          "                                                                   
+            DEFVAL        { 100 }                                                             
+            ::= { countryCustomizationDialingGroup 200 }                                      
+                                                                                              
+        -- Scalar:  Default Country Override Dialed DTMF Duration                             
+                                                                                              
+        defaultCountryCustomizationDialingDtmfDuration OBJECT-TYPE                            
+            SYNTAX        Unsigned32 ( 50..600 )                                              
+            MAX-ACCESS    read-write                                                          
+            STATUS        current                                                             
+            DESCRIPTION " Default Country Override Dialed DTMF Duration                       
+                                                                                              
+                          The duration of a DTMF when dialing on the pots.                    
+                                                                                              
+                          This value is expressed in milliseconds (ms).                       
+                                                                                              
+                          This configuration is used only if the variable                     
+                          DefaultCountryCustomizationDialingOverride is set to                
+                          'Enable'.                                                           
+                                                                                              
+                          If a specific configuration is set in the                           
+                          LineSpecificCountryCustomizationDialing.DtmfDuration variable       
+                          and the LineSpecificCountryCustomizationDialing.EnableConfig        
+                          variable is set to 'Enable', then it overrides the current          
+                          default configuration.                                              
+                                                                                              
+                                                                                              
+                          "                                                                   
+            DEFVAL        { 100 }                                                             
+            ::= { countryCustomizationDialingGroup 300 }                                      
+                                                                                              
+        -- *****************************************************************************
+                                                                                              
+        -- Table:  Line Specific Country Override Dialing.                                    
+                                                                                              
+        -- *****************************************************************************
+                                                                                              
+        lineSpecificCountryCustomizationDialingTable OBJECT-TYPE                              
+            SYNTAX        SEQUENCE OF LineSpecificCountryCustomizationDialingEntry            
+            MAX-ACCESS    not-accessible                                                      
+            STATUS        current                                                             
+            DESCRIPTION " Line Specific Country Override Dialing.                             
+                                                                                              
+                          This table allows to override the default country dialing           
+                          configuration for a specific line. All lines have the default       
+                          configuration unless 'EnableConfig' is enabled.                     
+                          "                                                                   
+            ::= { countryCustomizationDialingGroup 400 }                                      
+                                                                                              
+                                                                                              
+            lineSpecificCountryCustomizationDialingEntry OBJECT-TYPE                          
+                SYNTAX         LineSpecificCountryCustomizationDialingEntry                   
+                MAX-ACCESS     not-accessible                                                 
+                STATUS         current                                                        
+                DESCRIPTION  " A row in the Line Specific Country Override Dialing. . "       
+                INDEX          {                                                              
+                                   lineId                                                     
+                               }                                                              
+                                                                                              
+                ::= { lineSpecificCountryCustomizationDialingTable 1 }                        
+                                                                                              
+            LineSpecificCountryCustomizationDialingEntry ::= SEQUENCE                         
+            {                                                                                 
+                 lineId                        OCTET STRING,                                  
+                 enableConfig                  MxEnableState,                                 
+                 override                      MxEnableState,                                 
+                 interDtmfDialDelay            Unsigned32,                                    
+                 dtmfDuration                  Unsigned32                                     
+            }                                                                                 
+                                                                                              
+            -- Index:  Line Identifier                                                        
+                                                                                              
+            lineSpecificCountryCustomizationDialingLineId OBJECT-TYPE                         
+                SYNTAX         OCTET STRING                                                   
+                MAX-ACCESS     read-only                                                      
+                STATUS         current                                                        
+                DESCRIPTION  " Line Identifier                                                
+                                                                                              
+                               String that identifies a line in other tables.                 
+                               "                                                              
+                ::= { lineSpecificCountryCustomizationDialingEntry 100 }                      
+                                                                                              
+            -- Columnar:  Enable Configuration                                                
+                                                                                              
+            lineSpecificCountryCustomizationDialingEnableConfig OBJECT-TYPE                   
+                SYNTAX        MxEnableState                                                   
+                MAX-ACCESS    read-write                                                      
+                STATUS        current                                                         
+                DESCRIPTION " Enable Configuration                                            
+                                                                                              
+                              Defines the configuration to use for a specific line.           
+                                                                                              
+                                * Disable: The line uses the default configuration as         
+                                  defined in the DefaultCountryCustomizationDialingOverride,  
+                                  DefaultCountryCustomizationDialingInterDtmfDialDelay and    
+                                  DefaultCountryCustomizationDialingDtmfDuration variables.   
+                                * Enable: The line uses the specific configuration as         
+                                  defined in the                                              
+                                  LineSpecificCountryCustomizationDialing.Override,           
+                                  LineSpecificCountryCustomizationDialing.InterDtmfDialDelay  
+                                  and LineSpecificCountryCustomizationDialing.DtmfDuration    
+                                  variables.                                                  
+                                                                                              
+                                                                                              
+                              "                                                               
+                DEFVAL        { disable }                                                     
+                ::= { lineSpecificCountryCustomizationDialingEntry 200 }                      
+                                                                                              
+            -- Columnar:  Line Specific Override Dialing Country Configuration                
+                                                                                              
+            lineSpecificCountryCustomizationDialingOverride OBJECT-TYPE                       
+                SYNTAX        MxEnableState                                                   
+                MAX-ACCESS    read-write                                                      
+                STATUS        current                                                         
+                DESCRIPTION " Line Specific Override Dialing Country Configuration            
+                                                                                              
+                              Allows to override the default country dialing setting.         
+                                                                                              
+                                * Disable: The line uses the default country dialing          
+                                  setting.                                                    
+                                * Enable: The line uses the specific dialing configuration    
+                                  as defined in the InterDtmfDialDelay and DtmfDuration       
+                                  variables.                                                  
+                                                                                              
+                              This configuration overrides the default configuration set in   
+                              the DefaultCountryCustomizationDialingOverride variable if      
+                              the LineSpecificCountryCustomizationDialing.EnableConfig        
+                              variable is set to 'Enable'.                                    
+                                                                                              
+                                                                                              
+                              "                                                               
+                DEFVAL        { disable }                                                     
+                ::= { lineSpecificCountryCustomizationDialingEntry 300 }                      
+                                                                                              
+            -- Columnar:  Line Specific Delay Between Dialed DTMF                             
+                                                                                              
+            lineSpecificCountryCustomizationDialingInterDtmfDialDelay OBJECT-TYPE             
+                SYNTAX        Unsigned32 ( 50..600 )                                          
+                MAX-ACCESS    read-write                                                      
+                STATUS        current                                                         
+                DESCRIPTION " Line Specific Delay Between Dialed DTMF                         
+                                                                                              
+                              The delay between two DTMFs when dialing on the pots.           
+                                                                                              
+                              This value is expressed in milliseconds (ms).                   
+                                                                                              
+                              This configuration is used only if the variable Override is     
+                              set to 'Enable'.                                                
+                                                                                              
+                              This configuration overrides the default configuration set in   
+                              the DefaultCountryCustomizationDialingInterDtmfDialDelay        
+                              variable if the                                                 
+                              LineSpecificCountryCustomizationDialing.EnableConfig variable   
+                              is set to 'Enable'.                                             
+                                                                                              
+                                                                                              
+                              "                                                               
+                DEFVAL        { 100 }                                                         
+                ::= { lineSpecificCountryCustomizationDialingEntry 400 }                      
+                                                                                              
+            -- Columnar:  Line Specific Dialed DTMF Duration                                  
+                                                                                              
+            lineSpecificCountryCustomizationDialingDtmfDuration OBJECT-TYPE                   
+                SYNTAX        Unsigned32 ( 50..600 )                                          
+                MAX-ACCESS    read-write                                                      
+                STATUS        current                                                         
+                DESCRIPTION " Line Specific Dialed DTMF Duration                              
+                                                                                              
+                              The duration of a DTMF when dialing on the pots.                
+                                                                                              
+                              This value is expressed in milliseconds (ms).                   
+                                                                                              
+                              This configuration is used only if the variable Override is     
+                              set to 'Enable'.                                                
+                                                                                              
+                              This configuration overrides the default configuration set in   
+                              the DefaultCountryCustomizationDialingDtmfDuration variable     
+                              if the LineSpecificCountryCustomizationDialing.EnableConfig     
+                              variable is set to 'Enable'.                                    
+                                                                                              
+                                                                                              
+                              "                                                               
+                DEFVAL        { 100 }                                                         
+                ::= { lineSpecificCountryCustomizationDialingEntry 500 }                      
+                                                                                              
+                                                                                              
+        -- End of table:  Line Specific Country Override Dialing.                             
+                                                                                              
+    -- End of group:  Country Override Dialing                                                
+                                                                                              
+-- End of group:  Country Customization                                                       
+
+-- ****************************************************************************
+                                                                              
+-- Group:  Machine Detection                                                  
+                                                                              
+-- ****************************************************************************
+                                                                              
+machineDetectionGroup OBJECT IDENTIFIER                                       
+    ::= { potsMIBObjects 400 }                                                
+                                                                              
+                                                                              
+    -- Scalar:  Default Enable/Disable CNG Tone Detection                     
+                                                                              
+    defaultMachineDetectionCngToneDetection OBJECT-TYPE                       
+        SYNTAX        MxEnableState                                           
+        MAX-ACCESS    read-write                                              
+        STATUS        current                                                 
+        DESCRIPTION " Default Enable/Disable CNG Tone Detection               
+                                                                              
+                      Enables fax calling tone (CNG tone) detection.          
+                                                                              
+                        * Enable: Upon recognition of the CNG tone, the unit  
+                          switches the communication from voice mode to fax   
+                          mode and the CNG is transferred by using the        
+                          preferred fax codec. NOTE: This option allows for   
+                          quicker fax detection, but it also increases the    
+                          risk of false detection.                            
+                        * Disable: The CNG tone does not trigger a transition 
+                          from voice to data and the CNG is transferred in the
+                          voice channel. NOTE: With this option, faxes are    
+                          detected later, but the risk of false detection is  
+                          reduced.                                            
+                                                                              
+                      If a specific configuration is set in the               
+                      LineSpecificMachineDetection.CngToneDetection variable  
+                      and the LineSpecificMachineDetection.EnableConfig       
+                      variable is set to 'Enable', then it overrides the      
+                      current default configuration.                          
+                                                                              
+                                                                              
+                      "                                                       
+        DEFVAL        { enable }                                              
+        ::= { machineDetectionGroup 100 }                                     
+                                                                              
+    -- ************************************************************************
+                                                                              
+    -- Table:  Line Specific Voice Codec Configuration                        
+                                                                              
+    -- ************************************************************************
+                                                                              
+    lineSpecificMachineDetectionTable OBJECT-TYPE                             
+        SYNTAX              SEQUENCE OF LineSpecificMachineDetectionEntry     
+        MAX-ACCESS          not-accessible                                    
+        STATUS              current                                           
+        DESCRIPTION       " Line Specific Voice Codec Configuration           
+                                                                              
+                            Line specific configuration.                      
+                            "                                                 
+        ::= { machineDetectionGroup 200 }                                     
+                                                                              
+                                                                              
+        lineSpecificMachineDetectionEntry OBJECT-TYPE                         
+            SYNTAX        LineSpecificMachineDetectionEntry                   
+            MAX-ACCESS    not-accessible                                      
+            STATUS        current                                             
+            DESCRIPTION " A row in the Line Specific Voice Codec Configuration
+                          . "                                                 
+            INDEX         {                                                   
+                              lineId                                          
+                          }                                                   
+                                                                              
+            ::= { lineSpecificMachineDetectionTable 1 }                       
+                                                                              
+        LineSpecificMachineDetectionEntry ::= SEQUENCE                        
+        {                                                                     
+             lineId                 OCTET STRING,                             
+             enableConfig           MxEnableState,                            
+             cngToneDetection       MxEnableState                             
+        }                                                                     
+                                                                              
+        -- Index:  Line Identifier                                            
+                                                                              
+        lineSpecificMachineDetectionLineId OBJECT-TYPE                        
+            SYNTAX         OCTET STRING                                       
+            MAX-ACCESS     read-only                                          
+            STATUS         current                                            
+            DESCRIPTION  " Line Identifier                                    
+                                                                              
+                           String that identifies a line in other tables.     
+                           "                                                  
+            ::= { lineSpecificMachineDetectionEntry 100 }                     
+                                                                              
+        -- Columnar:  Enable Configuration                                    
+                                                                              
+        lineSpecificMachineDetectionEnableConfig OBJECT-TYPE                  
+            SYNTAX        MxEnableState                                       
+            MAX-ACCESS    read-write                                          
+            STATUS        current                                             
+            DESCRIPTION " Enable Configuration                                
+                                                                              
+                          Defines the configuration to use for a specific     
+                          line.                                               
+                                                                              
+                            * Disable: The line uses the default configuration
+                              as defined in the                               
+                              DefaultMachineDetectionCngToneDetection         
+                              variable.                                       
+                            * Enable: The line uses the specific configuration
+                              as defined in the                               
+                              LineSpecificMachineDetection.CngToneDetection   
+                              variable.                                       
+                                                                              
+                                                                              
+                          "                                                   
+            DEFVAL        { disable }                                         
+            ::= { lineSpecificMachineDetectionEntry 200 }                     
+                                                                              
+        -- Columnar:  Line Specific Enable/Disable CNG Tone Detection         
+                                                                              
+        lineSpecificMachineDetectionCngToneDetection OBJECT-TYPE              
+            SYNTAX        MxEnableState                                       
+            MAX-ACCESS    read-write                                          
+            STATUS        current                                             
+            DESCRIPTION " Line Specific Enable/Disable CNG Tone Detection     
+                                                                              
+                          Enables fax calling tone (CNG tone) detection.      
+                                                                              
+                            * Enable: Upon recognition of the CNG tone, the   
+                              unit switches the communication from voice mode 
+                              to fax mode and the CNG is transferred by using 
+                              the preferred fax codec. NOTE: This option      
+                              allows for quicker fax detection, but it also   
+                              increases the risk of false detection.          
+                            * Disable: The CNG tone does not trigger a        
+                              transition from voice to data and the CNG is    
+                              transferred in the voice channel. NOTE: With    
+                              this option, faxes are detected later, but the  
+                              risk of false detection is reduced.             
+                                                                              
+                          This configuration overrides the default            
+                          configuration set in the                            
+                          DefaultMachineDetectionCngToneDetection variable if 
+                          the LineSpecificMachineDetection.EnableConfig       
+                          variable is set to 'Enable'.                        
+                                                                              
+                                                                              
+                          "                                                   
+            DEFVAL        { enable }                                          
+            ::= { lineSpecificMachineDetectionEntry 300 }                     
+                                                                              
+                                                                              
+    -- End of table:  Line Specific Voice Codec Configuration                 
+                                                                              
+-- End of group:  Machine Detection                                           
+
+-- *****************************************************************************
+                                                                               
+-- Group:  Notification Messages Configuration                                 
+                                                                               
+-- *****************************************************************************
+                                                                               
+notificationsGroup OBJECT IDENTIFIER                                           
+    ::= { potsMIBObjects 60010 }                                               
+                                                                               
+                                                                               
+    -- Scalar:  Minimal Severity of Notification                               
+                                                                               
+    minSeverity OBJECT-TYPE                                                    
+        SYNTAX        INTEGER { disable(0) , debug(100) , info(200) , warning  
+                      (300) , error(400) , critical (500) }                    
+        MAX-ACCESS    read-write                                               
+        STATUS        current                                                  
+        DESCRIPTION " Minimal Severity of Notification                         
+                                                                               
+                      Sets the minimal severity to issue a notification message
+                      incoming from this service.                              
+                                                                               
+                        * Disable: No notification is issued.                  
+                        * Debug: All notification messages are issued.         
+                        * Info: Notification messages with severity            
+                          'Informational' and higher are issued.               
+                        * Warning: Notification messages with severity         
+                          'Warning' and higher are issued.                     
+                        * Error: Notification messages with severity 'Error'   
+                          and higher are issued.                               
+                        * Critical: Notification messages with severity        
+                          'Critical' are issued.                               
+                                                                               
+                                                                               
+                      "                                                        
+        DEFVAL        { warning }                                              
+        ::= { notificationsGroup 100 }                                         
+                                                                               
+-- End of group:  Notification Messages Configuration                          
+
+-- ****************************************************************************
+                                                                              
+-- Group:  Configuration Settings                                             
+                                                                              
+-- ****************************************************************************
+                                                                              
+configurationGroup OBJECT IDENTIFIER                                          
+    ::= { potsMIBObjects 60020 }                                              
+                                                                              
+                                                                              
+    -- Scalar:  Need Restart                                                  
+                                                                              
+    needRestartInfo OBJECT-TYPE                                               
+        SYNTAX        INTEGER { no(0) , yes(100) }                            
+        MAX-ACCESS    read-only                                               
+        STATUS        current                                                 
+        DESCRIPTION " Need Restart                                            
+                                                                              
+                      Indicates if the service needs to be restarted for its  
+                      configuration to fully take effect.                     
+                                                                              
+                        * Yes: Service needs to be restarted.                 
+                        * No: Service does not need to be restarted.          
+                                                                              
+                      Services can be restarted by using the command          
+                      Scm.ServiceCommands.Restart.                            
+                                                                              
+                                                                              
+                      "                                                       
+        ::= { configurationGroup 100 }                                        
+                                                                              
+-- End of group:  Configuration Settings                                      
+
+END

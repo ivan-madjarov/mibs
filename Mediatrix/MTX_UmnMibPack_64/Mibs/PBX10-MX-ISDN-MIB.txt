@@ -1,0 +1,2690 @@
+-- ****************************************************************************
+-- ****************************************************************************
+--             Copyright(c) 2004 Mediatrix Telecom, Inc.
+--  NOTICE:
+--   This document contains information that is confidential and proprietary
+--   to Mediatrix Telecom, Inc.
+--   Mediatrix Telecom, Inc. reserves all rights to this document as well as
+--   to the Intellectual Property of the document and the technology and
+--   know-how that it includes and represents.
+--   This publication cannot be reproduced, neither in whole nor in part in
+--   any form whatsoever without written prior approval by
+--   Mediatrix Telecom, Inc.
+--   Mediatrix Telecom, Inc. reserves the right to revise this publication
+--   and make changes at any time and without the obligation to notify any
+--   person and/or entity of such revisions and/or changes.
+-- ****************************************************************************
+-- ****************************************************************************
+
+
+PBX10-MX-ISDN-MIB
+DEFINITIONS ::= BEGIN
+
+IMPORTS
+        MODULE-IDENTITY,
+        OBJECT-TYPE,
+        Unsigned32,
+        Integer32
+    FROM SNMPv2-SMI
+        MODULE-COMPLIANCE,
+        OBJECT-GROUP
+    FROM SNMPv2-CONF
+        MxEnableState,
+        MxActivationState,
+        MxIpHostName,
+        MxIpPort,
+        MxAdvancedIpPort,
+        MxIpSubnetMask,
+        MxDigitMap
+    FROM MX-TC
+        MxUInt64,
+        MxFloat32,
+        MxIpHostNamePort,
+        MxIpAddr,
+        MxIpAddrPort,
+        MxIpAddrMask,
+        MxUri,
+        MxUrl
+    FROM MX-TC2
+        mediatrixServices
+    FROM MX-SMI2;
+
+isdnMIB MODULE-IDENTITY
+ LAST-UPDATED   "0603070000Z"
+ ORGANIZATION " Mediatrix Telecom, Inc. "
+ CONTACT-INFO " Mediatrix Telecom, Inc.
+                4229, Garlock Street
+                Sherbrooke (Quebec)
+                Canada
+                Phone: (819) 829-8749
+                "
+ DESCRIPTION  " Integrated Services Digital Network
+
+                The Integrated Services Digital Network service allows the
+                administrator to configure parameters for Basic Rate Interfaces
+                and Primary Rate Interfaces.
+                "
+ -- ****************************************************************************
+ 
+ -- Revision history
+ -- ****************************************************************************
+ REVISION       "0603070000Z"
+ DESCRIPTION  " Initial Revision "
+ REVISION       "0610300000Z"
+ DESCRIPTION  " Modified default value of variable CallingNameMaxLength to 34
+                instead of 0. "
+ REVISION       "0701310000Z"
+ DESCRIPTION  " Add tables PrimaryRateInterfaceInterop and
+                BasicRateInterfaceInterop. "
+ REVISION       "0703050000Z"
+ DESCRIPTION  " Add variables to disable Progress Indicator in ISDN Alerting
+                and Connect messages. "
+ REVISION       "0704170000Z"
+ DESCRIPTION  " Add table PhysicalLink. "
+ REVISION       "0706190000Z"
+ DESCRIPTION  " Add variables ColpEnable, ColrEnable and ColrOverrideEnable. "
+ REVISION       "0706200000Z"
+ DESCRIPTION  " Add 3 variables Multiple Subscriber Number. "
+ REVISION       "0707260000Z"
+ DESCRIPTION  " Modified description for ColpEnable. "
+ REVISION       "0708080000Z"
+ DESCRIPTION  " Improved description for ColpEnable. "
+ REVISION       "0708220000Z"
+ DESCRIPTION  " Updated PhysicalLink.ClockMode. "
+ REVISION       "0708310000Z"
+ DESCRIPTION  " PrimaryRateInterface.LineType is replaced by Cards.LineType in
+                ExPri_1. Now PrimaryRateInterface.LineType is OBSOLETE. "
+ REVISION       "0711210000Z"
+ DESCRIPTION  " Modified description of
+                PrimaryRateInterface.SupplementaryServicesEnable and
+                BasicRateInterface.SupplementaryServicesEnable. "
+ REVISION       "0712060000Z"
+ DESCRIPTION  " Add variables
+                PrimaryRateInterfaceInterop.UseImplicitInbandInfoEnable and
+                BasicRateInterfaceInterop.UseImplicitInbandInfoEnable "
+ REVISION       "0801280000Z"
+ DESCRIPTION  " Add variables
+                PrimaryRateInterfaceInterop.ProgressIndicatorInProgressEnable
+                and BasicRateInterfaceInterop.ProgressIndicatorInProgressEnable
+                "
+ REVISION       "0805010000Z"
+ DESCRIPTION  " Added variable PhysicalLink.MonitorLinkStateEnable. "
+ REVISION       "0809030000Z"
+ DESCRIPTION  " Modified variable PrimaryRateInterface.ClipEnable and
+                BasicRateInterface.ClipEnable. "
+ REVISION       "0811120000Z"
+ DESCRIPTION  " Added variable
+                SignalingChannel.MaintenanceServiceCallTermination. "
+ REVISION       "0811130000Z"
+ DESCRIPTION  " Removed the PrimaryRateInterface.LineType columnar and reserved
+                its OID. "
+ REVISION       "0811240000Z"
+ DESCRIPTION  " Renamed SupplementaryServicesEnable to FacilityServicesEnable
+                and move it to SignalingChannel group. Add variable
+                SignalingChannel.OutgoingNotifyEnable "
+ REVISION       "0901080000Z"
+ DESCRIPTION  " Renamed 'Free' to 'Idle' and 'Used' to 'InUse' in
+                BearerChannelGroup.State "
+ REVISION       "0903130000Z"
+ DESCRIPTION  " Added the SignalingChannel.LinkEstablishment. "
+ REVISION       "0904210000Z"
+ DESCRIPTION  " Modified the SignalingChannel.Protocol variable to add the QSIG
+                enum value and modified the description of the
+                SignalingChannel.ColpEnable and SignalingChannel.ClipEnable
+                variables. "
+ REVISION       "0905130000Z"
+ DESCRIPTION  " Added the SignalingChannel.StatusCause variable. "
+ REVISION       "0905150000Z"
+ DESCRIPTION  " Modified some descriptions for the support of QSIG in BRI. "
+ REVISION       "0905190000Z"
+ DESCRIPTION  " Added the variable
+                BasicRateInterfaceInterop.AllowTeiBroadcastInPtpEnable
+                variable. "
+ REVISION       "0910090000Z"
+ DESCRIPTION  " Added columnar SignalingChannel.AcceptedProgressCauses. "
+ REVISION       "0911030000Z"
+ DESCRIPTION  " Added the SignalingChannel.CallProceedingDelay. "
+ REVISION       "0911230000Z"
+ DESCRIPTION  " Modified the description of the
+                SignalingChannel.AcceptedProgressCauses variable. "
+ REVISION       "0912160000Z"
+ DESCRIPTION  " Add variable PortPinout. "
+ REVISION       "1001120000Z"
+ DESCRIPTION  " Added columnar SignalingChannel.SendProgressIndicatorIE. "
+ REVISION       "1001150000Z"
+ DESCRIPTION  " Added columnar SignalingChannel.SendIsdnProgress. "
+ REVISION       "1001210000Z"
+ DESCRIPTION  " Modified the default value of variable
+                PhysicalLink.MonitorLinkStateEnable "
+ REVISION       "1009290000Z"
+ DESCRIPTION  " Added the SignalingChannel.Dms100CnipDelivery. "
+ REVISION       "1009290000Z"
+ DESCRIPTION  " Modified the description of
+                SignalingChannel.AcceptedStatusCauses variable. "
+ REVISION       "1101040000Z"
+ DESCRIPTION  " Added the SignalingChannel.AocESupport variable. "
+ ::= { mediatrixServices 1850 }
+
+isdnMIBObjects OBJECT IDENTIFIER ::= { isdnMIB 1 }
+
+-- *****************************************************************************
+
+-- Group:Primary Rate Interface Configuration
+
+-- *****************************************************************************
+
+primaryRateInterfaceGroup OBJECT IDENTIFIER
+ ::= { isdnMIBObjects 200 }
+ -- *****************************************************************************
+ 
+ -- Table:Primary Rate Interface
+
+ -- *****************************************************************************
+ 
+ primaryRateInterfaceTable OBJECT-TYPE
+  SYNTAX        SEQUENCE OF PrimaryRateInterfaceEntry
+  MAX-ACCESS    not-accessible
+  STATUS        current
+  DESCRIPTION " Primary Rate Interface
+
+                Configuration parameters related to the Primary Rate interfaces
+                on this managed device.
+                "
+  ::= { primaryRateInterfaceGroup 100 }
+  primaryRateInterfaceEntry OBJECT-TYPE
+   SYNTAX        PrimaryRateInterfaceEntry
+   MAX-ACCESS    not-accessible
+   STATUS        current
+   DESCRIPTION " A row in table Primary Rate Interface. "
+   INDEX         {
+                   primaryRateInterfaceName
+                 }
+
+   ::= { primaryRateInterfaceTable 1 }
+
+  PrimaryRateInterfaceEntry ::= SEQUENCE
+  {
+    primaryRateInterfaceName                             OCTET STRING,
+    primaryRateInterfaceEndpointType                     INTEGER,
+    primaryRateInterfacePortPinout                       INTEGER,
+    primaryRateInterfaceLineCoding                       INTEGER,
+    primaryRateInterfaceLineFraming                      INTEGER,
+    primaryRateInterfaceNetworkLocation                  INTEGER,
+    primaryRateInterfacePreferredEncodingScheme          INTEGER,
+    primaryRateInterfaceFallbackEncodingScheme           INTEGER,
+    primaryRateInterfaceChannelRange                     OCTET STRING,
+    primaryRateInterfaceChannelAllocationStrategy        INTEGER,
+    primaryRateInterfaceMaxActiveCalls                   Unsigned32,
+    primaryRateInterfaceSignalInformationElementEnable   MxEnableState,
+    primaryRateInterfaceInbandToneGenerationEnable       MxEnableState,
+    primaryRateInterfaceInbandDtmfDialingEnable          MxEnableState,
+    primaryRateInterfaceOverlapDialingEnable             MxEnableState,
+    primaryRateInterfaceCallingNameMaxLength             Unsigned32,
+    primaryRateInterfaceExclusiveBChannelSelectionEnable MxEnableState,
+    primaryRateInterfaceSendingCompleteEnable            MxEnableState,
+    primaryRateInterfaceClipEnable                       INTEGER,
+    primaryRateInterfaceClirEnable                       MxEnableState,
+    primaryRateInterfaceClirOverrideEnable               MxEnableState,
+    primaryRateInterfaceSendRestartOnStartupEnable       MxEnableState
+  }
+
+  -- Index:Name
+
+  primaryRateInterfaceName OBJECT-TYPE
+   SYNTAX        OCTET STRING
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Name
+
+                 Name that identifies the interface.
+                 "
+   ::= { primaryRateInterfaceEntry 100 }
+
+  -- Columnar:Maximum Active Calls
+
+  primaryRateInterfaceMaxActiveCalls OBJECT-TYPE
+   SYNTAX        Unsigned32 ( 0..30 )
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Maximum Active Calls
+
+                 Defines the maximum number of active calls on the interface.
+
+                 Note: The special value 0 indicates no maximum number of active
+                 calls.
+
+
+                 "
+   DEFVAL        { 0 }
+   ::= { primaryRateInterfaceEntry 1000 }
+
+  -- Columnar:Signal Information Element Enable
+
+  primaryRateInterfaceSignalInformationElementEnable OBJECT-TYPE
+   SYNTAX        MxEnableState
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Signal Information Element Enable
+
+                 Defines whether the signal information element is enabled on
+                 the interface. When activated at the Network UNI-side
+                 (PrimaryRateInterfaceEndpointType variable set to Nt), the
+                 signal information element is sent to the User UNI-side. When
+                 activated at the User UNI-side
+                 (PrimaryRateInterfaceEndpointType variable set to Te), the tone
+                 indicated in the signal information element is played in the IP
+                 direction.
+                 "
+   DEFVAL        { disable }
+   ::= { primaryRateInterfaceEntry 1050 }
+
+  -- Columnar:Inband Tone Generation Enable
+
+  primaryRateInterfaceInbandToneGenerationEnable OBJECT-TYPE
+   SYNTAX        MxEnableState
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Inband Tone Generation Enable
+
+                 Defines whether inband tone generation is enabled on the
+                 interface.
+
+                 When activated at the User UNI-side
+                 (PrimaryRateInterfaceEndpointType variable set to Te), only the
+                 ringback tone is generated.
+
+                 When the SignalingChannel.Protocol is set to QSIG and this
+                 variable is activated, the incoming side of the call plays the
+                 tones inband.
+
+
+                 "
+   DEFVAL        { enable }
+   ::= { primaryRateInterfaceEntry 1100 }
+
+  -- Columnar:Inband DTMF Dialing Enable
+
+  primaryRateInterfaceInbandDtmfDialingEnable OBJECT-TYPE
+   SYNTAX        MxEnableState
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Inband DTMF Dialing Enable
+
+                 Defines whether inband DTMF dialing is enabled.
+                 "
+   DEFVAL        { enable }
+   ::= { primaryRateInterfaceEntry 1200 }
+
+  -- Columnar:Overlap Dialing Enable
+
+  primaryRateInterfaceOverlapDialingEnable OBJECT-TYPE
+   SYNTAX        MxEnableState
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Overlap Dialing Enable
+
+                 Defines whether overlap dialing is enabled on the interface.
+                 "
+   DEFVAL        { enable }
+   ::= { primaryRateInterfaceEntry 1300 }
+
+  -- Columnar:Calling Name Maximum Length
+
+  primaryRateInterfaceCallingNameMaxLength OBJECT-TYPE
+   SYNTAX        Unsigned32 ( 0..82 )
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Calling Name Maximum Length
+
+                 Defines the maximum length of the calling party name for calls
+                 from SIP to ISDN on the interface.
+                 "
+   DEFVAL        { 34 }
+   ::= { primaryRateInterfaceEntry 1400 }
+
+  -- Columnar:Exclusive Bearer Channel Selection Enable
+
+  primaryRateInterfaceExclusiveBChannelSelectionEnable OBJECT-TYPE
+   SYNTAX        MxEnableState
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Exclusive Bearer Channel Selection Enable
+
+                 Defines whether exclusive B-Channel selection is enabled for
+                 calls from SIP to ISDN on the interface.
+                 "
+   DEFVAL        { disable }
+   ::= { primaryRateInterfaceEntry 1500 }
+
+  -- Columnar:Sending Complete Enable
+
+  primaryRateInterfaceSendingCompleteEnable OBJECT-TYPE
+   SYNTAX        MxEnableState
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Sending Complete Enable
+
+                 Defines whether the Sending Complete information element in
+                 SETUP messages is enabled for calls from SIP to ISDN on the
+                 interface.
+                 "
+   DEFVAL        { enable }
+   ::= { primaryRateInterfaceEntry 1600 }
+
+  -- Columnar:Calling Line Information Presentation Enable
+
+  primaryRateInterfaceClipEnable OBJECT-TYPE
+   SYNTAX        INTEGER { userOnly(0) , enable(1) , disable(2) }
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Calling Line Information Presentation Enable
+
+                 Defines whether or not the calling number digits information is
+                 sent on the ISDN.
+
+                   * UserOnly: Sends a Calling Number IE which contains the
+                     calling number digits when acting as the User UNI-side
+                     (PrimaryRateInterfaceEndpointType variable set to Te)
+                     otherwise the Calling Number IE is not sent.
+                   * Enable: Sends a Calling Number IE which contains the
+                     calling number digits.
+                   * Disable: The Calling Number IE is never sent.
+
+                 When SignalingChannel.Protocol is set to QSIG, this variable
+                 does not depend on the PrimaryRateInterface.EndpointType
+                 variable (Nt or Te).
+
+                   * UserOnly: Sends a Calling Number IE which contains the
+                     calling number digits.
+                   * Enable: Sends a Calling Number IE which contains the
+                     calling number digits.
+                   * Disable: The Calling Number IE is never sent.
+
+
+                 "
+   DEFVAL        { userOnly }
+   ::= { primaryRateInterfaceEntry 1700 }
+
+  -- Columnar:Calling Line Information Restriction Enable
+
+  primaryRateInterfaceClirEnable OBJECT-TYPE
+   SYNTAX        MxEnableState
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Calling Line Information Restriction Enable
+
+                 Defines whether or not the calling number restriction at the
+                 originating ISDN side is activated. When activated at the User
+                 UNI-side (PrimaryRateInterfaceEndpointType variable set to Te),
+                 the Calling Number information element is marked with a
+                 'restricted' Presentation Indicator. When activated at the
+                 Network UNI-side (PrimaryRateInterfaceEndpointType variable set
+                 to Nt), the Network always overrides the Calling Number
+                 infomation element Presentation Indicator with 'restricted'.
+
+                 When SignalingChannel.Protocol is set to QSIG, the effect of
+                 this variable does not depend on the
+                 PrimaryRateInterface.EndpointType variable (Nt or Te).
+
+                   * Enable: The Presentation Indicator in the Calling Number IE
+                     is set to 'restricted' in outgoing calls.
+                   * Disable: There is no restriction on the calling user
+                     number.
+
+
+                 "
+   DEFVAL        { disable }
+   ::= { primaryRateInterfaceEntry 1725 }
+
+  -- Columnar:Calling Line Information Restriction Override Enable
+
+  primaryRateInterfaceClirOverrideEnable OBJECT-TYPE
+   SYNTAX        MxEnableState
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Calling Line Information Restriction Override Enable
+
+                 At the destination ISDN side, activates the delivery of the
+                 Calling Number digits even if the Calling Party information
+                 element's Presentation Indicator is set to 'restricted'. When
+                 activated at the ISDN destination-side Network uni-side
+                 (PrimaryRateInterfaceEndpointType variable set to Nt), the
+                 Calling Number digits are sent to the User uni-side (Te), but
+                 the Presentation Indicator is left untouched.
+
+                 When SignalingChannel.Protocol is set to QSIG, the effect of
+                 this variable does not depend on the
+                 PrimaryRateInterface.EndpointType variable (Nt or Te).
+
+                   * Enable: In incoming calls when the Calling Number IE is
+                     present and its Presentation Indicator is set to
+                     'restricted', the restriction is overridden and the calling
+                     user number is presented to the called user.
+                   * Disable: The restriction is not overridden.
+
+
+                 "
+   DEFVAL        { disable }
+   ::= { primaryRateInterfaceEntry 1750 }
+
+  -- Columnar:Send Restart On Startup Enable
+
+  primaryRateInterfaceSendRestartOnStartupEnable OBJECT-TYPE
+   SYNTAX        MxEnableState
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Send Restart On Startup Enable
+
+                 Defines whether the RESTART message is sent upon a signaling
+                 channel 'UP' event
+                 "
+   DEFVAL        { enable }
+   ::= { primaryRateInterfaceEntry 1800 }
+
+  -- Columnar:Endpoint Type
+
+  primaryRateInterfaceEndpointType OBJECT-TYPE
+   SYNTAX        INTEGER { te(100) , nt(200) }
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Endpoint Type
+
+                 Defines the endpoint type:
+
+                   * Te: Terminal Equipment
+                   * Nt: Network Termination
+
+                 When SignalingChannel.Protocol is set to QSIG, the endpoint
+                 type will only be used in the second layer (LAPD) since it is a
+                 concept that does not exist within QSIG.
+
+
+                 "
+   DEFVAL        { te }
+   ::= { primaryRateInterfaceEntry 200 }
+
+  -- Columnar:Port Pinout
+
+  primaryRateInterfacePortPinout OBJECT-TYPE
+   SYNTAX        INTEGER { auto(100) , te(200) , nt(300) }
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Port Pinout
+
+                 Defines the port pinout:
+
+                   * Auto: The pinout is set according to the endpoint type.
+                   * Te: Force the pinout to TE regardless of the endpoint type.
+                   * Nt: Force the pinout to NT regardless of the endpoint type.
+
+                 See variable PrimaryRateInterface.EndpointType for a
+                 description of the endpoint type.
+                 "
+   DEFVAL        { auto }
+   ::= { primaryRateInterfaceEntry 250 }
+
+  -- Columnar:Line Coding
+
+  primaryRateInterfaceLineCoding OBJECT-TYPE
+   SYNTAX        INTEGER { b8zs(100) , hdb3(200) , ami(300) }
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Line Coding
+
+                 Defines the transmission encoding of bits:
+
+                   * B8ZS: Bipolar with 8-Zeros Substitution (T1 lines)
+                   * HDB3: High-Density Bipolar with 3-zeros (E1 lines)
+                   * AMI: Alternate Mark Inversion (E1 and T1 lines)
+
+                 For further information, see ITU-T Recommendation G.703.
+                 "
+   DEFVAL        { hdb3 }
+   ::= { primaryRateInterfaceEntry 400 }
+
+  -- Columnar:Line Framing
+
+  primaryRateInterfaceLineFraming OBJECT-TYPE
+   SYNTAX        INTEGER { sf(100) , esf(200) , crc4(300) , noCrc4(400) }
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Line Framing
+
+                 Defines the frame format:
+
+                   * SF: Super frame. Sometimes known as D4 (T1 lines)
+                   * ESF: Extended super frame (T1 lines)
+                   * CRC4: Cyclic redundancy check 4 (E1 lines)
+                   * NO-CRC4: No Cyclic redundancy check 4 (E1 lines)
+
+                 For further information, see ITU-T Recommendation G.704.
+                 "
+   DEFVAL        { crc4 }
+   ::= { primaryRateInterfaceEntry 500 }
+
+  -- Columnar:Network Location
+
+  primaryRateInterfaceNetworkLocation OBJECT-TYPE
+   SYNTAX        INTEGER { user(100) , private(200) , public(300) , transit(400)
+                 , international(500) }
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Network Location
+
+                 Defines the value of the network location in the progress
+                 indicator messages sent by the unit.
+                 "
+   DEFVAL        { user }
+   ::= { primaryRateInterfaceEntry 600 }
+
+  -- Columnar:Preferred Encoding Scheme
+
+  primaryRateInterfacePreferredEncodingScheme OBJECT-TYPE
+   SYNTAX        INTEGER { g711alaw(100) , g711ulaw(200) }
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Preferred Encoding Scheme
+
+                 Defines the preferred data encoding scheme in the bearer
+                 capabilities (user information layer 1 protocol). This encoding
+                 scheme is used when initiating a call on the ISDN side.
+                 "
+   DEFVAL        { g711alaw }
+   ::= { primaryRateInterfaceEntry 700 }
+
+  -- Columnar:Fallback Encoding Scheme
+
+  primaryRateInterfaceFallbackEncodingScheme OBJECT-TYPE
+   SYNTAX        INTEGER { g711alaw(100) , g711ulaw(200) }
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Fallback Encoding Scheme
+
+                 Defines the fallback data encoding scheme in the bearer
+                 capabilities (user information layer 1 protocol).
+                 "
+   DEFVAL        { g711ulaw }
+   ::= { primaryRateInterfaceEntry 750 }
+
+  -- Columnar:Channel Range
+
+  primaryRateInterfaceChannelRange OBJECT-TYPE
+   SYNTAX        OCTET STRING ( SIZE(1..10) )
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Channel Range
+
+                 Defines the range of active bearer channels.
+                 "
+   DEFVAL        { "1-30" }
+   ::= { primaryRateInterfaceEntry 800 }
+
+  -- Columnar:Channel Allocation Strategy
+
+  primaryRateInterfaceChannelAllocationStrategy OBJECT-TYPE
+   SYNTAX        INTEGER { ascending(100) , descending(200) ,
+                 roundRobinAscending(300) , roundRobinDescending(400) }
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Channel Allocation Strategy
+
+                 Defines the strategy for selecting bearer channels. Available
+                 strategies are:
+
+                   * Ascending: select the lowest-numbered non-busy bearer
+                     channel
+                   * Descending: select the highest-numbered non-busy bearer
+                     channel
+                   * RoundRobinAscending: use a cyclic round-robin search;
+                     starting from the bearer channel that follows the bearer
+                     channel used for the last call, select the lowest-numbered
+                     non-busy bearer channel
+                   * RoundRobinDescending: use a cyclic round-robin search;
+                     starting from the bearer channel that precedes the bearer
+                     channel used for the last call, select the highest-numbered
+                     non-busy bearer channel
+
+
+                 "
+   DEFVAL        { ascending }
+   ::= { primaryRateInterfaceEntry 900 }
+
+
+ -- End of table:Primary Rate Interface
+
+ -- *****************************************************************************
+ 
+ -- Group:Primary Rate Interface Configuration
+
+ -- *****************************************************************************
+ 
+ primaryRateInterfaceInteropGroup OBJECT IDENTIFIER
+  ::= { primaryRateInterfaceGroup 50000 }
+  -- *****************************************************************************
+  
+  -- Table:Primary Rate Interface Interop
+
+  -- *****************************************************************************
+  
+  primaryRateInterfaceInteropTable OBJECT-TYPE
+   SYNTAX        SEQUENCE OF PrimaryRateInterfaceInteropEntry
+   MAX-ACCESS    not-accessible
+   STATUS        current
+   DESCRIPTION " Primary Rate Interface Interop
+
+                 Interop configuration parameters related to the Primary Rate interfaces on
+                 this managed device.
+                 "
+   ::= { primaryRateInterfaceInteropGroup 100 }
+   primaryRateInterfaceInteropEntry OBJECT-TYPE
+    SYNTAX        PrimaryRateInterfaceInteropEntry
+    MAX-ACCESS    not-accessible
+    STATUS        current
+    DESCRIPTION " A row in table Primary Rate Interface Interop. "
+    INDEX         {
+                    primaryRateInterfaceInteropName
+                  }
+
+    ::= { primaryRateInterfaceInteropTable 1 }
+
+   PrimaryRateInterfaceInteropEntry ::= SEQUENCE
+   {
+     primaryRateInterfaceInteropName                                          OCTET STRING,
+     primaryRateInterfaceInteropProgressIndicatorInSetupEnable                MxEnableState,
+     primaryRateInterfaceInteropProgressIndicatorInSetupAckEnable             MxEnableState,
+     primaryRateInterfaceInteropProgressIndicatorInCallProgressForSetupEnable MxEnableState,
+     primaryRateInterfaceInteropProgressIndicatorInProgressEnable             MxEnableState,
+     primaryRateInterfaceInteropProgressIndicatorInAlertingEnable             MxEnableState,
+     primaryRateInterfaceInteropProgressIndicatorInConnectEnable              MxEnableState,
+     primaryRateInterfaceInteropMaximumFacilityWaitingDelay                   Unsigned32,
+     primaryRateInterfaceInteropUseImplicitInbandInfoEnable                   MxEnableState
+   }
+
+   -- Index:Name
+
+   primaryRateInterfaceInteropName OBJECT-TYPE
+    SYNTAX        OCTET STRING
+    MAX-ACCESS    read-only
+    STATUS        current
+    DESCRIPTION " Name
+
+                  Name that identifies the interface.
+                  "
+    ::= { primaryRateInterfaceInteropEntry 100 }
+
+   -- Columnar:Progress Indicator In Setup
+
+   primaryRateInterfaceInteropProgressIndicatorInSetupEnable OBJECT-TYPE
+    SYNTAX        MxEnableState
+    MAX-ACCESS    read-write
+    STATUS        current
+    DESCRIPTION " Progress Indicator In Setup
+
+                  Defines whether or not the Progress Indicator information
+                  element is allowed in the SETUP message when acting as the
+                  originating side.
+
+                  See the variable SignalingChannel.SendProgressIndicatorIE for
+                  other conditions for sending Progress Indicator IE.
+
+
+                  "
+    DEFVAL        { enable }
+    ::= { primaryRateInterfaceInteropEntry 200 }
+
+   -- Columnar:Progress Indicator In Setup Ack
+
+   primaryRateInterfaceInteropProgressIndicatorInSetupAckEnable OBJECT-TYPE
+    SYNTAX        MxEnableState
+    MAX-ACCESS    read-write
+    STATUS        current
+    DESCRIPTION " Progress Indicator In Setup Ack
+
+                  Defines whether or not the Progress Indicator information
+                  element is allowed in the SETUP ACK when acting as the
+                  terminating side.
+
+                  See the variable SignalingChannel.SendProgressIndicatorIE for
+                  other conditions for sending Progress Indicator IE.
+
+
+                  "
+    DEFVAL        { enable }
+    ::= { primaryRateInterfaceInteropEntry 300 }
+
+   -- Columnar:Progress Indicator In Call Progress For Setup
+
+   primaryRateInterfaceInteropProgressIndicatorInCallProgressForSetupEnable
+   OBJECT-TYPE
+    SYNTAX        MxEnableState
+    MAX-ACCESS    read-write
+    STATUS        current
+    DESCRIPTION " Progress Indicator In Call Progress For Setup
+
+                  Defines whether or not the Progress Indicator information
+                  element is allowed in the CALL PROCEEDING message in response to
+                  a SETUP message when acting as the terminating side.
+
+                  See the variable SignalingChannel.SendProgressIndicatorIE for
+                  other conditions for sending Progress Indicator IE.
+
+
+                  "
+    DEFVAL        { enable }
+    ::= { primaryRateInterfaceInteropEntry 400 }
+
+   -- Columnar:Progress Indicator In Progress
+
+   primaryRateInterfaceInteropProgressIndicatorInProgressEnable OBJECT-TYPE
+    SYNTAX        MxEnableState
+    MAX-ACCESS    read-write
+    STATUS        current
+    DESCRIPTION " Progress Indicator In Progress
+
+                  Defines whether or not the Progress Indicator information
+                  element is allowed in the PROGRESS message in response to a
+                  SETUP message when acting as the terminating side.
+
+                  See the variable SignalingChannel.SendProgressIndicatorIE for
+                  other conditions for sending Progress Indicator IE.
+
+
+                  "
+    DEFVAL        { enable }
+    ::= { primaryRateInterfaceInteropEntry 450 }
+
+   -- Columnar:Progress Indicator In Alerting
+
+   primaryRateInterfaceInteropProgressIndicatorInAlertingEnable OBJECT-TYPE
+    SYNTAX        MxEnableState
+    MAX-ACCESS    read-write
+    STATUS        current
+    DESCRIPTION " Progress Indicator In Alerting
+
+                  Defines whether or not the Progress Indicator information
+                  element is allowed in the ALERTING message.
+
+                  See the variable SignalingChannel.SendProgressIndicatorIE for
+                  other conditions for sending Progress Indicator IE.
+
+
+                  "
+    DEFVAL        { enable }
+    ::= { primaryRateInterfaceInteropEntry 500 }
+
+   -- Columnar:Progress Indicator In Connect
+
+   primaryRateInterfaceInteropProgressIndicatorInConnectEnable OBJECT-TYPE
+    SYNTAX        MxEnableState
+    MAX-ACCESS    read-write
+    STATUS        current
+    DESCRIPTION " Progress Indicator In Connect
+
+                  Defines whether or not the Progress Indicator information
+                  element is allowed in the CONNECT message.
+
+                  See the variable SignalingChannel.SendProgressIndicatorIE for
+                  other conditions for sending Progress Indicator IE.
+
+
+                  "
+    DEFVAL        { enable }
+    ::= { primaryRateInterfaceInteropEntry 600 }
+
+   -- Columnar:Maximum FACILITY Waiting Delay
+
+   primaryRateInterfaceInteropMaximumFacilityWaitingDelay OBJECT-TYPE
+    SYNTAX        Unsigned32 ( 0..1500 )
+    MAX-ACCESS    read-write
+    STATUS        current
+    DESCRIPTION " Maximum FACILITY Waiting Delay
+
+                  Defines the maximum amount of time to wait for a FACILITY
+                  message, after receiving a SETUP message, before going on with
+                  normal call processing.
+
+                  After receiving a SETUP message, the system waits for this
+                  amount of time for a FACILITY message. As soon as it receives a
+                  FACILITY message or the delay expires, it goes on with normal
+                  call processing.
+
+                  A FACILITY message can contain useful information for the call.
+                  For example, it can contain a Calling Name.
+
+                  In order for this to be effective, the variable
+                  SignalingChannel.FacilityServicesEnable must be enabled.
+
+                  The value 0 deactivates this feature.
+
+                  This value is expressed in milliseconds (ms).
+
+
+                  "
+    DEFVAL        { 0 }
+    ::= { primaryRateInterfaceInteropEntry 700 }
+
+   -- Columnar:Use Implicit Inband Information
+
+   primaryRateInterfaceInteropUseImplicitInbandInfoEnable OBJECT-TYPE
+    SYNTAX        MxEnableState
+    MAX-ACCESS    read-write
+    STATUS        current
+    DESCRIPTION " Use Implicit Inband Information
+
+                  Defines if a message with progress indicator No. 1 (the call is
+                  not end-to-end ISDN; further call progress information may be
+                  available in-band) MUST be considered as offering inband
+                  information available. If so, the network shall activate the
+                  B-channel connection.
+                  "
+    DEFVAL        { enable }
+    ::= { primaryRateInterfaceInteropEntry 800 }
+
+
+  -- End of table:Primary Rate Interface Interop
+
+ -- End of group:Primary Rate Interface Configuration
+
+-- End of group:Primary Rate Interface Configuration
+
+-- *****************************************************************************
+
+-- Group:Basic Rate Interface Configuration
+
+-- *****************************************************************************
+
+basicRateInterfaceGroup OBJECT IDENTIFIER
+ ::= { isdnMIBObjects 300 }
+ -- *****************************************************************************
+ 
+ -- Table:Basic Rate Interface
+
+ -- *****************************************************************************
+ 
+ basicRateInterfaceTable OBJECT-TYPE
+  SYNTAX        SEQUENCE OF BasicRateInterfaceEntry
+  MAX-ACCESS    not-accessible
+  STATUS        current
+  DESCRIPTION " Basic Rate Interface
+
+                Configuration and operational parameters for all physical Basic
+                Rate interfaces on this managed device.
+                "
+  ::= { basicRateInterfaceGroup 100 }
+  basicRateInterfaceEntry OBJECT-TYPE
+   SYNTAX        BasicRateInterfaceEntry
+   MAX-ACCESS    not-accessible
+   STATUS        current
+   DESCRIPTION " A row in table Basic Rate Interface. "
+   INDEX         {
+                   basicRateInterfaceName
+                 }
+
+   ::= { basicRateInterfaceTable 1 }
+
+  BasicRateInterfaceEntry ::= SEQUENCE
+  {
+    basicRateInterfaceName                             OCTET STRING,
+    basicRateInterfaceEndpointType                     INTEGER,
+    basicRateInterfaceConnectionType                   INTEGER,
+    basicRateInterfaceNetworkLocation                  INTEGER,
+    basicRateInterfacePreferredEncodingScheme          INTEGER,
+    basicRateInterfaceFallbackEncodingScheme           INTEGER,
+    basicRateInterfaceChannelAllocationStrategy        INTEGER,
+    basicRateInterfaceMaxActiveCalls                   Unsigned32,
+    basicRateInterfaceSignalInformationElementEnable   MxEnableState,
+    basicRateInterfaceInbandToneGenerationEnable       MxEnableState,
+    basicRateInterfaceInbandDtmfDialingEnable          MxEnableState,
+    basicRateInterfaceOverlapDialingEnable             MxEnableState,
+    basicRateInterfaceCallingNameMaxLength             Unsigned32,
+    basicRateInterfaceExclusiveBChannelSelectionEnable MxEnableState,
+    basicRateInterfaceSendingCompleteEnable            MxEnableState,
+    basicRateInterfaceClipEnable                       INTEGER,
+    basicRateInterfaceClirEnable                       MxEnableState,
+    basicRateInterfaceClirOverrideEnable               MxEnableState,
+    basicRateInterfaceSendRestartOnStartupEnable       MxEnableState,
+    basicRateInterfaceHookFlashKeypad                  OCTET STRING,
+    basicRateInterfaceKeypadReceptionTimeout           Unsigned32,
+    basicRateInterfaceMsn1                             OCTET STRING,
+    basicRateInterfaceMsn2                             OCTET STRING,
+    basicRateInterfaceMsn3                             OCTET STRING
+  }
+
+  -- Index:Name
+
+  basicRateInterfaceName OBJECT-TYPE
+   SYNTAX        OCTET STRING
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Name
+
+                 The physical interface name.
+                 "
+   ::= { basicRateInterfaceEntry 100 }
+
+  -- Columnar:Maximum Active Calls
+
+  basicRateInterfaceMaxActiveCalls OBJECT-TYPE
+   SYNTAX        Unsigned32 ( 0..2 )
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Maximum Active Calls
+
+                 Defines the maximum number of active calls on the interface.
+
+                 Note: The special value 0 indicates no maximum number of active
+                 calls.
+
+
+                 "
+   DEFVAL        { 0 }
+   ::= { basicRateInterfaceEntry 1000 }
+
+  -- Columnar:Signal Information Element Enable
+
+  basicRateInterfaceSignalInformationElementEnable OBJECT-TYPE
+   SYNTAX        MxEnableState
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Signal Information Element Enable
+
+                 Defines whether the signal information element is enabled on
+                 the interface. When activated at the Network UNI-side
+                 (BasicRateInterfaceEndpointType variable set to Nt), the signal
+                 information element is sent to the User UNI-side. When
+                 activated at the User UNI-side (BasicRateInterfaceEndpointType
+                 variable set to Te), the tone indicated in the signal
+                 information element is played in the IP direction.
+                 "
+   DEFVAL        { disable }
+   ::= { basicRateInterfaceEntry 1050 }
+
+  -- Columnar:Inband Tone Generation Enable
+
+  basicRateInterfaceInbandToneGenerationEnable OBJECT-TYPE
+   SYNTAX        MxEnableState
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Inband Tone Generation Enable
+
+                 Defines whether inband tone generation is enabled on the
+                 interface. When activated at the User UNI-side
+                 (BasicRateInterfaceEndpointType variable set to Te), only the
+                 ringback tone is generated.
+
+                 When the SignalingChannel.Protocol is set to QSIG and this
+                 variable is activated, the incoming side of the call plays the
+                 tones inband.
+
+
+                 "
+   DEFVAL        { enable }
+   ::= { basicRateInterfaceEntry 1100 }
+
+  -- Columnar:Inband DTMF Dialing Enable
+
+  basicRateInterfaceInbandDtmfDialingEnable OBJECT-TYPE
+   SYNTAX        MxEnableState
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Inband DTMF Dialing Enable
+
+                 Defines whether inband DTMF dialing is enabled.
+                 "
+   DEFVAL        { enable }
+   ::= { basicRateInterfaceEntry 1200 }
+
+  -- Columnar:Overlap Dialing Enable
+
+  basicRateInterfaceOverlapDialingEnable OBJECT-TYPE
+   SYNTAX        MxEnableState
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Overlap Dialing Enable
+
+                 Defines whether overlap dialing is enabled on the interface.
+                 "
+   DEFVAL        { enable }
+   ::= { basicRateInterfaceEntry 1300 }
+
+  -- Columnar:Calling Name Maximum Length
+
+  basicRateInterfaceCallingNameMaxLength OBJECT-TYPE
+   SYNTAX        Unsigned32 ( 0..82 )
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Calling Name Maximum Length
+
+                 Defines the maximum length of the calling party name for calls
+                 from SIP to ISDN on the interface.
+                 "
+   DEFVAL        { 34 }
+   ::= { basicRateInterfaceEntry 1400 }
+
+  -- Columnar:Exclusive Bearer Channel Selection Enable
+
+  basicRateInterfaceExclusiveBChannelSelectionEnable OBJECT-TYPE
+   SYNTAX        MxEnableState
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Exclusive Bearer Channel Selection Enable
+
+                 Defines whether exclusive B-Channel selection is enabled for
+                 calls from SIP to ISDN on the interface.
+                 "
+   DEFVAL        { disable }
+   ::= { basicRateInterfaceEntry 1500 }
+
+  -- Columnar:Sending Complete Enable
+
+  basicRateInterfaceSendingCompleteEnable OBJECT-TYPE
+   SYNTAX        MxEnableState
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Sending Complete Enable
+
+                 Defines whether the Sending Complete information element in
+                 SETUP messages is enabled for calls from SIP to ISDN on the
+                 interface.
+                 "
+   DEFVAL        { enable }
+   ::= { basicRateInterfaceEntry 1600 }
+
+  -- Columnar:Calling Line Information Presentation Enable
+
+  basicRateInterfaceClipEnable OBJECT-TYPE
+   SYNTAX        INTEGER { userOnly(0) , enable(1) , disable(2) }
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Calling Line Information Presentation Enable
+
+                 Defines whether or not the calling number digits information is
+                 sent on the ISDN.
+
+                   * UserOnly: Sends a Calling Number IE which contains the
+                     calling number digits when acting as the User UNI-side
+                     (PrimaryRateInterfaceEndpointType variable set to Te)
+                     otherwise the Calling Number IE is not sent.
+                   * Enable: Sends a Calling Number IE which contains the
+                     calling number digits.
+                   * Disable: The Calling Number IE is never sent.
+
+                 When SignalingChannel.Protocol is set to QSIG, this variable
+                 does not depend on the PrimaryRateInterface.EndpointType
+                 variable (Nt or Te).
+
+                   * UserOnly: Sends a Calling Number IE which contains the
+                     calling number digits.
+                   * Enable: Sends a Calling Number IE which contains the
+                     calling number digits.
+                   * Disable: The Calling Number IE is never sent.
+
+
+                 "
+   DEFVAL        { userOnly }
+   ::= { basicRateInterfaceEntry 1700 }
+
+  -- Columnar:Calling Line Information Restriction Enable
+
+  basicRateInterfaceClirEnable OBJECT-TYPE
+   SYNTAX        MxEnableState
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Calling Line Information Restriction Enable
+
+                 Defines whether or not the calling number restriction at the
+                 originating ISDN side is activated. When activated at the User
+                 UNI-side (BasicRateInterfaceEndpointType variable set to Te),
+                 the Calling Number information element is marked with a
+                 'restricted' Presentation Indicator. When activated at the
+                 Network UNI-side (BasicRateInterfaceEndpointType variable set
+                 to Nt), the Network always overrides the Calling Number
+                 infomation element Presentation Indicator with 'restricted'.
+
+                 When SignalingChannel.Protocol is set to QSIG, the effect of
+                 this variable does not depend on the
+                 PrimaryRateInterface.EndpointType variable (Nt or Te).
+
+                   * Enable: The Presentation Indicator in the Calling Number IE
+                     is set to 'restricted' in outgoing calls.
+                   * Disable: There is no restriction on the calling user
+                     number.
+
+
+                 "
+   DEFVAL        { disable }
+   ::= { basicRateInterfaceEntry 1725 }
+
+  -- Columnar:Calling Line Information Restriction Override Enable
+
+  basicRateInterfaceClirOverrideEnable OBJECT-TYPE
+   SYNTAX        MxEnableState
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Calling Line Information Restriction Override Enable
+
+                 At the destination ISDN side, activates the delivery of the
+                 Calling Number digits even if the Calling Party information
+                 element's Presentation Indicator is set to 'restricted'. When
+                 activated at the ISDN destination-side Network uni-side
+                 (BasicRateInterfaceEndpointType variable set to Nt), the
+                 Calling Number digits are sent to the User uni-side (Te), but
+                 the Presentation Indicator is left untouched.
+
+                 When SignalingChannel.Protocol is set to QSIG, the effect of
+                 this variable does not depend on the
+                 PrimaryRateInterface.EndpointType variable (Nt or Te).
+
+                   * Enable: In incoming calls when the Calling Number IE is
+                     present and its Presentation Indicator is set to
+                     'restricted', the restriction is overridden and the calling
+                     user number is presented to the called user.
+                   * Disable: The restriction is not overridden.
+
+
+                 "
+   DEFVAL        { disable }
+   ::= { basicRateInterfaceEntry 1750 }
+
+  -- Columnar:Send Restart On Startup Enable
+
+  basicRateInterfaceSendRestartOnStartupEnable OBJECT-TYPE
+   SYNTAX        MxEnableState
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Send Restart On Startup Enable
+
+                 Defines whether the RESTART message is sent upon a signaling
+                 channel 'UP' event
+                 "
+   DEFVAL        { enable }
+   ::= { basicRateInterfaceEntry 1800 }
+
+  -- Columnar:Hook-Flash Keypad
+
+  basicRateInterfaceHookFlashKeypad OBJECT-TYPE
+   SYNTAX        OCTET STRING ( SIZE(0..32) )
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Hook-Flash Keypad
+
+                 The actual keypad string that is to be considered as a
+                 hook-flash.
+
+                 Setting this variable to an empty string disables the
+                 hook-flash detection.
+
+                 The permitted keypad must be made up of IA5 characters. See
+                 ITU-T Recommendation T.50.
+
+
+                 "
+   DEFVAL        { "" }
+   ::= { basicRateInterfaceEntry 1900 }
+
+  -- Columnar:Endpoint Type
+
+  basicRateInterfaceEndpointType OBJECT-TYPE
+   SYNTAX        INTEGER { te(100) , nt(200) }
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Endpoint Type
+
+                 Defines the endpoint type:
+
+                   * Te: Terminal Equipment
+                   * Nt: Network Termination
+
+                 When SignalingChannel.Protocol is set to QSIG, the endpoint
+                 type will only be used in the second layer (LAPD) since it is a
+                 concept that does not exist within QSIG.
+
+
+                 "
+   DEFVAL        { te }
+   ::= { basicRateInterfaceEntry 200 }
+
+  -- Columnar:Keypad Reception Timeout
+
+  basicRateInterfaceKeypadReceptionTimeout OBJECT-TYPE
+   SYNTAX        Unsigned32 ( 0..4 )
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Keypad Reception Timeout
+
+                 The actual time to wait before considering the keypad reception
+                 over.
+
+                 The value is expressed in seconds.
+
+                 Setting this variable to 0 disables the timeout, thus assuming
+                 that all keypads will be received in a single Information
+                 message.
+
+
+                 "
+   DEFVAL        { 2 }
+   ::= { basicRateInterfaceEntry 2000 }
+
+  -- Columnar:MSN 1
+
+  basicRateInterfaceMsn1 OBJECT-TYPE
+   SYNTAX        OCTET STRING ( SIZE(0..32) )
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " MSN 1
+
+                 This enables the MSN supplementary service with these numbers.
+
+                 The MSN supplementary service shall enable each individual
+                 terminal on one access to have one or more identities.
+
+                 If the Called E.164 received from a call does not matches any
+                 MSN numbers, the call is silently discarded.
+
+                 This service is available only for a BRI interface configured
+                 in TE Point To Multipoint. This service is also disabled when
+                 all fields are blank. The value of this field must be a digits.
+
+
+                 "
+   DEFVAL        { "" }
+   ::= { basicRateInterfaceEntry 2200 }
+
+  -- Columnar:MSN 2
+
+  basicRateInterfaceMsn2 OBJECT-TYPE
+   SYNTAX        OCTET STRING ( SIZE(0..32) )
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " MSN 2
+
+                 This enables the MSN supplementary service with these numbers.
+
+                 The MSN supplementary service shall enable each individual
+                 terminal on one access to have one or more identities.
+
+                 If the Called E.164 received from a call does not matches any
+                 MSN numbers, the call is silently discarded.
+
+                 This service is available only for a BRI interface configured
+                 in TE Point To Multipoint. This service is also disabled when
+                 all fields are blank. The value of this field must be a digits.
+
+
+                 "
+   DEFVAL        { "" }
+   ::= { basicRateInterfaceEntry 2300 }
+
+  -- Columnar:MSN 3
+
+  basicRateInterfaceMsn3 OBJECT-TYPE
+   SYNTAX        OCTET STRING ( SIZE(0..32) )
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " MSN 3
+
+                 This enables the MSN supplementary service with these numbers.
+
+                 The MSN supplementary service shall enable each individual
+                 terminal on one access to have one or more identities.
+
+                 If the Called E.164 received from a call does not matches any
+                 MSN numbers, the call is silently discarded.
+
+                 This service is available only for a BRI interface configured
+                 in TE Point To Multipoint. This service is also disabled when
+                 all fields are blank. The value of this field must be a digits.
+
+
+                 "
+   DEFVAL        { "" }
+   ::= { basicRateInterfaceEntry 2400 }
+
+  -- Columnar:Connection Type
+
+  basicRateInterfaceConnectionType OBJECT-TYPE
+   SYNTAX        INTEGER { pointToPoint(100) , pointToMultiPoint(200) }
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Connection Type
+
+                 Defines the connection type:
+
+                   * PointToPoint: Can only attach one device (for instance a
+                     PABX or PSTN)
+                   * PointToMultiPoint: Can attach more than one device
+
+                 PointToMultiPoint configuration is not available in QSIG.
+
+
+                 "
+   DEFVAL        { pointToMultiPoint }
+   ::= { basicRateInterfaceEntry 300 }
+
+  -- Columnar:Network Location
+
+  basicRateInterfaceNetworkLocation OBJECT-TYPE
+   SYNTAX        INTEGER { user(100) , private(200) , public(300) , transit(400)
+                 , international(500) }
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Network Location
+
+                 Defines the value of the network location in the progress
+                 indicator messages sent by the unit.
+                 "
+   DEFVAL        { user }
+   ::= { basicRateInterfaceEntry 600 }
+
+  -- Columnar:Preferred Encoding Scheme
+
+  basicRateInterfacePreferredEncodingScheme OBJECT-TYPE
+   SYNTAX        INTEGER { g711alaw(100) , g711ulaw(200) }
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Preferred Encoding Scheme
+
+                 Defines the preferred data encoding scheme in the bearer
+                 capabilities (user information layer 1 protocol). This encoding
+                 scheme is used when initiating a call on the ISDN side.
+                 "
+   DEFVAL        { g711alaw }
+   ::= { basicRateInterfaceEntry 700 }
+
+  -- Columnar:Fallback Encoding Scheme
+
+  basicRateInterfaceFallbackEncodingScheme OBJECT-TYPE
+   SYNTAX        INTEGER { g711alaw(100) , g711ulaw(200) }
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Fallback Encoding Scheme
+
+                 Defines the fallback data encoding scheme in the bearer
+                 capabilities (user information layer 1 protocol).
+                 "
+   DEFVAL        { g711ulaw }
+   ::= { basicRateInterfaceEntry 750 }
+
+  -- Columnar:Channel Allocation Strategy
+
+  basicRateInterfaceChannelAllocationStrategy OBJECT-TYPE
+   SYNTAX        INTEGER { ascending(100) , descending(200) ,
+                 roundRobinAscending(300) , roundRobinDescending(400) }
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Channel Allocation Strategy
+
+                 Defines the strategy for selecting bearer channels. Available
+                 strategies are:
+
+                   * Ascending: select the lowest-numbered non-busy bearer
+                     channel
+                   * Descending: select the highest-numbered non-busy bearer
+                     channel
+                   * RoundRobinAscending: use a cyclic round-robin search;
+                     starting from the bearer channel that follows the bearer
+                     channel used for the last call, select the lowest-numbered
+                     non-busy bearer channel
+                   * RoundRobinDescending: use a cyclic round-robin search;
+                     starting from the bearer channel that precedes the bearer
+                     channel used for the last call, select the highest-numbered
+                     non-busy bearer channel
+
+
+                 "
+   DEFVAL        { ascending }
+   ::= { basicRateInterfaceEntry 900 }
+
+
+ -- End of table:Basic Rate Interface
+
+ -- *****************************************************************************
+ 
+ -- Group:Basic Rate Interface Configuration
+
+ -- *****************************************************************************
+ 
+ basicRateInterfaceInteropGroup OBJECT IDENTIFIER
+  ::= { basicRateInterfaceGroup 50000 }
+  -- *****************************************************************************
+  
+  -- Table:Basic Rate Interface Interop
+
+  -- *****************************************************************************
+  
+  basicRateInterfaceInteropTable OBJECT-TYPE
+   SYNTAX        SEQUENCE OF BasicRateInterfaceInteropEntry
+   MAX-ACCESS    not-accessible
+   STATUS        current
+   DESCRIPTION " Basic Rate Interface Interop
+
+                 Interop configuration parameters related to the Basic Rate interfaces on
+                 this managed device.
+                 "
+   ::= { basicRateInterfaceInteropGroup 100 }
+   basicRateInterfaceInteropEntry OBJECT-TYPE
+    SYNTAX        BasicRateInterfaceInteropEntry
+    MAX-ACCESS    not-accessible
+    STATUS        current
+    DESCRIPTION " A row in table Basic Rate Interface Interop. "
+    INDEX         {
+                    basicRateInterfaceInteropName
+                  }
+
+    ::= { basicRateInterfaceInteropTable 1 }
+
+   BasicRateInterfaceInteropEntry ::= SEQUENCE
+   {
+     basicRateInterfaceInteropName                                          OCTET STRING,
+     basicRateInterfaceInteropProgressIndicatorInSetupEnable                MxEnableState,
+     basicRateInterfaceInteropProgressIndicatorInSetupAckEnable             MxEnableState,
+     basicRateInterfaceInteropProgressIndicatorInCallProgressForSetupEnable MxEnableState,
+     basicRateInterfaceInteropProgressIndicatorInProgressEnable             MxEnableState,
+     basicRateInterfaceInteropProgressIndicatorInAlertingEnable             MxEnableState,
+     basicRateInterfaceInteropProgressIndicatorInConnectEnable              MxEnableState,
+     basicRateInterfaceInteropMaximumFacilityWaitingDelay                   Unsigned32,
+     basicRateInterfaceInteropUseImplicitInbandInfoEnable                   MxEnableState,
+     basicRateInterfaceInteropAllowTeiBroadcastInPtpEnable                  MxEnableState
+   }
+
+   -- Index:Name
+
+   basicRateInterfaceInteropName OBJECT-TYPE
+    SYNTAX        OCTET STRING
+    MAX-ACCESS    read-only
+    STATUS        current
+    DESCRIPTION " Name
+
+                  Name that identifies the interface.
+                  "
+    ::= { basicRateInterfaceInteropEntry 100 }
+
+   -- Columnar:Progress Indicator In Setup
+
+   basicRateInterfaceInteropProgressIndicatorInSetupEnable OBJECT-TYPE
+    SYNTAX        MxEnableState
+    MAX-ACCESS    read-write
+    STATUS        current
+    DESCRIPTION " Progress Indicator In Setup
+
+                  Defines whether or not the Progress Indicator information
+                  element is allowed in the SETUP message when acting as the
+                  originating side.
+
+                  See the variable SignalingChannel.SendProgressIndicatorIE for
+                  other conditions for sending Progress Indicator IE.
+
+
+                  "
+    DEFVAL        { enable }
+    ::= { basicRateInterfaceInteropEntry 200 }
+
+   -- Columnar:Progress Indicator In Setup Ack
+
+   basicRateInterfaceInteropProgressIndicatorInSetupAckEnable OBJECT-TYPE
+    SYNTAX        MxEnableState
+    MAX-ACCESS    read-write
+    STATUS        current
+    DESCRIPTION " Progress Indicator In Setup Ack
+
+                  Defines whether or not the Progress Indicator information
+                  element is allowed in the SETUP ACK when acting as the
+                  terminating side.
+
+                  See the variable SignalingChannel.SendProgressIndicatorIE for
+                  other conditions for sending Progress Indicator IE.
+
+
+                  "
+    DEFVAL        { enable }
+    ::= { basicRateInterfaceInteropEntry 300 }
+
+   -- Columnar:Progress Indicator In Call Progress For Setup
+
+   basicRateInterfaceInteropProgressIndicatorInCallProgressForSetupEnable
+   OBJECT-TYPE
+    SYNTAX        MxEnableState
+    MAX-ACCESS    read-write
+    STATUS        current
+    DESCRIPTION " Progress Indicator In Call Progress For Setup
+
+                  Defines whether or not the Progress Indicator information
+                  element is allowed in the CALL PROCEEDING message in response to
+                  a SETUP message when acting as the terminating side.
+
+                  See the variable SignalingChannel.SendProgressIndicatorIE for
+                  other conditions for sending Progress Indicator IE.
+
+
+                  "
+    DEFVAL        { enable }
+    ::= { basicRateInterfaceInteropEntry 400 }
+
+   -- Columnar:Progress Indicator In Progress
+
+   basicRateInterfaceInteropProgressIndicatorInProgressEnable OBJECT-TYPE
+    SYNTAX        MxEnableState
+    MAX-ACCESS    read-write
+    STATUS        current
+    DESCRIPTION " Progress Indicator In Progress
+
+                  Defines whether or not the Progress Indicator information
+                  element is allowed in the PROGRESS message in response to a
+                  SETUP message when acting as the terminating side.
+
+                  See the variable SignalingChannel.SendProgressIndicatorIE for
+                  other conditions for sending Progress Indicator IE.
+
+
+                  "
+    DEFVAL        { enable }
+    ::= { basicRateInterfaceInteropEntry 450 }
+
+   -- Columnar:Progress Indicator In Alerting
+
+   basicRateInterfaceInteropProgressIndicatorInAlertingEnable OBJECT-TYPE
+    SYNTAX        MxEnableState
+    MAX-ACCESS    read-write
+    STATUS        current
+    DESCRIPTION " Progress Indicator In Alerting
+
+                  Defines whether or not the Progress Indicator information
+                  element is allowed in the ALERTING message.
+
+                  See the variable SignalingChannel.SendProgressIndicatorIE for
+                  other conditions for sending Progress Indicator IE.
+
+
+                  "
+    DEFVAL        { enable }
+    ::= { basicRateInterfaceInteropEntry 500 }
+
+   -- Columnar:Progress Indicator In Connect
+
+   basicRateInterfaceInteropProgressIndicatorInConnectEnable OBJECT-TYPE
+    SYNTAX        MxEnableState
+    MAX-ACCESS    read-write
+    STATUS        current
+    DESCRIPTION " Progress Indicator In Connect
+
+                  Defines whether or not the Progress Indicator information
+                  element is allowed in the CONNECT message.
+
+                  See the variable SignalingChannel.SendProgressIndicatorIE for
+                  other conditions for sending Progress Indicator IE.
+
+
+                  "
+    DEFVAL        { enable }
+    ::= { basicRateInterfaceInteropEntry 600 }
+
+   -- Columnar:Maximum FACILITY Waiting Delay
+
+   basicRateInterfaceInteropMaximumFacilityWaitingDelay OBJECT-TYPE
+    SYNTAX        Unsigned32 ( 0..1500 )
+    MAX-ACCESS    read-write
+    STATUS        current
+    DESCRIPTION " Maximum FACILITY Waiting Delay
+
+                  Defines the maximum amount of time to wait for a FACILITY
+                  message, after receiving a SETUP message, before going on with
+                  normal call processing.
+
+                  After receiving a SETUP message, the system waits for this
+                  amount of time for a FACILITY message. As soon as it receives a
+                  FACILITY message or the delay expires, it goes on with normal
+                  call processing.
+
+                  A FACILITY message can contain useful information for the call.
+                  For example, it can contain a Calling Name.
+
+                  In order for this to be effective, the variable
+                  SignalingChannel.FacilityServicesEnable must be enabled.
+
+                  The value 0 deactivates this feature.
+
+                  This value is expressed in milliseconds (ms).
+
+
+                  "
+    DEFVAL        { 0 }
+    ::= { basicRateInterfaceInteropEntry 700 }
+
+   -- Columnar:Use Implicit Inband Information
+
+   basicRateInterfaceInteropUseImplicitInbandInfoEnable OBJECT-TYPE
+    SYNTAX        MxEnableState
+    MAX-ACCESS    read-write
+    STATUS        current
+    DESCRIPTION " Use Implicit Inband Information
+
+                  Defines if a message with progress indicator No. 1 (the call is
+                  not end-to-end ISDN; further call progress information may be
+                  available in-band) MUST be considered as offering inband
+                  information available. If so, the network shall activate the
+                  B-channel connection.
+                  "
+    DEFVAL        { enable }
+    ::= { basicRateInterfaceInteropEntry 800 }
+
+   -- Columnar:Allow TEI Broadcast in Point-to-Point
+
+   basicRateInterfaceInteropAllowTeiBroadcastInPtpEnable OBJECT-TYPE
+    SYNTAX        MxEnableState
+    MAX-ACCESS    read-write
+    STATUS        current
+    DESCRIPTION " Allow TEI Broadcast in Point-to-Point
+
+                  Defines whether or not an ISDN message with a TEI broadcast
+                  needs to be interpreted as a TEI 0 when the connection type is
+                  'PointToPoint' (see variable
+                  BasicRateInterfaceGroup.ConnectionType).
+                  "
+    DEFVAL        { enable }
+    ::= { basicRateInterfaceInteropEntry 900 }
+
+
+  -- End of table:Basic Rate Interface Interop
+
+ -- End of group:Basic Rate Interface Configuration
+
+-- End of group:Basic Rate Interface Configuration
+
+-- ****************************************************************************
+
+-- Group:Bearer Channel Configuration
+
+-- ****************************************************************************
+
+bearerChannelGroup OBJECT IDENTIFIER
+ ::= { isdnMIBObjects 400 }
+ -- ***************************************************************************
+ 
+ -- Table:Bearer Channel Info
+
+ -- ***************************************************************************
+ 
+ bearerChannelInfoTable OBJECT-TYPE
+  SYNTAX        SEQUENCE OF BearerChannelInfoEntry
+  MAX-ACCESS    not-accessible
+  STATUS        current
+  DESCRIPTION " Bearer Channel Info
+
+                Port-specific operational, statistics, and active call data
+                for ISDN B channels.
+                "
+  ::= { bearerChannelGroup 100 }
+  bearerChannelInfoEntry OBJECT-TYPE
+   SYNTAX        BearerChannelInfoEntry
+   MAX-ACCESS    not-accessible
+   STATUS        current
+   DESCRIPTION " A row in table Bearer Channel Info. "
+   INDEX         {
+                   bearerChannelInfoIndex
+                 }
+
+   ::= { bearerChannelInfoTable 1 }
+
+  BearerChannelInfoEntry ::= SEQUENCE
+  {
+    bearerChannelInfoIndex OCTET STRING,
+    bearerChannelInfoState INTEGER
+  }
+
+  -- Index:Index
+
+  bearerChannelInfoIndex OBJECT-TYPE
+   SYNTAX        OCTET STRING
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Index
+
+                 Identifies the Bearer Channel..
+                 "
+   ::= { bearerChannelInfoEntry 100 }
+
+  -- Columnar:State
+
+  bearerChannelInfoState OBJECT-TYPE
+   SYNTAX        INTEGER { idle(100) , inUse(200) , maintenance(300) , error
+                 (400) , disabled(500) }
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " State
+
+                 The current call control state for this channel:
+
+                   * Idle: The channel is available
+                   * InUse: The channel is currently used
+                   * Maintenance: Maintenance state, temporarily unavailable
+                   * Error: Error on this channel
+                   * Disabled: The channel is disabled
+
+
+                 "
+   ::= { bearerChannelInfoEntry 200 }
+
+
+ -- End of table:Bearer Channel Info
+
+-- End of group:Bearer Channel Configuration
+
+-- ****************************************************************************
+
+-- Group:Signaling Channel Configuration
+
+-- ****************************************************************************
+
+signalingChannelGroup OBJECT IDENTIFIER
+ ::= { isdnMIBObjects 500 }
+ -- ***************************************************************************
+ 
+ -- Table:Signaling
+
+ -- ***************************************************************************
+ 
+ signalingChannelTable OBJECT-TYPE
+  SYNTAX        SEQUENCE OF SignalingChannelEntry
+  MAX-ACCESS    not-accessible
+  STATUS        current
+  DESCRIPTION " Signaling
+
+                ISDN signaling table containing configuration and operational
+                parameters for all ISDN signaling channels on this managed
+                device.
+                "
+  ::= { signalingChannelGroup 100 }
+  signalingChannelEntry OBJECT-TYPE
+   SYNTAX        SignalingChannelEntry
+   MAX-ACCESS    not-accessible
+   STATUS        current
+   DESCRIPTION " A row in table Signaling. "
+   INDEX         {
+                   signalingChannelInterfaceName
+                 }
+
+   ::= { signalingChannelTable 1 }
+
+  SignalingChannelEntry ::= SEQUENCE
+  {
+    signalingChannelInterfaceName                     OCTET STRING,
+    signalingChannelProtocol                          INTEGER,
+    signalingChannelFacilityServicesEnable            MxEnableState,
+    signalingChannelColpEnable                        MxEnableState,
+    signalingChannelColrEnable                        MxEnableState,
+    signalingChannelColrOverrideEnable                MxEnableState,
+    signalingChannelOutgoingNotifyEnable              MxEnableState,
+    signalingChannelAcceptedProgressCauses            OCTET STRING,
+    signalingChannelAutoCancelTimeout                 Unsigned32,
+    signalingChannelMaintenanceServiceCallTermination INTEGER,
+    signalingChannelLinkEstablishment                 INTEGER,
+    signalingChannelAcceptedStatusCauses              OCTET STRING,
+    signalingChannelSendIsdnProgress                  INTEGER,
+    signalingChannelSendProgressIndicatorIE           INTEGER,
+    signalingChannelAocESupport                       INTEGER
+  }
+
+  -- Index:Interface Name
+
+  signalingChannelInterfaceName OBJECT-TYPE
+   SYNTAX        OCTET STRING
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Interface Name
+
+                 Identifies the interface.
+                 "
+   ::= { signalingChannelEntry 100 }
+
+  -- Columnar:Maintenance Service Call Termination
+
+  signalingChannelMaintenanceServiceCallTermination OBJECT-TYPE
+   SYNTAX        INTEGER { graceful(100) , abrupt(200) }
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Maintenance Service Call Termination
+
+                 Describes the call termination strategy after reception of a
+                 service message requesting a maintenance on the associated
+                 bearer channel.
+
+                   * Graceful: The call proceeds normally until the user
+                     clears the call. The associated bearer is then set to
+                     maintenance.
+                   * Abrupt: The call is terminated immediately and set to
+                     maintenance.
+
+
+                 "
+   DEFVAL        { graceful }
+   ::= { signalingChannelEntry 10000 }
+
+  -- Columnar:Link Establishment
+
+  signalingChannelLinkEstablishment OBJECT-TYPE
+   SYNTAX        INTEGER { onDemand(100) , permanent(200) }
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Link Establishment
+
+                 Sets the link establishment strategy.
+
+                   * OnDemand: When the data link is shut down, the unit
+                     establishes a new link only when required.
+                   * Permanent: When the data link is shut down, the unit
+                     immediately attempts to establish a new link.
+
+
+                 "
+   DEFVAL        { onDemand }
+   ::= { signalingChannelEntry 10100 }
+
+  -- Columnar:Accepted STATUS Causes
+
+  signalingChannelAcceptedStatusCauses OBJECT-TYPE
+   SYNTAX        OCTET STRING ( SIZE(0..255) )
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Accepted STATUS Causes
+
+                 Sets the STATUS causes that can be received without
+                 automatically clearing the call.
+
+                 A STATUS message may be received indicating a compatible call
+                 state and containing one of the following causes:
+
+                   * No 96 - Mandatory information element is missing;
+                   * No 97 - Message type non-existent or not implemented;
+                   * No 98 - Message not compatible with call state or message
+                     type non-existent or not implemented;
+                   * No 99 - Information element/parameter non-existent or not
+                     implemented; or
+                   * No 100 - Invalid information element contents.
+                   * No 101 - Message not compatible with call state.
+
+                 The default action is to clear the call upon the receipt of a
+                 STATUS message. If a STATUS message is received indicating a
+                 compatible call state and containing the supplied STATUS
+                 causes, the clearing of the call is prevented
+
+                 The comma separated list must use the following syntax: 96,
+                 98, 100
+
+                 NOTE : Any other cause value will be ignored.
+
+
+                 "
+   DEFVAL        { "" }
+   ::= { signalingChannelEntry 10200 }
+
+  -- Columnar:Send ISDN Progress message
+
+  signalingChannelSendIsdnProgress OBJECT-TYPE
+   SYNTAX        INTEGER { sendAll(100) , sendInband(200) , sendAlerting(300)
+                 }
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Send ISDN Progress message
+
+                 Sets the strategy for sending ISDN Progress messages.
+
+                   * SendAll: Send an ISDN Progress message in all situations
+                     where call progression is signaled.
+                   * SendInband: Send an ISDN Progress message only when call
+                     progression contains an indication of in-band
+                     information.
+                   * SendAlerting: Send an ISDN Alerting message only when
+                     call progression contains an indication of in-band
+                     information.
+
+                 The strategy for sending Progress message should be adapted
+                 to the configuration of the peer ISDN switch. Some switches
+                 may terminate calls when receiving one or many ISDN progress
+                 messages.
+                 "
+   DEFVAL        { sendAll }
+   ::= { signalingChannelEntry 10300 }
+
+  -- Columnar:Send ISDN Progress Indicator Information Element
+
+  signalingChannelSendProgressIndicatorIE OBJECT-TYPE
+   SYNTAX        INTEGER { sendAll(100) , sendInbandOnly(200) }
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Send ISDN Progress Indicator Information Element
+
+                 Sets the strategy for sending the Progress Indicator
+                 Information Element.
+
+                   * SendAll: Send the Progress Indicator IE in all
+                     situations.
+                   * SendInbandOnly: Send the Progress Indicator only when the
+                     Progress Description contains an indication of in-band
+                     information.
+
+                 The strategy for the Progress Indicator IE should be adapted
+                 to the configuration of the peer ISDN switch.
+
+                 This variable controls sending of a Progress Indicator IE in
+                 ISDN messages where Progress Indicators are allowed. See the
+                 variables in the tables BasicRateInterfaceInterop and
+                 PrimaryRateInterfaceInterop for a control over which ISDN
+                 message allows Progress Indicators.
+                 "
+   DEFVAL        { sendAll }
+   ::= { signalingChannelEntry 10400 }
+
+  -- Columnar:Advice of Charge AOC-E Support
+
+  signalingChannelAocESupport OBJECT-TYPE
+   SYNTAX        INTEGER { no(100) , transparent(200) , automatic(300) ,
+                 explicit(400) }
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Advice of Charge AOC-E Support
+
+                 Send the total charge at the (E)nd of the call in AOC-E
+                 messages.
+
+                   * no: The AOC-E support is disabled. No information is
+                     forwarded to the peer interface.
+                   * transparent: On an NT interface, the information is sent
+                     as received from the network. No information is sent if
+                     the network does not provide information. On a TE
+                     interface, the information is forwarded to the peer
+                     interface if AOC messages are received from the network.
+                   * automatic: On an NT interface, always send the
+                     information. If the network does not provide information,
+                     'noChargeAvailable' is sent. On a TE interface, the
+                     information is forwarded to the peer interface if AOC
+                     messages are received from the network.
+                   * explicit: On an NT interface, always send the information
+                     if the phone requests AOC on a per-call basis.
+                     'noChargeAvailable' is sent if the network does not
+                     provide information. If the phone does not request AOC on
+                     a per-call basis, no information is sent. On a TE
+                     interface, send an AOC request to the network. If the
+                     network rejects the request, no information is forwarded
+                     to the peer interface. Otherwise, the information is
+                     forwarded to the peer interface is AOC messages are
+                     received from the network.
+
+
+                 "
+   DEFVAL        { no }
+   ::= { signalingChannelEntry 10600 }
+
+  -- Columnar:Protocol
+
+  signalingChannelProtocol OBJECT-TYPE
+   SYNTAX        INTEGER { dss1(100) , dms100(200) , ni2(300) , ess5(400) ,
+                 qSig(500) }
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Protocol
+
+                 Defines the protocol to use for the signaling channel:
+
+                   * DSS1: Digital Subscriber Signaling System No.1
+                   * DMS100: Digital Multiplex System 100
+                   * NI2: National ISDN No.2
+                   * ESS5: 5 Electronic Switching System (5ESS)
+                   * QSIG: ECMA's protocol for Private Integrated Services
+                     Networks
+
+
+                 "
+   DEFVAL        { dss1 }
+   ::= { signalingChannelEntry 200 }
+
+  -- Columnar:Facility Services Enable
+
+  signalingChannelFacilityServicesEnable OBJECT-TYPE
+   SYNTAX        MxEnableState
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Facility Services Enable
+
+                 Defines whether or not supplementary services FACILITY
+                 messages should be accepted on the ISDN interface.
+
+                 Disable: when receiving a FACILITY message containing
+                 supplementary services information, reply with a STATUS
+                 message saying the FACILITY is not supported.
+
+                 Enable: when receiving a FACILITY message containing
+                 supplementary services information, accept and interpret the
+                 message, processing supported supplementary service messages
+                 and silently discarding unsupported supplementary service
+                 messages.
+
+                 Generic procedures for the control of ISDN supplementary
+                 services are defined in the recommendation ITU-T Q.932.
+
+                 The following supplementary services FACILITY message is
+                 supported:
+
+                   * CNIP: Service offered to the called user and which
+                     provides the name of the calling user (calling party
+                     name) to the called user. Defined in the standard
+                     ECMA-164.
+
+
+                 "
+   DEFVAL        { disable }
+   ::= { signalingChannelEntry 250 }
+
+  -- Columnar:Connected Line Identification Presentation Enable
+
+  signalingChannelColpEnable OBJECT-TYPE
+   SYNTAX        MxEnableState
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Connected Line Identification Presentation Enable
+
+                 Defines the Connected Number Information Element at the
+                 originating ISDN side:
+
+                   * Enable: Sends a Connected Number IE within the CONNECT
+                     message, which contains the connected number digits once
+                     the transformation of the routing table has been applied.
+                   * Disable: The Connected Number IE is never sent.
+
+
+                 "
+   DEFVAL        { disable }
+   ::= { signalingChannelEntry 300 }
+
+  -- Columnar:Connected Line Identification Restriction Enable
+
+  signalingChannelColrEnable OBJECT-TYPE
+   SYNTAX        MxEnableState
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Connected Line Identification Restriction Enable
+
+
+                 Defines the Connected Number Information Element restriction
+                 at the destination ISDN side:
+
+                   * enable: When activated at the User UNI-side (Te), marks
+                     the Connected Number IE with a 'restricted' Presentation
+                     Indicator, which keeps privacy over the connected number
+                     digits. This option has no effect when activated at the
+                     Network UNI-side (Nt).
+                   * disable: No restriction is applied.
+
+                 When SignalingChannel.Protocol is set to QSIG, the effect of
+                 this variable does not depend on the
+                 PrimaryRateInterface.EndpointType variable (Nt or Te).
+
+                   * Enable: The Presentation Indicator of the Connected
+                     Number IE is set to 'restricted' in replies to incoming
+                     calls.
+                   * Disable: There is no restriction on the connected user
+                     number.
+
+
+                 "
+   DEFVAL        { disable }
+   ::= { signalingChannelEntry 400 }
+
+  -- Columnar:Connected Line Identification Restriction Override Enable
+
+  signalingChannelColrOverrideEnable OBJECT-TYPE
+   SYNTAX        MxEnableState
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Connected Line Identification Restriction Override Enable
+
+
+                 Defines the Connected Number Information Element restriction
+                 override at the originating ISDN side:
+
+                   * enable: When activated at the Network UNI-side (Nt), the
+                     connected number digits are delivered even if the
+                     Presentation Indicator is set to 'restricted'. This
+                     option has no effect when activated at the User UNI-side
+                     (Te). This is a national option designed for emergency
+                     services.
+                   * disable: The restriction is not overridden.
+
+                 When SignalingChannel.Protocol is set to QSIG, the effect of
+                 this variable does not depend on the
+                 PrimaryRateInterface.EndpointType variable (Nt or Te).
+
+                   * enable: When the Presentation Indicator of the Connected
+                     Number IE is set to 'restricted', the restriction is
+                     overridden and the connected user number is presented to
+                     the calling user.
+                   * disable: The restriction is not overridden.
+
+
+                 "
+   DEFVAL        { disable }
+   ::= { signalingChannelEntry 500 }
+
+  -- Columnar:Outgoing Notify Enable
+
+  signalingChannelOutgoingNotifyEnable OBJECT-TYPE
+   SYNTAX        MxEnableState
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Outgoing Notify Enable
+
+                 Defines if NOTIFY messages can be sent.
+
+                   * Enable: NOTIFY messages can be sent.
+                   * Disable: NOTIFY messages are never sent.
+
+                 The following NOTIFY messages are supported:
+
+                   * REMOTE HOLD: Sent when the remote peer holds the call.
+                   * REMOTE RETRIEVAL: Sent when the remote peer retrieves the
+                     call.
+
+
+                 "
+   DEFVAL        { disable }
+   ::= { signalingChannelEntry 600 }
+
+  -- Columnar:Accepted PROGRESS Causes
+
+  signalingChannelAcceptedProgressCauses OBJECT-TYPE
+   SYNTAX        OCTET STRING ( SIZE(0..255) )
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Accepted PROGRESS Causes
+
+                 Sets the range of PROGRESS causes accepted by the unit.
+                 Causes excluded from this range trigger call disconnections.
+
+                 The string has the following syntax:
+
+                   * ',': Separator between non-consecutive lists of causes or
+                     single cause.
+                   * 'n': A single cause, where n is the cause number.
+                   * 'm-n': List of causes where m is the start cause number
+                     and n is the end cause number.
+
+                 NOTE: The space character and cause duplication are not
+                 allowed. Causes must be specified in low to high order.
+
+                 Example: '1,124-127': The accepted causes are 1, 124, 125,
+                 126 and 127.
+
+
+                 "
+   DEFVAL        { "1-127" }
+   ::= { signalingChannelEntry 700 }
+
+  -- Columnar:Auto Cancel Timeout
+
+  signalingChannelAutoCancelTimeout OBJECT-TYPE
+   SYNTAX        Unsigned32 ( 0..180 )
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Auto Cancel Timeout
+
+                 Time, in seconds, the endpoint rings before the call is
+                 automatically cancelled.
+
+                 Setting this variable to 0 disables the timeout. Calls will
+                 not be automatically cancelled.
+
+
+                 "
+   DEFVAL        { 0 }
+   ::= { signalingChannelEntry 800 }
+
+
+ -- End of table:Signaling
+
+ -- ***************************************************************************
+ 
+ -- Table:Signaling Channel Info
+
+ -- ***************************************************************************
+ 
+ signalingChannelInfoTable OBJECT-TYPE
+  SYNTAX        SEQUENCE OF SignalingChannelInfoEntry
+  MAX-ACCESS    not-accessible
+  STATUS        current
+  DESCRIPTION " Signaling Channel Info
+
+                ISDN signaling table containing configuration and operational
+                parameters for all ISDN signaling channels on this managed
+                device.
+                "
+  ::= { signalingChannelGroup 200 }
+  signalingChannelInfoEntry OBJECT-TYPE
+   SYNTAX        SignalingChannelInfoEntry
+   MAX-ACCESS    not-accessible
+   STATUS        current
+   DESCRIPTION " A row in table Signaling Channel Info. "
+   INDEX         {
+                   signalingChannelInfoInterfaceName
+                 }
+
+   ::= { signalingChannelInfoTable 1 }
+
+  SignalingChannelInfoEntry ::= SEQUENCE
+  {
+    signalingChannelInfoInterfaceName OCTET STRING,
+    signalingChannelInfoState         INTEGER
+  }
+
+  -- Index:Interface Name
+
+  signalingChannelInfoInterfaceName OBJECT-TYPE
+   SYNTAX         OCTET STRING
+   MAX-ACCESS     read-only
+   STATUS         current
+   DESCRIPTION  " Interface Name
+
+                  Identifies the interface.
+                  "
+   ::= { signalingChannelInfoEntry 100 }
+
+  -- Columnar:State
+
+  signalingChannelInfoState OBJECT-TYPE
+   SYNTAX        INTEGER { up(100) , down(200) }
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " State
+
+                 The current call control state for this channel:
+
+                   * Up:
+                   * Down:
+
+
+                 "
+   ::= { signalingChannelInfoEntry 200 }
+
+
+ -- End of table:Signaling Channel Info
+
+ -- ***************************************************************************
+ 
+ -- Group:Signaling Channel Interop Configuration
+
+ -- ***************************************************************************
+ 
+ signalingChannelInteropGroup OBJECT IDENTIFIER
+  ::= { signalingChannelGroup 50000 }
+  -- ***************************************************************************
+  
+  -- Table:Signaling Channel Interop
+
+  -- ***************************************************************************
+  
+  signalingChannelInteropTable OBJECT-TYPE
+   SYNTAX        SEQUENCE OF SignalingChannelInteropEntry
+   MAX-ACCESS    not-accessible
+   STATUS        current
+   DESCRIPTION " Signaling Channel Interop
+
+                 Interop configuration parameters related to the Signaling
+                 Channel on this managed device.
+                 "
+   ::= { signalingChannelInteropGroup 100 }
+   signalingChannelInteropEntry OBJECT-TYPE
+    SYNTAX        SignalingChannelInteropEntry
+    MAX-ACCESS    not-accessible
+    STATUS        current
+    DESCRIPTION " A row in table Signaling Channel Interop. "
+    INDEX         {
+                    signalingChannelInteropInterfaceName
+                  }
+
+    ::= { signalingChannelInteropTable 1 }
+
+   SignalingChannelInteropEntry ::= SEQUENCE
+   {
+     signalingChannelInteropInterfaceName       OCTET STRING,
+     signalingChannelInteropCallProceedingDelay Unsigned32,
+     signalingChannelInteropDms100CnipDelivery  INTEGER
+   }
+
+   -- Index:Name
+
+   signalingChannelInteropInterfaceName OBJECT-TYPE
+    SYNTAX        OCTET STRING
+    MAX-ACCESS    read-only
+    STATUS        current
+    DESCRIPTION " Name
+
+                  Name that identifies the interface.
+                  "
+    ::= { signalingChannelInteropEntry 100 }
+
+   -- Columnar:CallProceeding Delay
+
+   signalingChannelInteropCallProceedingDelay OBJECT-TYPE
+    SYNTAX        Unsigned32 ( 0..4000 )
+    MAX-ACCESS    read-write
+    STATUS        current
+    DESCRIPTION " CallProceeding Delay
+
+                  Defines the maximum time to wait after receiving a SETUP
+                  message before sending a CALL PROCEEDING message and going on
+                  with normal call processing.
+
+                  After receiving a SETUP message, the system waits for a
+                  message from the called party. If the message maps to a User
+                  Busy cause, a DISCONNECT message is sent instead of the CALL
+                  PROCEEDING otherwise it goes on with normal call processing.
+
+                  The value 0 deactivates this feature.
+
+                  This value is expressed in milliseconds (ms).
+
+
+                  "
+    DEFVAL        { 0 }
+    ::= { signalingChannelInteropEntry 200 }
+
+   -- Columnar:DMS-100 Calling Name Identity Presentation (CNIP) delivery
+   -- method.
+
+   signalingChannelInteropDms100CnipDelivery OBJECT-TYPE
+    SYNTAX        INTEGER { facilityIe(100) , displayIe(200) }
+    MAX-ACCESS    read-write
+    STATUS        current
+    DESCRIPTION " DMS-100 Calling Name Identity Presentation (CNIP) delivery
+                  method.
+
+                  Defines how the Calling Name Identity Presentation (CNIP) is
+                  delivered when DMS-100 is selected as the signaling protocol.
+
+                    * FacilityIe: Use a Facility Information Element for
+                      delivering the CNIP.
+                    * DisplayIe: Use a Display Information Element for
+                      delivering the CNIP.
+
+
+                  "
+    ::= { signalingChannelInteropEntry 300 }
+
+
+  -- End of table:Signaling Channel Interop
+
+ -- End of group:Signaling Channel Interop Configuration
+
+-- End of group:Signaling Channel Configuration
+
+-- ****************************************************************************
+
+-- Group:Signaling Channel Configuration
+
+-- ****************************************************************************
+
+physicalGroup OBJECT IDENTIFIER
+ ::= { isdnMIBObjects 600 }
+ -- ***************************************************************************
+ 
+ -- Table:Physical Link Information
+
+ -- ***************************************************************************
+ 
+ physicalLinkInfoTable OBJECT-TYPE
+  SYNTAX        SEQUENCE OF PhysicalLinkInfoEntry
+  MAX-ACCESS    not-accessible
+  STATUS        current
+  DESCRIPTION " Physical Link Information
+
+                The ISDN physical link information table contains status
+                information for all ISDN interfaces on this managed device.
+                "
+  ::= { physicalGroup 100 }
+  physicalLinkInfoEntry OBJECT-TYPE
+   SYNTAX        PhysicalLinkInfoEntry
+   MAX-ACCESS    not-accessible
+   STATUS        current
+   DESCRIPTION " A row in table Physical Link Information. "
+   INDEX         {
+                   physicalLinkInfoInterfaceName
+                 }
+
+   ::= { physicalLinkInfoTable 1 }
+
+  PhysicalLinkInfoEntry ::= SEQUENCE
+  {
+    physicalLinkInfoInterfaceName OCTET STRING,
+    physicalLinkInfoState         INTEGER
+  }
+
+  -- Index:Interface Name
+
+  physicalLinkInfoInterfaceName OBJECT-TYPE
+   SYNTAX        OCTET STRING
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Interface Name
+
+                 Identifies the interface.
+                 "
+   ::= { physicalLinkInfoEntry 100 }
+
+  -- Columnar:State
+
+  physicalLinkInfoState OBJECT-TYPE
+   SYNTAX        INTEGER { up(100) , down(200) }
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " State
+
+                 The layer 1 state for this interface:
+
+                   * Up: Layer 1 connectivity.
+                   * Down: No layer 1 connectivity. The interface might be in
+                     this state because no cable is plugged in or a pinout
+                     problem is detected.
+
+
+                 "
+   ::= { physicalLinkInfoEntry 200 }
+
+
+ -- End of table:Physical Link Information
+
+ -- ***************************************************************************
+ 
+ -- Table:Physical Link
+
+ -- ***************************************************************************
+ 
+ physicalLinkTable OBJECT-TYPE
+  SYNTAX        SEQUENCE OF PhysicalLinkEntry
+  MAX-ACCESS    not-accessible
+  STATUS        current
+  DESCRIPTION " Physical Link
+
+                The ISDN physical link table containing configuration and
+                operational parameters for all ISDN interfaces on this managed
+                device.
+                "
+  ::= { physicalGroup 200 }
+  physicalLinkEntry OBJECT-TYPE
+   SYNTAX        PhysicalLinkEntry
+   MAX-ACCESS    not-accessible
+   STATUS        current
+   DESCRIPTION " A row in table Physical Link. "
+   INDEX         {
+                   physicalLinkInterfaceName
+                 }
+
+   ::= { physicalLinkTable 1 }
+
+  PhysicalLinkEntry ::= SEQUENCE
+  {
+    physicalLinkInterfaceName          OCTET STRING,
+    physicalLinkL1TimerT3              Unsigned32,
+    physicalLinkClockMode              INTEGER,
+    physicalLinkMonitorLinkStateEnable MxEnableState
+  }
+
+  -- Index:Interface Name
+
+  physicalLinkInterfaceName OBJECT-TYPE
+   SYNTAX        OCTET STRING
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Interface Name
+
+                 Identifies the interface.
+                 "
+   ::= { physicalLinkEntry 100 }
+
+  -- Columnar:Layer 1 Timer T3 Value
+
+  physicalLinkL1TimerT3 OBJECT-TYPE
+   SYNTAX        Unsigned32 ( 0..30000 )
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Layer 1 Timer T3 Value
+
+                 Timer 3 (T3) is a supervisory timer that has to take into
+                 account the overall time to activate. This time includes the
+                 time it takes to activate both the TE-NT and the NT-TE
+                 portion of the customer access.
+
+                 The expiry of Timer T3 is intended to provide an indication
+                 that the network side cannot complete the activation
+                 procedure, probably due to a failure condition or the
+                 terminal cannot detect INFO 4.
+
+                 This value is expressed in milliseconds (ms).
+
+
+                 "
+   DEFVAL        { 3000 }
+   ::= { physicalLinkEntry 200 }
+
+  -- Columnar:Clock Mode
+
+  physicalLinkClockMode OBJECT-TYPE
+   SYNTAX        INTEGER { auto(100) , master(200) , slave(300) }
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Clock Mode
+
+                 An ISDN port can either generate the clocking for the line or
+                 accept the clock from the line. The options master or slave
+                 determine the clocking method:
+
+                   * Auto: Derived from the endpoint type (NT: clock master,
+                     TE: clock slave)
+                   * Master: Generates clock
+                   * Slave: Accepts clock
+
+                 Note: For BRI interfaces with the endpoint type configured in
+                 TE the clock mode is always slave (even if configuration is
+                 set to master).
+
+
+                 "
+   DEFVAL        { auto }
+   ::= { physicalLinkEntry 300 }
+
+  -- Columnar:Monitor Link State Enable
+
+  physicalLinkMonitorLinkStateEnable OBJECT-TYPE
+   SYNTAX        MxEnableState
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Monitor Link State Enable
+
+                 Monitors the physical link state of an ISDN interface.
+
+                 Enable: An ISDN endpoint's operational state is affected by
+                 its interface physical link state. When the link state of an
+                 ISDN interface is down, the operational state of its matching
+                 endpoint becomes 'disable'.
+
+                 Disable: An ISDN endpoint's operational state is not affected
+                 by its interface physical link state.
+
+
+                 "
+   DEFVAL        { enable }
+   ::= { physicalLinkEntry 400 }
+
+
+ -- End of table:Physical Link
+
+-- End of group:Signaling Channel Configuration
+
+-- ****************************************************************************
+
+-- Group:Notification Messages Configuration
+
+-- ****************************************************************************
+
+notificationsGroup OBJECT IDENTIFIER
+ ::= { isdnMIBObjects 60010 }
+ -- Scalar:Minimal Severity of Notification
+
+ minSeverity OBJECT-TYPE
+  SYNTAX        INTEGER { disable(0) , debug(100) , info(200) , warning(300) ,
+                error(400) , critical (500) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Minimal Severity of Notification
+
+                Sets the minimal severity to issue a notification message
+                incoming from this service.
+
+                  * Disable: No notification is issued.
+                  * Debug: All notification messages are issued.
+                  * Info: Notification messages with severity 'Informational'
+                    and higher are issued.
+                  * Warning: Notification messages with severity 'Warning' and
+                    higher are issued.
+                  * Error: Notification messages with severity 'Error' and
+                    higher are issued.
+                  * Critical: Notification messages with severity 'Critical'
+                    are issued.
+
+
+                "
+  DEFVAL        { warning }
+  ::= { notificationsGroup 100 }
+
+-- End of group:Notification Messages Configuration
+
+-- ****************************************************************************
+
+-- Group:Configuration Settings
+
+-- ****************************************************************************
+
+configurationGroup OBJECT IDENTIFIER
+ ::= { isdnMIBObjects 60020 }
+ -- Scalar:Need Restart
+
+ needRestartInfo OBJECT-TYPE
+  SYNTAX        INTEGER { no(0) , yes(100) }
+  MAX-ACCESS    read-only
+  STATUS        current
+  DESCRIPTION " Need Restart
+
+                Indicates if the service needs to be restarted for its
+                configuration to fully take effect.
+
+                  * Yes: Service needs to be restarted.
+                  * No: Service does not need to be restarted.
+
+                Services can be restarted by using the command
+                Scm.ServiceCommands.Restart.
+
+
+                "
+  ::= { configurationGroup 100 }
+
+-- End of group:Configuration Settings
+
+END

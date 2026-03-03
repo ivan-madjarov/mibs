@@ -1,0 +1,199 @@
+-- ****************************************************************************
+-- ****************************************************************************
+--
+--             Copyright(c) 2001-2003 Mediatrix Telecom, Inc.
+--
+--  NOTICE:
+--   This document contains information that is confidential and proprietary to
+--   Mediatrix Telecom, Inc.
+--
+--   Mediatrix Telecom, Inc. reserves all rights to this document as well as to
+--   the Intellectual Property of the document and the technology and know-how
+--   that it includes and represents.
+--
+--   This publication cannot be reproduced, neither in whole nor in part, in any
+--   form whatsoever, without prior written approval by Mediatrix Telecom, Inc.
+--
+--   Mediatrix Telecom, Inc. reserves the right to revise this publication and
+--   make changes at any time and without the obligation to notify any person
+--   and/or entity of such revisions and/or changes.
+--
+-- ****************************************************************************
+-- ****************************************************************************
+
+MGCP44-MX-SIP-EXPERIMENTAL-MIB
+DEFINITIONS ::= BEGIN
+
+IMPORTS
+        MODULE-IDENTITY,
+        OBJECT-IDENTITY,
+        OBJECT-TYPE,
+        Unsigned32
+    FROM SNMPv2-SMI
+        OBJECT-GROUP,
+        MODULE-COMPLIANCE
+    FROM SNMPv2-CONF
+        MxIpHostName
+    FROM MX-TC
+        mediatrixExperimental
+    FROM MX-SMI;
+
+sipExperimentalMIB MODULE-IDENTITY
+    LAST-UPDATED "0304300000Z"
+    ORGANIZATION "Mediatrix Telecom, Inc."
+    CONTACT-INFO "Mediatrix Telecom, Inc.
+                  4229, Garlock Street
+                  Sherbrooke (Quebec)
+                  Canada
+                  Phone: (819) 829-8749
+                  "
+    DESCRIPTION "This MIB contains SIP experimental (NAT traversal and others)
+                 configuration objects."
+
+    -- ************************************************************************
+    -- Revision history
+    -- ************************************************************************
+    REVISION    "0304300000Z"
+    DESCRIPTION "April 30, 2003
+                    Changed sipUnregisteredPortBehavior default value to
+                    disablePort.
+                 March 11, 2003
+                    Updated sipOutboundProxyConfig and
+                    sipUnregisteredPortBehavior descriptions.
+                    Also changed defval to looseRouter.
+                 January 23, 2003
+                    Removed unsupported NAT traversal method.
+                 December 17, 2002
+                    Added sipOutboundProxyConfig.
+                 December 2, 2002
+                    Renamed MX-SIP-NAT-MIB.my to MGCP44-MX-SIP-EXPERIMENTAL-MIB.my and
+                    adding the variable sipRegistrationStatusBehavior.
+                 July 05, 2002
+                    Edited different comments.
+                 February 13, 2002
+                    Creation"
+    ::= { mediatrixExperimental 10 }
+
+sipExperimentalMIBObjects   OBJECT IDENTIFIER ::= { sipExperimentalMIB 1 }
+sipExperimentalConformance  OBJECT IDENTIFIER ::= { sipExperimentalMIB 2 }
+
+
+    -- ************************************************************************
+    -- Custom solution Group
+    -- ************************************************************************
+sipNatCustom OBJECT IDENTIFIER ::= { sipExperimentalMIBObjects 5 }
+
+    sipNatCustomEnable OBJECT-TYPE
+        SYNTAX      INTEGER {
+                            disable(0),
+                            enable(1)
+                           }
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Enable/disable the NAT traversal scheme."
+        DEFVAL { disable }
+        ::=  { sipNatCustom 5 }
+
+    sipNatCustomPublicAddress OBJECT-TYPE
+        SYNTAX      MxIpHostName
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "The public IP address used as Contact address by outgoing
+                     SIP packets crossing a NAT system."
+        DEFVAL      { "0.0.0.0" }
+        ::=  { sipNatCustom 10 }
+
+
+    -- ************************************************************************
+    -- Other SIP experimental variables
+    -- ************************************************************************
+
+    sipUnregisteredPortBehavior OBJECT-TYPE
+        SYNTAX      INTEGER {
+                             disablePort(0),
+                             enablePort(1)
+                            }
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "This variable specifies whether a port should remain enabled or not when not
+                     registered.
+
+                     disablePort :
+                       When an endpoint is not registered, it is disabled. This prevents the user
+                       from making or receiving calls. Picking up the handset will yield a fast busy
+                       tone, and incoming INVITEs will receive a '403 Forbidden' response. Ports that
+                       have a physical bypass will enable the bypass in this case.
+
+                     enablePort :
+                       When an endpoint is not registered, is is still enabled. The user will be able
+                       to receive and initiate outgoing calls.  Note that since the endpoint
+                       is not registered to a registrar, the public address of the endpoint is not
+                       available to the outside world, so the endpoint will most likely be
+                       unreachable except through direct IP calling."
+        DEFVAL { disablePort }
+        ::=  { sipExperimentalMIBObjects 25 }
+
+    sipOutboundProxyConfig OBJECT-TYPE
+        SYNTAX      INTEGER {
+                             looseRouter(0),
+                             strictRouter(1)
+                            }
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "This variable provisions the type of routing that the configured outbound proxy
+                     does.
+
+                     looseRouter :
+                        This is the most current method for SIP routing, as per RFC3261, and will
+                        become the standard behavior once RFC3261 compliance is achieved.
+
+                        See sipOutboundProxyHost in the SIP MIB for a description.
+
+                     strictRouter :
+                        Pre-RFC3261, RFC2543 compatible SIP routing.
+
+                        The initial route for all SIP requests will contain the home domain proxy
+                        address (the Request-URI). Requests will be directed to the outbound proxy.
+
+                        In other words, the Request-URI is constructed as usual, using the home domain
+                        proxy and the username, but is used in the route set. The Request-URI is filled
+                        by the outbound proxy address.
+
+
+                     Also see sipHomeDomainProxyHost."
+        DEFVAL { looseRouter }
+        ::=  { sipExperimentalMIBObjects 30 }
+
+
+    -- ************************************************************************
+    -- Conformance information
+    -- ************************************************************************
+    sipExperimentalCompliances OBJECT IDENTIFIER ::= { sipExperimentalConformance 1 }
+
+    sipExperimentalBasicComplVer1 MODULE-COMPLIANCE
+        STATUS      current
+        DESCRIPTION "Minimal definitions for the SIP experimental group"
+        MODULE -- This Module
+            MANDATORY-GROUPS {
+                                sipExperimentalGroupVer1
+                             }
+        ::= { sipExperimentalCompliances 1 }
+
+    -- ************************************************************************
+    -- MIB variable grouping
+    -- ************************************************************************
+    sipExperimentalGroups OBJECT IDENTIFIER ::= { sipExperimentalConformance 2 }
+
+    sipExperimentalGroupVer1 OBJECT-GROUP
+        OBJECTS {
+                    sipNatCustomEnable,
+                    sipNatCustomPublicAddress,
+                    sipUnregisteredPortBehavior,
+                    sipOutboundProxyConfig
+                }
+        STATUS      current
+        DESCRIPTION "This group holds the objects that define the SIP
+                     experimental group."
+        ::= { sipExperimentalGroups 5 }
+
+END

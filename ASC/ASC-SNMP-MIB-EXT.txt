@@ -1,0 +1,253 @@
+ASC-SNMP-MIB-EXT DEFINITIONS ::= BEGIN
+
+IMPORTS
+        OBJECT-TYPE, NOTIFICATION-TYPE,
+        MODULE-IDENTITY, OBJECT-IDENTITY, enterprises
+                FROM SNMPv2-SMI
+        OBJECT-GROUP, NOTIFICATION-GROUP
+                FROM SNMPv2-CONF
+        DisplayString,TEXTUAL-CONVENTION
+                FROM SNMPv2-TC;
+
+
+
+ ascEvoModule MODULE-IDENTITY
+    LAST-UPDATED "200803190000Z"
+    ORGANIZATION "ASC telecom AG"
+    CONTACT-INFO
+                "       ASC telecom AG
+                        Customer Service
+ 
+                Postal: Seibelstrasse 2-4
+                       63768 Hoesbach
+                        Germany
+ 
+                   Tel: +49 6021 5001 0
+ 
+                 email: hotline@asc.de"
+ 
+	DESCRIPTION
+	"This file defines the ASC SNMP MIB extensions."
+	REVISION	"200803190000Z"
+	DESCRIPTION	"Updated with new status object."
+ 	REVISION	"200504151200Z"
+	DESCRIPTION	"Initial version"
+
+    ::= { ascModule 1}
+
+
+ asc OBJECT IDENTIFIER ::= { enterprises 4063 }
+ ascModule OBJECT IDENTIFIER ::= { asc 1}
+ ascProducts OBJECT IDENTIFIER ::= {asc 2 }
+ ascRegistration OBJECT IDENTIFIER ::= {asc 3 }
+ ascGroups OBJECT IDENTIFIER ::= {asc 4 }
+ ascEvoGroups OBJECT IDENTIFIER ::= {ascGroups 1 }
+
+
+
+ascEvoReg OBJECT-IDENTITY
+        STATUS          current
+        DESCRIPTION     "Must be present in sysObjID in RFC1213 MIB for the evolution product"
+        ::= { ascRegistration 1 }
+
+ascEvolution OBJECT IDENTIFIER ::= { ascProducts 1 }
+
+ascEvoTrap OBJECT IDENTIFIER ::= { ascEvolution 1 }
+ascEvoObj  OBJECT IDENTIFIER ::= { ascEvolution 2 }
+
+
+AscDateTime ::= TEXTUAL-CONVENTION
+        STATUS          current
+        DESCRIPTION
+        "format is YYYY/MM/DD hh:mm:ss,SSS
+
+       where: YYYY - last four digits of the year (any year)
+              MM   - month (01 through 12)
+              DD   - day of month (01 through 31)
+              hh   - hours (00 through 23)
+              mm   - minutes (00 through 59)
+              ss   - seconds (00 throug 59)
+              SSS  - milliseconds (00 throug 999)"
+   
+
+        SYNTAX          OCTET STRING( SIZE( 0..23 ) )
+    -- format is YYYY/MM/DD hh:mm:ss,SSS
+
+    --   where: YYYY - last four digits of the year (any year)
+    --          MM   - month (01 through 12)
+    --          DD   - day of month (01 through 31)
+    --          hh   - hours (00 through 23)
+    --          mm   - minutes (00 through 59)
+    --          ss   - seconds (00 throug 59)
+    --          SSS  - milliseconds (00 throug 999)
+    --
+
+ascEvoSystemID OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  accessible-for-notify
+    STATUS      current
+    DESCRIPTION
+            "System ID, this is the unique recorder ID"
+    ::= { ascEvoObj 1 }
+
+ascEvoSystemName OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  accessible-for-notify
+    STATUS      current
+ -- Fin ajout CSSI
+    DESCRIPTION
+            "System name, the hostname of the recorder"
+    ::= { ascEvoObj 2 }
+
+ascEvoModuleName OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  accessible-for-notify
+    STATUS      current
+    DESCRIPTION
+            "Module name, the process which caused the message"
+    ::= { ascEvoObj 3 }
+
+ascEvoErrType OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  accessible-for-notify
+    STATUS      current
+    DESCRIPTION
+            "Error type LOG_ERROR, LOG_WARNING, LOG_INFO, LOG_AUDIT"
+    ::= { ascEvoObj 4 }
+
+ascEvoErrCode OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  accessible-for-notify
+    STATUS      current
+    DESCRIPTION
+            "Error code"
+    ::= { ascEvoObj 5 }
+
+ascEvoErrUniqueID OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0..20))
+    MAX-ACCESS  accessible-for-notify
+    STATUS      current
+    DESCRIPTION
+            "Unique error counter"
+    ::= { ascEvoObj 6 }
+
+ascEvoErrOpenTime OBJECT-TYPE
+    SYNTAX      AscDateTime
+    MAX-ACCESS  accessible-for-notify
+    STATUS      current
+    DESCRIPTION
+            "Error opened time"
+    ::= { ascEvoObj 7 }
+
+ascEvoErrUpdateTime OBJECT-TYPE
+    SYNTAX      AscDateTime
+    MAX-ACCESS  accessible-for-notify
+    STATUS      current
+    DESCRIPTION
+            "Error updated time is the same as ascEvoOpenTime on first occurence"
+    ::= { ascEvoObj 8 }
+
+ascEvoErrCloseTime OBJECT-TYPE
+    SYNTAX      AscDateTime
+    MAX-ACCESS  accessible-for-notify
+    STATUS      current
+    DESCRIPTION
+            "Error closed time if closed else empty"
+    ::= { ascEvoObj 9 }
+
+ascEvoErrText OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  accessible-for-notify
+    STATUS      current
+    DESCRIPTION
+            "Error text as an additional description"
+    ::= { ascEvoObj 10 }
+
+ascEvoErrCloseComment OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  accessible-for-notify
+    STATUS      current
+    DESCRIPTION
+            "Error close comment if closed else empty"
+    ::= { ascEvoObj 11 }
+
+ascEvoStatus OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+            "Status of recorder OK, Warning, Error"
+    ::= { ascEvoObj 12 }
+
+
+ascEvoNotif NOTIFICATION-TYPE
+	OBJECTS {
+		ascEvoSystemID,
+		ascEvoSystemName,
+		ascEvoModuleName,
+		ascEvoErrType,
+		ascEvoErrCode,
+		ascEvoErrUniqueID,
+		ascEvoErrOpenTime,
+		ascEvoErrUpdateTime,
+		ascEvoErrCloseTime,
+		ascEvoErrText,
+		ascEvoErrCloseComment
+	}
+ 	STATUS current
+	DESCRIPTION
+        "RecorderID:    %s
+         Hostname
+         Module:        %s
+         Type:          %s
+         Code:          %s
+         Number:        %s
+         Opened:        %s
+         Updated:       %s
+         Closed:        %s
+         Text:          %s
+         Close Comment: %s"
+    ::= {ascEvoTrap 1 }
+
+ascEvoStatusNotif NOTIFICATION-TYPE
+	OBJECTS {
+		ascEvoSystemID,
+		ascEvoSystemName,
+		ascEvoStatus
+	}
+ 	STATUS current
+	DESCRIPTION
+        "RecorderID:	%s
+         Hostname:	%s
+         Status:	%s"
+    ::= {ascEvoTrap 2 }
+
+ascEvoObjGroup  OBJECT-GROUP
+        OBJECTS {  
+		ascEvoSystemID,
+		ascEvoSystemName,
+		ascEvoModuleName,
+		ascEvoErrType,
+		ascEvoErrCode,
+		ascEvoErrUniqueID,
+		ascEvoErrOpenTime,
+		ascEvoErrUpdateTime,
+		ascEvoErrCloseTime,
+		ascEvoErrText,
+		ascEvoErrCloseComment,
+		ascEvoStatus
+                }
+        STATUS          current
+        DESCRIPTION "Objects of the ascEvoModule MIB"
+                ::=  {  ascEvoGroups  1  }
+
+ascEvoNotifGroup  NOTIFICATION-GROUP
+        NOTIFICATIONS {
+		ascEvoNotif,
+		ascEvoStatusNotif
+                   }
+        STATUS          current
+        DESCRIPTION "Traps Objects of the ascEvoModule MIB"
+                ::=  {  ascEvoGroups  2  }
+
+END

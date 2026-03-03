@@ -1,0 +1,288 @@
+--
+-- $Copyright: 
+-- Copyright (C) Fujitsu Technology Solutions 2009 
+-- All rights reserved 
+-- $
+--
+
+
+
+FTS-RTP-MIB-STATCOUNT-MGMT DEFINITIONS ::= BEGIN 
+
+IMPORTS
+    MODULE-IDENTITY, OBJECT-TYPE, OBJECT-IDENTITY,
+    NOTIFICATION-TYPE, Integer32, Unsigned32            FROM SNMPv2-SMI
+
+    TEXTUAL-CONVENTION, RowStatus, TestAndIncr		FROM SNMPv2-TC
+
+    rtpPerformanceMgmt,
+    Boolean						FROM FTS-RTP-MIB;
+
+--
+-- Resilient Telco Platform-related MOs
+--
+
+    rtpStatCountMgmtModule MODULE-IDENTITY
+	LAST-UPDATED "0902061800Z"
+	ORGANIZATION "Fujitsu Technology Solutions"
+	CONTACT-INFO "E-mail: rtpsupport@ts.fujitsu.com"
+
+	DESCRIPTION
+	    "The MIB module describes the Managed Objects of
+	     the Statistics Counters Management of the Resilient Telco Platform (RTP)
+
+	    $Header: RtpAdmStatCountMgmt.my /main/6 2009/02/25 12:21:09 intrtp $ "
+
+	REVISION "0103271800Z"
+	DESCRIPTION
+	    "The initial version of this MIB module."
+
+	REVISION "0504211800Z"
+	DESCRIPTION
+	    "Changed module name to FSC-RTP-MIB-STATCOUNT-MGMT to resolve naming
+	     conflict with RFC 2959.
+	     Module header information updated."
+
+	REVISION "0902061800Z"
+        DESCRIPTION
+            "Fujitsu Technology Solutions Rebranding."
+
+	::= { rtpPerformanceMgmt 1 }
+
+--
+-- Textual conventions used in the RTP StatCount Mgmt MIB:
+--
+
+    RtpCounterActions ::= TEXTUAL-CONVENTION
+	STATUS	current
+	DESCRIPTION
+		"Represents integer values used for counter
+		operations."
+	SYNTAX	INTEGER { nothing(0), activate(1), deactivate(2),
+				flush(3), rewind(4) }
+
+--
+-- Performance Management: StatCount Management
+--
+
+    rtpStatCountMgmt OBJECT-IDENTITY
+	STATUS current
+	DESCRIPTION
+	    "The Statistics Counters Management Functionality."
+	::= { rtpStatCountMgmtModule 1 }
+
+    --
+    -- The Counter Table
+    --
+
+    rtpStCntTable OBJECT-TYPE
+	SYNTAX  SEQUENCE OF RtpStCntEntry
+	MAX-ACCESS  not-accessible
+	STATUS  current
+	DESCRIPTION
+	    "A table of counters.
+	     The conceptual rows in this table can be created, read, modified
+	     and deleted."
+	::= { rtpStatCountMgmt 1 }
+
+	rtpStCntEntry OBJECT-TYPE
+	    SYNTAX  RtpStCntEntry
+	    MAX-ACCESS  not-accessible
+	    STATUS  current
+	    DESCRIPTION
+		"A counter table entry indexed by the counter name."
+	    INDEX { rtpStCntName }
+	    ::= { rtpStCntTable 1 }
+
+	RtpStCntEntry ::=
+	    SEQUENCE {
+		rtpStCntName		OCTET STRING,
+		rtpStCntValue		Integer32,
+		rtpStCntFlushInterval	Integer32,
+		rtpStCntActiveFlag	Boolean,
+		rtpStCntAction		RtpCounterActions,
+		rtpStCntRewActionId	Integer32,
+		rtpStCntRowStatus	RowStatus
+	    }
+
+	rtpStCntName OBJECT-TYPE
+	    SYNTAX  OCTET STRING (SIZE (1..31))
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION 
+		"The counter name. It's used as table index and assigned
+		 during creation of a new conceptual row."
+	    ::= { rtpStCntEntry 1 }
+
+	rtpStCntValue OBJECT-TYPE
+	    SYNTAX  Integer32
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION
+	    	"The current value of the counter (if active).
+	    	 If the counter is inactive (rtpStCntActiveFlag = false) a
+	    	 GET request always returns zero."
+	    ::= { rtpStCntEntry 2 }
+
+	rtpStCntFlushInterval OBJECT-TYPE
+	    SYNTAX  Integer32
+	    MAX-ACCESS  read-create
+	    STATUS  current
+	    DESCRIPTION
+	    	"The flush interval of the counter in seconds.
+	    	 This value is mandatory for counter (row) creation.
+	    	 It also can be set after the counter (row) has
+	    	 been created."
+	    ::= { rtpStCntEntry 3 }
+
+	rtpStCntActiveFlag OBJECT-TYPE
+	    SYNTAX  Boolean
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION
+	    	"This value represents the current state of the
+	    	 counter. If true, the counter is active."
+	    ::= { rtpStCntEntry 4 }
+
+	rtpStCntAction OBJECT-TYPE
+	    SYNTAX RtpCounterActions
+	    MAX-ACCESS  read-create
+	    STATUS  current
+	    DESCRIPTION
+		"This object is used to define actions which
+		 can be performed on counters.
+		 This object may not be set during row creation.
+
+		 'activate' - activates the indexed counter.
+
+		 'deactivate' - deactivates the indexed counter.
+
+		 'flush' - writes the counter values (of all cluster
+		           nodes) to the database.
+
+		 'rewind' - resets the value of the indexed counter (value = 0).
+		            If rtpStCntRewActionId is specified the last value
+		            of the counter before reset is stored in
+		            rtpStCntRewindValTable.
+
+		 A GET request on this object always returns 'nothing(0)'."
+	    ::= { rtpStCntEntry 5 }
+
+	rtpStCntRewActionId OBJECT-TYPE
+	    SYNTAX  Integer32
+	    MAX-ACCESS  read-create
+	    STATUS  current
+	    DESCRIPTION
+		"If this object contains a valid id (see rtpStCntActionId)
+		 when processing a rewind action (rtpStCntAction=rewind)
+		 in a SET request, the last value of the counter before reset
+		 is stored in rtpStCntRewindValTable.
+		 This object may not be set during row creation and is not
+		 mandatory for a rewind action.
+		 A GET request on this object always returns zero."
+	    ::= { rtpStCntEntry 6 }
+
+	rtpStCntRowStatus OBJECT-TYPE
+	    SYNTAX RowStatus
+	    MAX-ACCESS  read-create
+	    STATUS  current
+	    DESCRIPTION
+		"The current status of this conceptual row of the table.
+
+		 'active' (returned) indicates that the conceptual row is
+		 available for use by the system.
+
+		 'createAndGo' has to be set when a new conceptual row is to
+		 be created; only rtpStCntFlushInterval (one of the columnar
+		 objects with a MAX-ACCESS of 'read-create' that do not have a
+		 default value) has to be set within the same Set PDU.
+		 The index value must not exist in the table when the row is
+		 created. (Any non-existing index value will be accepted.)
+		 After a successful creation, this object is automatically set
+		 to 'active'.
+
+		 'destroy' has to be set when the conceptual row is to be
+		 deleted.
+
+		 None of the other values defined for 'RowStatus' are expected
+		 to be set by the management station or are returned."
+	    ::= { rtpStCntEntry 7 }
+
+    --
+    -- The Action Id & Rewind Values Table
+    -- (action 'rewind' only!) 
+    --
+
+    rtpStCntActionId OBJECT-TYPE
+	SYNTAX TestAndIncr
+	MAX-ACCESS read-only
+	STATUS  current
+	DESCRIPTION
+		"This id can be used as a so called action-id for 'rewind'
+		 actions in a SET request. So, before executing a SET request
+		 with rtpStCntAction set to 'rewind', it is necessary to do a
+		 GET request on this object to obtain its current value which
+		 must be used to supply rtpStCntRewActionId in the SET request,
+		 if this id and the last value of the counter before its rewind
+		 should be stored in rtpStCntRewindValTable.
+		 If the current value is the maximum value of 2^31-1 (2147483647
+		 decimal), then the value held by the instance is wrapped to
+		 one (not zero!); otherwise, the value held by the instance is
+		 incremented by one for each GET request.
+		 Warning: this is a non-persistent value. Each time the agent
+		 starts, its value starts at 0 again. Zero cannot be used as
+		 an action id."
+	::= { rtpStatCountMgmt 2 }
+
+
+    rtpStCntRewindValTable OBJECT-TYPE
+	SYNTAX  SEQUENCE OF RtpStCntRewindValEntry
+	MAX-ACCESS  not-accessible
+	STATUS  current
+	DESCRIPTION
+		"A list of counter values returned by the counter
+		 action 'rewind'. It represents the last value of
+		 a counter before its reset. The correspondig action id
+		 is used as table index.
+		 Warning: this is a non-persistent table. Each time the agent
+		 starts, the table is empty. At a time only a specific amount
+		 of values (e.g. the newest 200) are stored."
+	::= { rtpStatCountMgmt 3 }
+
+	rtpStCntRewindValEntry OBJECT-TYPE
+	    SYNTAX  RtpStCntRewindValEntry
+	    MAX-ACCESS  not-accessible
+	    STATUS  current
+	    DESCRIPTION
+		"A rewind value table entry indexed by rtpStCntRewindActionId."
+	    INDEX { rtpStCntRewindActionId }
+	    ::= { rtpStCntRewindValTable 1 }
+
+	RtpStCntRewindValEntry ::=
+	    SEQUENCE {
+		rtpStCntRewindActionId	Integer32,
+		rtpStCntRewindVal	Integer32
+	    }
+
+	rtpStCntRewindActionId OBJECT-TYPE
+	    SYNTAX  Integer32
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION 
+		"This value has been used for a rewind action
+		 (rtpStCntAction = rewind) in a SET request.
+		 rtpStCntRewindVal contains the result of this action."
+	    ::= { rtpStCntRewindValEntry 1 }
+
+	rtpStCntRewindVal OBJECT-TYPE
+	    SYNTAX  Integer32
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION
+		"This value is the result of a rewind action (SET request:
+		 rtpStCntAction = rewind). For the corresponding action id
+		 see rtpStCntRewindActionId."
+	    ::= { rtpStCntRewindValEntry 2 }
+
+	
+END

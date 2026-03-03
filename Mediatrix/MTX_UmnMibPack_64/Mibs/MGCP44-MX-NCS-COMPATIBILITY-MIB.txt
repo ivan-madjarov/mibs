@@ -1,0 +1,141 @@
+-- ****************************************************************************
+-- ****************************************************************************
+--
+--             Copyright(c) 2002-2004 Mediatrix Telecom, Inc. 
+--
+--  NOTICE:
+--   This document contains information that is confidential and proprietary
+--   to Mediatrix Telecom, Inc. 
+--
+--   Mediatrix Telecom, Inc. reserves all rights to this document as well as
+--   to the Intellectual Property of the document and the technology and
+--   know how that it includes and represents. 
+--
+--   This publication cannot be reproduced, neither in whole nor in part in
+--   any form whatsoever without written prior approval by
+--   Mediatrix Telecom, Inc. 
+--
+--   Mediatrix Telecom, Inc. reserves the right to revise this publication
+--   and make changes at any time and without the obligation to notify any
+--   person and/or entity of such revisions and/or changes. 
+--
+-- ****************************************************************************
+-- ****************************************************************************
+
+MGCP44-MX-NCS-COMPATIBILITY-MIB
+DEFINITIONS ::= BEGIN
+
+IMPORTS
+        MODULE-IDENTITY,
+        OBJECT-TYPE
+    FROM SNMPv2-SMI
+        MODULE-COMPLIANCE,
+        OBJECT-GROUP
+    FROM SNMPv2-CONF
+        mediatrixExperimental
+    FROM MX-SMI
+        MxEnableState
+    FROM MX-TC;
+
+ncsCompatibilityMIB MODULE-IDENTITY
+    LAST-UPDATED "200408170000Z"
+    ORGANIZATION "Mediatrix Telecom, Inc."
+    CONTACT-INFO "Mediatrix Telecom, Inc. 
+                  4229, Garlock Street
+                  Sherbrooke (Quebec)
+                  Canada
+                  Phone: (819) 829-8749
+                  "
+    DESCRIPTION "This MIB contains objects for NCS compatibility of the 
+                 Mediatrix products."
+
+    -- ************************************************************************
+    -- Revision history
+    -- ************************************************************************
+    REVISION    "200408170000Z"
+    DESCRIPTION "Addition of ncsCompatibilityMultipleFaxToneDetectionEnable and
+                 ncsCompatibilityConnectRtpSockets"
+    REVISION    "200208280000Z"
+    DESCRIPTION "Creation"
+    ::= { mediatrixExperimental 15 }
+
+ncsCompatibilityMIBObjects  OBJECT IDENTIFIER ::= { ncsCompatibilityMIB 1 }
+ncsCompatibilityConformance OBJECT IDENTIFIER ::= { ncsCompatibilityMIB 2 }
+
+    ncsCompatibilityRtpPayloadType18EncodingName OBJECT-TYPE
+        SYNTAX      INTEGER {
+                              g729(0),
+                              g729A(1)
+                            }
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Literal name of the compression algorithm corresponding
+                     to the RTP payload type 18."
+        DEFVAL      { g729 }
+        ::=  {  ncsCompatibilityMIBObjects  5  }
+
+    ncsCompatibilityMultipleFaxToneDetectionEnable OBJECT-TYPE
+        SYNTAX      MxEnableState
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Controls whether the unit's analog circuitry will report more
+                     than one occurrence of the fax tone during the negotiation phase.
+                     This variable is only useful with the MGCP/NCS protocol, when event 
+                     notification requests can be received after the fax tone.
+
+                     disable : when establishing a fax call, the unit only reports 
+                               the first occurrence of the fax tone event.
+
+                     enable  : the unit will keep reporting fax tone events when
+                               multiple fax tones are detected."
+        DEFVAL { disable }
+        ::=  { ncsCompatibilityMIBObjects 50 }
+
+    ncsCompatibilityConnectRtpSockets OBJECT-TYPE
+        SYNTAX      MxEnableState
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Determines whether the endpoints will listen to RTP sources
+                     other than the one to which they are sending packets.
+
+                     disable : use unconnected sockets.  Endpoints will play any RTP packets
+                               addressed to them.
+
+                     enable  : use connected sockets.  Endpoints will only play packets
+                               coming from the address to which they are sending."
+        DEFVAL { disable }
+        ::=  { ncsCompatibilityMIBObjects 100 }
+
+
+    -- ************************************************************************
+    -- Conformance information
+    -- ************************************************************************
+    ncsCompatibilityCompliances OBJECT IDENTIFIER ::= { ncsCompatibilityConformance 1 }
+
+    ncsCompatibilityComplVer1 MODULE-COMPLIANCE
+        STATUS      current
+        DESCRIPTION
+            "List of groups required to support NCS compatibility parameters."
+        MODULE -- This Module
+            MANDATORY-GROUPS { 
+                                 ncsCompatibilityBasicGroupVer1
+                             }
+        ::= { ncsCompatibilityCompliances 10 }
+
+    -- ************************************************************************
+    -- MIB variable grouping
+    -- ************************************************************************
+    ncsCompatibilityGroups OBJECT IDENTIFIER ::= { ncsCompatibilityConformance 2 }
+
+    ncsCompatibilityBasicGroupVer1 OBJECT-GROUP
+        OBJECTS {
+                    ncsCompatibilityRtpPayloadType18EncodingName,
+                    ncsCompatibilityMultipleFaxToneDetectionEnable,
+                    ncsCompatibilityConnectRtpSockets
+                }
+        STATUS current
+        DESCRIPTION
+            "This group holds the objects that define the basic NCS compatibility group."
+        ::= { ncsCompatibilityGroups 10 }
+
+END

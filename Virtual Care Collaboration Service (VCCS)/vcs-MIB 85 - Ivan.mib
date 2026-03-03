@@ -1,0 +1,240 @@
+VCS-MIB DEFINITIONS ::= BEGIN
+
+-- ==================================================================
+-- Copyright @ 2022 Unify GmbH & Co. KG
+--
+-- All Rights Reserved.
+--
+-- Reproduction of this document is authorized on condition that
+-- this copyright notice is included.
+--
+-- This MIB document embodies proprietary intellectual property of Unify,
+-- which retains all title and ownership in this MIB, including any revisions.
+--
+-- This module will be extended as required.
+--
+-- Unify reserves the right to make changes in specification and other
+-- information contained in this document without prior notice. The reader
+-- should consult Unify to determine whether any such changes have been made.
+
+-- ==================================================================
+
+IMPORTS
+    MODULE-IDENTITY, OBJECT-TYPE, NOTIFICATION-TYPE, enterprises        FROM SNMPv2-SMI
+    DisplayString                                                       FROM SNMPv2-TC;
+
+	atos			OBJECT IDENTIFIER ::= { enterprises 47984 }
+				-- The authoritative identity of the enterprise Atos IT Solutions and Services AG
+
+	unify		        OBJECT IDENTIFIER ::= { atos 2 }
+				-- The Atos Unify product-specific MIBs
+
+	vcs	        	OBJECT IDENTIFIER ::= { unify 3 }
+				-- Virtual Care Collaboration Service
+
+        vcsAlarms               MODULE-IDENTITY
+        LAST-UPDATED            "202203300000Z"
+        ORGANIZATION            "Atos"
+        CONTACT-INFO            "Technical Support
+                                Postal: Otto-Hahn-Ring 6
+                                        81739 Munich
+                                        Germany
+                                Contact URL: https://unify.com/en/contact-us"
+
+	DESCRIPTION		"This MIB module implements the SNMP alarms
+				reported by the VCS product.
+				An alarm is uniquely identified by the trap name
+				(mainly the last two numbers of trap OID) and
+				the Name and the FaultyObject parameter.
+				An alarm trap is a trap with a non-cleared severity.
+				It is cleared by the same trap
+				with the same Name and a severiy of clear."
+
+        ::= { vcs 1 }
+
+        trapParameters              OBJECT IDENTIFIER ::= { vcs 2 }
+
+        node                        OBJECT IDENTIFIER ::= { vcsAlarms 1 }
+        pod                         OBJECT IDENTIFIER ::= { vcsAlarms 2 }
+        identity                    OBJECT IDENTIFIER ::= { vcsAlarms 3 }
+        workflow                    OBJECT IDENTIFIER ::= { vcsAlarms 4 }
+        realtime                    OBJECT IDENTIFIER ::= { vcsAlarms 5 }
+        
+        --********************************************************************
+        -- Alarm Trap Parameters
+        --********************************************************************
+        alarmid                         OBJECT-TYPE
+        SYNTAX                     DisplayString
+        MAX-ACCESS                 not-accessible
+        STATUS                     current
+        DESCRIPTION                "name of the network element sending the alarm"
+        ::= { trapParameters 1 }
+
+        severity                   OBJECT-TYPE
+        SYNTAX                     DisplayString
+        MAX-ACCESS                 not-accessible
+        STATUS                     current
+        DESCRIPTION                "severity of the alarm"
+        ::= { trapParameters 2 }
+
+
+        description                OBJECT-TYPE
+        SYNTAX                     DisplayString
+        MAX-ACCESS                 not-accessible
+        STATUS                     current
+        DESCRIPTION                "description of the alarm"
+        ::= { trapParameters 3 }
+
+
+        --********************************************************************
+        -- Node Alerts
+        --********************************************************************
+        NodeMemoryUsageHigh NOTIFICATION-TYPE
+        OBJECTS        {        id,
+                                severity,
+                                description   }
+        STATUS               current
+        DESCRIPTION        "Node high memory usage"
+        ::= { node 1 }
+
+        NodeCpuLoadHigh NOTIFICATION-TYPE
+        OBJECTS        {        id,
+                                severity,
+                                description   }
+        STATUS               current
+        DESCRIPTION        "Node high CPU usage"
+        ::= { node 2 }
+
+        NodeDiskSpaceLow NOTIFICATION-TYPE
+        OBJECTS        {        id,
+                                severity,
+                                description   }
+        STATUS               current
+        DESCRIPTION        "Node free disk space low"
+        ::= { node 3 }
+
+        --********************************************************************
+        -- Pod Alerts
+        --********************************************************************
+        PodMemoryUsageHigh NOTIFICATION-TYPE
+        OBJECTS        {        id,
+                                severity,
+                                description   }
+        STATUS               current
+        DESCRIPTION        "Pod high memory usage"
+        ::= { pod 1 }
+
+        PodCpuLoadHigh NOTIFICATION-TYPE
+        OBJECTS        {        id,
+                                severity,
+                                description   }
+        STATUS               current
+        DESCRIPTION        "Pod high CPU usage"
+        ::= { pod 2 }
+
+        PodNotReady NOTIFICATION-TYPE
+        OBJECTS        {        id,
+                                severity,
+                                description   }
+        STATUS               current
+        DESCRIPTION        "Pod not ready"
+        ::= { pod 3 }
+
+        PodReplicasNotReady NOTIFICATION-TYPE
+        OBJECTS        {        id,
+                                severity,
+                                description   }
+        STATUS               current
+        DESCRIPTION        "Pod replicas not ready"
+        ::= { pod 4 }
+
+        PodRestarted NOTIFICATION-TYPE
+        OBJECTS        {        id,
+                                severity,
+                                description   }
+        STATUS               current
+        DESCRIPTION        "Pod restarted"
+        ::= { pod 5 }
+
+        --********************************************************************
+        -- VCS identity alerts
+        --********************************************************************
+        IdentityFailedLogonsHigh NOTIFICATION-TYPE
+        OBJECTS        {        id,
+                                severity,
+                                description   }
+        STATUS               current
+        DESCRIPTION        "High amount of failed logons"
+        ::= { identity 1 }
+
+        --********************************************************************
+        -- VCS workflow alerts
+        --********************************************************************
+        WorkflowLostConnectionsHigh NOTIFICATION-TYPE
+        OBJECTS        {        id,
+                                severity,
+                                description   }
+        STATUS               current
+        DESCRIPTION        "High amount of lost web socket connections"
+        ::= { workflow 1 }
+
+        WorkflowWebSocketMessagesHigh NOTIFICATION-TYPE
+        OBJECTS        {        id,
+                                severity,
+                                description   }
+        STATUS               current
+        DESCRIPTION        "High number of web socket messages"
+        ::= { workflow 2 }
+
+        WorkflowWebSocketConnectionsHigh NOTIFICATION-TYPE
+        OBJECTS        {        id,
+                                severity,
+                                description   }
+        STATUS               current
+        DESCRIPTION        "High number of web socket connections"
+        ::= { workflow 3 }
+
+        --********************************************************************
+        -- VCS realtime alerts
+        --********************************************************************
+       RealtimeLostConnectionsHigh NOTIFICATION-TYPE
+        OBJECTS        {        id,
+                                severity,
+                                description   }
+        STATUS               current
+        DESCRIPTION        "High amount of lost web socket connections"
+        ::= { realtime 1 }
+
+        RealtimeWebSocketMessagesHigh NOTIFICATION-TYPE
+        OBJECTS        {        id,
+                                severity,
+                                description   }
+        STATUS               current
+        DESCRIPTION        "High number of web socket messages"
+        ::= { realtime 2 }
+
+        RealtimeWebSocketConnectionsHigh NOTIFICATION-TYPE
+        OBJECTS        {        id,
+                                severity,
+                                description   }
+        STATUS               current
+        DESCRIPTION        "High number of web socket connections"
+        ::= { realtime 3 }
+
+        RealtimeActiveCallLimitReached NOTIFICATION-TYPE
+        OBJECTS        {        id,
+                                severity,
+                                description   }
+        STATUS               current
+        DESCRIPTION        "Active call limit reached"
+        ::= { realtime 4 }
+
+        RealtimeEndpointLimitReached NOTIFICATION-TYPE
+        OBJECTS        {        id,
+                                severity,
+                                description   }
+        STATUS               current
+        DESCRIPTION        "Endpoint limit reached"
+        ::= { realtime 5 }
+
+END

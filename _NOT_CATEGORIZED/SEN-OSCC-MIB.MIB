@@ -1,0 +1,280 @@
+-- *********************************************************************
+-- SEN-OSCC-MIB.txt mib to report OpenScape Contact Center application related 
+-- information.
+--
+-- Copyright © Siemens Enterprise Communications GmbH & Co. KG 2012
+-- Siemens Enterprise Communications GmbH & Co. KG is a Trademark Licensee of Siemens AG
+-- 
+-- 
+-- This document may not be reproduced, published or distributed in any form without 
+-- the written consent of Siemens Enterprise Communications GmbH & Co. KG. 
+-- 
+-- Issued by:   Siemens Enterprise Communications GmbH & Co. KG
+-- Location:	Toronto
+--
+--
+-- Version: 1.1 - Fix PTR 645622
+-- *********************************************************************
+
+SEN-OSCC-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+	MODULE-IDENTITY,
+	OBJECT-TYPE, NOTIFICATION-TYPE,
+	Integer32,  
+	enterprises FROM SNMPv2-SMI
+	TEXTUAL-CONVENTION, DisplayString, DateAndTime
+	FROM SNMPv2-TC
+	MODULE-COMPLIANCE FROM SNMPv2-CONF;
+	
+sen	OBJECT IDENTIFIER ::= { enterprises 32804 }
+senProducts	OBJECT IDENTIFIER ::= { sen 1 }
+oscc	OBJECT IDENTIFIER ::= { senProducts 1 }
+
+diagnosticInfo	MODULE-IDENTITY
+	LAST-UPDATED	"201108020000Z" -- August 2, 2011
+	ORGANIZATION	"Siemens Enterprise Communications GmbH & Co. KG"
+	CONTACT-INFO	"Mathias Thamm,
+			E-mail: mathias.thamm@siemens-enterprise.com"
+	DESCRIPTION	"Provides OpenScape Contact Center application specific information"
+	::= { oscc 1 }
+
+
+-- *****************************
+-- OSCC OID definitions 
+-- *****************************
+
+callDirectorInfo OBJECT IDENTIFIER ::= { diagnosticInfo 1 }
+usersAndContactsInfo OBJECT IDENTIFIER ::= { diagnosticInfo 2 }
+
+
+annExtRequestRSTotal	OBJECT-TYPE
+	SYNTAX		Integer32 (0..4095)
+	MAX-ACCESS	read-only
+	STATUS		current
+	DESCRIPTION	"The total number of requests for announcement extensions in a routing strategy workflow in the last 24 hours."
+	::= { callDirectorInfo 1 }
+
+annExtRequestRSSuccess	OBJECT-TYPE
+	SYNTAX		Integer32 (0..4095)
+	MAX-ACCESS	read-only
+	STATUS		current
+	DESCRIPTION	"The total number of successful requests for announcement extensions in a routing strategy workflow in the last 24 hours."
+	::= { callDirectorInfo 2 }
+
+annExtRequestQPTotal	OBJECT-TYPE
+	SYNTAX		Integer32 (0..4095)
+	MAX-ACCESS	read-only
+	STATUS		current
+	DESCRIPTION	"The total number of requests for announcement extensions in a queue processing workflow in the last 24 hours."
+	::= { callDirectorInfo 3 }
+
+annExtRequestQPSuccess	OBJECT-TYPE
+	SYNTAX		Integer32 (0..4095)
+	MAX-ACCESS	read-only
+	STATUS		current
+	DESCRIPTION	"The total number of successful requests for announcement extensions in a queue processing workflow in the last 24 hours."
+	::= { callDirectorInfo 4 }
+
+intExtRequestRSTotal	OBJECT-TYPE
+	SYNTAX		Integer32 (0..4095)
+	MAX-ACCESS	read-only
+	STATUS		current
+	DESCRIPTION	"The total number of requests for interactive extensions in a routing strategy workflow in the last 24 hours."
+	::= { callDirectorInfo 5 }
+
+intExtRequestRSSuccess	OBJECT-TYPE
+	SYNTAX		Integer32 (0..4095)
+	MAX-ACCESS	read-only
+	STATUS		current
+	DESCRIPTION	"The total number of successful requests for interactive extensions in a routing strategy workflow in the last 24 hours."
+	::= { callDirectorInfo 6 }
+
+intExtRequestQPTotal	OBJECT-TYPE
+	SYNTAX		Integer32 (0..4095)
+	MAX-ACCESS	read-only
+	STATUS		current
+	DESCRIPTION	"The total number of requests for interactive extensions in a queue processing workflow in the last 24 hours."
+	::= { callDirectorInfo 7 }
+
+intExtRequestQPSuccess	OBJECT-TYPE
+	SYNTAX		Integer32 (0..4095)
+	MAX-ACCESS	read-only
+	STATUS		current
+	DESCRIPTION	"The total number of successful requests for interactive extensions in a queue processing workflow in the last 24 hours."
+	::= { callDirectorInfo 8 }
+
+voiceProcessors	OBJECT-TYPE
+	SYNTAX		Integer32 (0..4095)
+	MAX-ACCESS	read-only
+	STATUS		current
+	DESCRIPTION	"The total number of configured voice processors."
+	::= { callDirectorInfo 9 }
+
+voiceProcessorTable OBJECT-TYPE
+      SYNTAX SEQUENCE OF VoiceProcessorTableEntry
+      MAX-ACCESS not-accessible
+      STATUS current
+      DESCRIPTION
+         "A (conceptual) table providing details of the configured voice processors."
+      ::= { callDirectorInfo 10 }
+
+voiceProcessorTableEntry OBJECT-TYPE
+      SYNTAX VoiceProcessorTableEntry
+      MAX-ACCESS not-accessible
+      STATUS current
+      DESCRIPTION
+         "A (conceptual) row in the VoiceProcessorTable."
+      INDEX { voiceProcessorName }
+      ::= { voiceProcessorTable 1 }
+      
+VoiceProcessorTableEntry ::= SEQUENCE {
+      voiceProcessorName DisplayString,
+      voiceProcessorExtsTotal Integer32,
+      voiceProcessorExtsOperational Integer32
+      }
+
+voiceProcessorName 	OBJECT-TYPE
+	SYNTAX		DisplayString
+	MAX-ACCESS	read-only
+	STATUS		current
+	DESCRIPTION	"The name of the voice processor."
+	::= { voiceProcessorTableEntry 1 }
+
+voiceProcessorExtsTotal	OBJECT-TYPE
+	SYNTAX		Integer32 (0..4095)
+	MAX-ACCESS	read-only
+	STATUS		current
+	DESCRIPTION	"The total number of configured voice processor extensions."
+	::= { voiceProcessorTableEntry 2 }
+
+voiceProcessorExtsOperational	OBJECT-TYPE
+	SYNTAX		Integer32 (0..4095)
+	MAX-ACCESS	read-only
+	STATUS		current
+	DESCRIPTION	"The total number of configured voice processor extensions that are currently operational."
+	::= { voiceProcessorTableEntry 3 }
+
+loggedOnVoiceUsers	OBJECT-TYPE
+	SYNTAX		Integer32 (0..4095)
+	MAX-ACCESS	read-only
+	STATUS		current
+	DESCRIPTION	"The total number of users logged on to voice."
+	::= { usersAndContactsInfo 1 }
+
+loggedOnCallbackUsers	OBJECT-TYPE
+	SYNTAX		Integer32 (0..4095)
+	MAX-ACCESS	read-only
+	STATUS		current
+	DESCRIPTION	"The total number of users logged on to callback."
+	::= { usersAndContactsInfo 2 }
+
+loggedOnE-mailUsers	OBJECT-TYPE
+	SYNTAX		Integer32 (0..4095)
+	MAX-ACCESS	read-only
+	STATUS		current
+	DESCRIPTION	"The total number of users logged on to e-mail."
+	::= { usersAndContactsInfo 3 }
+
+loggedOnWebCollabUsers	OBJECT-TYPE
+	SYNTAX		Integer32 (0..4095)
+	MAX-ACCESS	read-only
+	STATUS		current
+	DESCRIPTION	"The total number of users logged on to Web collaboration."
+	::= { usersAndContactsInfo 4 }
+
+
+loggedOnClientDesktopUsers	OBJECT-TYPE
+ 	SYNTAX		Integer32 (0..4095)
+ 	MAX-ACCESS	read-only
+ 	STATUS		current
+ 	DESCRIPTION	"The total number of users logged on to the Client Desktop application."
+	::= { usersAndContactsInfo 5 }
+
+callsArrivedLastHour	OBJECT-TYPE
+	SYNTAX		Integer32 (0..2147483647)
+	MAX-ACCESS	read-only
+	STATUS		current
+	DESCRIPTION	"The total number of calls that arrived in the last hour."
+	::= { usersAndContactsInfo 6 }
+
+callsArrivedLastMinute	OBJECT-TYPE
+	SYNTAX		Integer32 (0..4095)
+	MAX-ACCESS	read-only
+	STATUS		current
+	DESCRIPTION	"The total number of calls that arrived in the last minute."
+	::= { usersAndContactsInfo 7 }
+
+e-mailsArrivedLastHour	OBJECT-TYPE
+	SYNTAX		Integer32 (0..2147483647)
+	MAX-ACCESS	read-only
+	STATUS		current
+	DESCRIPTION	"The total number of e-mail messages that arrived in the last hour."
+	::= { usersAndContactsInfo 8 }
+
+e-mailsArrivedLastMinute	OBJECT-TYPE
+	SYNTAX		Integer32 (0..4095)
+	MAX-ACCESS	read-only
+	STATUS		current
+	DESCRIPTION	"The total number of e-mail messages that arrived in the last minute."
+	::= { usersAndContactsInfo 9 }
+
+callbacksEnqueuedLastHour	OBJECT-TYPE
+	SYNTAX		Integer32 (0..2147483647)
+	MAX-ACCESS	read-only
+	STATUS		current
+	DESCRIPTION	"The total number of callbacks enqueued in the last hour."
+	::= { usersAndContactsInfo 10 }
+
+callbacksEnqueuedLastMinute	OBJECT-TYPE
+	SYNTAX		Integer32 (0..4095)
+	MAX-ACCESS	read-only
+	STATUS		current
+	DESCRIPTION	"The total number of callbacks enqueued in the last minute."
+	::= { usersAndContactsInfo 11 }
+
+webCollabContactsArrivedLastHour	OBJECT-TYPE
+	SYNTAX		Integer32 (0..2147483647)
+	MAX-ACCESS	read-only
+	STATUS		current
+	DESCRIPTION	"The total number of Web collaboration contacts that arrived in the last hour."
+	::= { usersAndContactsInfo 12 }
+
+webCollabContactsArrivedLastMinute	OBJECT-TYPE
+	SYNTAX		Integer32 (0..4095)
+	MAX-ACCESS	read-only
+	STATUS		current
+	DESCRIPTION	"The total number of Web collaboration contacts that arrived in the last minute."
+	::= { usersAndContactsInfo 13 }
+
+
+e-mailsInQueue	OBJECT-TYPE
+	SYNTAX		Integer32 (0..4095)
+	MAX-ACCESS	read-only
+	STATUS		current
+	DESCRIPTION	"The total number of e-mail messages in the queue."
+	::= { usersAndContactsInfo 14 }
+
+callbacksInQueue	OBJECT-TYPE
+	SYNTAX		Integer32 (0..4095)
+	MAX-ACCESS	read-only
+	STATUS		current
+	DESCRIPTION	"The total number of callbacks in the queue."
+	::= { usersAndContactsInfo 15 }
+
+webCollabContactsInQueue	OBJECT-TYPE
+	SYNTAX		Integer32 (0..4095)
+	MAX-ACCESS	read-only
+	STATUS		current
+	DESCRIPTION	"The total number of Web collaboration contacts in the queue."
+	::= { usersAndContactsInfo 16 }
+
+voiceContactsInQueue	OBJECT-TYPE
+	SYNTAX		Integer32 (0..4095)
+	MAX-ACCESS	read-only
+	STATUS		current
+	DESCRIPTION	"The total number of calls in the queue."
+	::= { usersAndContactsInfo 17 }
+
+
+END

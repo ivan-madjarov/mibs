@@ -1,0 +1,197 @@
+-- ****************************************************************************
+-- ****************************************************************************
+--
+--             Copyright(c) 2001-2004 Mediatrix Telecom, Inc. 
+--
+--  NOTICE:
+--   This document contains information that is confidential and proprietary
+--   to Mediatrix Telecom, Inc. 
+--
+--   Mediatrix Telecom, Inc. reserves all rights to this document as well as
+--   to the Intellectual Property of the document and the technology and
+--   know-how that it includes and represents. 
+--
+--   This publication cannot be reproduced, neither in whole nor in part in
+--   any form whatsoever without written prior approval by
+--   Mediatrix Telecom, Inc. 
+--
+--   Mediatrix Telecom, Inc. reserves the right to revise this publication
+--   and make changes at any time and without the obligation to notify any
+--   person and/or entity of such revisions and/or changes. 
+--
+-- ****************************************************************************
+-- ****************************************************************************
+
+MGCP46-NT-MGCP-MIB
+DEFINITIONS ::= BEGIN
+
+IMPORTS
+        MODULE-IDENTITY,
+        OBJECT-IDENTITY,
+        OBJECT-TYPE,
+        Unsigned32
+    FROM SNMPv2-SMI
+        OBJECT-GROUP,
+        MODULE-COMPLIANCE
+    FROM SNMPv2-CONF
+        MxEnableState
+    FROM MX-TC
+        mediatrixExperimental
+    FROM MX-SMI;
+
+ntMgcpMIB MODULE-IDENTITY
+    LAST-UPDATED "200407290000Z"
+    ORGANIZATION "Mediatrix Telecom, Inc."
+    CONTACT-INFO "Mediatrix Telecom, Inc. 
+                  4229, Garlock Street
+                  Sherbrooke (Quebec)
+                  Canada
+                  Phone: (819) 829-8749
+                  "
+    DESCRIPTION "This MIB contains MGCP configuration objects."
+
+    -- ************************************************************************
+    -- Revision history
+    -- ************************************************************************
+    REVISION    "200407290000Z"
+    DESCRIPTION "Addition of the ntMgcpNatT38 folder."
+    REVISION    "0301210000Z"
+    DESCRIPTION "January 21, 2003
+                    Creation"
+    ::= { mediatrixExperimental 50 }
+
+ntMgcpMIBObjects  OBJECT IDENTIFIER ::= { ntMgcpMIB 1 }
+ntMgcpConformance OBJECT IDENTIFIER ::= { ntMgcpMIB 2 }
+
+-- ************************************************************************
+-- NAT package 
+-- ************************************************************************
+    -- The NAT package contains MGCP NAT traversal configuration
+    -- objects based on draft-aoun-mgcp-nat-package-01.txt. 
+    -- 
+    -- When Media Gateways (MGW) controlled with the MGCP protocol are
+    -- deployed behind NATs, the Media Gateway Controller (MGC) should be
+    -- allowed to control the MGW. To keep the firewall and NAT connection
+    -- alive, signalling packets must be exchanged between the MGW and MGC
+    -- within a specified period of time called the keep alive timeout.
+    -- If no packets are exchanged for the specified period, then the
+    -- connection will be closed.
+    -- 
+    -- To keep the connection alive, the gateway uses an event notification
+    -- message to indicate that the gateway inactivity timer has timed-out.
+    -- Note that voice packets cannot be used to keep the connection opened
+    -- because they are transmitted on another channel.
+    
+ntMgcpNatPackage OBJECT IDENTIFIER ::=  {  ntMgcpMIBObjects  47  }
+
+    ntMgcpNatPackageKeepAliveEnable OBJECT-TYPE
+        SYNTAX      INTEGER {
+                            disable(0),
+                            enable(1)
+                            }
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Enable/disable the NAT keep alive timeout mechanism.
+                     The timeout is reset each time the MGW sends any MGCP
+                     message (including MGW responses to commands from the
+                     MGC, such as 200 OK acknowledgements)."
+        DEFVAL { disable }
+        ::=  { ntMgcpNatPackage 10 }
+
+    ntMgcpNatPackageKeepAliveTimeout OBJECT-TYPE
+        SYNTAX      Unsigned32
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Keep alive timeout value in ms."
+        DEFVAL      { 300000 }
+        ::=  { ntMgcpNatPackage 15 }
+
+    ntMgcpNatPackageEndpointId OBJECT-TYPE
+        SYNTAX      OCTET STRING (SIZE (1..255))
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Name of the virtual endpoint used to report the keep 
+                     alive timeout event."
+        DEFVAL { "nat-timeout" }
+        ::=  { ntMgcpNatPackage 20 }
+
+-- ************************************************************************
+-- NAT with T.38 
+-- ************************************************************************
+    -- The NAT T.38 folder contains MGCP NAT traversal parameters for T.38 fax
+    -- transmissions. 
+    -- 
+    -- The factors justifying the use of a NAT traversal scheme for telephony 
+    -- signaling also motivate the need to keep the communication channel open
+    -- when a T.38 fax transmission has to go through a NAT device.
+    -- 
+    -- To this end, a mechanism is available that has the unit send "no signal"
+    -- packets to fill the dead air intervals that could occur during fax transmission
+    -- and cause the closure of the NAT pinhole.
+    
+ntMgcpNatT38 OBJECT IDENTIFIER ::=  {  ntMgcpMIBObjects  97  }
+
+    ntMgcpNatT38NoSignalEnable OBJECT-TYPE
+        SYNTAX      MxEnableState
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "Enable/disable the NAT traversal scheme for T.38.
+                     When enabled, the unit will ensure that, during a T.38 fax
+                     transmission, data is sent out at least every time the
+                     ntMgcpNatT38NoSignalTimeout delay expires in order to keep
+                     the NAT port open.  In the absence of meaningful data to send,
+                     'no signal' packets are output."
+        DEFVAL { disable }
+        ::=  { ntMgcpNatT38 10 }
+
+    ntMgcpNatT38NoSignalTimeout OBJECT-TYPE
+        SYNTAX      Unsigned32 (1..4294967295)
+        MAX-ACCESS  read-write
+        STATUS      current
+        DESCRIPTION "The period, in seconds, at which 'no signal' packets are
+                     sent during a T.38 transmission, in the absence of valid data."
+        DEFVAL      { 1 }
+        ::=  { ntMgcpNatT38 60 }
+
+    -- ************************************************************************
+    -- Conformance information
+    -- ************************************************************************
+    ntMgcpCompliances OBJECT IDENTIFIER ::= { ntMgcpConformance 1 }
+
+    ntMgcpResidentialGatewayBasicComplVer1 MODULE-COMPLIANCE
+        STATUS      current
+        DESCRIPTION "Minimal definitions for the Nortel MGCP gateway"
+        MODULE -- This Module
+            MANDATORY-GROUPS { 
+                                ntMgcpNatPackageGroupVer1,
+                                ntMgcpNatT38GroupVer1
+                             }
+        ::= { ntMgcpCompliances 1 }
+
+    -- ************************************************************************
+    -- MIB variable grouping
+    -- ************************************************************************
+    ntMgcpGroups OBJECT IDENTIFIER ::= {ntMgcpConformance 2 }
+
+    ntMgcpNatPackageGroupVer1 OBJECT-GROUP
+        OBJECTS {
+                    ntMgcpNatPackageKeepAliveEnable,
+                    ntMgcpNatPackageKeepAliveTimeout,
+                    ntMgcpNatPackageEndpointId
+                }
+        STATUS      current
+        DESCRIPTION "This group holds the objects that define the
+                     Nortel MGCP NAT package specific parameters."
+        ::= { ntMgcpGroups 20 }
+
+    ntMgcpNatT38GroupVer1 OBJECT-GROUP
+        OBJECTS {
+                    ntMgcpNatT38NoSignalEnable,
+                    ntMgcpNatT38NoSignalTimeout
+                }
+        STATUS      current
+        DESCRIPTION "This group holds the objects that define the
+                     Nortel MGCP NAT traversal parameters for T.38."
+        ::= { ntMgcpGroups 70 }
+
+END

@@ -1,0 +1,210 @@
+-- ****************************************************************************
+-- ****************************************************************************
+--
+--             Copyright(c) 2001-2004 Mediatrix Telecom, Inc.
+--
+--  NOTICE:
+--   This document contains information that is confidential and proprietary
+--   to Mediatrix Telecom, Inc.
+--
+--   Mediatrix Telecom, Inc. reserves all rights to this document as well as
+--   to the Intellectual Property of the document and the technology and
+--   know-how that it includes and represents.
+--
+--   This publication cannot be reproduced, neither in whole nor in part in
+--   any form whatsoever without written prior approval by
+--   Mediatrix Telecom, Inc.
+--
+--   Mediatrix Telecom, Inc. reserves the right to revise this publication
+--   and make changes at any time and without the obligation to notify any
+--   person and/or entity of such revisions and/or changes.
+--
+-- ****************************************************************************
+-- ****************************************************************************
+
+MGCP46-MX-DATAIF-MIB
+DEFINITIONS ::= BEGIN
+
+IMPORTS
+        MODULE-IDENTITY,
+        OBJECT-TYPE,
+        Unsigned32
+    FROM SNMPv2-SMI
+        ifIndex
+    FROM RFC1213-MIB
+        OBJECT-GROUP,
+        MODULE-COMPLIANCE
+    FROM SNMPv2-CONF
+        mediatrixConfig
+    FROM MX-SMI;
+
+dataIfMIB MODULE-IDENTITY
+    LAST-UPDATED "0310220000Z"
+    ORGANIZATION "Mediatrix Telecom, Inc."
+    CONTACT-INFO "Mediatrix Telecom, Inc.
+                  4229, Garlock Street
+                  Sherbrooke (Quebec)
+                  Canada
+                  Phone: (819) 829-8749
+                  "
+    DESCRIPTION  "This MIB provides information to configure data interface
+                  (such as T.38, Fax, etc.) on a per interface basis."
+    -- ************************************************************************
+    -- Revision history
+    -- ************************************************************************
+    REVISION    "200408230000Z"
+    DESCRIPTION "Removed variables dataIfT38BasePort and dataIfT38FinalFramesRedundancy
+                 for the 1.4.9 branch."
+    REVISION    "0310220000Z"
+    DESCRIPTION "October 22nd, 2003
+                    Updated dataIfT38BasePort variable description.
+                 October 2nd, 2003
+                    Added the dataIfT38FinalFramesRedundancy variable.
+                 September 15th, 2003
+                    Added the dataIfT38BasePort variable.
+                 February 20th, 2003
+                    Amended the description of the dataIfClearChannelCodecPreferred
+                    variable to point out that it is used differently depending
+                    on the signaling protocol.
+                 December 18, 2002
+                    Added dataIfClearChannelCodecPreferred for selection of the
+                    preferred clear channel codec for fax transmissions.
+                 September 30, 2002
+                    Updated description of dataIfCodecMediaTypeImageEnable.
+                 July 24, 2002
+                    Specified that dataIfCodecMediaTypeImageEnable applies only
+                    to MGCP and NCS.
+                 April 26, 2002
+                    Added signalingProtocolDependent in dataIfCodecT38Enable.
+                 August 22, 2001
+                    Creation"
+    ::= { mediatrixConfig 35 }
+
+dataIfMIBObjects OBJECT IDENTIFIER ::= { dataIfMIB 1 }
+dataIfConformance OBJECT IDENTIFIER ::= { dataIfMIB 2 }
+
+    -- ************************************************************************
+    -- Data interface codec configuration table parameters
+    -- ************************************************************************
+    dataIfCodecTable OBJECT-TYPE
+        SYNTAX      SEQUENCE OF DataIfCodecEntry
+        MAX-ACCESS  not-accessible
+        STATUS      current
+        DESCRIPTION "Table that contains data interface configuration parameters."
+        ::= { dataIfMIBObjects 20 }
+
+        dataIfCodecEntry OBJECT-TYPE
+            SYNTAX      DataIfCodecEntry
+            MAX-ACCESS  not-accessible
+            STATUS      current
+            DESCRIPTION "Table entry of the data interface table."
+            INDEX       {
+                         ifIndex
+                        }
+            ::= { dataIfCodecTable 1 }
+
+            DataIfCodecEntry ::= SEQUENCE
+                {
+                    dataIfCodecT38Enable             INTEGER,
+                    dataIfCodecMediaTypeImageEnable  INTEGER,
+                    dataIfClearChannelCodecPreferred INTEGER,
+                    dataIfCodecT38ProtectionLevel    Unsigned32
+               }
+
+            dataIfCodecMediaTypeImageEnable OBJECT-TYPE
+                SYNTAX      INTEGER  {
+                             disable(0),
+                             pcmu(1),
+                             pcma(2),
+                             pcmu-pcma(3)
+                            }
+                MAX-ACCESS  read-write
+                STATUS      current
+                DESCRIPTION "disable   : image media type is not present in the SDP.
+                             pcmu      : image media type is present in the SDP for PCMU only.
+                             pcma      : image media type is present in the SDP for PCMA only.
+                             pcmu-pcma : image media type is present in the SDP for PCMU and PCMA.
+
+                             Note: This variable only applies when using MGCP
+                             or NCS as the signaling protocol. When using SIP,
+                             the clear channel codec used is the first one of
+                             PCMU or PCMA that is supported in the SDP's audio
+                             media type codec list of both endpoints, or PCMU
+                             if none is supported."
+                DEFVAL      { pcmu-pcma }
+                ::= { dataIfCodecEntry 1 }
+
+            dataIfClearChannelCodecPreferred OBJECT-TYPE
+                SYNTAX      INTEGER {
+                                     pcmu(1),
+                                     pcma(2)
+                                    }
+                MAX-ACCESS  read-write
+                STATUS      current
+                DESCRIPTION "Indicates the preferred clear channel type of codec
+                             for fax transmission.
+
+                             This variable's semantics are different depending on
+                             protocol and/or hardware platforms.
+                             Please refer to the documentation shipped with your
+                             device for more details."
+                DEFVAL      { pcmu }
+                ::= { dataIfCodecEntry 2 }
+
+            dataIfCodecT38Enable OBJECT-TYPE
+                SYNTAX      INTEGER {
+                             disable(0),
+                             enable(1),
+                             signalingProtocolDependent(2)
+                            }
+                MAX-ACCESS  read-write
+                STATUS      current
+                DESCRIPTION "If enabled, the T.38 protocol will be used for Fax transmission.
+                             If signalingProtocolDependent is selected, the signaling protocol
+                             has the control to enable or disable T.38."
+                DEFVAL      { enable }
+                ::= { dataIfCodecEntry 5 }
+
+            dataIfCodecT38ProtectionLevel OBJECT-TYPE
+                SYNTAX      Unsigned32 (1..5)
+                MAX-ACCESS  read-write
+                STATUS      current
+                DESCRIPTION "The number of redundancy packets. This is the standard
+                             redundancy offered by T.38."
+                DEFVAL      { 3 }
+                ::=    { dataIfCodecEntry  6 }
+
+
+    -- ************************************************************************
+    -- Conformance information
+    -- ************************************************************************
+    dataIfCompliances OBJECT IDENTIFIER ::= { dataIfConformance 1 }
+
+    dataIfComplVer1 MODULE-COMPLIANCE
+        STATUS      current
+        DESCRIPTION
+            "Basic data interface requirements."
+        MODULE -- This Module
+            MANDATORY-GROUPS {
+                              dataIfGroupVer1
+                             }
+        ::= { dataIfCompliances 1 }
+
+    -- ************************************************************************
+    -- MIB variable grouping
+    -- ************************************************************************
+    dataIfGroups OBJECT IDENTIFIER ::= { dataIfConformance 2 }
+
+    dataIfGroupVer1 OBJECT-GROUP
+        OBJECTS {
+                 dataIfCodecT38Enable,
+                 dataIfCodecMediaTypeImageEnable,
+                 dataIfClearChannelCodecPreferred,
+                 dataIfCodecT38ProtectionLevel
+                }
+        STATUS current
+        DESCRIPTION
+            "This group holds the objects necessary to control data transmission."
+        ::= { dataIfGroups 1 }
+
+END

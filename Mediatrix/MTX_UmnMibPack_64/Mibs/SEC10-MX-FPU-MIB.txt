@@ -1,0 +1,508 @@
+-- ****************************************************************************
+-- ****************************************************************************
+--             Copyright(c) 2004 Mediatrix Telecom, Inc.
+--  NOTICE:
+--   This document contains information that is confidential and proprietary
+--   to Mediatrix Telecom, Inc.
+--   Mediatrix Telecom, Inc. reserves all rights to this document as well as
+--   to the Intellectual Property of the document and the technology and
+--   know-how that it includes and represents.
+--   This publication cannot be reproduced, neither in whole nor in part in
+--   any form whatsoever without written prior approval by
+--   Mediatrix Telecom, Inc.
+--   Mediatrix Telecom, Inc. reserves the right to revise this publication
+--   and make changes at any time and without the obligation to notify any
+--   person and/or entity of such revisions and/or changes.
+-- ****************************************************************************
+-- ****************************************************************************
+  
+SEC10-MX-FPU-MIB
+DEFINITIONS ::= BEGIN
+
+IMPORTS
+        MODULE-IDENTITY,
+        OBJECT-TYPE,
+        Unsigned32
+    FROM SNMPv2-SMI
+        MODULE-COMPLIANCE,
+        OBJECT-GROUP
+    FROM SNMPv2-CONF
+        MxEnableState,
+        MxActivationState,
+        MxIpHostName,
+        MxIpPort,
+        MxAdvancedIpPort,
+        MxIpSubnetMask,
+        MxDigitMap
+    FROM MX-TC
+        MxUInt64,
+        MxFloat32,
+        MxIpHostNamePort,
+        MxIpAddr,
+        MxIpAddrPort,
+        MxIpAddrMask,
+        MxUri,
+        MxUrl
+    FROM MX-TC2
+        mediatrixServices       
+    FROM MX-SMI2;
+
+fpuMIB MODULE-IDENTITY                                                         
+    LAST-UPDATED   "0510310000Z"                                               
+    ORGANIZATION " Mediatrix Telecom, Inc. "                                   
+    CONTACT-INFO " Mediatrix Telecom, Inc.                                     
+                   4229, Garlock Street                                        
+                   Sherbrooke (Quebec)                                         
+                   Canada                                                      
+                   Phone: (819) 829-8749                                       
+                   "                                                           
+    DESCRIPTION  " Firmware Pack Updater                                       
+                                                                               
+                   The Firmware Pack Updater handles firmware upgrade and      
+                   downgrade operations.                                       
+                   "                                                           
+    -- *************************************************************************
+                                                                               
+    -- Revision history                                                        
+                                                                               
+    -- *************************************************************************
+    REVISION       "0510310000Z"                                               
+    DESCRIPTION  " Initial Revision "                                          
+    ::= { mediatrixServices 1300 }                                             
+
+fpuMIBObjects OBJECT IDENTIFIER ::= { fpuMIB 1 }
+
+-- *****************************************************************************
+                                                                               
+-- Table:  Installed MFPs                                                      
+                                                                               
+-- *****************************************************************************
+                                                                               
+mfpInstalledInfoTable OBJECT-TYPE                                              
+    SYNTAX        SEQUENCE OF MfpInstalledInfoEntry                            
+    MAX-ACCESS    not-accessible                                               
+    STATUS        current                                                      
+    DESCRIPTION " Installed MFPs                                               
+                                                                               
+                  List of Mediatrix Firmware Packs that are currently installed
+                  on the unit.                                                 
+                  "                                                            
+    ::= { fpuMIBObjects 100 }                                                  
+                                                                               
+                                                                               
+    mfpInstalledInfoEntry OBJECT-TYPE                                          
+        SYNTAX         MfpInstalledInfoEntry                                   
+        MAX-ACCESS     not-accessible                                          
+        STATUS         current                                                 
+        DESCRIPTION  " A row in the Installed MFPs. "                          
+        INDEX          {                                                       
+                           index                                               
+                       }                                                       
+                                                                               
+        ::= { mfpInstalledInfoTable 1 }                                        
+                                                                               
+    MfpInstalledInfoEntry ::= SEQUENCE                                         
+    {                                                                          
+         index         Unsigned32,                                             
+         mfpName       OCTET STRING,                                           
+         mfpVersion    OCTET STRING                                            
+    }                                                                          
+                                                                               
+    -- Columnar:  Name                                                         
+                                                                               
+    mfpInstalledInfoMfpName OBJECT-TYPE                                        
+        SYNTAX          OCTET STRING                                           
+        MAX-ACCESS      read-only                                              
+        STATUS          current                                                
+        DESCRIPTION   " Name                                                   
+                                                                               
+                        Name of the MFP.                                       
+                        "                                                      
+        ::= { mfpInstalledInfoEntry 100 }                                      
+                                                                               
+    -- Columnar:  Version                                                      
+                                                                               
+    mfpInstalledInfoMfpVersion OBJECT-TYPE                                     
+        SYNTAX         OCTET STRING                                            
+        MAX-ACCESS     read-only                                               
+        STATUS         current                                                 
+        DESCRIPTION  " Version                                                 
+                                                                               
+                       Version of the MFP installed.                           
+                       "                                                       
+        ::= { mfpInstalledInfoEntry 200 }                                      
+                                                                               
+    -- Index:  MFPs Installed Info Index                                       
+                                                                               
+    mfpInstalledInfoIndex OBJECT-TYPE                                          
+        SYNTAX         Unsigned32 ( 0..4 )                                     
+        MAX-ACCESS     read-only                                               
+        STATUS         current                                                 
+        DESCRIPTION  " MFPs Installed Info Index                               
+                                                                               
+                       Index of the currently installed MFPs.                  
+                       "                                                       
+        ::= { mfpInstalledInfoEntry 50 }                                       
+                                                                               
+                                                                               
+-- End of table:  Installed MFPs                                               
+
+-- Scalar:  Status                                                             
+                                                                               
+status OBJECT-TYPE                                                             
+    SYNTAX        INTEGER { waitingSystemReady(100) , idle(200) , updating(300)
+                  , waitingManualRestart(400) }                                
+    MAX-ACCESS    read-only                                                    
+    STATUS        current                                                      
+    DESCRIPTION " Status                                                       
+                                                                               
+                  Indicates the current status of the Firmware Pack Updater.   
+                                                                               
+                    * WaitingSystemReady: Waiting for the system restart to    
+                      complete.                                                
+                    * Idle: Ready to process a command.                        
+                    * Updating: Currently downloading and installing a         
+                      firmware.                                                
+                    * WaitingManualRestart: Waiting for a manual restart to    
+                      complete a firmware update.                              
+                                                                               
+                                                                               
+                  "                                                            
+    ::= { fpuMIBObjects 110 }                                                  
+
+-- Scalar:  Last Result                                            
+                                                                   
+mfpLastInstallationResult OBJECT-TYPE                              
+    SYNTAX         INTEGER { none(100) , success(200) , fail(300) }
+    MAX-ACCESS     read-only                                       
+    STATUS         current                                         
+    DESCRIPTION  " Last Result                                     
+                                                                   
+                   Result of the last install command.             
+                                                                   
+                     * None: No installation result available.     
+                     * Success: The last installation succeeded.   
+                     * Fail: The last installation failed.         
+                                                                   
+                                                                   
+                   "                                               
+    ::= { fpuMIBObjects 125 }                                      
+
+-- Scalar:  Last Successful Installation Date and Time                  
+                                                                        
+mfpLastInstallationDateTime OBJECT-TYPE                                 
+    SYNTAX         OCTET STRING ( SIZE(0..255) )                        
+    MAX-ACCESS     read-only                                            
+    STATUS         current                                              
+    DESCRIPTION  " Last Successful Installation Date and Time           
+                                                                        
+                   Date and time of the last successful install command.
+                   "                                                    
+    ::= { fpuMIBObjects 150 }                                           
+
+-- *****************************************************************************
+                                                                               
+-- Table:  Selected MFP                                                        
+                                                                               
+-- *****************************************************************************
+                                                                               
+mfpSelectionTable OBJECT-TYPE                                                  
+    SYNTAX        SEQUENCE OF MfpSelectionEntry                                
+    MAX-ACCESS    not-accessible                                               
+    STATUS        current                                                      
+    DESCRIPTION " Selected MFP                                                 
+                                                                               
+                  List of Mediatrix Firmware Packs that will be installed on   
+                  the unit when the Install command is issued.                 
+                  "                                                            
+    ::= { fpuMIBObjects 200 }                                                  
+                                                                               
+                                                                               
+    mfpSelectionEntry OBJECT-TYPE                                              
+        SYNTAX         MfpSelectionEntry                                       
+        MAX-ACCESS     not-accessible                                          
+        STATUS         current                                                 
+        DESCRIPTION  " A row in the Selected MFP. "                            
+        INDEX          {                                                       
+                           index                                               
+                       }                                                       
+                                                                               
+        ::= { mfpSelectionTable 1 }                                            
+                                                                               
+    MfpSelectionEntry ::= SEQUENCE                                             
+    {                                                                          
+        index     Unsigned32,                                                  
+        mfpName   OCTET STRING                                                 
+    }                                                                          
+                                                                               
+    -- Columnar:  Name                                                         
+                                                                               
+    mfpSelectionMfpName OBJECT-TYPE                                            
+        SYNTAX        OCTET STRING                                             
+        MAX-ACCESS    read-write                                               
+        STATUS        current                                                  
+        DESCRIPTION " Name                                                     
+                                                                               
+                      Name of the Mediatrix Firmware Pack to install.          
+                                                                               
+                      When extracting the content of the ZIP file, available   
+                      MFPs are listed as directories under the Mediatrix/      
+                      FirmwarePacks directory.                                 
+                                                                               
+                                                                               
+                      "                                                        
+        DEFVAL        { "" }                                                   
+        ::= { mfpSelectionEntry 100 }                                          
+                                                                               
+    -- Index:  MFP Selection Index                                             
+                                                                               
+    mfpSelectionIndex OBJECT-TYPE                                              
+        SYNTAX         Unsigned32 ( 0..4 )                                     
+        MAX-ACCESS     read-only                                               
+        STATUS         current                                                 
+        DESCRIPTION  " MFP Selection Index                                     
+                                                                               
+                       Index of the current MFP selection.                     
+                       "                                                       
+        ::= { mfpSelectionEntry 50 }                                           
+                                                                               
+                                                                               
+-- End of table:  Selected MFP                                                 
+
+-- Scalar:  Version                              
+                                                 
+mfpVersion OBJECT-TYPE                           
+    SYNTAX         OCTET STRING                  
+    MAX-ACCESS     read-write                    
+    STATUS         current                       
+    DESCRIPTION  " Version                       
+                                                 
+                   Version of the MFP to install.
+                   "                             
+    DEFVAL         { "" }                        
+    ::= { fpuMIBObjects 225 }                    
+
+-- Scalar:  Language                       
+                                           
+languageSelection OBJECT-TYPE              
+    SYNTAX         INTEGER { english(100) }
+    MAX-ACCESS     read-write              
+    STATUS         current                 
+    DESCRIPTION  " Language                
+                                           
+                   Language.               
+                                           
+                     * English             
+                                           
+                                           
+                   "                       
+    DEFVAL         { english }             
+    ::= { fpuMIBObjects 250 }              
+
+-- ****************************************************************************
+                                                                               
+-- Group:  MFP Repository                                                      
+                                                                               
+-- Configuration relative to the remote update tree, i.e., where to get update 
+-- files.                                                                         
+-- ****************************************************************************
+                                                                               
+mfpRepositoryGroup OBJECT IDENTIFIER                                           
+    ::= { fpuMIBObjects 400 }                                                  
+                                                                               
+                                                                               
+    -- Scalar:  MFP Location                                                   
+                                                                               
+    mfpLocation OBJECT-TYPE                                                    
+        SYNTAX        OCTET STRING ( SIZE(0..255) )                            
+        MAX-ACCESS    read-write                                               
+        STATUS        current                                                  
+        DESCRIPTION " MFP Location                                             
+                                                                               
+                      Path to the directory containing MFPs.                   
+                                                                               
+                      The MFP location is where the zip file containing the    
+                      MFP has been extracted. This path is relative to the     
+                      root of the external media and excludes the 'Mediatrix'  
+                      directory.                                               
+                                                                               
+                      Use '/' to separate subdirectories.                      
+                                                                               
+                                                                               
+                      "                                                        
+        DEFVAL        { "" }                                                   
+        ::= { mfpRepositoryGroup 100 }                                         
+                                                                               
+    -- ************************************************************************
+                                                                               
+    -- Group:  File Transfer                                                   
+                                                                               
+    -- ************************************************************************
+                                                                               
+    mfpTransferGroup OBJECT IDENTIFIER                                         
+        ::= { mfpRepositoryGroup 200 }                                         
+                                                                               
+                                                                               
+        -- Scalar:  Protocol                                                   
+                                                                               
+        mfpTransferProtocol OBJECT-TYPE                                        
+            SYNTAX        INTEGER { http(100) , https(200) , tftp(300) , ftp   
+                          (400) , file(500) }                                  
+            MAX-ACCESS    read-write                                           
+            STATUS        current                                              
+            DESCRIPTION " Protocol                                             
+                                                                               
+                          Protocol to use to access the update tree.           
+                                                                               
+                            * HTTP: Hypertext Transfer Protocol.               
+                            * HTTPS: Hypertext Transfer Protocol over Transport
+                              Layer Security.                                  
+                            * TFTP: Trivial File Transfer Protocol.            
+                            * FTP: File Transfer Protocol.                     
+                            * File: The update tree is located in an external  
+                              USB device.                                      
+                                                                               
+                                                                               
+                          "                                                    
+            DEFVAL        { https }                                            
+            ::= { mfpTransferGroup 100 }                                       
+                                                                               
+        -- Scalar:  User Name                                                  
+                                                                               
+        mfpTransferUsername OBJECT-TYPE                                        
+            SYNTAX        OCTET STRING ( SIZE(0..63) )                         
+            MAX-ACCESS    read-write                                           
+            STATUS        current                                              
+            DESCRIPTION " User Name                                            
+                                                                               
+                          User name to use to access the update tree, if the   
+                          protocol selected by the variable MfpTransferProtocol
+                          requires it.                                         
+                          "                                                    
+            DEFVAL        { "" }                                               
+            ::= { mfpTransferGroup 200 }                                       
+                                                                               
+        -- Scalar:  Password                                                   
+                                                                               
+        mfpTransferPassword OBJECT-TYPE                                        
+            SYNTAX        OCTET STRING ( SIZE(0..63) )                         
+            MAX-ACCESS    read-write                                           
+            STATUS        current                                              
+            DESCRIPTION " Password                                             
+                                                                               
+                          Password to use to access the update tree, if the    
+                          protocol selected by the variable MfpTransferProtocol
+                          requires it.                                         
+                          "                                                    
+            DEFVAL        { "" }                                               
+            ::= { mfpTransferGroup 300 }                                       
+                                                                               
+        -- Scalar:  Hostname                                                   
+                                                                               
+        mfpTransferSrvHostname OBJECT-TYPE                                     
+            SYNTAX        MxIpHostNamePort                                     
+            MAX-ACCESS    read-write                                           
+            STATUS        current                                              
+            DESCRIPTION " Hostname                                             
+                                                                               
+                          Name or IP address and port of the Update Files      
+                          server, if the protocol selected by the variable     
+                          MfpTransferProtocol requires it. Use the special port
+                          value '0' to indicate the protocol default.          
+                          "                                                    
+            DEFVAL        { 0.0.0.0:0 }                                        
+            ::= { mfpTransferGroup 400 }                                       
+                                                                               
+    -- End of group:  File Transfer                                            
+                                                                               
+-- End of group:  MFP Repository                                               
+
+-- Scalar:  Automatic Restart                                                  
+                                                                               
+automaticRestartEnable OBJECT-TYPE                                             
+    SYNTAX        MxEnableState                                                
+    MAX-ACCESS    read-write                                                   
+    STATUS        current                                                      
+    DESCRIPTION " Automatic Restart                                            
+                                                                               
+                  Enables the firmware pack updater to automatically restart   
+                  the system when needed for completing a firmware update      
+                  operation.                                                   
+                  "                                                            
+    DEFVAL        { disable }                                                  
+    ::= { fpuMIBObjects 500 }                                                  
+
+-- *****************************************************************************
+                                                                               
+-- Group:  Notification Messages Configuration                                 
+                                                                               
+-- *****************************************************************************
+                                                                               
+notificationsGroup OBJECT IDENTIFIER                                           
+    ::= { fpuMIBObjects 60010 }                                                
+                                                                               
+                                                                               
+    -- Scalar:  Minimal Severity of Notification                               
+                                                                               
+    minSeverity OBJECT-TYPE                                                    
+        SYNTAX        INTEGER { disable(0) , debug(100) , info(200) , warning  
+                      (300) , error(400) , critical (500) }                    
+        MAX-ACCESS    read-write                                               
+        STATUS        current                                                  
+        DESCRIPTION " Minimal Severity of Notification                         
+                                                                               
+                      Sets the minimal severity to issue a notification message
+                      incoming from this service.                              
+                                                                               
+                        * Disable: No notification is issued.                  
+                        * Debug: All notification messages are issued.         
+                        * Info: Notification messages with severity            
+                          'Informational' and higher are issued.               
+                        * Warning: Notification messages with severity         
+                          'Warning' and higher are issued.                     
+                        * Error: Notification messages with severity 'Error'   
+                          and higher are issued.                               
+                        * Critical: Notification messages with severity        
+                          'Critical' are issued.                               
+                                                                               
+                                                                               
+                      "                                                        
+        DEFVAL        { warning }                                              
+        ::= { notificationsGroup 100 }                                         
+                                                                               
+-- End of group:  Notification Messages Configuration                          
+
+-- ****************************************************************************
+                                                                              
+-- Group:  Configuration Settings                                             
+                                                                              
+-- ****************************************************************************
+                                                                              
+configurationGroup OBJECT IDENTIFIER                                          
+    ::= { fpuMIBObjects 60020 }                                               
+                                                                              
+                                                                              
+    -- Scalar:  Need Restart                                                  
+                                                                              
+    needRestartInfo OBJECT-TYPE                                               
+        SYNTAX        INTEGER { no(0) , yes(100) }                            
+        MAX-ACCESS    read-only                                               
+        STATUS        current                                                 
+        DESCRIPTION " Need Restart                                            
+                                                                              
+                      Indicates if the service needs to be restarted for its  
+                      configuration to fully take effect.                     
+                                                                              
+                        * Yes: Service needs to be restarted.                 
+                        * No: Service does not need to be restarted.          
+                                                                              
+                      Services can be restarted by using the command          
+                      Scm.ServiceCommands.Restart.                            
+                                                                              
+                                                                              
+                      "                                                       
+        ::= { configurationGroup 100 }                                        
+                                                                              
+-- End of group:  Configuration Settings                                      
+
+END

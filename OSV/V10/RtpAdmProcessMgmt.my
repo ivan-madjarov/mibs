@@ -1,0 +1,1056 @@
+--
+-- $Copyright:
+-- Copyright (c) 2011-2021 UNIFY, ATOS
+-- All rights reserved
+-- $
+--
+
+
+
+FTS-RTP-MIB-PROCESS-MGMT DEFINITIONS ::= BEGIN
+
+IMPORTS
+    MODULE-IDENTITY, OBJECT-TYPE, OBJECT-IDENTITY,
+    NOTIFICATION-TYPE, Integer32, IpAddress         FROM SNMPv2-SMI
+
+    TEXTUAL-CONVENTION, DisplayString	 FROM SNMPv2-TC
+
+    rtpConfigurationMgmt,
+    rtpSystemMgmt,
+    TimeIntervalMillis,
+    TimeStampSeconds	                 FROM FTS-RTP-MIB
+
+	rtpClusterName                       FROM FTS-RTP-MIB-EVENT-MGMT;
+
+
+--
+-- Resilient Telco Platform-related MOs
+--
+
+    rtpProcessMgmtModule MODULE-IDENTITY
+	LAST-UPDATED "1907301800Z"
+	ORGANIZATION "UNIFY, ATOS"
+	CONTACT-INFO "E-mail: ccs_support_portal@atos.net"
+
+	DESCRIPTION
+	    "The MIB module describes the Managed Objects of
+	     the Process & Node Management of the Resilient Telco Platform (RTP)"
+
+	REVISION "9908061800Z"
+	DESCRIPTION
+	    "The initial draft version of this MIB module."
+
+	REVISION "9909031800Z"
+	DESCRIPTION
+	    "- rtpAliasInfoTable and rtpAliasMemberTable added.
+	     - NodeNameString textual convention added."
+
+	REVISION "0001041800Z"
+	DESCRIPTION
+	    "Module header information updated."
+
+	REVISION "0007191800Z"
+	DESCRIPTION
+	    "Code clearance:
+	     - replaced DisplayString by OCTET STRING (due to SIZE
+	       specification)
+	     - renamed RtpNodeInfo with RtpNodeInfoTableEntry
+	     - renamed RtpProcessGroup with RtpProcessGroupTableEntry
+	     - renamed RtpProcessGroupDep with RtpProcessGroupDepTableEntry
+	     - renamed RtpProcessInfo with RtpProcessInfoTableEntry
+	     - renamed RtpProcessDetails with RtpProcessDetailsTableEntry
+	     - renamed RtpAliasInfo with RtpAliasInfoTableEntry
+	     - renamed RtpAliasMember with RtpAliasMemberTableEntry
+	    "
+
+	REVISION "0008031800Z"
+	DESCRIPTION
+	    "Added aliasLocalBestQueue to AliasType"
+
+	REVISION "0008241800Z"
+	DESCRIPTION
+	    "- Updated description of ProcessStatusDetail "
+
+	REVISION "0011141800Z"
+	DESCRIPTION
+	    "Added rtpNtNodeId, rtpNtIpAddress"
+
+	REVISION "0106181800Z"
+	DESCRIPTION
+	    "Updated description of rtpPdtFirstStartTime, rtpPdtLastExitTime,
+	     rtpPdtRestartCount."
+
+	REVISION "0106191800Z"
+	DESCRIPTION
+	    "Updated description of rtpGtCeName, rtpPtCeName."
+
+	REVISION "0208261300Z"
+	DESCRIPTION
+	    "new alias aliasRemoteBroadcast."
+
+	REVISION "0504211800Z"
+	DESCRIPTION
+	    "Changed module name to FSC-RTP-MIB-PROCESS-MGMT to resolve naming
+	     conflict with RFC 2959.
+	     Module header information updated."
+
+	REVISION "0810281200Z"
+	DESCRIPTION
+		"Add rtpClusterName to rtpProcessUpdateTrap.
+		 rtpProcessNodeTraps marked as obsolete since there is no RTP support."
+
+	REVISION "1107110900Z"
+        DESCRIPTION
+            "Add rtpNtNodeAddress to RtpNodeInfoTableEntry.
+             Mark rtpNtIpAddress in RtpNodeInfoTableEntry
+             as deprecated."
+
+	REVISION "201907301600Z"
+	DESCRIPTION
+	     "Vendor: UNIFY, ATOS"
+
+	::= { rtpSystemMgmt 1 }
+
+
+--
+-- Textual conventions used in the RTP MIB:
+--
+
+    Boolean ::= TEXTUAL-CONVENTION
+	STATUS      current
+	DESCRIPTION "Represents a boolean value."
+	SYNTAX      INTEGER { false(0), true(1) }
+
+    NodeStatus ::= TEXTUAL-CONVENTION
+	STATUS  current
+	DESCRIPTION
+		"Represents the availability status of nodes (computing
+		 elements).
+
+		 statusUndefined:      undefined state
+		 statusNotRunning:    none of the node's processes is running
+		 statusPartlyRunning: node is partly running (at least one
+					process is not in status-Running
+		 statusRunning:		all node's processes are running)"
+	SYNTAX  INTEGER { statusUndefined(0), statusNotRunning(1),
+			  statusPartlyRunning(3), statusRunning(4) }
+
+    ProcessGroupStatus ::= TEXTUAL-CONVENTION
+	STATUS  current
+	DESCRIPTION
+		"Represents the availability status of startup process groups.
+
+		 statusUndefined:     undefined state
+		 statusNotRunning:    none of the startup group's processes is
+				      running
+		 statusPartlyRunning: process group is partly running (at
+				      least one process is not in
+				      statusRunning
+		 statusRunning:	      all group's processes are running)"
+	SYNTAX  INTEGER { statusUndefined(0), statusNotRunning(1),
+			  statusPartlyRunning(3), statusRunning(4) }
+
+    ProcessGroupStartMode ::= TEXTUAL-CONVENTION
+	STATUS  current
+	DESCRIPTION
+		"Represents the start mode of startup process groups.
+
+		 startParallel: processes are started simultanously
+		 startSequence: processes are started sequentially."
+	SYNTAX  INTEGER { startParallel(1), startSequence(2) }
+
+    ProcessStatus ::= TEXTUAL-CONVENTION
+	STATUS  current
+	DESCRIPTION
+		"Represents the availability status of processes.
+
+		 statusUndefined:	undefined state
+		 statusNotRunning:	process is not running
+		 statusBooting:	  	process is in initialization phase
+		 statusRunning:		process is running
+		 statusShutdownPending: process is about to shut down."
+	SYNTAX  INTEGER { statusUndefined(0), statusNotRunning(1),
+			  statusBooting(2), statusRunning(4),
+			  statusShutdownPending(5) }
+
+    ProcessStatusDetail ::= TEXTUAL-CONVENTION
+	STATUS  current
+	DESCRIPTION
+		"Represents additional status information for processes in
+		 status statusNotRunning.
+
+		 statusUndefined:         undefined state
+		 detailRestartDelayed:    (currently not used)
+		 detailExplicitlyStopped: process has been stopped
+					  explicitly (by operator intervention)
+		 detailWaitForRestart:    process has exited and will be
+					  restarted automatically by the Node
+					  Manager; restart is either
+					  immediately or delayed
+		 detailDepsNotSatisfied:  process is not yet running as
+					  its startup dependencies are not
+					  satisfied"
+	SYNTAX  INTEGER { detailUndefined(0), detailRestartDelayed(1),
+			  detailExplicitlyStopped(2),
+			  detailWaitForRestart(3),
+			  detailDepsNotSatisfied(4) }
+
+
+    QueueStatus ::= TEXTUAL-CONVENTION
+	STATUS  current
+	DESCRIPTION
+		"Represents the availability status of IPC message queues
+		 and IPC aliases.
+
+		 statusUndefined:        undefined state
+		 queueUnavailable:	 IPC message queue is unavailable or
+					 none of the IPC alias members is
+					 fully available
+		 queueDirectlyAvailable: IPC message queue is only directly
+					 available (i.e. not via alias)
+		 queueAvailable:         IPC message queue is fully available
+					 (i.e. directly and via alias) or
+					 IPC alias is fully available (i.e.
+					 at least one member queue is fully
+					 available)"
+	SYNTAX  INTEGER { statusUndefined(0), queueUnavailable(1),
+			  queueDirectlyAvailable(2), queueAvailable(3) }
+
+    AliasType ::= TEXTUAL-CONVENTION
+	STATUS  current
+	DESCRIPTION
+		"Represents the different types of IPC aliases.
+
+		 aliasEqualLoad:        load sharing between alias members
+		 aliasLocalEqualLoad:   load sharing between alias members, but
+                                        local processes are preferred
+		 aliasLocalEqualLoadExclusive:   load sharing between alias members,
+		 			but only local processes are used
+		 aliasLocalBestQueue:   load sharing between alias members, but
+                                        the process with the most space in its
+					message queue is preferred
+		 aliasBackup:           a list of processes that will take
+                                        over the tasks of the currently active
+                                        process if it fails (the order in
+                                        which backup processes become active
+                                        is controlled by a priority parameter)
+		 aliasPersistentBackup: like aliasBackup but the process that
+                                        has overtaken the tasks of the failed
+                                        process will belong active even when
+                                        that process gets up again (used to
+                                        minimize process activity switches)
+		 aliasBroadcast:        all fully available alias members will
+                                        receive the message
+		 aliasRemoteBroadcast:  all fully available alias members will
+                                        receive the message, except those running
+					on the local node"
+	SYNTAX  INTEGER { aliasEqualLoad(0), aliasLocalEqualLoad(1),
+			  aliasBackup(2), aliasPersistentBackup(3),
+			  aliasBroadcast(4), aliasLocalBestQueue(5),
+			  aliasLocalEqualLoadExclusive(6), aliasRemoteBroadcast(7) }
+
+    AliasBackupState ::= TEXTUAL-CONVENTION
+	STATUS  current
+	DESCRIPTION
+		"Represents the different backup states of IPC alias members if
+		 the alias is of the alias-Backup or alias-Persistent-Backup
+		 type.
+
+		 backupPrimary:   the member of the backup alias is currently
+                                  primary backup process
+		 backupSecondary: the member of the backup alias is currently
+                                  secondary backup process
+		 backupNone:      the member of the backup alias is currently
+                                  neither primary nor secondary backup process
+                                  (also used if IPC alias is not a backup
+                                  alias)"
+	SYNTAX  INTEGER { backupPrimary(1), backupSecondary(2),
+			  backupNone(3) }
+
+    NodeNameString ::= TEXTUAL-CONVENTION
+	STATUS  current
+	DESCRIPTION
+		"The string type used for names of nodes, processes,
+		 process groups and IPC aliases."
+	SYNTAX OCTET STRING (SIZE (0..63))
+
+
+--
+-- System Management: Process & Node Management
+--
+
+    rtpProcessNodeMgmt OBJECT-IDENTITY
+	STATUS current
+	DESCRIPTION
+	    "The Process & Node Management Functionality."
+	::= { rtpProcessMgmtModule 1 }
+
+    --
+    -- Node Table (Computing Element Table)
+    --
+
+    rtpNodeInfoTable OBJECT-TYPE
+	SYNTAX  SEQUENCE OF RtpNodeInfoTableEntry
+	MAX-ACCESS  not-accessible
+	STATUS  current
+	DESCRIPTION
+	    "The rtpNodeInfoTable represents the nodes (computing elements) that
+	     make up the cluster of the Resilient Telco Platform."
+	::= { rtpProcessNodeMgmt 1 }
+
+	rtpNodeInfoTableEntry OBJECT-TYPE
+	    SYNTAX  RtpNodeInfoTableEntry
+	    MAX-ACCESS  not-accessible
+	    STATUS  current
+	    DESCRIPTION
+		"A conceptual row of the rtpNodeInfoTable. The rtpNtIndex
+		 serves as index."
+	    INDEX   { rtpNtIndex }
+	    ::= { rtpNodeInfoTable 1 }
+
+	RtpNodeInfoTableEntry ::=
+	    SEQUENCE {
+		rtpNtIndex		Integer32,
+		rtpNtNodeName 		NodeNameString,
+		rtpNtAvailable		NodeStatus,
+		rtpNtNodeId		Integer32,
+		rtpNtIpAddress		IpAddress,
+		rtpNtNodeAddress		OCTET STRING
+	    }
+
+	rtpNtIndex OBJECT-TYPE
+	    SYNTAX  Integer32
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION
+		"Auxiliary variable used to identify instances of the columnar
+		 objects in rtpNodeInfoTable."
+	    ::= { rtpNodeInfoTableEntry 1 }
+
+	rtpNtNodeName OBJECT-TYPE
+	    SYNTAX NodeNameString
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION
+		"Textual name of the node (computing element); unique on the
+		 whole cluster."
+	    ::= { rtpNodeInfoTableEntry 2 }
+
+	rtpNtAvailable OBJECT-TYPE
+	    SYNTAX  NodeStatus
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION "Availability state of the node (computing element)."
+	    ::= { rtpNodeInfoTableEntry 3 }
+
+	rtpNtNodeId OBJECT-TYPE
+	    SYNTAX  Integer32
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION "Identifier of the node."
+	    ::= { rtpNodeInfoTableEntry 4 }
+
+	rtpNtIpAddress OBJECT-TYPE
+	    SYNTAX  IpAddress
+	    MAX-ACCESS  read-only
+	    STATUS  deprecated
+	    DESCRIPTION
+                "IP address belonging to rtpNtNodeName.
+                 **NOTE: this object is deprecated and replaced by
+                 rtpNtNodeAddress as it cannot hold IPv6 addresses.
+                "
+	    ::= { rtpNodeInfoTableEntry 5 }
+
+	rtpNtNodeAddress OBJECT-TYPE
+	    SYNTAX  OCTET STRING (SIZE (4..16))
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION
+             "IP address belonging to rtpNtNodeName.
+              May be IPv4 or IPv6 address.
+             "
+	    ::= { rtpNodeInfoTableEntry 6 }
+
+    --
+    -- Startup Process Group Table
+    --
+
+    rtpProcessGroupTable OBJECT-TYPE
+	SYNTAX  SEQUENCE OF RtpProcessGroupTableEntry
+	MAX-ACCESS  not-accessible
+	STATUS  current
+	DESCRIPTION
+	    "The rtpProcessGroupTable represents the startup process groups
+	     running under the control of the Resilient Telco Platform. Each
+	     process group is contained once for each computing element.
+
+	     For each startup process group there can be zero, one or more
+	     corresponding rows in the rtpProcessGroupDepTable specifying
+	     startup groups on which this startup group depends."
+	::= { rtpProcessNodeMgmt 2 }
+
+	rtpProcessGroupTableEntry OBJECT-TYPE
+	    SYNTAX  RtpProcessGroupTableEntry
+	    MAX-ACCESS  not-accessible
+	    STATUS  current
+	    DESCRIPTION
+		"A conceptual row of the rtpProcessGroupTable. The rtpGtIndex
+		 serves as index."
+	    INDEX   { rtpGtIndex }
+	    ::= { rtpProcessGroupTable 1 }
+
+	RtpProcessGroupTableEntry ::=
+	    SEQUENCE {
+		rtpGtIndex		Integer32,
+		rtpGtGroupName 		NodeNameString,
+		rtpGtAvailable		ProcessGroupStatus,
+		rtpGtStartMode		ProcessGroupStartMode,
+		rtpGtCeName 		NodeNameString
+	    }
+
+	rtpGtIndex OBJECT-TYPE
+	    SYNTAX  Integer32
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION
+		"Auxiliary variable used to identify instance of the columnar
+		 objects in the rtpProcessGroupTable."
+	    ::= { rtpProcessGroupTableEntry 1 }
+
+	rtpGtGroupName OBJECT-TYPE
+	    SYNTAX NodeNameString
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION
+		"Textual name of the startup process group; unique on the whole
+		 cluster."
+	    ::= { rtpProcessGroupTableEntry 2 }
+
+	rtpGtAvailable OBJECT-TYPE
+	    SYNTAX  ProcessGroupStatus
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION "Availability state of the startup process group."
+	    ::= { rtpProcessGroupTableEntry 3 }
+
+	rtpGtStartMode OBJECT-TYPE
+	    SYNTAX  ProcessGroupStartMode
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION "The start mode for the startup process group."
+	    ::= { rtpProcessGroupTableEntry 4 }
+
+	rtpGtCeName OBJECT-TYPE
+	    SYNTAX NodeNameString
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION
+		"Textual name of the computing element (node of the cluster) on
+		 which the process group is running."
+	    ::= { rtpProcessGroupTableEntry 5 }
+
+    --
+    -- Startup Process Group Dependency Table
+    --
+
+    rtpProcessGroupDepTable OBJECT-TYPE
+	SYNTAX  SEQUENCE OF RtpProcessGroupDepTableEntry
+	MAX-ACCESS  not-accessible
+	STATUS  current
+	DESCRIPTION
+	    "The rtpProcessGroupDepTable represents the dependencies among
+	     startup process groups defined in rtpProcessGroupTable. The Node
+	     Manager makes sure that all of the startup groups that a particular
+	     startup group depends on are running before that group is started.
+	     During the shutdown phase, the dependencies are also taken into
+	     account."
+	::= { rtpProcessNodeMgmt 3 }
+
+	rtpProcessGroupDepTableEntry OBJECT-TYPE
+	    SYNTAX  RtpProcessGroupDepTableEntry
+	    MAX-ACCESS  not-accessible
+	    STATUS  current
+	    DESCRIPTION
+		"A conceptual row of the rtpProcessGroupDepTable.
+		 The rtpGdtIndex serves as index."
+	    INDEX   { rtpGdtIndex }
+	    ::= { rtpProcessGroupDepTable 1 }
+
+	RtpProcessGroupDepTableEntry ::=
+	    SEQUENCE {
+		rtpGdtIndex		Integer32,
+		rtpGdtGroupName 	NodeNameString,
+		rtpGdtDependency	NodeNameString
+	    }
+
+	rtpGdtIndex OBJECT-TYPE
+	    SYNTAX  Integer32
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION
+		"Auxiliary variable used to identify instances of the columnar
+		 objects in the rtpProcessGroupDepTable."
+	    ::= { rtpProcessGroupDepTableEntry 1 }
+
+	rtpGdtGroupName OBJECT-TYPE
+	    SYNTAX NodeNameString
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION
+		"Textual name of the startup process group corresponding with
+		 'rtpGtGroupName' in 'rtpProcessGroupTable'; unique on the whole
+		 cluster."
+	    ::= { rtpProcessGroupDepTableEntry 2 }
+
+	rtpGdtDependency OBJECT-TYPE
+	    SYNTAX NodeNameString
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION
+		"Textual name of the startup process group which the group in
+		 rtpGdtGroupName depends on."
+	    ::= { rtpProcessGroupDepTableEntry 3 }
+
+
+    --
+    -- Process Overview Table
+    --
+
+    rtpProcessInfoTable OBJECT-TYPE
+	SYNTAX  SEQUENCE OF RtpProcessInfoTableEntry
+	MAX-ACCESS  not-accessible
+	STATUS  current
+	DESCRIPTION
+	    "The rtpProcessInfoTable represents the processes running under the
+	     control of the Resilient Telco Platform. For each process only the
+	     major information is contained. The rtpProcessDetailsTable
+	     augments this table and contains more detailed information about
+	     single processes."
+	::= { rtpProcessNodeMgmt 4 }
+
+	rtpProcessInfoTableEntry OBJECT-TYPE
+	    SYNTAX  RtpProcessInfoTableEntry
+	    MAX-ACCESS  not-accessible
+	    STATUS  current
+	    DESCRIPTION
+		"A conceptual row of the rtpProcessInfoTable. The rtpPtIndex
+		 serves as index."
+	    INDEX   { rtpPtIndex }
+	    ::= { rtpProcessInfoTable 1 }
+
+	RtpProcessInfoTableEntry ::=
+	    SEQUENCE {
+		rtpPtIndex		Integer32,
+		rtpPtLogicalName 	NodeNameString,
+		rtpPtCeName		NodeNameString,
+		rtpPtGroupName		NodeNameString,
+		rtpPtAvailable		ProcessStatus,
+		rtpPtStatusDetail	ProcessStatusDetail,
+		rtpPtConfigured		Boolean
+	    }
+
+	rtpPtIndex OBJECT-TYPE
+	    SYNTAX  Integer32
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION
+		"Auxiliary variable used to identify instance of the columnar
+		 objects in the rtpProcessInfoTable."
+	    ::= { rtpProcessInfoTableEntry 1 }
+
+	rtpPtLogicalName OBJECT-TYPE
+	    SYNTAX  NodeNameString
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION
+		"Textual name of the process; unique on the whole cluster"
+	    ::= { rtpProcessInfoTableEntry 2 }
+
+	rtpPtCeName OBJECT-TYPE
+	    SYNTAX NodeNameString
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION
+		"Textual name of the computing element (node of the cluster) on
+		 which the process is running."
+	    ::= { rtpProcessInfoTableEntry 3 }
+
+	rtpPtGroupName OBJECT-TYPE
+	    SYNTAX NodeNameString
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION
+		"Textual name of the startup process group to which the
+		 process is assigned. (Is empty if process has been started
+		 manually, i.e. not during startup of the platform.)"
+	    ::= { rtpProcessInfoTableEntry 4 }
+
+	rtpPtAvailable OBJECT-TYPE
+	    SYNTAX  ProcessStatus
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION "Availability state of the process."
+	    ::= { rtpProcessInfoTableEntry 5 }
+
+	rtpPtStatusDetail OBJECT-TYPE
+	    SYNTAX  ProcessStatusDetail
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION
+		"Additional information related to the availability
+		 state of the process."
+	    ::= { rtpProcessInfoTableEntry 6 }
+
+	rtpPtConfigured OBJECT-TYPE
+	    SYNTAX  Boolean
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION
+		"If true, the process is configured in the startup process
+		 table. Otherwise it has been started dynamically, i.e. without
+		 having been configured before."
+	    ::= { rtpProcessInfoTableEntry 7 }
+
+
+    --
+    -- Process Details Table
+    --
+
+    rtpProcessDetailsTable OBJECT-TYPE
+	SYNTAX  SEQUENCE OF RtpProcessDetailsTableEntry
+	MAX-ACCESS  not-accessible
+	STATUS  current
+	DESCRIPTION
+	    "The rtpProcessDetailsTable augments the rtpProcessInfoTable and
+	     contains more detailed information for each process. While
+	     rtpProcessInfoTable should be used to obtain an overview about ALL
+	     processes, the purpose of rtpProcessDetailsTable is to get details
+	     about SINGLE processes."
+	::= { rtpProcessNodeMgmt 5 }
+
+	rtpProcessDetailsTableEntry OBJECT-TYPE
+	    SYNTAX  RtpProcessDetailsTableEntry
+	    MAX-ACCESS  not-accessible
+	    STATUS  current
+	    DESCRIPTION
+		"An entry containing additional process information."
+	    AUGMENTS   { rtpProcessInfoTableEntry }
+	    ::= { rtpProcessDetailsTable 1 }
+
+	RtpProcessDetailsTableEntry ::=
+	    SEQUENCE {
+		rtpPdtExecutableFile		OCTET STRING,
+		rtpPdtParameterList			OCTET STRING,
+		rtpPdtPid					Integer32,
+		rtpPdtRestartFlag			Boolean,
+		rtpPdtGroupPosition			Integer32,
+		rtpPdtKeepQueue				Boolean,
+		rtpPdtQueueStatus			QueueStatus,
+		rtpPdtQueueLength			Integer32,
+		rtpPdtHighPrioQueueLength	Integer32,
+		rtpPdtBytesUsed				Integer32,
+		rtpPdtHighPrioBytesUsed		Integer32,
+		rtpPdtNumberOfMessages		Integer32,
+		rtpPdtHighPrioNumberOfMessages	Integer32,
+		rtpPdtTimeUntilReady		TimeIntervalMillis,
+		rtpPdtRestartTimeUntilReady	TimeIntervalMillis,
+		rtpPdtHealthCheckInterval	TimeIntervalMillis,
+		rtpPdtHealthCheckTimeout	TimeIntervalMillis,
+		rtpPdtFirstStartTime		TimeStampSeconds,
+		rtpPdtLastExitTime			TimeStampSeconds,
+		rtpPdtRestartCount			Integer32
+	    }
+
+	rtpPdtExecutableFile OBJECT-TYPE
+	    SYNTAX  OCTET STRING (SIZE (0..255))
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION
+		"Path and file name of the process' executable file."
+	    ::= { rtpProcessDetailsTableEntry 1 }
+
+	rtpPdtParameterList OBJECT-TYPE
+	    SYNTAX OCTET STRING (SIZE (0..255))
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION
+		"The command line parameters."
+	    ::= { rtpProcessDetailsTableEntry 2 }
+
+	rtpPdtPid OBJECT-TYPE
+	    SYNTAX  Integer32
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION
+		"The numerical process identifier on operating system level."
+	    ::= { rtpProcessDetailsTableEntry 3 }
+
+	rtpPdtRestartFlag OBJECT-TYPE
+	    SYNTAX  Boolean
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION
+		"If true, the process is configured to be restarted
+		 automatically after failure."
+	    ::= { rtpProcessDetailsTableEntry 4 }
+
+	rtpPdtGroupPosition OBJECT-TYPE
+	    SYNTAX  Integer32
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION
+		"Position within startup process group if the process group's
+		 rtpGtStartMode is START-SEQUENCE (no meaning if rtpGtStartMode
+		 has any other value)."
+	    ::= { rtpProcessDetailsTableEntry 5 }
+
+	rtpPdtKeepQueue OBJECT-TYPE
+	    SYNTAX  Boolean
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION
+		"If true, the IPC message queue of the process will be kept
+		 after exit of the process."
+	    ::= { rtpProcessDetailsTableEntry 6 }
+
+	rtpPdtQueueStatus OBJECT-TYPE
+	    SYNTAX  QueueStatus
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION
+		"The availability status of the process' IPC message queue."
+	    ::= { rtpProcessDetailsTableEntry 7 }
+
+	rtpPdtQueueLength OBJECT-TYPE
+	    SYNTAX  Integer32
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION
+		"Length in bytes of the 'regular' message queue."
+	    ::= { rtpProcessDetailsTableEntry 8 }
+
+	rtpPdtHighPrioQueueLength OBJECT-TYPE
+	    SYNTAX  Integer32
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION
+		"Length in bytes of the 'high priority' message queue."
+	    ::= { rtpProcessDetailsTableEntry 9 }
+
+	rtpPdtBytesUsed OBJECT-TYPE
+	    SYNTAX  Integer32
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION
+		"Number of used bytes in the 'regular' message queue."
+	    ::= { rtpProcessDetailsTableEntry 10 }
+
+	rtpPdtHighPrioBytesUsed OBJECT-TYPE
+	    SYNTAX  Integer32
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION
+		"Number of used bytes in the 'high priority' message queue."
+	    ::= { rtpProcessDetailsTableEntry 11 }
+
+	rtpPdtNumberOfMessages OBJECT-TYPE
+	    SYNTAX  Integer32
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION
+		"Number of messages in the 'regular' message queue."
+	    ::= { rtpProcessDetailsTableEntry 12 }
+
+	rtpPdtHighPrioNumberOfMessages OBJECT-TYPE
+	    SYNTAX  Integer32
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION
+		"Number of messages in the 'high priority' message queue."
+	    ::= { rtpProcessDetailsTableEntry 13 }
+
+	rtpPdtTimeUntilReady OBJECT-TYPE
+	    SYNTAX  TimeIntervalMillis
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION
+		"Maximum time interval (in milliseconds) after start
+		 until the process switches into state status-running."
+	    ::= { rtpProcessDetailsTableEntry 14 }
+
+	rtpPdtRestartTimeUntilReady OBJECT-TYPE
+	    SYNTAX  TimeIntervalMillis
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION
+		"Maximum time interval (in milliseconds) after restart
+		 until the process switches into state status-running."
+	    ::= { rtpProcessDetailsTableEntry 15 }
+
+	rtpPdtHealthCheckInterval OBJECT-TYPE
+	    SYNTAX  TimeIntervalMillis
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION
+		"Time interval (in milliseconds) between two health
+		 check messages. If set to 0, no health checking will be done."
+	    ::= { rtpProcessDetailsTableEntry 16 }
+
+	rtpPdtHealthCheckTimeout OBJECT-TYPE
+	    SYNTAX  TimeIntervalMillis
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION
+		"Time interval (in milliseconds) after which a health
+		 check message times out. Must be less than
+		 rtpPdtHealthCheckInterval. (Meaningless if
+		 rtpPdtHealthCheckInterval is 0.)"
+	    ::= { rtpProcessDetailsTableEntry 17 }
+
+	rtpPdtFirstStartTime OBJECT-TYPE
+	    SYNTAX  TimeStampSeconds
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION
+		"Time when process was started for the first time (usually the
+		 time when the Node Manager started the whole platform or the
+		 time when it was started manually).
+		 If 0 the process has not been started, yet."
+	    ::= { rtpProcessDetailsTableEntry 18 }
+
+	rtpPdtLastExitTime OBJECT-TYPE
+	    SYNTAX  TimeStampSeconds
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION
+		"Time when process exited for the last time (e.g. due to a
+		 crash). If 0 the process has not exited, yet.
+
+		 This object is only meaningful for configured processes
+		 that are started by the node manager. The value of this object
+		 will be reset to 0 for a process that has explicitly been
+		 stopped by administrator intervention."
+	    ::= { rtpProcessDetailsTableEntry 19 }
+
+	rtpPdtRestartCount OBJECT-TYPE
+	    SYNTAX  Integer32
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION
+		"Number of times the process has been restarted after its first
+		 start (indicated in rtpPdtFirstStartTime).
+
+		 The value of this object will be reset to 0 for a process that
+		 has explicitly been stopped by administrator intervention."
+	    ::= { rtpProcessDetailsTableEntry 20 }
+
+
+    --
+    -- IPC Alias Table
+    --
+
+    rtpAliasInfoTable OBJECT-TYPE
+	SYNTAX  SEQUENCE OF RtpAliasInfoTableEntry
+	MAX-ACCESS  not-accessible
+	STATUS  current
+	DESCRIPTION
+	    "The rtpAliasInfoTable represents the IPC aliases that are currently
+	     defined on the cluster of the Resilient Telco Platform."
+	::= { rtpProcessNodeMgmt 6 }
+
+	rtpAliasInfoTableEntry OBJECT-TYPE
+	    SYNTAX  RtpAliasInfoTableEntry
+	    MAX-ACCESS  not-accessible
+	    STATUS  current
+	    DESCRIPTION
+		"A conceptual row of the rtpAliasInfoTable. The rtpAtIndex
+		 serves as index."
+	    INDEX   { rtpAtIndex }
+	    ::= { rtpAliasInfoTable 1 }
+
+	RtpAliasInfoTableEntry ::=
+	    SEQUENCE {
+		rtpAtIndex		Integer32,
+		rtpAtAliasName 		NodeNameString,
+		rtpAtAvailable		QueueStatus,
+		rtpAtType		AliasType
+	    }
+
+	rtpAtIndex OBJECT-TYPE
+	    SYNTAX  Integer32
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION
+		"Auxiliary variable used to identify instances of the columnar
+		 objects in rtpAliasInfoTable."
+	    ::= { rtpAliasInfoTableEntry 1 }
+
+	rtpAtAliasName OBJECT-TYPE
+	    SYNTAX NodeNameString
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION
+		"Textual name of the IPC alias; unique on the whole cluster."
+	    ::= { rtpAliasInfoTableEntry 2 }
+
+	rtpAtAvailable OBJECT-TYPE
+	    SYNTAX  QueueStatus
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION "Availability state of the IPC alias."
+	    ::= { rtpAliasInfoTableEntry 3 }
+
+	rtpAtType OBJECT-TYPE
+	    SYNTAX  AliasType
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION "The type of the IPC alias."
+	    ::= { rtpAliasInfoTableEntry 4 }
+
+
+    --
+    -- IPC Alias Member Table
+    --
+
+    rtpAliasMemberTable OBJECT-TYPE
+	SYNTAX  SEQUENCE OF RtpAliasMemberTableEntry
+	MAX-ACCESS  not-accessible
+	STATUS  current
+	DESCRIPTION
+	    "The rtpAliasMemberTable represents the IPC alias members that are
+	     currently defined on the cluster of the Resilient Telco Platform."
+	::= { rtpProcessNodeMgmt 7 }
+
+	rtpAliasMemberTableEntry OBJECT-TYPE
+	    SYNTAX  RtpAliasMemberTableEntry
+	    MAX-ACCESS  not-accessible
+	    STATUS  current
+	    DESCRIPTION
+		"A conceptual row of the rtpAliasMemberTable. The rtpAmtIndex
+		 serves as index."
+	    INDEX   { rtpAmtIndex }
+	    ::= { rtpAliasMemberTable 1 }
+
+	RtpAliasMemberTableEntry ::=
+	    SEQUENCE {
+		rtpAmtIndex		Integer32,
+		rtpAmtAliasName 	NodeNameString,
+		rtpAmtMemberName 	NodeNameString,
+		rtpAmtAvailable		QueueStatus,
+		rtpAmtPriority		Integer32,
+		rtpAmtBackupState	AliasBackupState
+	    }
+
+	rtpAmtIndex OBJECT-TYPE
+	    SYNTAX  Integer32
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION
+		"Auxiliary variable used to identify instances of the columnar
+		 objects in rtpAliasMemberTable."
+	    ::= { rtpAliasMemberTableEntry 1 }
+
+	rtpAmtAliasName OBJECT-TYPE
+	    SYNTAX NodeNameString
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION
+		"Textual name of the IPC alias to which the member belongs;
+		 unique on the whole cluster. Corresponds with 'rtpAtAliasName'
+		 in 'rtpAliasInfoTable'."
+	    ::= { rtpAliasMemberTableEntry 2 }
+
+	rtpAmtMemberName OBJECT-TYPE
+	    SYNTAX NodeNameString
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION
+		"Textual name of the IPC alias member, i.e. the logical name
+		 of a process; unique on the whole cluster."
+	    ::= { rtpAliasMemberTableEntry 3 }
+
+	rtpAmtAvailable OBJECT-TYPE
+	    SYNTAX  QueueStatus
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION "Availability state of the IPC alias member."
+	    ::= { rtpAliasMemberTableEntry 4 }
+
+	rtpAmtPriority OBJECT-TYPE
+	    SYNTAX  Integer32
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION "Priority of the IPC alias member to become
+			 'primary backup' if the alias has the type
+			 alias-backup or alias-persistent-backup; otherwise
+			 unused."
+	    ::= { rtpAliasMemberTableEntry 5 }
+
+	rtpAmtBackupState OBJECT-TYPE
+	    SYNTAX  AliasBackupState
+	    MAX-ACCESS  read-only
+	    STATUS  current
+	    DESCRIPTION "The backup state of the IPC alias member if the alias
+			 has the type alias-backup or alias_persistent_backup."
+	    ::= { rtpAliasMemberTableEntry 6 }
+
+    --
+    -- Process Traps
+    --
+
+    rtpProcessNodeTraps OBJECT-IDENTITY
+	STATUS current
+	DESCRIPTION
+	    "The traps for the Process & Node Management Functionality."
+	::= { rtpProcessNodeMgmt 8 }
+
+	rtpProcessUpdateTrap NOTIFICATION-TYPE
+		OBJECTS { rtpClusterName
+		}
+	    STATUS  obsolete
+	    DESCRIPTION
+		"This Trap is sent when any of the process-related data
+		 (including process startup groups, IPC aliases) has changed.
+		 This might be the case when some process has changed its state
+		 or some of the process-related configuration has been updated.
+		 (Whether this trap is generated depends on the RTP subagent's
+		 configuration.)"
+	    ::= { rtpProcessNodeTraps 1 }
+
+
+	rtpProcessUpdateTrapInfo OBJECT-TYPE
+	    SYNTAX INTEGER { processStateChange(2),
+			     processConfigurationUpdate(3),
+			     processGroupConfigurationUpdate(4),
+			     aliasConfigurationUpdate(5)
+			   }
+	    MAX-ACCESS  not-accessible
+	    STATUS  obsolete
+	    DESCRIPTION
+		"This object is sent as part of a rtpProcessUpdateTrap and
+		 indicates which kind of Process & Node objects has been
+		 updated.
+
+		 - processStateChange: the status of a process
+				       (in rtpPtAvailable) has changed (this
+				       might have affected the state of a
+				       process group, node or IPC alias)
+
+		 - processConfigurationUpdate: the configuration data of a
+					       process has been changed by
+					       operator intervention
+
+		 - processGroupConfigurationUpdate: the configuration data of a
+						    startup process group has
+						    been changed by operator
+						    intervention
+
+		 - aliasConfigurationUpdate: the configuration data of an
+					     IPC alias has been changed by
+					     operator intervention
+		"
+	    ::= { rtpProcessNodeTraps 2 }
+
+
+END
+

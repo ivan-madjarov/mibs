@@ -1,0 +1,761 @@
+
+KAVWSEE-MIB DEFINITIONS ::= BEGIN
+
+--
+-- Kaspersky Lab MIB tree for Kaspersky Antivirus for Windows Servers Enterprise Edition
+--
+
+IMPORTS
+	NOTIFICATION-TYPE, OBJECT-TYPE, OBJECT-IDENTITY, MODULE-IDENTITY, Unsigned32, TimeTicks
+		FROM SNMPv2-SMI
+	DisplayString, DateAndTime
+		FROM SNMPv2-TC
+	kaspersky
+		FROM KASPERSKY-MIB;
+
+kavwsee MODULE-IDENTITY
+	LAST-UPDATED "200811111552Z"
+	ORGANIZATION 
+		"Kaspersky Lab Ltd."
+	CONTACT-INFO 
+		"Phone:  +7 (495) 797-87-00
+		 E-mail:  sales@kaspersky.com
+		 Web:     http://www.kaspersky.com; http://www.viruslist.com
+		 Support: http://support.kaspersky.com/"
+	DESCRIPTION 
+		"MIB file for Kaspersky Antivirus 8.0 for Windows Servers, Enterprise Edition."
+::= { kaspersky 1193 }
+
+
+counters  OBJECT-IDENTITY
+	STATUS     current
+	DESCRIPTION 
+		"Settings and statistics for operation of the anti-virus application and its subsystems."
+	::= { kavwsee 1 }
+
+traps  OBJECT-IDENTITY
+	STATUS     current
+	DESCRIPTION 
+		"Events occurring during the application's operation."
+	::= { kavwsee 0 }
+
+performanceCounters  OBJECT-IDENTITY
+	STATUS     current
+	DESCRIPTION 
+		"Operation indicators for the file interception subsystem."
+	::= { counters 1 }
+
+eventVars            OBJECT IDENTIFIER ::= { traps 1 }
+
+currentRequestsAmount OBJECT-TYPE
+	SYNTAX     Unsigned32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Number of requests currently being processed."
+	::= { performanceCounters 1 }
+
+currentInfectedQueueLength OBJECT-TYPE
+	SYNTAX     Unsigned32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Number of items currently in the queue of infected objects, waiting to be processed."
+	::= { performanceCounters 2 }
+
+currentWorkProcessesNumber  OBJECT-TYPE
+	SYNTAX     Unsigned32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Current number of working processes."
+	::= { performanceCounters 3 }
+
+currentObjectProcessingRate OBJECT-TYPE
+	SYNTAX     Unsigned32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Number of objects processed per second."
+	::= { performanceCounters 4 }
+
+updaterCounters  OBJECT-IDENTITY
+	STATUS     current
+	DESCRIPTION 
+		"Update subsystem statistics."
+	::= { counters 2 }
+	
+avBasesAge  OBJECT-TYPE
+	SYNTAX     TimeTicks
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Age of anti-virus database (time elapsed in hundreds of seconds since the database's release date)."
+	DEFVAL { 0 }
+	::= { updaterCounters 1 }
+	
+onAccessScanningCounters  OBJECT-IDENTITY
+	STATUS     current
+	DESCRIPTION 
+		"Statistics for the real-time file protection task."
+	::= { counters 3 }
+	
+totalObjectsProcessed  OBJECT-TYPE
+	SYNTAX     Counter32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Total number of objects processed since the last real-time file protection task was run."
+	::= { onAccessScanningCounters 1 }
+	
+totalInfectedObjectsFound  OBJECT-TYPE
+	SYNTAX     Counter32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Total number of infected objects detected (viruses) since the last real-time file protection task was run."
+	::= { onAccessScanningCounters 2 }
+	
+totalSuspiciousObjectsFound  OBJECT-TYPE
+	SYNTAX     Counter32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Total number of suspicious objects detected (viruses) since the last real-time file protection task was run."
+	::= { onAccessScanningCounters 3 }
+	
+totalObjectsQuarantined OBJECT-TYPE
+	SYNTAX     Counter32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Total number of objects quarantined since the last real-time file protection task was run."
+	::= { onAccessScanningCounters 4 }
+	
+totalObjectsNotQuarantined OBJECT-TYPE
+	SYNTAX     Counter32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION
+		"Total number of objects not quarantined since the last real-time file protection task was run." 
+	::= { onAccessScanningCounters 5 }
+	
+totalObjectsDisinfected OBJECT-TYPE
+	SYNTAX     Counter32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Total number of objects disinfected since the last real-time file protection task was run."
+	::= { onAccessScanningCounters 6 }
+	
+totalObjectsNotDisinfected OBJECT-TYPE
+	SYNTAX     Counter32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Total number of objects not disinfected since the last real-time file protection task was run."
+	::= { onAccessScanningCounters 7 }
+	
+totalObjectsDeleted OBJECT-TYPE
+	SYNTAX     Counter32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Total number of objects deleted since the last real-time file protection task was run."
+	::= { onAccessScanningCounters 8 }
+	
+totalObjectsNotDeleted OBJECT-TYPE
+	SYNTAX     Counter32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Total number of objects not deleted since the last real-time file protection task was run."
+	::= { onAccessScanningCounters 9 }
+	
+totalObjectsBackedUp OBJECT-TYPE
+	SYNTAX     Counter32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Total number of objects backed up since the last real-time file protection task was run."
+	::= { onAccessScanningCounters 10 }
+	
+totalObjectsNotBackedUp OBJECT-TYPE
+	SYNTAX     Counter32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Total number of objects not backed up since the last real-time file protection task was run."
+	::= { onAccessScanningCounters 11 }
+	
+totalVirusesFound OBJECT-TYPE
+	SYNTAX     Counter32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Total number of viruses (unique signatures) found since the last real-time file protection task was run."
+	::= { onAccessScanningCounters 12 }
+	
+quarantineCounters  OBJECT-IDENTITY
+	STATUS     current
+	DESCRIPTION 
+		"Quarantine statistics."
+	::= { counters 4 }
+	
+totalObjects  OBJECT-TYPE
+	SYNTAX     Unsigned32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Total number of objects in Quarantine."
+	::= { quarantineCounters 1 }
+	
+totalSuspiciousObjects  OBJECT-TYPE
+	SYNTAX     Unsigned32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Number of suspicious objects in Quarantine."
+	::= { quarantineCounters 2 }
+	
+currentStorageSize  OBJECT-TYPE
+	SYNTAX     Unsigned32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Current total size of objects in Quarantine (in MB)."
+	::= { quarantineCounters 3 }
+	
+backupCounters  OBJECT-IDENTITY
+	STATUS     current
+	DESCRIPTION 
+		"Backup statistics."
+	::= { counters 5 }
+	
+currentBackupStorageSize  OBJECT-TYPE
+	SYNTAX     Unsigned32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Current total size of objects in Backup (in MB)."
+	::= { backupCounters 1 }
+	
+commonCounters  OBJECT-IDENTITY
+	STATUS     current
+	DESCRIPTION 
+		"Overall statistics and settings for application performance."
+	::= { counters 7 }
+
+currentApplicationUptime  OBJECT-TYPE
+	SYNTAX     TimeTicks
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Duration of the application's operation (in hundreds of seconds since the last time started)"
+	DEFVAL { 0 }
+	::= { commonCounters 1 }
+	
+currentFileMonitorTaskStatus  OBJECT-TYPE
+	SYNTAX     INTEGER { off(0), on(1) }
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Status of the real-time protection task (on/off)."
+	DEFVAL { off }
+	::= { commonCounters 2 }
+	
+currentScriptCheckerTaskStatus  OBJECT-TYPE
+	SYNTAX     INTEGER { off(0), on(1) }
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Status of the real-time script monitor (on/off)."
+	DEFVAL { off }
+	::= { commonCounters 3 }
+	
+lastCriticalAreasScanAge  OBJECT-TYPE
+	SYNTAX     TimeTicks
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Time (in seconds) since the last complete critical areas scan."
+	::= { commonCounters 4 }
+	
+licenseExpirationDate  OBJECT-TYPE
+	SYNTAX     DateAndTime
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"License expiration date."
+	::= { commonCounters 5 }
+
+
+scriptCheckerCounters  OBJECT-IDENTITY
+	STATUS     current
+	DESCRIPTION 
+		"Statistics for the script checker subsystem."
+	::= { counters 8 }
+	
+totalScriptsProcessed OBJECT-TYPE
+	SYNTAX     Counter32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Total number of scripts processed since the last script monitoring task was run."
+	DEFVAL { 0 }
+	::= { scriptCheckerCounters 1 }
+
+totalInfectedIDangerousScriptsFound OBJECT-TYPE
+	SYNTAX     Counter32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Total number of dangerous scripts detected since the last script monitoring task was run."
+	DEFVAL { 0 }
+	::= { scriptCheckerCounters 2 }
+
+totalSuspiciousScriptsFound OBJECT-TYPE
+	SYNTAX     Counter32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Total number of suspicious scripts detected since the last script monitoring task was run."
+	DEFVAL { 0 }
+	::= { scriptCheckerCounters 3 }
+
+totalScriptsBlocked OBJECT-TYPE
+	SYNTAX     Counter32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Total number of scripts blocked since the last script monitoring task was run."
+	DEFVAL { 0 }
+	::= { scriptCheckerCounters 4 }
+
+
+-- Event vars
+
+eventDateAndTime  OBJECT-TYPE
+	SYNTAX     DateAndTime
+	MAX-ACCESS accessible-for-notify
+	STATUS     current
+	DESCRIPTION 
+		"Time at which the event occurred."
+	::= { eventVars 1 }
+
+eventSeverity  OBJECT-TYPE
+	SYNTAX     INTEGER {
+		critical (1),
+		warning (2),
+		info (3)
+			}
+	MAX-ACCESS accessible-for-notify
+	STATUS     current
+	DESCRIPTION 
+		"Event severity (critical, warning, informational)."
+	::= { eventVars 2 }
+
+userName  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS accessible-for-notify
+	STATUS     current
+	DESCRIPTION 
+		"Username (for example, name of the user who attempted to access an infected file)."
+	::= { eventVars 3 }
+
+computerName  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS accessible-for-notify
+	STATUS     current
+	DESCRIPTION 
+		"Computer name (for example, name of the computer from which the user attempted to access an infected file)."
+	::= { eventVars 4 }
+
+eventSource  OBJECT-TYPE
+	SYNTAX     INTEGER {
+		unknown (0),
+		quarantine (1),
+		backup (2),
+		reporting (3),
+		updates (4),
+		realTimeProtection (5),
+		onDemandScanning (6),
+		product (7),
+		systemAudit (8)
+	}
+	MAX-ACCESS accessible-for-notify
+	STATUS     current
+	DESCRIPTION 
+		"Event source, indicating the subsystem that generated this event: 'quarantine' - quarantine; 'backup' - backup; 'reporting' - reporting subsystem; 'updates' - update subsystem; 'real-time-protection' - real-time file protection task; 'on-demand-scanning' - on-demand scan task;  'pProduct' - service side;  'system-audit' - audit subsystem."
+	::= { eventVars 5 }
+
+eventReason  OBJECT-TYPE
+	SYNTAX     INTEGER {
+		reasonUnknown (0),
+		reasonInvalidSettings (1)
+	}
+	MAX-ACCESS accessible-for-notify
+	STATUS     current
+	DESCRIPTION 
+		"Reason for event: 'reasonUnknown' - reason not defined; 'reasonInvalidSettings' - invalid Quarantine settings."
+	::= { eventVars 6 }
+
+objectName  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS accessible-for-notify
+	STATUS     current
+	DESCRIPTION 
+		"Object name (for example, name of the file in which the virus was detected)."
+	::= { eventVars 7 }
+
+threatName  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS accessible-for-notify
+	STATUS     current
+	DESCRIPTION 
+		"Threat name."
+	::= { eventVars 8 }
+
+detectType  OBJECT-TYPE
+	SYNTAX     INTEGER {
+		undefined (0),
+		virware (1),
+		trojware (2),
+		malware (3),
+		adware (4),
+		pornware (5),
+		riskware (6),
+		xfiles (7),
+		software (8),
+		undetect (9),
+		vulnerability (10)
+	}
+	MAX-ACCESS accessible-for-notify
+	STATUS     current
+	DESCRIPTION 
+		"Threat type (undefined, virware, trojware, malware, adware, pornware, riskware, xfiles, software, undetect, vulnerability)"
+	::= { eventVars 9 }
+
+detectCertainty  OBJECT-TYPE
+	SYNTAX     INTEGER {
+		undefined (0),
+		sure (1),
+		warning (2),
+		suspicion (3)
+	}
+	MAX-ACCESS accessible-for-notify
+	STATUS     current
+	DESCRIPTION 
+		"Certainty level for threat detection (undefined, sure, warning, suspicion)."
+	::= { eventVars 10 }
+
+days  OBJECT-TYPE
+	SYNTAX     Unsigned32
+	MAX-ACCESS accessible-for-notify
+	STATUS     current
+	DESCRIPTION 
+		"Number of days (for example, the number of days until the license expires)."
+	::= { eventVars 11 }
+
+errorCode  OBJECT-TYPE
+	SYNTAX     Unsigned32
+	MAX-ACCESS accessible-for-notify
+	STATUS     current
+	DESCRIPTION 
+		"Error code."
+	::= { eventVars 12 }
+
+knowledgeBaseId  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS accessible-for-notify
+	STATUS     current
+	DESCRIPTION 
+		"Address of related knowledge base article (for example, the address of an article that explains a particular error)."
+	::= { eventVars 13 }
+
+taskName  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS accessible-for-notify
+	STATUS     current
+	DESCRIPTION 
+		"Task name."
+	::= { eventVars 14 }
+	
+updaterErrorEventReason  OBJECT-TYPE
+	SYNTAX     INTEGER {
+		reasonUnknown (0),
+		reasonAccessDenied (1),
+		reasonUrlsExhausted (2),
+		reasonInvalidConfig (3),
+		reasonInvalidSignature (4),
+		reasonCantCreateFolder (5),
+		reasonFileOperError (6),
+		reasonDataCorrupted (7),
+		reasonConnectionReset (8),
+		reasonTimeOut (9),
+		reasonProxyAuthError (10),
+		reasonServerAuthError (11),
+		reasonHostNotFound (12),
+		reasonServerBusy (13),
+		reasonConnectionError (14),
+		reasonModuleNotFound (15),
+		reasonBlstCheckFailed (16)
+	}
+	MAX-ACCESS accessible-for-notify
+	STATUS     current
+	DESCRIPTION 
+		"Reason for the updater error event: 'reasonUnknown' - reason not defined; 'reasonAccessDenied' - access denied; 'reasonUrlsExhausted' - the list of update sources is exhausted; 'reasonInvalidConfig' - invalid configuration file; 'reasonInvalidSignature' - invalid signature; 'reasonCantCreateFolder' - cannot create folder; 'reasonFileOperError' - file operation error; 'reasonDataCorrupted' - object is corrupted; 'reasonConnectionReset' - connection reset; 'reasonTimeOut' - connection timeout expired; 'reasonProxyAuthError' - proxy server authentication error; 'reasonServerAuthError' - server authentication error; 'reasonHostNotFound' - computer not found; 'reasonServerBusy' - service unavailable; 'reasonConnectionError' - connection error; 'reasonModuleNotFound' - object not found; 'reasonBlstCheckFailed' - error checking black list of keys."
+	::= { eventVars 15 }
+
+storageObjectNotAddedEventReason OBJECT-TYPE
+	SYNTAX     INTEGER {
+		reasonUnknown(0),
+		reasonStorageInternalError(1),
+		reasonStorageReadOnly(2),
+		reasonStorageIOError(3),
+		reasonStorageCorrupted(4),
+		reasonStorageFull(5),
+		reasonStorageOpenError(6),
+		reasonStorageOSFeatureError(7),
+		reasonObjectNotFound(8),
+		reasonObjectAccessError(9),
+		reasonDiskOutOfSpace(10),
+		reasonActionNotSupported(11)
+	}
+	MAX-ACCESS accessible-for-notify
+	STATUS     current
+	DESCRIPTION 
+		"Reason for error while adding an object to a storage area: 'reasonUnknown' - reason not defined; 'reasonStorageInternalError' - an internal logical database error; 'reasonStorageReadOnly' - attempt to write to a readonly database; 'reasonStorageIOError' - input/output error; 'reasonStorageCorrupted' - database image on the disk is corrupted; 'reasonStorageFull' - insert error because of insufficient space in the database; 'reasonStorageOpenError' - error opening database file; 'reasonStorageOSFeatureError' - required OS features not supported by host; 'reasonObjectNotFound' - object not found; 'reasonObjectAccessError' - insufficient rights to use BACKUP API; 'reasonDiskOutOfSpace' - insufficient free space."
+	::= { eventVars 16 }
+
+processName  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS accessible-for-notify
+	STATUS     current
+	DESCRIPTION 
+		"Name of a process accessing the object."
+	::= { eventVars 17 }
+
+processID  OBJECT-TYPE
+	SYNTAX     Unsigned32
+	MAX-ACCESS accessible-for-notify
+	STATUS     current
+	DESCRIPTION 
+		"PID of a process accessing the object."
+	::= { eventVars 18 }
+
+-- Events
+
+eventThreatDetected  NOTIFICATION-TYPE
+	OBJECTS { eventDateAndTime,
+		eventSeverity,
+		computerName, 
+		userName,  
+		objectName,
+		threatName,
+		detectType,
+		detectCertainty,
+		processName,
+		processID
+		}
+	STATUS     current
+	DESCRIPTION 
+		"Threat detected. This event is generated when an infected or suspicious object is detected. Events vary in severity depending on the level of danger."
+	::= { traps 2 }
+
+eventBackupStorageSizeExceeds  NOTIFICATION-TYPE
+	OBJECTS { eventDateAndTime,
+		eventSeverity,
+		eventSource 
+		}
+	STATUS     current
+	DESCRIPTION 
+		"Maximum backup size exceeded. This event occurs if the actual backup size exceeds the maximum size defined in the application settings."
+	::= { traps 3 }
+
+eventThresholdBackupStorageSizeExceeds  NOTIFICATION-TYPE
+	OBJECTS { eventDateAndTime,
+		eventSeverity,
+		eventSource 
+		}
+	STATUS     current
+	DESCRIPTION 
+		"The backup minimum free space threshold has been exceeded. This event occurs when the difference between the actual backup size and the the maximum specified size is less than the threshold assigned in the application settings."
+	::= { traps 4 }
+
+eventQuarantineStorageSizeExceeds  NOTIFICATION-TYPE
+	OBJECTS { eventDateAndTime,
+		eventSeverity,
+		eventSource 
+		}
+	STATUS     current
+	DESCRIPTION 
+		"Maximum Quarantine size exceeded. This event occurs if the actual size of the Quarantine area exceeds the maximum size defined in the application settings."
+	::= { traps 5 }
+
+eventThresholdQuarantineStorageSizeExceeds  NOTIFICATION-TYPE
+	OBJECTS { eventDateAndTime,
+		eventSeverity,
+		eventSource 
+		}
+	STATUS     current
+	DESCRIPTION 
+		"The Quarantine minimum free space threshold has been exceeded. This event occurs when the difference between the actual Quarantine size and the maximum specified size is less than the threshold assigned in the application settings."
+	::= { traps 6 }
+
+eventQuarantineInternalError  NOTIFICATION-TYPE
+	OBJECTS { eventDateAndTime,
+		eventSeverity,
+		eventSource, 
+		eventReason
+		}
+	STATUS     current
+	DESCRIPTION 
+		"Internal Quarantine error."
+	::= { traps 7 }
+
+eventBackupInternalError  NOTIFICATION-TYPE
+	OBJECTS { eventDateAndTime,
+		eventSeverity,
+		eventSource, 
+		eventReason
+		}
+	STATUS     current
+	DESCRIPTION 
+		"Internal Backup error."
+	::= { traps 8 }
+	
+eventAVBasesOutdated  NOTIFICATION-TYPE
+	OBJECTS { eventDateAndTime,
+		eventSeverity,
+		eventSource, 
+		days
+		}
+	STATUS     current
+	DESCRIPTION 
+		"The anti-virus database is obsolete."
+	::= { traps 9 }
+	
+eventAVBasesTotallyOutdated NOTIFICATION-TYPE
+	OBJECTS { eventDateAndTime,
+		eventSeverity,
+		eventSource, 
+		days
+		}
+	STATUS     current
+	DESCRIPTION 
+		"The anti-virus database is critically obsolete."
+	::= { traps 10 }
+	
+	
+eventApplicationStarted NOTIFICATION-TYPE
+	OBJECTS { eventDateAndTime,
+		eventSeverity,
+		eventSource
+		}
+	STATUS     current
+	DESCRIPTION 
+		"Application started."
+	::= { traps 12 }
+	
+eventApplicationShutdown NOTIFICATION-TYPE
+	OBJECTS { eventDateAndTime,
+		eventSeverity,
+		eventSource
+		}
+	STATUS     current
+	DESCRIPTION 
+		"Application stopped."
+	::= { traps 13 }
+	
+eventCriticalAreasScanWasntPerformForALongTime NOTIFICATION-TYPE
+	OBJECTS { eventDateAndTime,
+		eventSeverity,
+		eventSource, 
+		days
+		}
+	STATUS     current
+	DESCRIPTION 
+		"Critical areas have not been scanned for a very long time."
+	::= { traps 14 }
+	
+eventLicenseHasExpired NOTIFICATION-TYPE
+	OBJECTS { eventDateAndTime,
+		eventSeverity,
+		eventSource
+		}
+	STATUS     current
+	DESCRIPTION 
+		"The license has expired."
+	::= { traps 15 }
+	
+eventLicenseExpiresSoon NOTIFICATION-TYPE
+	OBJECTS { eventDateAndTime,
+		eventSeverity,
+		eventSource, 
+		days
+		}
+	STATUS     current
+	DESCRIPTION 
+		"The license will expire soon."
+	::= { traps 16 }
+	
+eventTaskInternalError NOTIFICATION-TYPE
+	OBJECTS { eventDateAndTime,
+		eventSeverity,
+		eventSource,
+		errorCode,
+		knowledgeBaseId,
+		taskName
+		}
+	STATUS     current
+	DESCRIPTION 
+		"Task completion internal error."
+	::= { traps 17 }
+
+eventUpdateError NOTIFICATION-TYPE
+	OBJECTS { eventDateAndTime,
+		eventSeverity,
+		eventSource,
+		taskName,
+		updaterErrorEventReason
+		}
+	STATUS     current
+	DESCRIPTION 
+		"Update task completion error."
+	::= { traps 18 }
+
+eventObjectNotQuarantined NOTIFICATION-TYPE
+	OBJECTS { eventDateAndTime,
+		eventSeverity,
+		eventSource,
+		userName,
+		computerName,
+		objectName,
+		storageObjectNotAddedEventReason,
+		processName,
+		processID
+		}
+	STATUS     current
+	DESCRIPTION 
+		"Error occurred while adding object to quarantine storage area."
+	::= { traps 19 }
+
+eventObjectNotBackuped NOTIFICATION-TYPE
+	OBJECTS { eventDateAndTime,
+		eventSeverity,
+		eventSource,
+		userName,
+		computerName,
+		objectName,
+		storageObjectNotAddedEventReason,
+		processName,
+		processID
+		}
+	STATUS     current
+	DESCRIPTION 
+		"Error occurred while adding object to backup storage area."
+	::= { traps 20 }
+
+	
+END

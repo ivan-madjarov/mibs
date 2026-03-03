@@ -1,0 +1,7161 @@
+EIN2-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+                enterprises,
+                OBJECT-TYPE,
+                Integer32,
+                NOTIFICATION-TYPE,
+                MODULE-IDENTITY FROM SNMPv2-SMI;
+
+ein2Mib         MODULE-IDENTITY
+                LAST-UPDATED "201706280000Z"
+                ORGANIZATION "Gigaset Communications"
+                CONTACT-INFO "www.gigaset.com"
+                DESCRIPTION  "Database of the objects"
+
+                REVISION "201706280000Z"
+                DESCRIPTION  "Validation"
+
+                ::= {enterprises 32775}
+
+dmMibs          OBJECT IDENTIFIER ::= {ein2Mib 1}
+bsTraps         OBJECT IDENTIFIER ::= {ein2Mib 2}
+
+--
+-- BS Traps
+--
+
+trBs            OBJECT IDENTIFIER ::= {bsTraps 3}
+
+trBsMAC OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's MAC"
+    ::= {trBs 1}
+
+trBsName OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= {trBs 2}
+
+trBsEvent OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's event name"
+    ::= {trBs 3}
+
+trBsSeverity OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's event severity"
+    ::= {trBs 4}
+
+trBsOnlineState NOTIFICATION-TYPE
+    OBJECTS     { trBsMAC, trBsName, trBsEvent, trBsSeverity }
+    STATUS      current
+    DESCRIPTION "BS's online state"
+    ::= {bsTraps 1}
+
+trBsSyncState NOTIFICATION-TYPE
+    OBJECTS     { trBsMAC, trBsName, trBsEvent, trBsSeverity }
+    STATUS      current
+    DESCRIPTION "BS's sync state"
+    ::= {bsTraps 2}
+
+--
+-- BS MIBs
+--
+
+bsStatistics    OBJECT IDENTIFIER ::= {dmMibs 1}
+
+-- bsStatistics
+
+bsStatistics-01 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-01
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 1}
+bsStatistics-02 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-02
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 2}
+bsStatistics-03 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-03
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 3}
+bsStatistics-04 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-04
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 4}
+bsStatistics-05 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-05
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 5}
+bsStatistics-06 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-06
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 6}
+bsStatistics-07 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-07
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 7}
+bsStatistics-08 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-08
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 8}
+bsStatistics-09 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-09
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 9}
+bsStatistics-10 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-10
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 10}
+bsStatistics-11 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-11
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 11}
+bsStatistics-12 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-12
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 12}
+bsStatistics-13 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-13
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 13}
+bsStatistics-14 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-14
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 14}
+bsStatistics-15 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-15
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 15}
+bsStatistics-16 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-16
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 16}
+bsStatistics-17 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-17
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 17}
+bsStatistics-18 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-18
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 18}
+bsStatistics-19 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-19
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 19}
+bsStatistics-20 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-20
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 20}
+bsStatistics-21 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-21
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 21}
+bsStatistics-22 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-22
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 22}
+bsStatistics-23 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-23
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 23}
+bsStatistics-24 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-24
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 24}
+bsStatistics-25 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-25
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 25}
+bsStatistics-26 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-26
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 26}
+bsStatistics-27 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-27
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 27}
+bsStatistics-28 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-28
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 28}
+bsStatistics-29 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-29
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 29}
+bsStatistics-30 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-30
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 30}
+bsStatistics-31 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-31
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 31}
+bsStatistics-32 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-32
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 32}
+bsStatistics-33 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-33
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 33}
+bsStatistics-34 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-34
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 34}
+bsStatistics-35 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-35
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 35}
+bsStatistics-36 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-36
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 36}
+bsStatistics-37 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-37
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 37}
+bsStatistics-38 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-38
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 38}
+bsStatistics-39 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-39
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 39}
+bsStatistics-40 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-40
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 40}
+bsStatistics-41 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-41
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 41}
+bsStatistics-42 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-42
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 42}
+bsStatistics-43 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-43
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 43}
+bsStatistics-44 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-44
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 44}
+bsStatistics-45 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-45
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 45}
+bsStatistics-46 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-46
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 46}
+bsStatistics-47 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-47
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 47}
+bsStatistics-48 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-48
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 48}
+bsStatistics-49 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-49
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 49}
+bsStatistics-50 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-50
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 50}
+bsStatistics-51 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-51
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 51}
+bsStatistics-52 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-52
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 52}
+bsStatistics-53 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-53
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 53}
+bsStatistics-54 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-54
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 54}
+bsStatistics-55 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-55
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 55}
+bsStatistics-56 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-56
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 56}
+bsStatistics-57 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-57
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 57}
+bsStatistics-58 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-58
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 58}
+bsStatistics-59 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-59
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 59}
+bsStatistics-60 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-60
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 60}
+bsStatistics-61 OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Entry-61
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Table"
+    ::= {bsStatistics 61}
+
+-- bsEntries
+
+bsEntry-01 OBJECT-TYPE
+    SYNTAX      Entry-01
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-01 }
+    ::= { bsStatistics-01 1 }
+bsEntry-02 OBJECT-TYPE
+    SYNTAX      Entry-02
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-02 }
+    ::= { bsStatistics-02 1 }
+bsEntry-03 OBJECT-TYPE
+    SYNTAX      Entry-03
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-03 }
+    ::= { bsStatistics-03 1 }
+bsEntry-04 OBJECT-TYPE
+    SYNTAX      Entry-04
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-04 }
+    ::= { bsStatistics-04 1 }
+bsEntry-05 OBJECT-TYPE
+    SYNTAX      Entry-05
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-05 }
+    ::= { bsStatistics-05 1 }
+bsEntry-06 OBJECT-TYPE
+    SYNTAX      Entry-06
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-06 }
+    ::= { bsStatistics-06 1 }
+bsEntry-07 OBJECT-TYPE
+    SYNTAX      Entry-07
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-07 }
+    ::= { bsStatistics-07 1 }
+bsEntry-08 OBJECT-TYPE
+    SYNTAX      Entry-08
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-08 }
+    ::= { bsStatistics-08 1 }
+bsEntry-09 OBJECT-TYPE
+    SYNTAX      Entry-09
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-09 }
+    ::= { bsStatistics-09 1 }
+bsEntry-10 OBJECT-TYPE
+    SYNTAX      Entry-10
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-10 }
+    ::= { bsStatistics-10 1 }
+bsEntry-11 OBJECT-TYPE
+    SYNTAX      Entry-11
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-11 }
+    ::= { bsStatistics-11 1 }
+bsEntry-12 OBJECT-TYPE
+    SYNTAX      Entry-12
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-12 }
+    ::= { bsStatistics-12 1 }
+bsEntry-13 OBJECT-TYPE
+    SYNTAX      Entry-13
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-13 }
+    ::= { bsStatistics-13 1 }
+bsEntry-14 OBJECT-TYPE
+    SYNTAX      Entry-14
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-14 }
+    ::= { bsStatistics-14 1 }
+bsEntry-15 OBJECT-TYPE
+    SYNTAX      Entry-15
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-15 }
+    ::= { bsStatistics-15 1 }
+bsEntry-16 OBJECT-TYPE
+    SYNTAX      Entry-16
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-16 }
+    ::= { bsStatistics-16 1 }
+bsEntry-17 OBJECT-TYPE
+    SYNTAX      Entry-17
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-17 }
+    ::= { bsStatistics-17 1 }
+bsEntry-18 OBJECT-TYPE
+    SYNTAX      Entry-18
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-18 }
+    ::= { bsStatistics-18 1 }
+bsEntry-19 OBJECT-TYPE
+    SYNTAX      Entry-19
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-19 }
+    ::= { bsStatistics-19 1 }
+bsEntry-20 OBJECT-TYPE
+    SYNTAX      Entry-20
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-20 }
+    ::= { bsStatistics-20 1 }
+bsEntry-21 OBJECT-TYPE
+    SYNTAX      Entry-21
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-21 }
+    ::= { bsStatistics-21 1 }
+bsEntry-22 OBJECT-TYPE
+    SYNTAX      Entry-22
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-22 }
+    ::= { bsStatistics-22 1 }
+bsEntry-23 OBJECT-TYPE
+    SYNTAX      Entry-23
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-23 }
+    ::= { bsStatistics-23 1 }
+bsEntry-24 OBJECT-TYPE
+    SYNTAX      Entry-24
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-24 }
+    ::= { bsStatistics-24 1 }
+bsEntry-25 OBJECT-TYPE
+    SYNTAX      Entry-25
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-25 }
+    ::= { bsStatistics-25 1 }
+bsEntry-26 OBJECT-TYPE
+    SYNTAX      Entry-26
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-26 }
+    ::= { bsStatistics-26 1 }
+bsEntry-27 OBJECT-TYPE
+    SYNTAX      Entry-27
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-27 }
+    ::= { bsStatistics-27 1 }
+bsEntry-28 OBJECT-TYPE
+    SYNTAX      Entry-28
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-28 }
+    ::= { bsStatistics-28 1 }
+bsEntry-29 OBJECT-TYPE
+    SYNTAX      Entry-29
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-29 }
+    ::= { bsStatistics-29 1 }
+bsEntry-30 OBJECT-TYPE
+    SYNTAX      Entry-30
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-30 }
+    ::= { bsStatistics-30 1 }
+bsEntry-31 OBJECT-TYPE
+    SYNTAX      Entry-31
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-31 }
+    ::= { bsStatistics-31 1 }
+bsEntry-32 OBJECT-TYPE
+    SYNTAX      Entry-32
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-32 }
+    ::= { bsStatistics-32 1 }
+bsEntry-33 OBJECT-TYPE
+    SYNTAX      Entry-33
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-33 }
+    ::= { bsStatistics-33 1 }
+bsEntry-34 OBJECT-TYPE
+    SYNTAX      Entry-34
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-34 }
+    ::= { bsStatistics-34 1 }
+bsEntry-35 OBJECT-TYPE
+    SYNTAX      Entry-35
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-35 }
+    ::= { bsStatistics-35 1 }
+bsEntry-36 OBJECT-TYPE
+    SYNTAX      Entry-36
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-36 }
+    ::= { bsStatistics-36 1 }
+bsEntry-37 OBJECT-TYPE
+    SYNTAX      Entry-37
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-37 }
+    ::= { bsStatistics-37 1 }
+bsEntry-38 OBJECT-TYPE
+    SYNTAX      Entry-38
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-38 }
+    ::= { bsStatistics-38 1 }
+bsEntry-39 OBJECT-TYPE
+    SYNTAX      Entry-39
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-39 }
+    ::= { bsStatistics-39 1 }
+bsEntry-40 OBJECT-TYPE
+    SYNTAX      Entry-40
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-40 }
+    ::= { bsStatistics-40 1 }
+bsEntry-41 OBJECT-TYPE
+    SYNTAX      Entry-41
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-41 }
+    ::= { bsStatistics-41 1 }
+bsEntry-42 OBJECT-TYPE
+    SYNTAX      Entry-42
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-42 }
+    ::= { bsStatistics-42 1 }
+bsEntry-43 OBJECT-TYPE
+    SYNTAX      Entry-43
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-43 }
+    ::= { bsStatistics-43 1 }
+bsEntry-44 OBJECT-TYPE
+    SYNTAX      Entry-44
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-44 }
+    ::= { bsStatistics-44 1 }
+bsEntry-45 OBJECT-TYPE
+    SYNTAX      Entry-45
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-45 }
+    ::= { bsStatistics-45 1 }
+bsEntry-46 OBJECT-TYPE
+    SYNTAX      Entry-46
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-46 }
+    ::= { bsStatistics-46 1 }
+bsEntry-47 OBJECT-TYPE
+    SYNTAX      Entry-47
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-47 }
+    ::= { bsStatistics-47 1 }
+bsEntry-48 OBJECT-TYPE
+    SYNTAX      Entry-48
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-48 }
+    ::= { bsStatistics-48 1 }
+bsEntry-49 OBJECT-TYPE
+    SYNTAX      Entry-49
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-49 }
+    ::= { bsStatistics-49 1 }
+bsEntry-50 OBJECT-TYPE
+    SYNTAX      Entry-50
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-50 }
+    ::= { bsStatistics-50 1 }
+bsEntry-51 OBJECT-TYPE
+    SYNTAX      Entry-51
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-51 }
+    ::= { bsStatistics-51 1 }
+bsEntry-52 OBJECT-TYPE
+    SYNTAX      Entry-52
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-52 }
+    ::= { bsStatistics-52 1 }
+bsEntry-53 OBJECT-TYPE
+    SYNTAX      Entry-53
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-53 }
+    ::= { bsStatistics-53 1 }
+bsEntry-54 OBJECT-TYPE
+    SYNTAX      Entry-54
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-54 }
+    ::= { bsStatistics-54 1 }
+bsEntry-55 OBJECT-TYPE
+    SYNTAX      Entry-55
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-55 }
+    ::= { bsStatistics-55 1 }
+bsEntry-56 OBJECT-TYPE
+    SYNTAX      Entry-56
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-56 }
+    ::= { bsStatistics-56 1 }
+bsEntry-57 OBJECT-TYPE
+    SYNTAX      Entry-57
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-57 }
+    ::= { bsStatistics-57 1 }
+bsEntry-58 OBJECT-TYPE
+    SYNTAX      Entry-58
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-58 }
+    ::= { bsStatistics-58 1 }
+bsEntry-59 OBJECT-TYPE
+    SYNTAX      Entry-59
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-59 }
+    ::= { bsStatistics-59 1 }
+bsEntry-60 OBJECT-TYPE
+    SYNTAX      Entry-60
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-60 }
+    ::= { bsStatistics-60 1 }
+bsEntry-61 OBJECT-TYPE
+    SYNTAX      Entry-61
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Entry"
+    INDEX       { bsMAC-61 }
+    ::= { bsStatistics-61 1 }
+
+-- Entries
+
+Entry-01 ::= SEQUENCE {
+    bsMAC-01    OCTET STRING,
+    bsFrom-01   OCTET STRING,
+    bsTo-01     OCTET STRING,
+    bsRPN-01    OCTET STRING,
+    bsName-01   OCTET STRING,
+    bsCl-01     INTEGER,
+    bsLv-01     INTEGER,
+    bsConn-01   INTEGER,
+    bsHoIn-01   INTEGER,
+    bsHoOut-01  INTEGER,
+    bsCallDrop-01   INTEGER,
+    bsAsync-01  INTEGER,
+    bsBusy-01   INTEGER,
+    bsDpcOff-01 INTEGER
+}
+Entry-02 ::= SEQUENCE {
+    bsMAC-02    OCTET STRING,
+    bsFrom-02   OCTET STRING,
+    bsTo-02     OCTET STRING,
+    bsRPN-02    OCTET STRING,
+    bsName-02   OCTET STRING,
+    bsCl-02     INTEGER,
+    bsLv-02     INTEGER,
+    bsConn-02   INTEGER,
+    bsHoIn-02   INTEGER,
+    bsHoOut-02  INTEGER,
+    bsCallDrop-02   INTEGER,
+    bsAsync-02  INTEGER,
+    bsBusy-02   INTEGER,
+    bsDpcOff-02 INTEGER
+}
+Entry-03 ::= SEQUENCE {
+    bsMAC-03    OCTET STRING,
+    bsFrom-03   OCTET STRING,
+    bsTo-03     OCTET STRING,
+    bsRPN-03    OCTET STRING,
+    bsName-03   OCTET STRING,
+    bsCl-03     INTEGER,
+    bsLv-03     INTEGER,
+    bsConn-03   INTEGER,
+    bsHoIn-03   INTEGER,
+    bsHoOut-03  INTEGER,
+    bsCallDrop-03   INTEGER,
+    bsAsync-03  INTEGER,
+    bsBusy-03   INTEGER,
+    bsDpcOff-03 INTEGER
+}
+Entry-04 ::= SEQUENCE {
+    bsMAC-04    OCTET STRING,
+    bsFrom-04   OCTET STRING,
+    bsTo-04     OCTET STRING,
+    bsRPN-04    OCTET STRING,
+    bsName-04   OCTET STRING,
+    bsCl-04     INTEGER,
+    bsLv-04     INTEGER,
+    bsConn-04   INTEGER,
+    bsHoIn-04   INTEGER,
+    bsHoOut-04  INTEGER,
+    bsCallDrop-04   INTEGER,
+    bsAsync-04  INTEGER,
+    bsBusy-04   INTEGER,
+    bsDpcOff-04 INTEGER
+}
+Entry-05 ::= SEQUENCE {
+    bsMAC-05    OCTET STRING,
+    bsFrom-05   OCTET STRING,
+    bsTo-05     OCTET STRING,
+    bsRPN-05    OCTET STRING,
+    bsName-05   OCTET STRING,
+    bsCl-05     INTEGER,
+    bsLv-05     INTEGER,
+    bsConn-05   INTEGER,
+    bsHoIn-05   INTEGER,
+    bsHoOut-05  INTEGER,
+    bsCallDrop-05   INTEGER,
+    bsAsync-05  INTEGER,
+    bsBusy-05   INTEGER,
+    bsDpcOff-05 INTEGER
+}
+Entry-06 ::= SEQUENCE {
+    bsMAC-06    OCTET STRING,
+    bsFrom-06   OCTET STRING,
+    bsTo-06     OCTET STRING,
+    bsRPN-06    OCTET STRING,
+    bsName-06   OCTET STRING,
+    bsCl-06     INTEGER,
+    bsLv-06     INTEGER,
+    bsConn-06   INTEGER,
+    bsHoIn-06   INTEGER,
+    bsHoOut-06  INTEGER,
+    bsCallDrop-06   INTEGER,
+    bsAsync-06  INTEGER,
+    bsBusy-06   INTEGER,
+    bsDpcOff-06 INTEGER
+}
+Entry-07 ::= SEQUENCE {
+    bsMAC-07    OCTET STRING,
+    bsFrom-07   OCTET STRING,
+    bsTo-07     OCTET STRING,
+    bsRPN-07    OCTET STRING,
+    bsName-07   OCTET STRING,
+    bsCl-07     INTEGER,
+    bsLv-07     INTEGER,
+    bsConn-07   INTEGER,
+    bsHoIn-07   INTEGER,
+    bsHoOut-07  INTEGER,
+    bsCallDrop-07   INTEGER,
+    bsAsync-07  INTEGER,
+    bsBusy-07   INTEGER,
+    bsDpcOff-07 INTEGER
+}
+Entry-08 ::= SEQUENCE {
+    bsMAC-08    OCTET STRING,
+    bsFrom-08   OCTET STRING,
+    bsTo-08     OCTET STRING,
+    bsRPN-08    OCTET STRING,
+    bsName-08   OCTET STRING,
+    bsCl-08     INTEGER,
+    bsLv-08     INTEGER,
+    bsConn-08   INTEGER,
+    bsHoIn-08   INTEGER,
+    bsHoOut-08  INTEGER,
+    bsCallDrop-08   INTEGER,
+    bsAsync-08  INTEGER,
+    bsBusy-08   INTEGER,
+    bsDpcOff-08 INTEGER
+}
+Entry-09 ::= SEQUENCE {
+    bsMAC-09    OCTET STRING,
+    bsFrom-09   OCTET STRING,
+    bsTo-09     OCTET STRING,
+    bsRPN-09    OCTET STRING,
+    bsName-09   OCTET STRING,
+    bsCl-09     INTEGER,
+    bsLv-09     INTEGER,
+    bsConn-09   INTEGER,
+    bsHoIn-09   INTEGER,
+    bsHoOut-09  INTEGER,
+    bsCallDrop-09   INTEGER,
+    bsAsync-09  INTEGER,
+    bsBusy-09   INTEGER,
+    bsDpcOff-09 INTEGER
+}
+Entry-10 ::= SEQUENCE {
+    bsMAC-10    OCTET STRING,
+    bsFrom-10   OCTET STRING,
+    bsTo-10     OCTET STRING,
+    bsRPN-10    OCTET STRING,
+    bsName-10   OCTET STRING,
+    bsCl-10     INTEGER,
+    bsLv-10     INTEGER,
+    bsConn-10   INTEGER,
+    bsHoIn-10   INTEGER,
+    bsHoOut-10  INTEGER,
+    bsCallDrop-10   INTEGER,
+    bsAsync-10  INTEGER,
+    bsBusy-10   INTEGER,
+    bsDpcOff-10 INTEGER
+}
+Entry-11 ::= SEQUENCE {
+    bsMAC-11    OCTET STRING,
+    bsFrom-11   OCTET STRING,
+    bsTo-11     OCTET STRING,
+    bsRPN-11    OCTET STRING,
+    bsName-11   OCTET STRING,
+    bsCl-11     INTEGER,
+    bsLv-11     INTEGER,
+    bsConn-11   INTEGER,
+    bsHoIn-11   INTEGER,
+    bsHoOut-11  INTEGER,
+    bsCallDrop-11   INTEGER,
+    bsAsync-11  INTEGER,
+    bsBusy-11   INTEGER,
+    bsDpcOff-11 INTEGER
+}
+Entry-12 ::= SEQUENCE {
+    bsMAC-12    OCTET STRING,
+    bsFrom-12   OCTET STRING,
+    bsTo-12     OCTET STRING,
+    bsRPN-12    OCTET STRING,
+    bsName-12   OCTET STRING,
+    bsCl-12     INTEGER,
+    bsLv-12     INTEGER,
+    bsConn-12   INTEGER,
+    bsHoIn-12   INTEGER,
+    bsHoOut-12  INTEGER,
+    bsCallDrop-12   INTEGER,
+    bsAsync-12  INTEGER,
+    bsBusy-12   INTEGER,
+    bsDpcOff-12 INTEGER
+}
+Entry-13 ::= SEQUENCE {
+    bsMAC-13    OCTET STRING,
+    bsFrom-13   OCTET STRING,
+    bsTo-13     OCTET STRING,
+    bsRPN-13    OCTET STRING,
+    bsName-13   OCTET STRING,
+    bsCl-13     INTEGER,
+    bsLv-13     INTEGER,
+    bsConn-13   INTEGER,
+    bsHoIn-13   INTEGER,
+    bsHoOut-13  INTEGER,
+    bsCallDrop-13   INTEGER,
+    bsAsync-13  INTEGER,
+    bsBusy-13   INTEGER,
+    bsDpcOff-13 INTEGER
+}
+Entry-14 ::= SEQUENCE {
+    bsMAC-14    OCTET STRING,
+    bsFrom-14   OCTET STRING,
+    bsTo-14     OCTET STRING,
+    bsRPN-14    OCTET STRING,
+    bsName-14   OCTET STRING,
+    bsCl-14     INTEGER,
+    bsLv-14     INTEGER,
+    bsConn-14   INTEGER,
+    bsHoIn-14   INTEGER,
+    bsHoOut-14  INTEGER,
+    bsCallDrop-14   INTEGER,
+    bsAsync-14  INTEGER,
+    bsBusy-14   INTEGER,
+    bsDpcOff-14 INTEGER
+}
+Entry-15 ::= SEQUENCE {
+    bsMAC-15    OCTET STRING,
+    bsFrom-15   OCTET STRING,
+    bsTo-15     OCTET STRING,
+    bsRPN-15    OCTET STRING,
+    bsName-15   OCTET STRING,
+    bsCl-15     INTEGER,
+    bsLv-15     INTEGER,
+    bsConn-15   INTEGER,
+    bsHoIn-15   INTEGER,
+    bsHoOut-15  INTEGER,
+    bsCallDrop-15   INTEGER,
+    bsAsync-15  INTEGER,
+    bsBusy-15   INTEGER,
+    bsDpcOff-15 INTEGER
+}
+Entry-16 ::= SEQUENCE {
+    bsMAC-16    OCTET STRING,
+    bsFrom-16   OCTET STRING,
+    bsTo-16     OCTET STRING,
+    bsRPN-16    OCTET STRING,
+    bsName-16   OCTET STRING,
+    bsCl-16     INTEGER,
+    bsLv-16     INTEGER,
+    bsConn-16   INTEGER,
+    bsHoIn-16   INTEGER,
+    bsHoOut-16  INTEGER,
+    bsCallDrop-16   INTEGER,
+    bsAsync-16  INTEGER,
+    bsBusy-16   INTEGER,
+    bsDpcOff-16 INTEGER
+}
+Entry-17 ::= SEQUENCE {
+    bsMAC-17    OCTET STRING,
+    bsFrom-17   OCTET STRING,
+    bsTo-17     OCTET STRING,
+    bsRPN-17    OCTET STRING,
+    bsName-17   OCTET STRING,
+    bsCl-17     INTEGER,
+    bsLv-17     INTEGER,
+    bsConn-17   INTEGER,
+    bsHoIn-17   INTEGER,
+    bsHoOut-17  INTEGER,
+    bsCallDrop-17   INTEGER,
+    bsAsync-17  INTEGER,
+    bsBusy-17   INTEGER,
+    bsDpcOff-17 INTEGER
+}
+Entry-18 ::= SEQUENCE {
+    bsMAC-18    OCTET STRING,
+    bsFrom-18   OCTET STRING,
+    bsTo-18     OCTET STRING,
+    bsRPN-18    OCTET STRING,
+    bsName-18   OCTET STRING,
+    bsCl-18     INTEGER,
+    bsLv-18     INTEGER,
+    bsConn-18   INTEGER,
+    bsHoIn-18   INTEGER,
+    bsHoOut-18  INTEGER,
+    bsCallDrop-18   INTEGER,
+    bsAsync-18  INTEGER,
+    bsBusy-18   INTEGER,
+    bsDpcOff-18 INTEGER
+}
+Entry-19 ::= SEQUENCE {
+    bsMAC-19    OCTET STRING,
+    bsFrom-19   OCTET STRING,
+    bsTo-19     OCTET STRING,
+    bsRPN-19    OCTET STRING,
+    bsName-19   OCTET STRING,
+    bsCl-19     INTEGER,
+    bsLv-19     INTEGER,
+    bsConn-19   INTEGER,
+    bsHoIn-19   INTEGER,
+    bsHoOut-19  INTEGER,
+    bsCallDrop-19   INTEGER,
+    bsAsync-19  INTEGER,
+    bsBusy-19   INTEGER,
+    bsDpcOff-19 INTEGER
+}
+Entry-20 ::= SEQUENCE {
+    bsMAC-20    OCTET STRING,
+    bsFrom-20   OCTET STRING,
+    bsTo-20     OCTET STRING,
+    bsRPN-20    OCTET STRING,
+    bsName-20   OCTET STRING,
+    bsCl-20     INTEGER,
+    bsLv-20     INTEGER,
+    bsConn-20   INTEGER,
+    bsHoIn-20   INTEGER,
+    bsHoOut-20  INTEGER,
+    bsCallDrop-20   INTEGER,
+    bsAsync-20  INTEGER,
+    bsBusy-20   INTEGER,
+    bsDpcOff-20 INTEGER
+}
+Entry-21 ::= SEQUENCE {
+    bsMAC-21    OCTET STRING,
+    bsFrom-21   OCTET STRING,
+    bsTo-21     OCTET STRING,
+    bsRPN-21    OCTET STRING,
+    bsName-21   OCTET STRING,
+    bsCl-21     INTEGER,
+    bsLv-21     INTEGER,
+    bsConn-21   INTEGER,
+    bsHoIn-21   INTEGER,
+    bsHoOut-21  INTEGER,
+    bsCallDrop-21   INTEGER,
+    bsAsync-21  INTEGER,
+    bsBusy-21   INTEGER,
+    bsDpcOff-21 INTEGER
+}
+Entry-22 ::= SEQUENCE {
+    bsMAC-22    OCTET STRING,
+    bsFrom-22   OCTET STRING,
+    bsTo-22     OCTET STRING,
+    bsRPN-22    OCTET STRING,
+    bsName-22   OCTET STRING,
+    bsCl-22     INTEGER,
+    bsLv-22     INTEGER,
+    bsConn-22   INTEGER,
+    bsHoIn-22   INTEGER,
+    bsHoOut-22  INTEGER,
+    bsCallDrop-22   INTEGER,
+    bsAsync-22  INTEGER,
+    bsBusy-22   INTEGER,
+    bsDpcOff-22 INTEGER
+}
+Entry-23 ::= SEQUENCE {
+    bsMAC-23    OCTET STRING,
+    bsFrom-23   OCTET STRING,
+    bsTo-23     OCTET STRING,
+    bsRPN-23    OCTET STRING,
+    bsName-23   OCTET STRING,
+    bsCl-23     INTEGER,
+    bsLv-23     INTEGER,
+    bsConn-23   INTEGER,
+    bsHoIn-23   INTEGER,
+    bsHoOut-23  INTEGER,
+    bsCallDrop-23   INTEGER,
+    bsAsync-23  INTEGER,
+    bsBusy-23   INTEGER,
+    bsDpcOff-23 INTEGER
+}
+Entry-24 ::= SEQUENCE {
+    bsMAC-24    OCTET STRING,
+    bsFrom-24   OCTET STRING,
+    bsTo-24     OCTET STRING,
+    bsRPN-24    OCTET STRING,
+    bsName-24   OCTET STRING,
+    bsCl-24     INTEGER,
+    bsLv-24     INTEGER,
+    bsConn-24   INTEGER,
+    bsHoIn-24   INTEGER,
+    bsHoOut-24  INTEGER,
+    bsCallDrop-24   INTEGER,
+    bsAsync-24  INTEGER,
+    bsBusy-24   INTEGER,
+    bsDpcOff-24 INTEGER
+}
+Entry-25 ::= SEQUENCE {
+    bsMAC-25    OCTET STRING,
+    bsFrom-25   OCTET STRING,
+    bsTo-25     OCTET STRING,
+    bsRPN-25    OCTET STRING,
+    bsName-25   OCTET STRING,
+    bsCl-25     INTEGER,
+    bsLv-25     INTEGER,
+    bsConn-25   INTEGER,
+    bsHoIn-25   INTEGER,
+    bsHoOut-25  INTEGER,
+    bsCallDrop-25   INTEGER,
+    bsAsync-25  INTEGER,
+    bsBusy-25   INTEGER,
+    bsDpcOff-25 INTEGER
+}
+Entry-26 ::= SEQUENCE {
+    bsMAC-26    OCTET STRING,
+    bsFrom-26   OCTET STRING,
+    bsTo-26     OCTET STRING,
+    bsRPN-26    OCTET STRING,
+    bsName-26   OCTET STRING,
+    bsCl-26     INTEGER,
+    bsLv-26     INTEGER,
+    bsConn-26   INTEGER,
+    bsHoIn-26   INTEGER,
+    bsHoOut-26  INTEGER,
+    bsCallDrop-26   INTEGER,
+    bsAsync-26  INTEGER,
+    bsBusy-26   INTEGER,
+    bsDpcOff-26 INTEGER
+}
+Entry-27 ::= SEQUENCE {
+    bsMAC-27    OCTET STRING,
+    bsFrom-27   OCTET STRING,
+    bsTo-27     OCTET STRING,
+    bsRPN-27    OCTET STRING,
+    bsName-27   OCTET STRING,
+    bsCl-27     INTEGER,
+    bsLv-27     INTEGER,
+    bsConn-27   INTEGER,
+    bsHoIn-27   INTEGER,
+    bsHoOut-27  INTEGER,
+    bsCallDrop-27   INTEGER,
+    bsAsync-27  INTEGER,
+    bsBusy-27   INTEGER,
+    bsDpcOff-27 INTEGER
+}
+Entry-28 ::= SEQUENCE {
+    bsMAC-28    OCTET STRING,
+    bsFrom-28   OCTET STRING,
+    bsTo-28     OCTET STRING,
+    bsRPN-28    OCTET STRING,
+    bsName-28   OCTET STRING,
+    bsCl-28     INTEGER,
+    bsLv-28     INTEGER,
+    bsConn-28   INTEGER,
+    bsHoIn-28   INTEGER,
+    bsHoOut-28  INTEGER,
+    bsCallDrop-28   INTEGER,
+    bsAsync-28  INTEGER,
+    bsBusy-28   INTEGER,
+    bsDpcOff-28 INTEGER
+}
+Entry-29 ::= SEQUENCE {
+    bsMAC-29    OCTET STRING,
+    bsFrom-29   OCTET STRING,
+    bsTo-29     OCTET STRING,
+    bsRPN-29    OCTET STRING,
+    bsName-29   OCTET STRING,
+    bsCl-29     INTEGER,
+    bsLv-29     INTEGER,
+    bsConn-29   INTEGER,
+    bsHoIn-29   INTEGER,
+    bsHoOut-29  INTEGER,
+    bsCallDrop-29   INTEGER,
+    bsAsync-29  INTEGER,
+    bsBusy-29   INTEGER,
+    bsDpcOff-29 INTEGER
+}
+Entry-30 ::= SEQUENCE {
+    bsMAC-30    OCTET STRING,
+    bsFrom-30   OCTET STRING,
+    bsTo-30     OCTET STRING,
+    bsRPN-30    OCTET STRING,
+    bsName-30   OCTET STRING,
+    bsCl-30     INTEGER,
+    bsLv-30     INTEGER,
+    bsConn-30   INTEGER,
+    bsHoIn-30   INTEGER,
+    bsHoOut-30  INTEGER,
+    bsCallDrop-30   INTEGER,
+    bsAsync-30  INTEGER,
+    bsBusy-30   INTEGER,
+    bsDpcOff-30 INTEGER
+}
+Entry-31 ::= SEQUENCE {
+    bsMAC-31    OCTET STRING,
+    bsFrom-31   OCTET STRING,
+    bsTo-31     OCTET STRING,
+    bsRPN-31    OCTET STRING,
+    bsName-31   OCTET STRING,
+    bsCl-31     INTEGER,
+    bsLv-31     INTEGER,
+    bsConn-31   INTEGER,
+    bsHoIn-31   INTEGER,
+    bsHoOut-31  INTEGER,
+    bsCallDrop-31   INTEGER,
+    bsAsync-31  INTEGER,
+    bsBusy-31   INTEGER,
+    bsDpcOff-31 INTEGER
+}
+Entry-32 ::= SEQUENCE {
+    bsMAC-32    OCTET STRING,
+    bsFrom-32   OCTET STRING,
+    bsTo-32     OCTET STRING,
+    bsRPN-32    OCTET STRING,
+    bsName-32   OCTET STRING,
+    bsCl-32     INTEGER,
+    bsLv-32     INTEGER,
+    bsConn-32   INTEGER,
+    bsHoIn-32   INTEGER,
+    bsHoOut-32  INTEGER,
+    bsCallDrop-32   INTEGER,
+    bsAsync-32  INTEGER,
+    bsBusy-32   INTEGER,
+    bsDpcOff-32 INTEGER
+}
+Entry-33 ::= SEQUENCE {
+    bsMAC-33    OCTET STRING,
+    bsFrom-33   OCTET STRING,
+    bsTo-33     OCTET STRING,
+    bsRPN-33    OCTET STRING,
+    bsName-33   OCTET STRING,
+    bsCl-33     INTEGER,
+    bsLv-33     INTEGER,
+    bsConn-33   INTEGER,
+    bsHoIn-33   INTEGER,
+    bsHoOut-33  INTEGER,
+    bsCallDrop-33   INTEGER,
+    bsAsync-33  INTEGER,
+    bsBusy-33   INTEGER,
+    bsDpcOff-33 INTEGER
+}
+Entry-34 ::= SEQUENCE {
+    bsMAC-34    OCTET STRING,
+    bsFrom-34   OCTET STRING,
+    bsTo-34     OCTET STRING,
+    bsRPN-34    OCTET STRING,
+    bsName-34   OCTET STRING,
+    bsCl-34     INTEGER,
+    bsLv-34     INTEGER,
+    bsConn-34   INTEGER,
+    bsHoIn-34   INTEGER,
+    bsHoOut-34  INTEGER,
+    bsCallDrop-34   INTEGER,
+    bsAsync-34  INTEGER,
+    bsBusy-34   INTEGER,
+    bsDpcOff-34 INTEGER
+}
+Entry-35 ::= SEQUENCE {
+    bsMAC-35    OCTET STRING,
+    bsFrom-35   OCTET STRING,
+    bsTo-35     OCTET STRING,
+    bsRPN-35    OCTET STRING,
+    bsName-35   OCTET STRING,
+    bsCl-35     INTEGER,
+    bsLv-35     INTEGER,
+    bsConn-35   INTEGER,
+    bsHoIn-35   INTEGER,
+    bsHoOut-35  INTEGER,
+    bsCallDrop-35   INTEGER,
+    bsAsync-35  INTEGER,
+    bsBusy-35   INTEGER,
+    bsDpcOff-35 INTEGER
+}
+Entry-36 ::= SEQUENCE {
+    bsMAC-36    OCTET STRING,
+    bsFrom-36   OCTET STRING,
+    bsTo-36     OCTET STRING,
+    bsRPN-36    OCTET STRING,
+    bsName-36   OCTET STRING,
+    bsCl-36     INTEGER,
+    bsLv-36     INTEGER,
+    bsConn-36   INTEGER,
+    bsHoIn-36   INTEGER,
+    bsHoOut-36  INTEGER,
+    bsCallDrop-36   INTEGER,
+    bsAsync-36  INTEGER,
+    bsBusy-36   INTEGER,
+    bsDpcOff-36 INTEGER
+}
+Entry-37 ::= SEQUENCE {
+    bsMAC-37    OCTET STRING,
+    bsFrom-37   OCTET STRING,
+    bsTo-37     OCTET STRING,
+    bsRPN-37    OCTET STRING,
+    bsName-37   OCTET STRING,
+    bsCl-37     INTEGER,
+    bsLv-37     INTEGER,
+    bsConn-37   INTEGER,
+    bsHoIn-37   INTEGER,
+    bsHoOut-37  INTEGER,
+    bsCallDrop-37   INTEGER,
+    bsAsync-37  INTEGER,
+    bsBusy-37   INTEGER,
+    bsDpcOff-37 INTEGER
+}
+Entry-38 ::= SEQUENCE {
+    bsMAC-38    OCTET STRING,
+    bsFrom-38   OCTET STRING,
+    bsTo-38     OCTET STRING,
+    bsRPN-38    OCTET STRING,
+    bsName-38   OCTET STRING,
+    bsCl-38     INTEGER,
+    bsLv-38     INTEGER,
+    bsConn-38   INTEGER,
+    bsHoIn-38   INTEGER,
+    bsHoOut-38  INTEGER,
+    bsCallDrop-38   INTEGER,
+    bsAsync-38  INTEGER,
+    bsBusy-38   INTEGER,
+    bsDpcOff-38 INTEGER
+}
+Entry-39 ::= SEQUENCE {
+    bsMAC-39    OCTET STRING,
+    bsFrom-39   OCTET STRING,
+    bsTo-39     OCTET STRING,
+    bsRPN-39    OCTET STRING,
+    bsName-39   OCTET STRING,
+    bsCl-39     INTEGER,
+    bsLv-39     INTEGER,
+    bsConn-39   INTEGER,
+    bsHoIn-39   INTEGER,
+    bsHoOut-39  INTEGER,
+    bsCallDrop-39   INTEGER,
+    bsAsync-39  INTEGER,
+    bsBusy-39   INTEGER,
+    bsDpcOff-39 INTEGER
+}
+Entry-40 ::= SEQUENCE {
+    bsMAC-40    OCTET STRING,
+    bsFrom-40   OCTET STRING,
+    bsTo-40     OCTET STRING,
+    bsRPN-40    OCTET STRING,
+    bsName-40   OCTET STRING,
+    bsCl-40     INTEGER,
+    bsLv-40     INTEGER,
+    bsConn-40   INTEGER,
+    bsHoIn-40   INTEGER,
+    bsHoOut-40  INTEGER,
+    bsCallDrop-40   INTEGER,
+    bsAsync-40  INTEGER,
+    bsBusy-40   INTEGER,
+    bsDpcOff-40 INTEGER
+}
+Entry-41 ::= SEQUENCE {
+    bsMAC-41    OCTET STRING,
+    bsFrom-41   OCTET STRING,
+    bsTo-41     OCTET STRING,
+    bsRPN-41    OCTET STRING,
+    bsName-41   OCTET STRING,
+    bsCl-41     INTEGER,
+    bsLv-41     INTEGER,
+    bsConn-41   INTEGER,
+    bsHoIn-41   INTEGER,
+    bsHoOut-41  INTEGER,
+    bsCallDrop-41   INTEGER,
+    bsAsync-41  INTEGER,
+    bsBusy-41   INTEGER,
+    bsDpcOff-41 INTEGER
+}
+Entry-42 ::= SEQUENCE {
+    bsMAC-42    OCTET STRING,
+    bsFrom-42   OCTET STRING,
+    bsTo-42     OCTET STRING,
+    bsRPN-42    OCTET STRING,
+    bsName-42   OCTET STRING,
+    bsCl-42     INTEGER,
+    bsLv-42     INTEGER,
+    bsConn-42   INTEGER,
+    bsHoIn-42   INTEGER,
+    bsHoOut-42  INTEGER,
+    bsCallDrop-42   INTEGER,
+    bsAsync-42  INTEGER,
+    bsBusy-42   INTEGER,
+    bsDpcOff-42 INTEGER
+}
+Entry-43 ::= SEQUENCE {
+    bsMAC-43    OCTET STRING,
+    bsFrom-43   OCTET STRING,
+    bsTo-43     OCTET STRING,
+    bsRPN-43    OCTET STRING,
+    bsName-43   OCTET STRING,
+    bsCl-43     INTEGER,
+    bsLv-43     INTEGER,
+    bsConn-43   INTEGER,
+    bsHoIn-43   INTEGER,
+    bsHoOut-43  INTEGER,
+    bsCallDrop-43   INTEGER,
+    bsAsync-43  INTEGER,
+    bsBusy-43   INTEGER,
+    bsDpcOff-43 INTEGER
+}
+Entry-44 ::= SEQUENCE {
+    bsMAC-44    OCTET STRING,
+    bsFrom-44   OCTET STRING,
+    bsTo-44     OCTET STRING,
+    bsRPN-44    OCTET STRING,
+    bsName-44   OCTET STRING,
+    bsCl-44     INTEGER,
+    bsLv-44     INTEGER,
+    bsConn-44   INTEGER,
+    bsHoIn-44   INTEGER,
+    bsHoOut-44  INTEGER,
+    bsCallDrop-44   INTEGER,
+    bsAsync-44  INTEGER,
+    bsBusy-44   INTEGER,
+    bsDpcOff-44 INTEGER
+}
+Entry-45 ::= SEQUENCE {
+    bsMAC-45    OCTET STRING,
+    bsFrom-45   OCTET STRING,
+    bsTo-45     OCTET STRING,
+    bsRPN-45    OCTET STRING,
+    bsName-45   OCTET STRING,
+    bsCl-45     INTEGER,
+    bsLv-45     INTEGER,
+    bsConn-45   INTEGER,
+    bsHoIn-45   INTEGER,
+    bsHoOut-45  INTEGER,
+    bsCallDrop-45   INTEGER,
+    bsAsync-45  INTEGER,
+    bsBusy-45   INTEGER,
+    bsDpcOff-45 INTEGER
+}
+Entry-46 ::= SEQUENCE {
+    bsMAC-46    OCTET STRING,
+    bsFrom-46   OCTET STRING,
+    bsTo-46     OCTET STRING,
+    bsRPN-46    OCTET STRING,
+    bsName-46   OCTET STRING,
+    bsCl-46     INTEGER,
+    bsLv-46     INTEGER,
+    bsConn-46   INTEGER,
+    bsHoIn-46   INTEGER,
+    bsHoOut-46  INTEGER,
+    bsCallDrop-46   INTEGER,
+    bsAsync-46  INTEGER,
+    bsBusy-46   INTEGER,
+    bsDpcOff-46 INTEGER
+}
+Entry-47 ::= SEQUENCE {
+    bsMAC-47    OCTET STRING,
+    bsFrom-47   OCTET STRING,
+    bsTo-47     OCTET STRING,
+    bsRPN-47    OCTET STRING,
+    bsName-47   OCTET STRING,
+    bsCl-47     INTEGER,
+    bsLv-47     INTEGER,
+    bsConn-47   INTEGER,
+    bsHoIn-47   INTEGER,
+    bsHoOut-47  INTEGER,
+    bsCallDrop-47   INTEGER,
+    bsAsync-47  INTEGER,
+    bsBusy-47   INTEGER,
+    bsDpcOff-47 INTEGER
+}
+Entry-48 ::= SEQUENCE {
+    bsMAC-48    OCTET STRING,
+    bsFrom-48   OCTET STRING,
+    bsTo-48     OCTET STRING,
+    bsRPN-48    OCTET STRING,
+    bsName-48   OCTET STRING,
+    bsCl-48     INTEGER,
+    bsLv-48     INTEGER,
+    bsConn-48   INTEGER,
+    bsHoIn-48   INTEGER,
+    bsHoOut-48  INTEGER,
+    bsCallDrop-48   INTEGER,
+    bsAsync-48  INTEGER,
+    bsBusy-48   INTEGER,
+    bsDpcOff-48 INTEGER
+}
+Entry-49 ::= SEQUENCE {
+    bsMAC-49    OCTET STRING,
+    bsFrom-49   OCTET STRING,
+    bsTo-49     OCTET STRING,
+    bsRPN-49    OCTET STRING,
+    bsName-49   OCTET STRING,
+    bsCl-49     INTEGER,
+    bsLv-49     INTEGER,
+    bsConn-49   INTEGER,
+    bsHoIn-49   INTEGER,
+    bsHoOut-49  INTEGER,
+    bsCallDrop-49   INTEGER,
+    bsAsync-49  INTEGER,
+    bsBusy-49   INTEGER,
+    bsDpcOff-49 INTEGER
+}
+Entry-50 ::= SEQUENCE {
+    bsMAC-50    OCTET STRING,
+    bsFrom-50   OCTET STRING,
+    bsTo-50     OCTET STRING,
+    bsRPN-50    OCTET STRING,
+    bsName-50   OCTET STRING,
+    bsCl-50     INTEGER,
+    bsLv-50     INTEGER,
+    bsConn-50   INTEGER,
+    bsHoIn-50   INTEGER,
+    bsHoOut-50  INTEGER,
+    bsCallDrop-50   INTEGER,
+    bsAsync-50  INTEGER,
+    bsBusy-50   INTEGER,
+    bsDpcOff-50 INTEGER
+}
+Entry-51 ::= SEQUENCE {
+    bsMAC-51    OCTET STRING,
+    bsFrom-51   OCTET STRING,
+    bsTo-51     OCTET STRING,
+    bsRPN-51    OCTET STRING,
+    bsName-51   OCTET STRING,
+    bsCl-51     INTEGER,
+    bsLv-51     INTEGER,
+    bsConn-51   INTEGER,
+    bsHoIn-51   INTEGER,
+    bsHoOut-51  INTEGER,
+    bsCallDrop-51   INTEGER,
+    bsAsync-51  INTEGER,
+    bsBusy-51   INTEGER,
+    bsDpcOff-51 INTEGER
+}
+Entry-52 ::= SEQUENCE {
+    bsMAC-52    OCTET STRING,
+    bsFrom-52   OCTET STRING,
+    bsTo-52     OCTET STRING,
+    bsRPN-52    OCTET STRING,
+    bsName-52   OCTET STRING,
+    bsCl-52     INTEGER,
+    bsLv-52     INTEGER,
+    bsConn-52   INTEGER,
+    bsHoIn-52   INTEGER,
+    bsHoOut-52  INTEGER,
+    bsCallDrop-52   INTEGER,
+    bsAsync-52  INTEGER,
+    bsBusy-52   INTEGER,
+    bsDpcOff-52 INTEGER
+}
+Entry-53 ::= SEQUENCE {
+    bsMAC-53    OCTET STRING,
+    bsFrom-53   OCTET STRING,
+    bsTo-53     OCTET STRING,
+    bsRPN-53    OCTET STRING,
+    bsName-53   OCTET STRING,
+    bsCl-53     INTEGER,
+    bsLv-53     INTEGER,
+    bsConn-53   INTEGER,
+    bsHoIn-53   INTEGER,
+    bsHoOut-53  INTEGER,
+    bsCallDrop-53   INTEGER,
+    bsAsync-53  INTEGER,
+    bsBusy-53   INTEGER,
+    bsDpcOff-53 INTEGER
+}
+Entry-54 ::= SEQUENCE {
+    bsMAC-54    OCTET STRING,
+    bsFrom-54   OCTET STRING,
+    bsTo-54     OCTET STRING,
+    bsRPN-54    OCTET STRING,
+    bsName-54   OCTET STRING,
+    bsCl-54     INTEGER,
+    bsLv-54     INTEGER,
+    bsConn-54   INTEGER,
+    bsHoIn-54   INTEGER,
+    bsHoOut-54  INTEGER,
+    bsCallDrop-54   INTEGER,
+    bsAsync-54  INTEGER,
+    bsBusy-54   INTEGER,
+    bsDpcOff-54 INTEGER
+}
+Entry-55 ::= SEQUENCE {
+    bsMAC-55    OCTET STRING,
+    bsFrom-55   OCTET STRING,
+    bsTo-55     OCTET STRING,
+    bsRPN-55    OCTET STRING,
+    bsName-55   OCTET STRING,
+    bsCl-55     INTEGER,
+    bsLv-55     INTEGER,
+    bsConn-55   INTEGER,
+    bsHoIn-55   INTEGER,
+    bsHoOut-55  INTEGER,
+    bsCallDrop-55   INTEGER,
+    bsAsync-55  INTEGER,
+    bsBusy-55   INTEGER,
+    bsDpcOff-55 INTEGER
+}
+Entry-56 ::= SEQUENCE {
+    bsMAC-56    OCTET STRING,
+    bsFrom-56   OCTET STRING,
+    bsTo-56     OCTET STRING,
+    bsRPN-56    OCTET STRING,
+    bsName-56   OCTET STRING,
+    bsCl-56     INTEGER,
+    bsLv-56     INTEGER,
+    bsConn-56   INTEGER,
+    bsHoIn-56   INTEGER,
+    bsHoOut-56  INTEGER,
+    bsCallDrop-56   INTEGER,
+    bsAsync-56  INTEGER,
+    bsBusy-56   INTEGER,
+    bsDpcOff-56 INTEGER
+}
+Entry-57 ::= SEQUENCE {
+    bsMAC-57    OCTET STRING,
+    bsFrom-57   OCTET STRING,
+    bsTo-57     OCTET STRING,
+    bsRPN-57    OCTET STRING,
+    bsName-57   OCTET STRING,
+    bsCl-57     INTEGER,
+    bsLv-57     INTEGER,
+    bsConn-57   INTEGER,
+    bsHoIn-57   INTEGER,
+    bsHoOut-57  INTEGER,
+    bsCallDrop-57   INTEGER,
+    bsAsync-57  INTEGER,
+    bsBusy-57   INTEGER,
+    bsDpcOff-57 INTEGER
+}
+Entry-58 ::= SEQUENCE {
+    bsMAC-58    OCTET STRING,
+    bsFrom-58   OCTET STRING,
+    bsTo-58     OCTET STRING,
+    bsRPN-58    OCTET STRING,
+    bsName-58   OCTET STRING,
+    bsCl-58     INTEGER,
+    bsLv-58     INTEGER,
+    bsConn-58   INTEGER,
+    bsHoIn-58   INTEGER,
+    bsHoOut-58  INTEGER,
+    bsCallDrop-58   INTEGER,
+    bsAsync-58  INTEGER,
+    bsBusy-58   INTEGER,
+    bsDpcOff-58 INTEGER
+}
+Entry-59 ::= SEQUENCE {
+    bsMAC-59    OCTET STRING,
+    bsFrom-59   OCTET STRING,
+    bsTo-59     OCTET STRING,
+    bsRPN-59    OCTET STRING,
+    bsName-59   OCTET STRING,
+    bsCl-59     INTEGER,
+    bsLv-59     INTEGER,
+    bsConn-59   INTEGER,
+    bsHoIn-59   INTEGER,
+    bsHoOut-59  INTEGER,
+    bsCallDrop-59   INTEGER,
+    bsAsync-59  INTEGER,
+    bsBusy-59   INTEGER,
+    bsDpcOff-59 INTEGER
+}
+Entry-60 ::= SEQUENCE {
+    bsMAC-60    OCTET STRING,
+    bsFrom-60   OCTET STRING,
+    bsTo-60     OCTET STRING,
+    bsRPN-60    OCTET STRING,
+    bsName-60   OCTET STRING,
+    bsCl-60     INTEGER,
+    bsLv-60     INTEGER,
+    bsConn-60   INTEGER,
+    bsHoIn-60   INTEGER,
+    bsHoOut-60  INTEGER,
+    bsCallDrop-60   INTEGER,
+    bsAsync-60  INTEGER,
+    bsBusy-60   INTEGER,
+    bsDpcOff-60 INTEGER
+}
+Entry-61 ::= SEQUENCE {
+    bsMAC-61    OCTET STRING,
+    bsFrom-61   OCTET STRING,
+    bsTo-61     OCTET STRING,
+    bsRPN-61    OCTET STRING,
+    bsName-61   OCTET STRING,
+    bsCl-61     INTEGER,
+    bsLv-61     INTEGER,
+    bsConn-61   INTEGER,
+    bsHoIn-61   INTEGER,
+    bsHoOut-61  INTEGER,
+    bsCallDrop-61   INTEGER,
+    bsAsync-61  INTEGER,
+    bsBusy-61   INTEGER,
+    bsDpcOff-61 INTEGER
+}
+
+-- Entry 01
+
+bsMAC-01 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-01 1 }
+bsFrom-01 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-01 2 }
+bsTo-01 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-01 3 }
+bsRPN-01 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-01 4 }
+bsName-01 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-01 5 }
+bsCl-01 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-01 6 }
+bsLv-01 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-01 7 }
+bsConn-01 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-01 8 }
+bsHoIn-01 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-01 9 }
+bsHoOut-01 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-01 10 }
+bsCallDrop-01 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-01 11 }
+bsAsync-01 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-01 12 }
+bsBusy-01 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-01 13 }
+bsDpcOff-01 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-01 14 }
+
+-- Entry 02
+
+bsMAC-02 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-02 1 }
+bsFrom-02 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-02 2 }
+bsTo-02 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-02 3 }
+bsRPN-02 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-02 4 }
+bsName-02 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-02 5 }
+bsCl-02 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-02 6 }
+bsLv-02 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-02 7 }
+bsConn-02 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-02 8 }
+bsHoIn-02 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-02 9 }
+bsHoOut-02 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-02 10 }
+bsCallDrop-02 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-02 11 }
+bsAsync-02 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-02 12 }
+bsBusy-02 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-02 13 }
+bsDpcOff-02 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-02 14 }
+
+-- Entry 03
+
+bsMAC-03 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-03 1 }
+bsFrom-03 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-03 2 }
+bsTo-03 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-03 3 }
+bsRPN-03 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-03 4 }
+bsName-03 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-03 5 }
+bsCl-03 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-03 6 }
+bsLv-03 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-03 7 }
+bsConn-03 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-03 8 }
+bsHoIn-03 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-03 9 }
+bsHoOut-03 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-03 10 }
+bsCallDrop-03 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-03 11 }
+bsAsync-03 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-03 12 }
+bsBusy-03 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-03 13 }
+bsDpcOff-03 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-03 14 }
+
+-- Entry 04
+
+bsMAC-04 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-04 1 }
+bsFrom-04 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-04 2 }
+bsTo-04 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-04 3 }
+bsRPN-04 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-04 4 }
+bsName-04 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-04 5 }
+bsCl-04 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-04 6 }
+bsLv-04 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-04 7 }
+bsConn-04 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-04 8 }
+bsHoIn-04 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-04 9 }
+bsHoOut-04 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-04 10 }
+bsCallDrop-04 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-04 11 }
+bsAsync-04 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-04 12 }
+bsBusy-04 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-04 13 }
+bsDpcOff-04 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-04 14 }
+
+-- Entry 05
+
+bsMAC-05 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-05 1 }
+bsFrom-05 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-05 2 }
+bsTo-05 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-05 3 }
+bsRPN-05 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-05 4 }
+bsName-05 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-05 5 }
+bsCl-05 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-05 6 }
+bsLv-05 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-05 7 }
+bsConn-05 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-05 8 }
+bsHoIn-05 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-05 9 }
+bsHoOut-05 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-05 10 }
+bsCallDrop-05 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-05 11 }
+bsAsync-05 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-05 12 }
+bsBusy-05 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-05 13 }
+bsDpcOff-05 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-05 14 }
+
+-- Entry 06
+
+bsMAC-06 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-06 1 }
+bsFrom-06 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-06 2 }
+bsTo-06 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-06 3 }
+bsRPN-06 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-06 4 }
+bsName-06 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-06 5 }
+bsCl-06 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-06 6 }
+bsLv-06 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-06 7 }
+bsConn-06 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-06 8 }
+bsHoIn-06 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-06 9 }
+bsHoOut-06 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-06 10 }
+bsCallDrop-06 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-06 11 }
+bsAsync-06 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-06 12 }
+bsBusy-06 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-06 13 }
+bsDpcOff-06 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-06 14 }
+
+-- Entry 07
+
+bsMAC-07 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-07 1 }
+bsFrom-07 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-07 2 }
+bsTo-07 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-07 3 }
+bsRPN-07 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-07 4 }
+bsName-07 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-07 5 }
+bsCl-07 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-07 6 }
+bsLv-07 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-07 7 }
+bsConn-07 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-07 8 }
+bsHoIn-07 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-07 9 }
+bsHoOut-07 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-07 10 }
+bsCallDrop-07 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-07 11 }
+bsAsync-07 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-07 12 }
+bsBusy-07 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-07 13 }
+bsDpcOff-07 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-07 14 }
+
+-- Entry 08
+
+bsMAC-08 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-08 1 }
+bsFrom-08 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-08 2 }
+bsTo-08 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-08 3 }
+bsRPN-08 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-08 4 }
+bsName-08 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-08 5 }
+bsCl-08 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-08 6 }
+bsLv-08 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-08 7 }
+bsConn-08 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-08 8 }
+bsHoIn-08 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-08 9 }
+bsHoOut-08 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-08 10 }
+bsCallDrop-08 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-08 11 }
+bsAsync-08 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-08 12 }
+bsBusy-08 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-08 13 }
+bsDpcOff-08 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-08 14 }
+
+-- Entry 09
+
+bsMAC-09 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-09 1 }
+bsFrom-09 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-09 2 }
+bsTo-09 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-09 3 }
+bsRPN-09 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-09 4 }
+bsName-09 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-09 5 }
+bsCl-09 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-09 6 }
+bsLv-09 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-09 7 }
+bsConn-09 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-09 8 }
+bsHoIn-09 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-09 9 }
+bsHoOut-09 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-09 10 }
+bsCallDrop-09 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-09 11 }
+bsAsync-09 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-09 12 }
+bsBusy-09 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-09 13 }
+bsDpcOff-09 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-09 14 }
+
+-- Entry 10
+
+bsMAC-10 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-10 1 }
+bsFrom-10 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-10 2 }
+bsTo-10 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-10 3 }
+bsRPN-10 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-10 4 }
+bsName-10 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-10 5 }
+bsCl-10 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-10 6 }
+bsLv-10 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-10 7 }
+bsConn-10 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-10 8 }
+bsHoIn-10 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-10 9 }
+bsHoOut-10 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-10 10 }
+bsCallDrop-10 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-10 11 }
+bsAsync-10 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-10 12 }
+bsBusy-10 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-10 13 }
+bsDpcOff-10 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-10 14 }
+
+-- Entry 11
+
+bsMAC-11 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-11 1 }
+bsFrom-11 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-11 2 }
+bsTo-11 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-11 3 }
+bsRPN-11 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-11 4 }
+bsName-11 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-11 5 }
+bsCl-11 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-11 6 }
+bsLv-11 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-11 7 }
+bsConn-11 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-11 8 }
+bsHoIn-11 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-11 9 }
+bsHoOut-11 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-11 10 }
+bsCallDrop-11 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-11 11 }
+bsAsync-11 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-11 12 }
+bsBusy-11 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-11 13 }
+bsDpcOff-11 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-11 14 }
+
+-- Entry 12
+
+bsMAC-12 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-12 1 }
+bsFrom-12 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-12 2 }
+bsTo-12 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-12 3 }
+bsRPN-12 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-12 4 }
+bsName-12 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-12 5 }
+bsCl-12 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-12 6 }
+bsLv-12 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-12 7 }
+bsConn-12 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-12 8 }
+bsHoIn-12 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-12 9 }
+bsHoOut-12 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-12 10 }
+bsCallDrop-12 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-12 11 }
+bsAsync-12 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-12 12 }
+bsBusy-12 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-12 13 }
+bsDpcOff-12 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-12 14 }
+
+-- Entry 13
+
+bsMAC-13 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-13 1 }
+bsFrom-13 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-13 2 }
+bsTo-13 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-13 3 }
+bsRPN-13 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-13 4 }
+bsName-13 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-13 5 }
+bsCl-13 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-13 6 }
+bsLv-13 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-13 7 }
+bsConn-13 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-13 8 }
+bsHoIn-13 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-13 9 }
+bsHoOut-13 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-13 10 }
+bsCallDrop-13 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-13 11 }
+bsAsync-13 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-13 12 }
+bsBusy-13 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-13 13 }
+bsDpcOff-13 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-13 14 }
+
+-- Entry 14
+
+bsMAC-14 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-14 1 }
+bsFrom-14 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-14 2 }
+bsTo-14 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-14 3 }
+bsRPN-14 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-14 4 }
+bsName-14 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-14 5 }
+bsCl-14 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-14 6 }
+bsLv-14 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-14 7 }
+bsConn-14 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-14 8 }
+bsHoIn-14 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-14 9 }
+bsHoOut-14 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-14 10 }
+bsCallDrop-14 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-14 11 }
+bsAsync-14 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-14 12 }
+bsBusy-14 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-14 13 }
+bsDpcOff-14 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-14 14 }
+
+-- Entry 15
+
+bsMAC-15 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-15 1 }
+bsFrom-15 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-15 2 }
+bsTo-15 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-15 3 }
+bsRPN-15 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-15 4 }
+bsName-15 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-15 5 }
+bsCl-15 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-15 6 }
+bsLv-15 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-15 7 }
+bsConn-15 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-15 8 }
+bsHoIn-15 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-15 9 }
+bsHoOut-15 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-15 10 }
+bsCallDrop-15 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-15 11 }
+bsAsync-15 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-15 12 }
+bsBusy-15 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-15 13 }
+bsDpcOff-15 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-15 14 }
+
+-- Entry 16
+
+bsMAC-16 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-16 1 }
+bsFrom-16 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-16 2 }
+bsTo-16 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-16 3 }
+bsRPN-16 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-16 4 }
+bsName-16 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-16 5 }
+bsCl-16 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-16 6 }
+bsLv-16 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-16 7 }
+bsConn-16 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-16 8 }
+bsHoIn-16 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-16 9 }
+bsHoOut-16 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-16 10 }
+bsCallDrop-16 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-16 11 }
+bsAsync-16 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-16 12 }
+bsBusy-16 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-16 13 }
+bsDpcOff-16 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-16 14 }
+
+-- Entry 17
+
+bsMAC-17 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-17 1 }
+bsFrom-17 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-17 2 }
+bsTo-17 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-17 3 }
+bsRPN-17 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-17 4 }
+bsName-17 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-17 5 }
+bsCl-17 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-17 6 }
+bsLv-17 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-17 7 }
+bsConn-17 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-17 8 }
+bsHoIn-17 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-17 9 }
+bsHoOut-17 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-17 10 }
+bsCallDrop-17 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-17 11 }
+bsAsync-17 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-17 12 }
+bsBusy-17 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-17 13 }
+bsDpcOff-17 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-17 14 }
+
+-- Entry 18
+
+bsMAC-18 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-18 1 }
+bsFrom-18 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-18 2 }
+bsTo-18 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-18 3 }
+bsRPN-18 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-18 4 }
+bsName-18 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-18 5 }
+bsCl-18 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-18 6 }
+bsLv-18 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-18 7 }
+bsConn-18 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-18 8 }
+bsHoIn-18 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-18 9 }
+bsHoOut-18 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-18 10 }
+bsCallDrop-18 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-18 11 }
+bsAsync-18 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-18 12 }
+bsBusy-18 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-18 13 }
+bsDpcOff-18 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-18 14 }
+
+-- Entry 19
+
+bsMAC-19 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-19 1 }
+bsFrom-19 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-19 2 }
+bsTo-19 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-19 3 }
+bsRPN-19 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-19 4 }
+bsName-19 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-19 5 }
+bsCl-19 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-19 6 }
+bsLv-19 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-19 7 }
+bsConn-19 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-19 8 }
+bsHoIn-19 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-19 9 }
+bsHoOut-19 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-19 10 }
+bsCallDrop-19 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-19 11 }
+bsAsync-19 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-19 12 }
+bsBusy-19 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-19 13 }
+bsDpcOff-19 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-19 14 }
+
+-- Entry 20
+
+bsMAC-20 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-20 1 }
+bsFrom-20 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-20 2 }
+bsTo-20 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-20 3 }
+bsRPN-20 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-20 4 }
+bsName-20 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-20 5 }
+bsCl-20 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-20 6 }
+bsLv-20 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-20 7 }
+bsConn-20 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-20 8 }
+bsHoIn-20 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-20 9 }
+bsHoOut-20 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-20 10 }
+bsCallDrop-20 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-20 11 }
+bsAsync-20 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-20 12 }
+bsBusy-20 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-20 13 }
+bsDpcOff-20 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-20 14 }
+
+-- Entry 21
+
+bsMAC-21 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-21 1 }
+bsFrom-21 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-21 2 }
+bsTo-21 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-21 3 }
+bsRPN-21 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-21 4 }
+bsName-21 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-21 5 }
+bsCl-21 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-21 6 }
+bsLv-21 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-21 7 }
+bsConn-21 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-21 8 }
+bsHoIn-21 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-21 9 }
+bsHoOut-21 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-21 10 }
+bsCallDrop-21 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-21 11 }
+bsAsync-21 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-21 12 }
+bsBusy-21 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-21 13 }
+bsDpcOff-21 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-21 14 }
+
+-- Entry 22
+
+bsMAC-22 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-22 1 }
+bsFrom-22 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-22 2 }
+bsTo-22 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-22 3 }
+bsRPN-22 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-22 4 }
+bsName-22 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-22 5 }
+bsCl-22 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-22 6 }
+bsLv-22 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-22 7 }
+bsConn-22 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-22 8 }
+bsHoIn-22 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-22 9 }
+bsHoOut-22 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-22 10 }
+bsCallDrop-22 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-22 11 }
+bsAsync-22 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-22 12 }
+bsBusy-22 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-22 13 }
+bsDpcOff-22 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-22 14 }
+
+-- Entry 23
+
+bsMAC-23 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-23 1 }
+bsFrom-23 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-23 2 }
+bsTo-23 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-23 3 }
+bsRPN-23 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-23 4 }
+bsName-23 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-23 5 }
+bsCl-23 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-23 6 }
+bsLv-23 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-23 7 }
+bsConn-23 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-23 8 }
+bsHoIn-23 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-23 9 }
+bsHoOut-23 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-23 10 }
+bsCallDrop-23 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-23 11 }
+bsAsync-23 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-23 12 }
+bsBusy-23 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-23 13 }
+bsDpcOff-23 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-23 14 }
+
+-- Entry 24
+
+bsMAC-24 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-24 1 }
+bsFrom-24 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-24 2 }
+bsTo-24 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-24 3 }
+bsRPN-24 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-24 4 }
+bsName-24 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-24 5 }
+bsCl-24 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-24 6 }
+bsLv-24 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-24 7 }
+bsConn-24 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-24 8 }
+bsHoIn-24 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-24 9 }
+bsHoOut-24 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-24 10 }
+bsCallDrop-24 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-24 11 }
+bsAsync-24 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-24 12 }
+bsBusy-24 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-24 13 }
+bsDpcOff-24 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-24 14 }
+
+-- Entry 25
+
+bsMAC-25 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-25 1 }
+bsFrom-25 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-25 2 }
+bsTo-25 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-25 3 }
+bsRPN-25 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-25 4 }
+bsName-25 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-25 5 }
+bsCl-25 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-25 6 }
+bsLv-25 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-25 7 }
+bsConn-25 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-25 8 }
+bsHoIn-25 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-25 9 }
+bsHoOut-25 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-25 10 }
+bsCallDrop-25 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-25 11 }
+bsAsync-25 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-25 12 }
+bsBusy-25 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-25 13 }
+bsDpcOff-25 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-25 14 }
+
+-- Entry 26
+
+bsMAC-26 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-26 1 }
+bsFrom-26 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-26 2 }
+bsTo-26 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-26 3 }
+bsRPN-26 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-26 4 }
+bsName-26 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-26 5 }
+bsCl-26 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-26 6 }
+bsLv-26 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-26 7 }
+bsConn-26 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-26 8 }
+bsHoIn-26 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-26 9 }
+bsHoOut-26 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-26 10 }
+bsCallDrop-26 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-26 11 }
+bsAsync-26 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-26 12 }
+bsBusy-26 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-26 13 }
+bsDpcOff-26 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-26 14 }
+
+-- Entry 27
+
+bsMAC-27 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-27 1 }
+bsFrom-27 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-27 2 }
+bsTo-27 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-27 3 }
+bsRPN-27 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-27 4 }
+bsName-27 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-27 5 }
+bsCl-27 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-27 6 }
+bsLv-27 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-27 7 }
+bsConn-27 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-27 8 }
+bsHoIn-27 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-27 9 }
+bsHoOut-27 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-27 10 }
+bsCallDrop-27 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-27 11 }
+bsAsync-27 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-27 12 }
+bsBusy-27 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-27 13 }
+bsDpcOff-27 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-27 14 }
+
+-- Entry 28
+
+bsMAC-28 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-28 1 }
+bsFrom-28 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-28 2 }
+bsTo-28 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-28 3 }
+bsRPN-28 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-28 4 }
+bsName-28 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-28 5 }
+bsCl-28 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-28 6 }
+bsLv-28 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-28 7 }
+bsConn-28 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-28 8 }
+bsHoIn-28 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-28 9 }
+bsHoOut-28 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-28 10 }
+bsCallDrop-28 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-28 11 }
+bsAsync-28 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-28 12 }
+bsBusy-28 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-28 13 }
+bsDpcOff-28 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-28 14 }
+
+-- Entry 29
+
+bsMAC-29 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-29 1 }
+bsFrom-29 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-29 2 }
+bsTo-29 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-29 3 }
+bsRPN-29 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-29 4 }
+bsName-29 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-29 5 }
+bsCl-29 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-29 6 }
+bsLv-29 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-29 7 }
+bsConn-29 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-29 8 }
+bsHoIn-29 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-29 9 }
+bsHoOut-29 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-29 10 }
+bsCallDrop-29 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-29 11 }
+bsAsync-29 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-29 12 }
+bsBusy-29 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-29 13 }
+bsDpcOff-29 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-29 14 }
+
+-- Entry 30
+
+bsMAC-30 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-30 1 }
+bsFrom-30 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-30 2 }
+bsTo-30 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-30 3 }
+bsRPN-30 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-30 4 }
+bsName-30 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-30 5 }
+bsCl-30 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-30 6 }
+bsLv-30 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-30 7 }
+bsConn-30 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-30 8 }
+bsHoIn-30 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-30 9 }
+bsHoOut-30 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-30 10 }
+bsCallDrop-30 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-30 11 }
+bsAsync-30 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-30 12 }
+bsBusy-30 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-30 13 }
+bsDpcOff-30 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-30 14 }
+
+-- Entry 31
+
+bsMAC-31 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-31 1 }
+bsFrom-31 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-31 2 }
+bsTo-31 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-31 3 }
+bsRPN-31 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-31 4 }
+bsName-31 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-31 5 }
+bsCl-31 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-31 6 }
+bsLv-31 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-31 7 }
+bsConn-31 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-31 8 }
+bsHoIn-31 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-31 9 }
+bsHoOut-31 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-31 10 }
+bsCallDrop-31 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-31 11 }
+bsAsync-31 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-31 12 }
+bsBusy-31 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-31 13 }
+bsDpcOff-31 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-31 14 }
+
+-- Entry 32
+
+bsMAC-32 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-32 1 }
+bsFrom-32 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-32 2 }
+bsTo-32 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-32 3 }
+bsRPN-32 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-32 4 }
+bsName-32 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-32 5 }
+bsCl-32 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-32 6 }
+bsLv-32 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-32 7 }
+bsConn-32 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-32 8 }
+bsHoIn-32 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-32 9 }
+bsHoOut-32 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-32 10 }
+bsCallDrop-32 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-32 11 }
+bsAsync-32 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-32 12 }
+bsBusy-32 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-32 13 }
+bsDpcOff-32 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-32 14 }
+
+-- Entry 33
+
+bsMAC-33 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-33 1 }
+bsFrom-33 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-33 2 }
+bsTo-33 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-33 3 }
+bsRPN-33 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-33 4 }
+bsName-33 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-33 5 }
+bsCl-33 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-33 6 }
+bsLv-33 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-33 7 }
+bsConn-33 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-33 8 }
+bsHoIn-33 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-33 9 }
+bsHoOut-33 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-33 10 }
+bsCallDrop-33 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-33 11 }
+bsAsync-33 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-33 12 }
+bsBusy-33 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-33 13 }
+bsDpcOff-33 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-33 14 }
+
+-- Entry 34
+
+bsMAC-34 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-34 1 }
+bsFrom-34 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-34 2 }
+bsTo-34 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-34 3 }
+bsRPN-34 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-34 4 }
+bsName-34 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-34 5 }
+bsCl-34 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-34 6 }
+bsLv-34 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-34 7 }
+bsConn-34 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-34 8 }
+bsHoIn-34 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-34 9 }
+bsHoOut-34 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-34 10 }
+bsCallDrop-34 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-34 11 }
+bsAsync-34 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-34 12 }
+bsBusy-34 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-34 13 }
+bsDpcOff-34 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-34 14 }
+
+-- Entry 35
+
+bsMAC-35 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-35 1 }
+bsFrom-35 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-35 2 }
+bsTo-35 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-35 3 }
+bsRPN-35 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-35 4 }
+bsName-35 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-35 5 }
+bsCl-35 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-35 6 }
+bsLv-35 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-35 7 }
+bsConn-35 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-35 8 }
+bsHoIn-35 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-35 9 }
+bsHoOut-35 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-35 10 }
+bsCallDrop-35 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-35 11 }
+bsAsync-35 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-35 12 }
+bsBusy-35 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-35 13 }
+bsDpcOff-35 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-35 14 }
+
+-- Entry 36
+
+bsMAC-36 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-36 1 }
+bsFrom-36 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-36 2 }
+bsTo-36 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-36 3 }
+bsRPN-36 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-36 4 }
+bsName-36 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-36 5 }
+bsCl-36 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-36 6 }
+bsLv-36 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-36 7 }
+bsConn-36 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-36 8 }
+bsHoIn-36 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-36 9 }
+bsHoOut-36 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-36 10 }
+bsCallDrop-36 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-36 11 }
+bsAsync-36 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-36 12 }
+bsBusy-36 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-36 13 }
+bsDpcOff-36 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-36 14 }
+
+-- Entry 37
+
+bsMAC-37 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-37 1 }
+bsFrom-37 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-37 2 }
+bsTo-37 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-37 3 }
+bsRPN-37 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-37 4 }
+bsName-37 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-37 5 }
+bsCl-37 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-37 6 }
+bsLv-37 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-37 7 }
+bsConn-37 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-37 8 }
+bsHoIn-37 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-37 9 }
+bsHoOut-37 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-37 10 }
+bsCallDrop-37 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-37 11 }
+bsAsync-37 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-37 12 }
+bsBusy-37 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-37 13 }
+bsDpcOff-37 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-37 14 }
+
+-- Entry 38
+
+bsMAC-38 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-38 1 }
+bsFrom-38 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-38 2 }
+bsTo-38 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-38 3 }
+bsRPN-38 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-38 4 }
+bsName-38 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-38 5 }
+bsCl-38 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-38 6 }
+bsLv-38 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-38 7 }
+bsConn-38 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-38 8 }
+bsHoIn-38 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-38 9 }
+bsHoOut-38 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-38 10 }
+bsCallDrop-38 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-38 11 }
+bsAsync-38 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-38 12 }
+bsBusy-38 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-38 13 }
+bsDpcOff-38 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-38 14 }
+
+-- Entry 39
+
+bsMAC-39 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-39 1 }
+bsFrom-39 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-39 2 }
+bsTo-39 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-39 3 }
+bsRPN-39 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-39 4 }
+bsName-39 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-39 5 }
+bsCl-39 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-39 6 }
+bsLv-39 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-39 7 }
+bsConn-39 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-39 8 }
+bsHoIn-39 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-39 9 }
+bsHoOut-39 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-39 10 }
+bsCallDrop-39 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-39 11 }
+bsAsync-39 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-39 12 }
+bsBusy-39 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-39 13 }
+bsDpcOff-39 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-39 14 }
+
+-- Entry 40
+
+bsMAC-40 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-40 1 }
+bsFrom-40 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-40 2 }
+bsTo-40 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-40 3 }
+bsRPN-40 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-40 4 }
+bsName-40 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-40 5 }
+bsCl-40 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-40 6 }
+bsLv-40 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-40 7 }
+bsConn-40 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-40 8 }
+bsHoIn-40 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-40 9 }
+bsHoOut-40 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-40 10 }
+bsCallDrop-40 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-40 11 }
+bsAsync-40 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-40 12 }
+bsBusy-40 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-40 13 }
+bsDpcOff-40 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-40 14 }
+
+-- Entry 41
+
+bsMAC-41 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-41 1 }
+bsFrom-41 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-41 2 }
+bsTo-41 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-41 3 }
+bsRPN-41 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-41 4 }
+bsName-41 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-41 5 }
+bsCl-41 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-41 6 }
+bsLv-41 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-41 7 }
+bsConn-41 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-41 8 }
+bsHoIn-41 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-41 9 }
+bsHoOut-41 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-41 10 }
+bsCallDrop-41 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-41 11 }
+bsAsync-41 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-41 12 }
+bsBusy-41 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-41 13 }
+bsDpcOff-41 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-41 14 }
+
+-- Entry 42
+
+bsMAC-42 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-42 1 }
+bsFrom-42 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-42 2 }
+bsTo-42 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-42 3 }
+bsRPN-42 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-42 4 }
+bsName-42 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-42 5 }
+bsCl-42 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-42 6 }
+bsLv-42 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-42 7 }
+bsConn-42 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-42 8 }
+bsHoIn-42 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-42 9 }
+bsHoOut-42 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-42 10 }
+bsCallDrop-42 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-42 11 }
+bsAsync-42 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-42 12 }
+bsBusy-42 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-42 13 }
+bsDpcOff-42 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-42 14 }
+
+-- Entry 43
+
+bsMAC-43 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-43 1 }
+bsFrom-43 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-43 2 }
+bsTo-43 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-43 3 }
+bsRPN-43 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-43 4 }
+bsName-43 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-43 5 }
+bsCl-43 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-43 6 }
+bsLv-43 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-43 7 }
+bsConn-43 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-43 8 }
+bsHoIn-43 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-43 9 }
+bsHoOut-43 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-43 10 }
+bsCallDrop-43 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-43 11 }
+bsAsync-43 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-43 12 }
+bsBusy-43 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-43 13 }
+bsDpcOff-43 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-43 14 }
+
+-- Entry 44
+
+bsMAC-44 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-44 1 }
+bsFrom-44 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-44 2 }
+bsTo-44 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-44 3 }
+bsRPN-44 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-44 4 }
+bsName-44 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-44 5 }
+bsCl-44 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-44 6 }
+bsLv-44 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-44 7 }
+bsConn-44 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-44 8 }
+bsHoIn-44 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-44 9 }
+bsHoOut-44 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-44 10 }
+bsCallDrop-44 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-44 11 }
+bsAsync-44 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-44 12 }
+bsBusy-44 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-44 13 }
+bsDpcOff-44 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-44 14 }
+
+-- Entry 45
+
+bsMAC-45 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-45 1 }
+bsFrom-45 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-45 2 }
+bsTo-45 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-45 3 }
+bsRPN-45 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-45 4 }
+bsName-45 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-45 5 }
+bsCl-45 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-45 6 }
+bsLv-45 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-45 7 }
+bsConn-45 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-45 8 }
+bsHoIn-45 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-45 9 }
+bsHoOut-45 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-45 10 }
+bsCallDrop-45 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-45 11 }
+bsAsync-45 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-45 12 }
+bsBusy-45 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-45 13 }
+bsDpcOff-45 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-45 14 }
+
+-- Entry 46
+
+bsMAC-46 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-46 1 }
+bsFrom-46 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-46 2 }
+bsTo-46 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-46 3 }
+bsRPN-46 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-46 4 }
+bsName-46 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-46 5 }
+bsCl-46 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-46 6 }
+bsLv-46 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-46 7 }
+bsConn-46 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-46 8 }
+bsHoIn-46 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-46 9 }
+bsHoOut-46 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-46 10 }
+bsCallDrop-46 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-46 11 }
+bsAsync-46 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-46 12 }
+bsBusy-46 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-46 13 }
+bsDpcOff-46 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-46 14 }
+
+-- Entry 47
+
+bsMAC-47 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-47 1 }
+bsFrom-47 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-47 2 }
+bsTo-47 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-47 3 }
+bsRPN-47 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-47 4 }
+bsName-47 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-47 5 }
+bsCl-47 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-47 6 }
+bsLv-47 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-47 7 }
+bsConn-47 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-47 8 }
+bsHoIn-47 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-47 9 }
+bsHoOut-47 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-47 10 }
+bsCallDrop-47 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-47 11 }
+bsAsync-47 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-47 12 }
+bsBusy-47 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-47 13 }
+bsDpcOff-47 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-47 14 }
+
+-- Entry 48
+
+bsMAC-48 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-48 1 }
+bsFrom-48 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-48 2 }
+bsTo-48 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-48 3 }
+bsRPN-48 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-48 4 }
+bsName-48 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-48 5 }
+bsCl-48 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-48 6 }
+bsLv-48 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-48 7 }
+bsConn-48 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-48 8 }
+bsHoIn-48 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-48 9 }
+bsHoOut-48 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-48 10 }
+bsCallDrop-48 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-48 11 }
+bsAsync-48 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-48 12 }
+bsBusy-48 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-48 13 }
+bsDpcOff-48 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-48 14 }
+
+-- Entry 49
+
+bsMAC-49 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-49 1 }
+bsFrom-49 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-49 2 }
+bsTo-49 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-49 3 }
+bsRPN-49 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-49 4 }
+bsName-49 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-49 5 }
+bsCl-49 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-49 6 }
+bsLv-49 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-49 7 }
+bsConn-49 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-49 8 }
+bsHoIn-49 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-49 9 }
+bsHoOut-49 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-49 10 }
+bsCallDrop-49 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-49 11 }
+bsAsync-49 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-49 12 }
+bsBusy-49 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-49 13 }
+bsDpcOff-49 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-49 14 }
+
+-- Entry 50
+
+bsMAC-50 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-50 1 }
+bsFrom-50 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-50 2 }
+bsTo-50 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-50 3 }
+bsRPN-50 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-50 4 }
+bsName-50 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-50 5 }
+bsCl-50 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-50 6 }
+bsLv-50 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-50 7 }
+bsConn-50 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-50 8 }
+bsHoIn-50 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-50 9 }
+bsHoOut-50 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-50 10 }
+bsCallDrop-50 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-50 11 }
+bsAsync-50 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-50 12 }
+bsBusy-50 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-50 13 }
+bsDpcOff-50 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-50 14 }
+
+-- Entry 51
+
+bsMAC-51 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-51 1 }
+bsFrom-51 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-51 2 }
+bsTo-51 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-51 3 }
+bsRPN-51 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-51 4 }
+bsName-51 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-51 5 }
+bsCl-51 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-51 6 }
+bsLv-51 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-51 7 }
+bsConn-51 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-51 8 }
+bsHoIn-51 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-51 9 }
+bsHoOut-51 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-51 10 }
+bsCallDrop-51 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-51 11 }
+bsAsync-51 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-51 12 }
+bsBusy-51 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-51 13 }
+bsDpcOff-51 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-51 14 }
+
+-- Entry 52
+
+bsMAC-52 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-52 1 }
+bsFrom-52 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-52 2 }
+bsTo-52 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-52 3 }
+bsRPN-52 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-52 4 }
+bsName-52 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-52 5 }
+bsCl-52 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-52 6 }
+bsLv-52 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-52 7 }
+bsConn-52 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-52 8 }
+bsHoIn-52 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-52 9 }
+bsHoOut-52 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-52 10 }
+bsCallDrop-52 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-52 11 }
+bsAsync-52 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-52 12 }
+bsBusy-52 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-52 13 }
+bsDpcOff-52 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-52 14 }
+
+-- Entry 53
+
+bsMAC-53 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-53 1 }
+bsFrom-53 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-53 2 }
+bsTo-53 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-53 3 }
+bsRPN-53 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-53 4 }
+bsName-53 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-53 5 }
+bsCl-53 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-53 6 }
+bsLv-53 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-53 7 }
+bsConn-53 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-53 8 }
+bsHoIn-53 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-53 9 }
+bsHoOut-53 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-53 10 }
+bsCallDrop-53 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-53 11 }
+bsAsync-53 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-53 12 }
+bsBusy-53 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-53 13 }
+bsDpcOff-53 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-53 14 }
+
+-- Entry 54
+
+bsMAC-54 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-54 1 }
+bsFrom-54 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-54 2 }
+bsTo-54 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-54 3 }
+bsRPN-54 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-54 4 }
+bsName-54 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-54 5 }
+bsCl-54 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-54 6 }
+bsLv-54 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-54 7 }
+bsConn-54 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-54 8 }
+bsHoIn-54 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-54 9 }
+bsHoOut-54 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-54 10 }
+bsCallDrop-54 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-54 11 }
+bsAsync-54 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-54 12 }
+bsBusy-54 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-54 13 }
+bsDpcOff-54 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-54 14 }
+
+-- Entry 55
+
+bsMAC-55 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-55 1 }
+bsFrom-55 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-55 2 }
+bsTo-55 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-55 3 }
+bsRPN-55 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-55 4 }
+bsName-55 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-55 5 }
+bsCl-55 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-55 6 }
+bsLv-55 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-55 7 }
+bsConn-55 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-55 8 }
+bsHoIn-55 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-55 9 }
+bsHoOut-55 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-55 10 }
+bsCallDrop-55 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-55 11 }
+bsAsync-55 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-55 12 }
+bsBusy-55 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-55 13 }
+bsDpcOff-55 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-55 14 }
+
+-- Entry 56
+
+bsMAC-56 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-56 1 }
+bsFrom-56 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-56 2 }
+bsTo-56 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-56 3 }
+bsRPN-56 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-56 4 }
+bsName-56 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-56 5 }
+bsCl-56 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-56 6 }
+bsLv-56 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-56 7 }
+bsConn-56 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-56 8 }
+bsHoIn-56 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-56 9 }
+bsHoOut-56 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-56 10 }
+bsCallDrop-56 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-56 11 }
+bsAsync-56 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-56 12 }
+bsBusy-56 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-56 13 }
+bsDpcOff-56 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-56 14 }
+
+-- Entry 57
+
+bsMAC-57 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-57 1 }
+bsFrom-57 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-57 2 }
+bsTo-57 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-57 3 }
+bsRPN-57 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-57 4 }
+bsName-57 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-57 5 }
+bsCl-57 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-57 6 }
+bsLv-57 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-57 7 }
+bsConn-57 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-57 8 }
+bsHoIn-57 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-57 9 }
+bsHoOut-57 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-57 10 }
+bsCallDrop-57 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-57 11 }
+bsAsync-57 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-57 12 }
+bsBusy-57 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-57 13 }
+bsDpcOff-57 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-57 14 }
+
+-- Entry 58
+
+bsMAC-58 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-58 1 }
+bsFrom-58 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-58 2 }
+bsTo-58 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-58 3 }
+bsRPN-58 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-58 4 }
+bsName-58 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-58 5 }
+bsCl-58 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-58 6 }
+bsLv-58 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-58 7 }
+bsConn-58 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-58 8 }
+bsHoIn-58 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-58 9 }
+bsHoOut-58 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-58 10 }
+bsCallDrop-58 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-58 11 }
+bsAsync-58 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-58 12 }
+bsBusy-58 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-58 13 }
+bsDpcOff-58 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-58 14 }
+
+-- Entry 59
+
+bsMAC-59 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-59 1 }
+bsFrom-59 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-59 2 }
+bsTo-59 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-59 3 }
+bsRPN-59 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-59 4 }
+bsName-59 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-59 5 }
+bsCl-59 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-59 6 }
+bsLv-59 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-59 7 }
+bsConn-59 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-59 8 }
+bsHoIn-59 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-59 9 }
+bsHoOut-59 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-59 10 }
+bsCallDrop-59 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-59 11 }
+bsAsync-59 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-59 12 }
+bsBusy-59 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-59 13 }
+bsDpcOff-59 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-59 14 }
+
+-- Entry 60
+
+bsMAC-60 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-60 1 }
+bsFrom-60 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-60 2 }
+bsTo-60 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-60 3 }
+bsRPN-60 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-60 4 }
+bsName-60 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-60 5 }
+bsCl-60 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-60 6 }
+bsLv-60 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-60 7 }
+bsConn-60 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-60 8 }
+bsHoIn-60 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-60 9 }
+bsHoOut-60 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-60 10 }
+bsCallDrop-60 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-60 11 }
+bsAsync-60 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-60 12 }
+bsBusy-60 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-60 13 }
+bsDpcOff-60 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-60 14 }
+
+-- Entry 61
+
+bsMAC-61 OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0 | 12))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Index, BS's MAC"
+    ::= { bsEntry-61 1 }
+bsFrom-61 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics start date"
+    ::= { bsEntry-61 2 }
+bsTo-61 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Statistics stop date"
+    ::= { bsEntry-61 3 }
+bsRPN-61 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's RPN"
+    ::= { bsEntry-61 4 }
+bsName-61 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's name"
+    ::= { bsEntry-61 5 }
+bsCl-61 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's cluster"
+    ::= { bsEntry-61 6 }
+bsLv-61 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's sync level"
+    ::= { bsEntry-61 7 }
+bsConn-61 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection setup counter"
+    ::= { bsEntry-61 8 }
+bsHoIn-61 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover setup counter"
+    ::= { bsEntry-61 9 }
+bsHoOut-61 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "DECT MAC layer connection handover release counter"
+    ::= { bsEntry-61 10 }
+bsCallDrop-61 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's active call drops counter"
+    ::= { bsEntry-61 11 }
+bsAsync-61 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's async counter"
+    ::= { bsEntry-61 12 }
+bsBusy-61 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's busy state counter"
+    ::= { bsEntry-61 13 }
+bsDpcOff-61 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "BS's lost TCP/IP connection counter"
+    ::= { bsEntry-61 14 }
+
+END

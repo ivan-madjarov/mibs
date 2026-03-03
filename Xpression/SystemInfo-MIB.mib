@@ -1,0 +1,526 @@
+--************************************************************************--
+--  Name     : SNMP MIB for OpenScape Xpressions and OpenScape CMP 	      --
+--                                                                        --
+--  Date     : 2010-04-29                                                 --
+--                                                                        --
+--  Version  : 1.0.0                                                      --
+--                                                                        --
+--  Author   : Cleber J. Gomes de Campos                                  --
+--                                                                        --
+--  Purpose  : status report of Xpressions modules, logs and information  --
+--                                                                        --
+--************************************************************************--
+
+--*HOC********************************************************************--
+--*                                                                      *--
+--*    HISTORY OF CHANGE:                                                *--
+--*                                                                      *--
+--************************************************************************--
+--*VERS| DATE | CHANGES                                      | KZ | VGNO *--
+--*    |yymmdd|                                              |    |      *--
+--************************************************************************--
+--* 01 |100429| first version of XpressionsCmp               |cle |  N   *--
+--* 02 |111111| mib was adequated to the new SEN structure   |fte |  N   *--
+--* 03 |120112| minor changes                                |fte |  N   *--
+--* 04 |120705| systemVersion leaf was added                 |lcp |  N   *--
+--************************************************************************--
+
+   SystemInfo-MIB DEFINITIONS ::= BEGIN
+
+   IMPORTS
+        MODULE-IDENTITY, OBJECT-TYPE, NOTIFICATION-TYPE
+       FROM SNMPv2-SMI
+        enterprises
+       FROM RFC1155-SMI;
+
+-- Some MIB compilers require that the following lines
+-- which define the path to this MIB are added.
+
+-- tree              OBJECT IDENTIFIER ::= { iso(1) org(3) dod(6) internet(1) }
+-- private           OBJECT IDENTIFIER ::= { tree 4 }
+-- enterprises       OBJECT IDENTIFIER ::= { private 1 }
+-- sen               OBJECT IDENTIFIER ::= { enterprises 32804 }
+-- senProducts       OBJECT IDENTIFIER ::= { sen 1 }
+-- xpressions        OBJECT IDENTIFIER ::= { senProducts 2 }
+
+   systemInfo        MODULE-IDENTITY
+       LAST-UPDATED  "1201120000Z" -- Jan 12, 2011
+       ORGANIZATION  "EN DB"
+       CONTACT-INFO  "Cleber Campos,
+                      Email: cle@cycos.com"
+       DESCRIPTION   "for Siemens Xpressions and OpenScape CMP"
+       ::= { xpressions 1 }
+
+   sen               OBJECT IDENTIFIER ::= { enterprises 32804 }
+   senProducts       OBJECT IDENTIFIER ::= { sen 1 }
+   xpressions        OBJECT IDENTIFIER ::= { senProducts 2 }
+
+     xpressionsInfo             OBJECT IDENTIFIER ::= {systemInfo 1}
+     aplsInfo                   OBJECT IDENTIFIER ::= {systemInfo 2}
+     physicalLinesInfo          OBJECT IDENTIFIER ::= {systemInfo 3}
+     hardDiskInfo               OBJECT IDENTIFIER ::= {systemInfo 4}
+     messagesInfo               OBJECT IDENTIFIER ::= {systemInfo 5}
+     alarmsInfo                 OBJECT IDENTIFIER ::= {systemInfo 6}
+
+   DisplayString ::= OCTET STRING
+       -- This data type is used to model textual information taken
+       -- from the NVT ASCII character set.  By convention, objects
+       -- with this syntax are declared as having SIZE (0..255)
+
+       -- States for node- /application- /container- and service- groups:
+       --                           DisplayString:
+       -- started / executing    =  normal
+       -- started / configuring  =  warning
+       -- stopped                =  critical
+
+--************************************************************************--
+--******                     Accessible Elements                    ******--
+--************************************************************************--
+
+    --*******************************************--
+    --************** Info Group *****************--
+    --*******************************************--
+
+    systemName OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "Name of the Xpressions server"
+        ::= { xpressionsInfo 1 }
+
+    systemVersion OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "Version of the Xpressions server"
+        ::= { xpressionsInfo 2 }
+
+    ipAddress OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "IP address"
+        ::= { xpressionsInfo 3 }
+
+    hostName OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "Computer host name"
+        ::= { xpressionsInfo 4 }
+
+    subnetMask OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "Subnet mask"
+        ::= { xpressionsInfo 5 }
+
+    defaultGateway OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "Default gateway"
+        ::= { xpressionsInfo 6 }
+
+    systemType OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "System type"
+        ::= { xpressionsInfo 7 }
+
+    language OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "Installed Language"
+        ::= { xpressionsInfo 8 }
+
+    voicemailProtocol OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "Voice mail protocol"
+        ::= { xpressionsInfo 9 }
+
+    osVersion OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "OS Version"
+        ::= { xpressionsInfo 10 }
+
+    osServicePack OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "OS Service Pack"
+        ::= { xpressionsInfo 11 }
+
+    computerName OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "NetBIOS name"
+        ::= { xpressionsInfo 12 }
+
+        -- A Windows machine's NetBIOS name is not to be confused with the computer's host name.
+        -- Generally a computer running TCP/IP (whether it's a Windows machine or not) has a host
+        -- name (also sometimes called a machine name or a DNS name). Generally the host name of
+        -- a Windows computer is based on the NetBIOS name plus the Primary DNS Suffix, which are
+        -- both set in the System Properties dialog box.
+
+    totalMemory OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "Total Memory"
+        ::= { xpressionsInfo 13 }
+
+    availableMemory OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "Available Memory"
+        ::= { xpressionsInfo 14 }
+
+    --*******************************************--
+    --************** Apls Group *****************--
+    --*******************************************--
+
+    aplsTable OBJECT-TYPE
+        SYNTAX      SEQUENCE OF NodeAplEntry
+        MAX-ACCESS  accessible-for-notify
+        STATUS      current
+        DESCRIPTION
+                    "This table shows the contents of Apls entries.
+                    A APL is a service running in the hosting
+                    machine."
+        ::= { aplsInfo 1 }
+
+    nodeAplEntry  OBJECT-TYPE
+        SYNTAX      NodeAplEntry
+        MAX-ACCESS  not-accessible
+        STATUS      current
+        DESCRIPTION
+                    "The Apl table entries."
+        INDEX { nodeDisplayName }
+        ::= { aplsTable 1 }
+
+    NodeAplEntry ::= SEQUENCE {
+           nodeDisplayName       DisplayString,
+           nodeBuildNumber       DisplayString,
+           nodeDescription       DisplayString,
+           nodeStatus            DisplayString
+        }
+
+     nodeDisplayName OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "The nodename."
+        ::= { nodeAplEntry 1 }
+
+    nodeBuildNumber OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "The build number of the node."
+        ::= { nodeAplEntry 2 }
+
+    nodeDescription OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "A description of the node."
+        ::= { nodeAplEntry 3 }
+
+    nodeStatus OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "The status of the node."
+        ::= { nodeAplEntry 4 }
+
+
+    --*******************************************--
+    --******** Physical Lines Group *************--
+    --*******************************************--
+
+    physicalLinesTable OBJECT-TYPE
+        SYNTAX      SEQUENCE OF PhysicalLineEntry
+        MAX-ACCESS  accessible-for-notify
+        STATUS      current
+        DESCRIPTION
+                    "This table shows the contents of lines entries."
+        ::= { physicalLinesInfo 1 }
+
+    physicalLineEntry  OBJECT-TYPE
+        SYNTAX      PhysicalLineEntry
+        MAX-ACCESS  not-accessible
+        STATUS      current
+        DESCRIPTION
+                    "The Apl table entries."
+        INDEX { nodePhysicalLineName }
+        ::= { physicalLinesTable 1 }
+
+    PhysicalLineEntry ::= SEQUENCE {
+           nodePhysicalLineName       DisplayString,
+           nodePhysicalLineStatus     DisplayString
+        }
+
+     nodePhysicalLineName OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "The Physical Line Name."
+        ::= { physicalLineEntry 1 }
+
+    nodePhysicalLineStatus OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "The Physical Line status."
+        ::= { physicalLineEntry 2 }
+
+
+    --*******************************************--
+    --******** Hard disk Group ******************--
+    --*******************************************--
+
+    hardDiskTable OBJECT-TYPE
+        SYNTAX      SEQUENCE OF HardDiskEntry
+        MAX-ACCESS  accessible-for-notify
+        STATUS      current
+        DESCRIPTION
+                    "This table shows the hard disks of the host machine."
+        ::= { hardDiskInfo 1 }
+
+    hardDiskEntry  OBJECT-TYPE
+        SYNTAX      HardDiskEntry
+        MAX-ACCESS  not-accessible
+        STATUS      current
+        DESCRIPTION
+                    "The hard disk entrie."
+        INDEX { nodeHardDiskName }
+        ::= { hardDiskTable 1 }
+
+    HardDiskEntry ::= SEQUENCE {
+           nodeHardDiskName          DisplayString,
+           nodeHardDiskUsedSpace     DisplayString
+        }
+
+     nodeHardDiskName OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "The hard disk name or description."
+        ::= { hardDiskEntry 1 }
+
+    nodeHardDiskUsedSpace OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "The hard disk used space."
+        ::= { hardDiskEntry 2 }
+
+
+    --*******************************************--
+    --***** Messages/Log Group ******************--
+    --*******************************************--
+
+    logTable OBJECT-TYPE
+        SYNTAX      SEQUENCE OF LogEntry
+        MAX-ACCESS  accessible-for-notify
+        STATUS      current
+        DESCRIPTION
+           "This table shows the latest lines of log availble in the server."
+        ::= { messagesInfo 1 }
+
+    logEntry  OBJECT-TYPE
+        SYNTAX      LogEntry
+        MAX-ACCESS  not-accessible
+        STATUS      current
+        DESCRIPTION
+                    "Log line."
+        INDEX { nodeLogTimeStamp }
+        ::= { logTable 1 }
+
+    LogEntry ::= SEQUENCE {
+           nodeLogLevel             DisplayString,
+           nodeLogTimeStamp         DisplayString,
+           nodeLogModule         DisplayString,
+           nodeLogTopic             DisplayString,
+           nodeLogMessage         DisplayString
+        }
+
+     nodeLogLevel OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "The log level (error/warning/info or debug level."
+        ::= { logEntry 1 }
+
+     nodeLogTimeStamp OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "The log time stamp."
+        ::= { logEntry 2 }
+
+    nodeLogModule OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "The module that wrote the log line."
+        ::= { logEntry 3 }
+
+    nodeLogTopic OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "The topic of the log."
+        ::= { logEntry 4 }
+
+    nodeLogMessage OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              read-only
+        STATUS                  current
+        DESCRIPTION
+            "The log text."
+        ::= { logEntry 5 }
+
+--************************************************************************--
+--******                 Non Accessible Elements                    ******--
+--************************************************************************--
+
+    --*******************************************--
+    --************** trap Group *****************--
+    --*******************************************--
+   fatalErrorAtServer  NOTIFICATION-TYPE
+       OBJECTS {
+          alarmModuleName,
+          alarmTopicName,
+          alarmLevel,
+          alarmMessage
+          }
+       STATUS      current
+       DESCRIPTION
+                   "If a fatal error occurs in the server
+                    this trap will be sent to the management station
+                    containing the server module name, the topic name,
+                    the log level and the log message"
+       ::= { alarmsInfo 1 }
+
+   errorAtServer  NOTIFICATION-TYPE
+       OBJECTS {
+          alarmModuleName,
+          alarmTopicName,
+          alarmLevel,
+          alarmMessage
+          }
+       STATUS      current
+       DESCRIPTION
+                   "If an error occurs in the server
+                    this trap will be sent to the management station
+                    containing the server module name, the topic name,
+                    the log level and the log message"
+       ::= { alarmsInfo 2 }
+
+   warningAtServer  NOTIFICATION-TYPE
+       OBJECTS {
+          alarmModuleName,
+          alarmTopicName,
+          alarmLevel,
+          alarmMessage
+          }
+       STATUS      current
+       DESCRIPTION
+                   "If a warning occurs in the server
+                    this trap will be sent to the management station
+                    containing the server module name, the topic name,
+                    the log level and the log message"
+       ::= { alarmsInfo 3 }
+
+   alarmAtServer  NOTIFICATION-TYPE
+       OBJECTS {
+          alarmModuleName,
+          alarmTopicName,
+          alarmLevel,
+          alarmMessage
+          }
+       STATUS      current
+       DESCRIPTION
+                   "If any configured alarm occurs in the server
+                    a trap will be sent to the management station
+                    containing the server module name, the topic name,
+                    the log level and the log message. This configuration
+                    can produce a large quantity of traps and maybe
+                    not be desired"
+       ::= { alarmsInfo 4 }
+
+
+    alarmModuleName OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              not-accessible
+        STATUS                  current
+        DESCRIPTION
+            "The module name"
+        ::= { alarmsInfo 5 }
+
+    alarmTopicName OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              not-accessible
+        STATUS                  current
+        DESCRIPTION
+            "The topic name"
+        ::= { alarmsInfo 6 }
+
+    alarmLevel OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              not-accessible
+        STATUS                  current
+        DESCRIPTION
+            "The alarm  level (fatal error, error, warning)"
+        ::= { alarmsInfo 7 }
+
+    alarmMessage OBJECT-TYPE
+        SYNTAX                  DisplayString
+        MAX-ACCESS              not-accessible
+        STATUS                  current
+        DESCRIPTION
+            "The alarm message"
+        ::= { alarmsInfo 8 }
+
+    --*******************************************--
+    --******************* END *******************--
+    --*******************************************--
+
+END

@@ -1,0 +1,69 @@
+SEN-ROOT-MIB DEFINITIONS ::= BEGIN
+
+-- ===================================================================
+--  Copyright © 2013 Unify GmbH & Co. KG
+--  formerly Siemens Enterprise Communications
+--
+--  All Rights Reserved.
+--
+--  Reproduction of this document is authorized on condition that
+--  this copyright notice is included.
+--
+--  This MIB document embodies proprietary intellectual property. 
+--  of Unify, which retains all title and ownership in this MIB,
+--  including any revisions.
+--
+--  This module will be extended, as required.  
+--
+--  Unify reserves the right to make changes in specification and
+--  other information contained in this document without prior notice.
+--  The reader should consult Unify to determine whether any such
+--  changes have been made.
+--
+--  Copyright © 2013 Unify GmbH & Co. KG  
+-- ===================================================================
+
+
+-- ===================================================================
+-- Revision History           (Date needs to match LAST-UPDATED below)
+-- 2011-05-31 Anton Sudi      Initial issue
+-- 2013-10-22 Michael Tietsch Rebranding (Siemens ... -> Unify)
+-- ===================================================================
+
+
+
+
+   IMPORTS
+       MODULE-IDENTITY,
+       enterprises
+           FROM SNMPv2-SMI
+       TEXTUAL-CONVENTION
+           FROM SNMPv2-TC;
+
+sen MODULE-IDENTITY
+    LAST-UPDATED "1310220000Z"
+    ORGANIZATION "Unify"
+    CONTACT-INFO
+        "Michael Tietsch
+         Email:  michael.tietsch@unify.com"
+    DESCRIPTION
+        "Top level module for all Unify MIBs"
+    ::= { enterprises 32804}
+
+
+--  Unify specific branches
+--  =======================
+
+   senProducts OBJECT IDENTIFIER ::= { sen 1 }
+-- Unify Product specific MIBs
+	
+
+    senCommon OBJECT IDENTIFIER ::= { sen 2 }
+--  Common Unify MIBs used by several SEN products"
+	
+ 
+    senExperimental OBJECT IDENTIFIER ::= { sen 3 }
+--  Experimental MIBs used for prototypes or testing purposes"
+
+
+END

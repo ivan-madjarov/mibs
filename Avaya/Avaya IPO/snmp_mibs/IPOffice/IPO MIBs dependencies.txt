@@ -1,0 +1,3 @@
+IPO-MIB depends on AVAYAGEN-MIB
+IPO-PROD-MIB depends on IPO-MIB
+IPO-PHONES-MIB depends on IPO-MIB

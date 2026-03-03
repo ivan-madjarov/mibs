@@ -1,0 +1,171 @@
+-- Deep Security System Event MIB
+-- SNMP V2 Version
+
+DEEPSECURITY-MIB DEFINITIONS	::= BEGIN
+
+IMPORTS
+	enterprises				FROM SNMPv2-SMI
+	DisplayString			FROM SNMPv2-TC
+	OBJECT-TYPE				FROM SNMPv2-SMI	
+	NOTIFICATION-TYPE		FROM SNMPv2-SMI;
+
+---------------------------------------------------------------------------
+--
+-- Deep Security Module Identity
+--
+---------------------------------------------------------------------------
+
+deepSecurityMIB MODULE-IDENTITY
+	LAST-UPDATED			"200609260000Z"
+	ORGANIZATION			"Deep Security"
+	CONTACT-INFO
+		""
+	DESCRIPTION	
+		""
+	REVISION				"200609250000Z"
+	DESCRIPTION
+		"Initial version"
+		
+	::= { enterprises 26911 }
+---------------------------------------------------------------------------
+--
+-- Deep Security Tree Structure
+--
+---------------------------------------------------------------------------
+
+	deepSecurity			OBJECT IDENTIFIER ::= { enterprises 26911 }
+	products				OBJECT IDENTIFIER ::= { deepSecurity 1 }
+	manager					OBJECT IDENTIFIER ::= { products 1 }
+	systemEvent				OBJECT IDENTIFIER ::= { manager 1 }
+
+---------------------------------------------------------------------------
+--
+-- SystemEvent objects and structures
+--
+---------------------------------------------------------------------------
+
+	systemEventID OBJECT-TYPE
+		SYNTAX				INTEGER
+		MAX-ACCESS			read-only
+		STATUS				current
+		DESCRIPTION			"The SystemEvent Record SystemEventID field."
+		::= { systemEvent 1 }
+
+	systemEventAdministratorID OBJECT-TYPE
+		SYNTAX				INTEGER
+		MAX-ACCESS			read-only
+		STATUS				current
+		DESCRIPTION			"The SystemEvent Record AdministratorID field."
+		::= { systemEvent 2 }
+
+	systemEventTargetType OBJECT-TYPE
+		SYNTAX				DisplayString
+		MAX-ACCESS			read-only
+		STATUS				current
+		DESCRIPTION			"The SystemEvent Record TargetType field."
+		::= { systemEvent 3 }
+
+	systemEventTargetID OBJECT-TYPE
+		SYNTAX				INTEGER
+		MAX-ACCESS			read-only
+		STATUS				current
+		DESCRIPTION			"The SystemEvent Record TargetID field."
+		::= { systemEvent 4 }
+
+	systemEventTargetName OBJECT-TYPE
+		SYNTAX				DisplayString
+		MAX-ACCESS			read-only
+		STATUS				current
+		DESCRIPTION			"The SystemEvent Record TargetName field."
+		::= { systemEvent 5 }
+
+	systemEventTime OBJECT-TYPE
+		SYNTAX				DisplayString
+		MAX-ACCESS			read-only
+		STATUS				current
+		DESCRIPTION			"The SystemEvent Record Time field."
+		::= { systemEvent 6 }
+
+	systemEventNumber OBJECT-TYPE
+		SYNTAX				INTEGER
+		MAX-ACCESS			read-only
+		STATUS				current
+		DESCRIPTION			"The SystemEvent Record Number field."
+		::= { systemEvent 7 }
+
+	systemEventDescriptionResourceKey OBJECT-TYPE
+		SYNTAX				DisplayString
+		MAX-ACCESS			read-only
+		STATUS				current
+		DESCRIPTION			"The SystemEvent Record DescriptionResourceKey field."
+		::= { systemEvent 8 }
+
+	systemEventDescriptionToFormat OBJECT-TYPE
+		SYNTAX				DisplayString
+		MAX-ACCESS			read-only
+		STATUS				current
+		DESCRIPTION			"The SystemEvent Record DescriptionToFormat field."
+		::= { systemEvent 9 }
+
+	systemEventObjectXML OBJECT-TYPE
+		SYNTAX				DisplayString
+		MAX-ACCESS			read-only
+		STATUS				current
+		DESCRIPTION			"The SystemEvent Record ObjectXML field."
+		::= { systemEvent 10 }
+
+	systemEventSeverity OBJECT-TYPE
+		SYNTAX				DisplayString
+		MAX-ACCESS			read-only
+		STATUS				current
+		DESCRIPTION			"The SystemEvent Summary Severity field."
+		::= { systemEvent 11 }
+
+	systemEventTitle OBJECT-TYPE
+		SYNTAX				DisplayString
+		MAX-ACCESS			read-only
+		STATUS				current
+		DESCRIPTION			"The SystemEvent Summary Title field."
+		::= { systemEvent 12 }
+
+	systemEventTarget OBJECT-TYPE
+		SYNTAX				DisplayString
+		MAX-ACCESS			read-only
+		STATUS				current
+		DESCRIPTION			"The SystemEvent Summary Target field."
+		::= { systemEvent 13 }
+
+	systemEventActionBy OBJECT-TYPE
+		SYNTAX				DisplayString
+		MAX-ACCESS			read-only
+		STATUS				current
+		DESCRIPTION			"The SystemEvent Summary ActionBy field."
+		::= { systemEvent 14 }
+
+	systemEventDescription OBJECT-TYPE
+		SYNTAX				DisplayString
+		MAX-ACCESS			read-only
+		STATUS				current
+		DESCRIPTION			"The SystemEvent Summary Description field."
+		::= { systemEvent 15 }
+
+	systemEventNotify NOTIFICATION-TYPE
+		OBJECTS {
+			systemEventID,
+			systemEventTime,
+			systemEventSeverity,
+			systemEventNumber,
+			systemEventTitle,
+			systemEventTarget,
+			systemEventActionBy,
+			systemEventDescription
+ 		}
+ 		STATUS				current
+		DESCRIPTION			"Notification when a Deep Security System Event has occurred."
+		::= { deepSecurity 0 1 }
+
+---------------------------------------------------------------------------
+-- End of DEEPSECURITY-MIB DEFINITIONS
+---------------------------------------------------------------------------
+		
+END

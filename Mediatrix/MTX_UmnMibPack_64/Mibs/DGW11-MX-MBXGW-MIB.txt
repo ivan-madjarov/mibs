@@ -1,0 +1,344 @@
+-- ****************************************************************************
+-- ****************************************************************************
+--             Copyright(c) 2004 Mediatrix Telecom, Inc.
+--  NOTICE:
+--   This document contains information that is confidential and proprietary
+--   to Mediatrix Telecom, Inc.
+--   Mediatrix Telecom, Inc. reserves all rights to this document as well as
+--   to the Intellectual Property of the document and the technology and
+--   know-how that it includes and represents.
+--   This publication cannot be reproduced, neither in whole nor in part in
+--   any form whatsoever without written prior approval by
+--   Mediatrix Telecom, Inc.
+--   Mediatrix Telecom, Inc. reserves the right to revise this publication
+--   and make changes at any time and without the obligation to notify any
+--   person and/or entity of such revisions and/or changes.
+-- ****************************************************************************
+-- ****************************************************************************
+
+
+DGW11-MX-MBXGW-MIB
+DEFINITIONS ::= BEGIN
+
+IMPORTS
+        MODULE-IDENTITY,
+        OBJECT-TYPE,
+        Unsigned32,
+        Integer32
+    FROM SNMPv2-SMI
+        MODULE-COMPLIANCE,
+        OBJECT-GROUP
+    FROM SNMPv2-CONF
+        MxEnableState,
+        MxActivationState,
+        MxIpHostName,
+        MxIpPort,
+        MxAdvancedIpPort,
+        MxIpSubnetMask,
+        MxDigitMap
+    FROM MX-TC
+        MxUInt64,
+        MxFloat32,
+        MxIpHostNamePort,
+        MxIpAddr,
+        MxIpAddrPort,
+        MxIpAddrMask,
+        MxUri,
+        MxUrl
+    FROM MX-TC2
+        mediatrixHardware
+    FROM MX-SMI2;
+
+mbXgwMIB MODULE-IDENTITY
+ LAST-UPDATED   "0606190000Z"
+ ORGANIZATION " Mediatrix Telecom, Inc. "
+ CONTACT-INFO " Mediatrix Telecom, Inc.
+                4229, Garlock Street
+                Sherbrooke (Quebec)
+                Canada
+                Phone: (819) 829-8749
+                "
+ DESCRIPTION  " MbXgw
+
+
+                "
+ -- ****************************************************
+ 
+ -- Revision history
+ -- ****************************************************
+ REVISION       "0606190000Z"
+ DESCRIPTION  " Initial Revision "
+ REVISION       "0610160000Z"
+ DESCRIPTION  " Added BRI Power-Feeding configuration "
+ REVISION       "0705140000Z"
+ DESCRIPTION  " Added FXS support (Mediatrix 4104) "
+ ::= { mediatrixHardware 40101 }
+
+mbXgwMIBObjects OBJECT IDENTIFIER ::= { mbXgwMIB 1 }
+
+-- ****************************************************************************
+
+-- Group:BRI ISDN
+
+-- ****************************************************************************
+
+bri OBJECT IDENTIFIER
+ ::= { mbXgwMIBObjects 100 }
+ -- Scalar:Current Synchonization Reference
+
+ clockReferenceState OBJECT-TYPE
+  SYNTAX        INTEGER { none(100) , bri1(200) , bri2(300) , bri3(400) , bri4
+                (500) }
+  MAX-ACCESS    read-only
+  STATUS        current
+  DESCRIPTION " Current Synchonization Reference
+
+                Indicates the synchronisation source currrently in use for the
+                ISDN ports.
+
+                  * None: The internal clock does not synchronise with any
+                    other source.
+                  * Bri1: The internal clock synchronizes with the signal
+                    provided by the port Bri1.
+                  * Bri2: The internal clock synchronizes with the signal
+                    provided by the port Bri2.
+                  * Bri3: The internal clock synchronizes with the signal
+                    provided by the port Bri3.
+                  * Bri4: The internal clock synchronizes with the signal
+                    provided by the port Bri4.
+
+
+                "
+  ::= { bri 100 }
+
+ -- Scalar:Preferred Clock Reference
+
+ clockReference OBJECT-TYPE
+  SYNTAX        INTEGER { none(100) , bri1(200) , bri2(300) , bri3(400) , bri4
+                (500) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Preferred Clock Reference
+
+                Indicates the preferred synchronisation source to use for the
+                internal clock of the ISDN ports.
+
+                  * None: The internal clock synchronizes with the first
+                    available source.
+                  * Bri1: The internal clock synchronizes with the signal
+                    provided by the port Bri1.
+                  * Bri2: The internal clock synchronizes with the signal
+                    provided by the port Bri2.
+                  * Bri3: The internal clock synchronizes with the signal
+                    provided by the port Bri3.
+                  * Bri4: The internal clock synchronizes with the signal
+                    provided by the port Bri4.
+
+                If the selected source does not provide a signal, the internal
+                clock synchronizes with the first available source.
+                "
+  DEFVAL        { none }
+  ::= { bri 200 }
+
+ -- ***************************************************************************
+ 
+ -- Table:BRI Ports Configuration
+
+ -- ***************************************************************************
+ 
+ briPortsTable OBJECT-TYPE
+  SYNTAX        SEQUENCE OF BriPortsEntry
+  MAX-ACCESS    not-accessible
+  STATUS        current
+  DESCRIPTION " BRI Ports Configuration
+
+                This table configures the hardware properties of the BRI ports
+                on this unit.
+                "
+  ::= { bri 500 }
+  briPortsEntry OBJECT-TYPE
+   SYNTAX        BriPortsEntry
+   MAX-ACCESS    not-accessible
+   STATUS        current
+   DESCRIPTION " A row in table BRI Ports Configuration. "
+   INDEX         {
+                   briPortsName
+                 }
+
+   ::= { briPortsTable 1 }
+
+  BriPortsEntry ::= SEQUENCE
+  {
+    briPortsName               OCTET STRING,
+    briPortsPowerFeedingEnable MxEnableState
+  }
+
+  -- Index:Name
+
+  briPortsName OBJECT-TYPE
+   SYNTAX        OCTET STRING
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Name
+
+                 BRI port name.
+                 "
+   ::= { briPortsEntry 100 }
+
+  -- Columnar:Power Feeding Enable
+
+  briPortsPowerFeedingEnable OBJECT-TYPE
+   SYNTAX        MxEnableState
+   MAX-ACCESS    read-write
+   STATUS        current
+   DESCRIPTION " Power Feeding Enable
+
+                 Enables or disables the ISDN power feeding for a given port.
+                 "
+   DEFVAL        { disable }
+   ::= { briPortsEntry 200 }
+
+
+ -- End of table:BRI Ports Configuration
+
+ -- ***************************************************************************
+ 
+ -- Table:BRI Ports Status
+
+ -- ***************************************************************************
+ 
+ briPortsStatusTable OBJECT-TYPE
+  SYNTAX        SEQUENCE OF BriPortsStatusEntry
+  MAX-ACCESS    not-accessible
+  STATUS        current
+  DESCRIPTION " BRI Ports Status
+
+                This table displays the state of the BRI ports on this unit.
+                "
+  ::= { bri 600 }
+  briPortsStatusEntry OBJECT-TYPE
+   SYNTAX        BriPortsStatusEntry
+   MAX-ACCESS    not-accessible
+   STATUS        current
+   DESCRIPTION " A row in table BRI Ports Status. "
+   INDEX         {
+                   briPortsStatusName
+                 }
+
+   ::= { briPortsStatusTable 1 }
+
+  BriPortsStatusEntry ::= SEQUENCE
+  {
+    briPortsStatusName         OCTET STRING,
+    briPortsStatusPowerFeeding INTEGER
+  }
+
+  -- Index:Name
+
+  briPortsStatusName OBJECT-TYPE
+   SYNTAX          OCTET STRING
+   MAX-ACCESS      read-only
+   STATUS          current
+   DESCRIPTION   " Name
+
+                   BRI port name.
+                   "
+   ::= { briPortsStatusEntry 100 }
+
+  -- Columnar:Power Feeding State
+
+  briPortsStatusPowerFeeding OBJECT-TYPE
+   SYNTAX        INTEGER { on(100) , off(200) , unavailable(300) , unsupported
+                 (400) }
+   MAX-ACCESS    read-only
+   STATUS        current
+   DESCRIPTION " Power Feeding State
+
+                 Indicates the state of the ISDN power feeding for a port.
+
+                   * On: Power is fed over the ISDN line.
+                   * Off: Power is not fed over the ISDN line.
+                   * Unavailable: The power feeding feature is unavailable on
+                     endpoints of type TE.
+                   * Unsupported: The power feeding feature is not physically
+                     supported on this port.
+
+
+                 "
+   ::= { briPortsStatusEntry 200 }
+
+
+ -- End of table:BRI Ports Status
+
+-- End of group:BRI ISDN
+
+-- ****************************************************************************
+
+-- Group:Notification Messages Configuration
+
+-- ****************************************************************************
+
+notificationsGroup OBJECT IDENTIFIER
+ ::= { mbXgwMIBObjects 60010 }
+ -- Scalar:Minimal Severity of Notification
+
+ minSeverity OBJECT-TYPE
+  SYNTAX        INTEGER { disable(0) , debug(100) , info(200) , warning(300) ,
+                error(400) , critical (500) }
+  MAX-ACCESS    read-write
+  STATUS        current
+  DESCRIPTION " Minimal Severity of Notification
+
+                Sets the minimal severity to issue a notification message
+                incoming from this service.
+
+                  * Disable: No notification is issued.
+                  * Debug: All notification messages are issued.
+                  * Info: Notification messages with severity 'Informational'
+                    and higher are issued.
+                  * Warning: Notification messages with severity 'Warning' and
+                    higher are issued.
+                  * Error: Notification messages with severity 'Error' and
+                    higher are issued.
+                  * Critical: Notification messages with severity 'Critical'
+                    are issued.
+
+
+                "
+  DEFVAL        { warning }
+  ::= { notificationsGroup 100 }
+
+-- End of group:Notification Messages Configuration
+
+-- ****************************************************************************
+
+-- Group:Configuration Settings
+
+-- ****************************************************************************
+
+configurationGroup OBJECT IDENTIFIER
+ ::= { mbXgwMIBObjects 60020 }
+ -- Scalar:Need Restart
+
+ needRestartInfo OBJECT-TYPE
+  SYNTAX        INTEGER { no(0) , yes(100) }
+  MAX-ACCESS    read-only
+  STATUS        current
+  DESCRIPTION " Need Restart
+
+                Indicates if the service needs to be restarted for its
+                configuration to fully take effect.
+
+                  * Yes: Service needs to be restarted.
+                  * No: Service does not need to be restarted.
+
+                Services can be restarted by using the command
+                Scm.ServiceCommands.Restart.
+
+
+                "
+  ::= { configurationGroup 100 }
+
+-- End of group:Configuration Settings
+
+END
